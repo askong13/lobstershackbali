@@ -21,41 +21,29 @@
           </ul>
         </nav>
         <div class="header-actions">
-          <div id="user-auth-container">
-            <button id="login-btn" class="btn">Login with Google</button>
+          <div id="user-auth-section" class="user-auth">
+            <a href="/login.html" id="login-link" class="auth-link">Login/Register</a>
             <div id="user-info" class="hidden">
-              <img id="user-avatar" src="" alt="User Avatar">
-              <button id="logout-btn" class="btn">Logout</button>
+              <span id="user-name"></span>
+              <a href="#" id="logout-link" class="auth-link">Logout</a>
             </div>
           </div>
+          <a href="/cart.html" class="cart-icon">
+            🛒 <span id="cart-count">0</span>
+          </a>
         </div>
     </div>
   </header>
   <main>
-    <section id="featured-menu" class="section animate-on-scroll">
+    <section id="featured-menu" class="section">
         <div class="container">
             <h2 class="section-title">Menu Unggulan Kami</h2>
             <div id="menu-grid-container" class="menu-grid"><p>Memuat menu...</p></div>
         </div>
     </section>
   </main>
-  
-  <div id="order-modal" class="modal-overlay hidden">
-    <div class="modal-content">
-      <button class="modal-close-btn">&times;</button>
-      <div id="modal-body">
-        <h2 id="modal-title">Pesan Antar</h2>
-        <p>Anda memesan: <strong id="modal-item-name"></strong></p>
-        <div id="map" style="height: 300px; width: 100%; margin: 20px 0;"></div>
-        <p>Lokasi Pengiriman: <strong id="delivery-address">Memuat...</strong></p>
-        <button id="confirm-order-btn" class="btn">Konfirmasi Pesanan ke Lokasi Ini</button>
-      </div>
-    </div>
-  </div>
-
   <footer class="main-footer"><p>&copy; <span id="current-year"></span> Lobster Shack Bali.</p></footer>
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script type="module" src="assets/js/app.js"></script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADCv-AX09lIYq6Gr7Gm56rChp4kS0J08Q&libraries=places&callback=initMap"></script>
 </body>
 </html>
