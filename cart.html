@@ -1,22 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Keranjang Belanja - Lobster Shack Bali</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
     <header class="main-header">
-        </header>
+         </header>
+
     <main class="section">
         <div class="container">
-            <h1 class="section-title">Keranjang Anda</h1>
-            <div id="cart-items-container"></div>
+            <h1 class="section-title">Keranjang Belanja Anda</h1>
+            
+            <div id="cart-items-container">
+                </div>
+
             <div id="cart-summary" class="hidden">
                 <h3 id="cart-total"></h3>
                 <button class="btn" id="checkout-btn">Lanjutkan ke Checkout</button>
             </div>
         </div>
     </main>
-    <script type="module" src="assets/js/app.js"></script>
+
+    <footer class="main-footer">
+        </footer>
+    
+    <script type="module" src="/assets/js/app.js"></script>
+    <script>
+        // Tambahkan script kecil ini untuk secara spesifik memanggil fungsi render keranjang
+        document.addEventListener('DOMContentLoaded', () => {
+             // Pastikan fungsi ini ada di dalam app.js Anda
+            if(typeof renderCartPage === 'function') {
+                renderCartPage();
+            }
+        });
+    </script>
 </body>
 </html>
