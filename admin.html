@@ -1,68 +1,1370 @@
-// Pastikan Firebase SDK dan Auth sudah terinisialisasi
-// import { getAuth, onAuthStateChanged } from "firebase/auth";
-// import { getFirestore, collection, getDocs, onSnapshot, query, orderBy } from "firebase/firestore";
-
-// const auth = getAuth(app);
-// const db = getFirestore(app);
-
-// Fungsi untuk memuat pesanan di dashboard admin
-function loadOrdersForAdmin() {
-    const ordersTableBody = document.getElementById('orders-table-body'); // Pastikan ID ini ada
-    if (!ordersTableBody) return; // Keluar jika elemen tidak ditemukan
-
-    // Gunakan onSnapshot untuk real-time updates
-    const q = query(collection(db, "orders"), orderBy("order_date", "desc"));
-
-    onSnapshot(q, (snapshot) => {
-        ordersTableBody.innerHTML = ''; // Bersihkan tabel
-        if (snapshot.empty) {
-            ordersTableBody.innerHTML = '<tr><td colspan="5">No new orders.</td></tr>';
-            console.log("No orders found.");
-            return;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lobster Shack Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* CSS untuk admin.html */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
         }
 
-        let totalOrdersToday = 0;
-        const today = new Date();
-        today.setHours(0, 0, 0, 0); // Reset waktu ke awal hari
+        .login-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 350px;
+            text-align: center;
+            margin: auto; /* Center login form */
+        }
 
-        snapshot.forEach((doc) => {
-            const order = doc.data();
-            const orderDate = order.order_date ? order.order_date.toDate() : new Date(); // Pastikan order_date ada
+        .login-container h2 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
 
-            // Periksa jika pesanan dari hari ini
-            if (orderDate.getFullYear() === today.getFullYear() &&
-                orderDate.getMonth() === today.getMonth() &&
-                orderDate.getDate() === today.getDate()) {
-                totalOrdersToday++;
+        .login-container input[type="email"],
+        .login-container input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .login-container button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        /* Admin Dashboard Layout */
+        .admin-dashboard {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .admin-dashboard header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            position: fixed; /* Fix header */
+            top: 0;
+            z-index: 1000;
+        }
+
+        .admin-dashboard header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .admin-dashboard header button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #34495e;
+            color: white;
+            padding-top: 80px; /* Offset for fixed header */
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li a {
+            display: block;
+            padding: 15px 20px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar ul li a:hover,
+        .sidebar ul li a.active {
+            background-color: #4CAF50;
+        }
+
+        .content {
+            margin-left: 250px; /* Offset for sidebar */
+            padding: 80px 20px 20px 20px; /* Offset for fixed header */
+            flex-grow: 1;
+            background-color: #f4f4f4;
+        }
+
+        .content section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .content h2 {
+            color: #4CAF50;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: #e8f5e9;
+            border: 1px solid #4CAF50;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: #388e3c;
+        }
+
+        .card p {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+
+        .error-detail {
+            color: #e74c3c;
+            background-color: #ffe0e0;
+            border: 1px solid #e74c3c;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+        }
+
+        .form-container input[type="text"],
+        .form-container input[type="email"],
+        .form-container input[type="number"],
+        .form-container input[type="url"],
+        .form-container textarea,
+        .form-container select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box; /* Include padding in width */
+        }
+
+        .form-container textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-container button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .form-container button#cancel-product-btn,
+        .form-container button#cancel-category-btn,
+        .form-container button#cancel-site-content-btn {
+            background-color: #95a5a6;
+        }
+
+        .add-btn {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        /* Image preview in forms */
+        .form-container img {
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container" id="login-container">
+        <h2>Admin Login</h2>
+        <form id="login-form">
+            <input type="email" id="login-email" placeholder="Email" required>
+            <input type="password" id="login-password" placeholder="Password" required>
+            <button type="submit">Login</button>
+            <p id="login-error-message" class="error-message"></p>
+        </form>
+    </div>
+
+    <div class="admin-dashboard" id="admin-dashboard" style="display: none;">
+        <header>
+            <h1>Admin Dashboard</h1>
+            <button id="logout-btn">Logout</button>
+        </header>
+
+        <nav class="sidebar">
+            <ul>
+                <li><a href="#" data-section="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#" data-section="orders"><i class="fas fa-receipt"></i> Orders</a></li>
+                <li><a href="#" data-section="products"><i class="fas fa-utensils"></i> Products</a></li>
+                <li><a href="#" data-section="categories"><i class="fas fa-list"></i> Categories</a></li>
+                <li><a href="#" data-section="site-content"><i class="fas fa-pager"></i> Site Content</a></li>
+                <li><a href="#" data-section="users"><i class="fas fa-users"></i> Users</a></li>
+                <li><a href="#" data-section="customers"><i class="fas fa-user-friends"></i> Customers</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <section id="dashboard-section" class="active-section">
+                <h2>Dashboard Overview</h2>
+                <div class="summary-cards">
+                    <div class="card">
+                        <h3>Orders Today</h3>
+                        <p id="orders-today-count">0</p>
+                    </div>
+                    <div class="card">
+                        <h3>Total Products</h3>
+                        <p id="total-products-count">0</p>
+                    </div>
+                    <div class="card">
+                        <h3>Total Customers</h3>
+                        <p id="total-customers-count">0</p>
+                    </div>
+                </div>
+                <div class="error-detail" id="dashboard-error-detail"></div>
+            </section>
+
+            <section id="orders-section" style="display: none;">
+                <h2>Manage Orders</h2>
+                <div class="filter-controls">
+                    <label for="order-status-filter">Filter by Status:</label>
+                    <select id="order-status-filter">
+                        <option value="all">All</option>
+                        <option value="pending">Pending</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer Name</th>
+                            <th>Total Amount</th>
+                            <th>Status</th>
+                            <th>Order Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-table-body">
+                        <tr><td colspan="6">Loading orders...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="products-section" style="display: none;">
+                <h2>Manage Products</h2>
+                <button id="add-product-btn" class="add-btn">Add New Product</button>
+                <div class="form-container" id="product-form-container" style="display: none;">
+                    <h3>Add/Edit Product</h3>
+                    <form id="product-form">
+                        <input type="hidden" id="product-id">
+                        <input type="text" id="product-name" placeholder="Product Name" required>
+                        <textarea id="product-description" placeholder="Description"></textarea>
+                        <input type="number" id="product-price" placeholder="Price" step="1000" required>
+                        <select id="product-category" required>
+                            <option value="">Select Category</option>
+                            </select>
+                        <input type="file" id="product-image">
+                        <img id="current-product-image" src="" alt="Current Product Image" style="max-width: 100px; display: none;">
+                        <label>
+                            <input type="checkbox" id="product-available"> Available
+                        </label>
+                        <input type="number" id="product-order" placeholder="Display Order" min="0">
+                        <button type="submit" id="save-product-btn">Save Product</button>
+                        <button type="button" id="cancel-product-btn">Cancel</button>
+                    </form>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Available</th>
+                            <th>Order</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-table-body">
+                        <tr><td colspan="7">Loading products...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="categories-section" style="display: none;">
+                <h2>Manage Categories</h2>
+                <button id="add-category-btn" class="add-btn">Add New Category</button>
+                <div class="form-container" id="category-form-container" style="display: none;">
+                    <h3>Add/Edit Category</h3>
+                    <form id="category-form">
+                        <input type="hidden" id="category-id">
+                        <input type="text" id="category-name" placeholder="Category Name" required>
+                        <input type="number" id="category-order" placeholder="Display Order" min="0">
+                        <button type="submit" id="save-category-btn">Save Category</button>
+                        <button type="button" id="cancel-category-btn">Cancel</button>
+                    </form>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Order</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categories-table-body">
+                        <tr><td colspan="3">Loading categories...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="site-content-section" style="display: none;">
+                <h2>Manage Site Content</h2>
+                <button id="add-site-content-btn" class="add-btn">Add New Content</button>
+                <div class="form-container" id="site-content-form-container" style="display: none;">
+                    <h3>Add/Edit Site Content</h3>
+                    <form id="site-content-form">
+                        <input type="hidden" id="content-id">
+                        <input type="text" id="content-name" placeholder="Content Identifier (e.g., main_banner, about_us)" required>
+                        <input type="text" id="content-title" placeholder="Title">
+                        <textarea id="content-text" placeholder="Content Text"></textarea>
+                        <input type="url" id="content-image-url" placeholder="Image URL (if not uploading)">
+                        <input type="file" id="content-image-upload">
+                        <img id="current-content-image" src="" alt="Current Content Image" style="max-width: 100px; display: none;">
+                        <label>
+                            <input type="checkbox" id="content-active"> Is Active
+                        </label>
+                        <input type="number" id="content-order" placeholder="Display Order" min="0">
+                        <button type="submit" id="save-content-btn">Save Content</button>
+                        <button type="button" id="cancel-content-btn">Cancel</button>
+                    </form>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Image</th>
+                            <th>Active</th>
+                            <th>Order</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="site-content-table-body">
+                        <tr><td colspan="6">Loading site content...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="users-section" style="display: none;">
+                <h2>Manage Users (Admin)</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body">
+                        <tr><td colspan="3">Loading users...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="customers-section" style="display: none;">
+                <h2>Manage Customers</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Registered At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customers-table-body">
+                        <tr><td colspan="5">Loading customers...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import {
+            getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, setDoc,
+            query, orderBy, limit, onSnapshot, where, serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
+            authDomain: "lobster-shack-bali.firebaseapp.com",
+            databaseURL: "https://lobster-shack-bali-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "lobster-shack-bali",
+            storageBucket: "lobster-shack-bali.firebasestorage.app",
+            messagingSenderId: "42452974733",
+            appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // --- Elemen Login ---
+        const loginForm = document.getElementById('login-form');
+        const loginEmailInput = document.getElementById('login-email');
+        const loginPasswordInput = document.getElementById('login-password');
+        const loginErrorMessage = document.getElementById('login-error-message');
+        const logoutBtn = document.getElementById('logout-btn');
+        const loginContainer = document.getElementById('login-container');
+        const adminDashboard = document.getElementById('admin-dashboard');
+
+        // --- Elemen Umum Dashboard ---
+        const dashboardSection = document.getElementById('dashboard-section');
+        const ordersSection = document.getElementById('orders-section');
+        const productsSection = document.getElementById('products-section');
+        const categoriesSection = document.getElementById('categories-section');
+        const siteContentSection = document.getElementById('site-content-section');
+        const usersSection = document.getElementById('users-section');
+        const customersSection = document.getElementById('customers-section');
+
+        const sections = {
+            'dashboard': dashboardSection,
+            'orders': ordersSection,
+            'products': productsSection,
+            'categories': categoriesSection,
+            'site-content': siteContentSection,
+            'users': usersSection,
+            'customers': customersSection
+        };
+
+        const sidebarLinks = document.querySelectorAll('.sidebar ul li a');
+        const dashboardErrorDetail = document.getElementById('dashboard-error-detail');
+
+        // --- Autentikasi Login ---
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = loginEmailInput.value;
+            const password = loginPasswordInput.value;
+            loginErrorMessage.textContent = ''; // Clear previous error
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                // Autentikasi berhasil, onAuthStateChanged akan menangani tampilan dashboard
+            } catch (error) {
+                console.error("Login failed:", error);
+                loginErrorMessage.textContent = `Login failed: ${error.message}`;
             }
-
-            const row = ordersTableBody.insertRow();
-            row.innerHTML = `
-                <td>${doc.id}</td>
-                <td>${order.customer_name || 'N/A'}</td>
-                <td>Rp ${order.total_amount ? order.total_amount.toLocaleString('id-ID') : '0'}</td>
-                <td>${order.status || 'N/A'}</td>
-                <td>${orderDate.toLocaleString()}</td>
-            `;
         });
 
-        document.getElementById('orders-today-count').innerText = totalOrdersToday; // Perbarui counter di dashboard
-        console.log("Orders loaded successfully for admin dashboard.");
-    }, (error) => {
-        console.error("Error loading orders for admin: ", error);
-        document.getElementById('orders-table-body').innerHTML = `<tr><td colspan="5">Error loading orders: ${error.message}</td></tr>`;
-        document.getElementById('orders-today-count').innerText = 'Error';
-    });
-}
+        // --- Logout ---
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                console.log("User logged out.");
+                // onAuthStateChanged akan menangani kembali ke tampilan login
+            } catch (error) {
+                console.error("Logout failed:", error);
+                alert(`Logout failed: ${error.message}`);
+            }
+        });
 
-// Panggil fungsi ini setelah user terautentikasi di admin.html
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        console.log("Admin user logged in:", user.email);
-        loadOrdersForAdmin(); // Memuat pesanan
-        // Panggil fungsi lain untuk memuat produk, kategori, dll. untuk admin panel
-    } else {
-        console.log("No admin user logged in. Redirecting to login.");
-        // Mungkin redirect ke halaman login
-    }
-});
+        // --- Mengelola tampilan berdasarkan status autentikasi ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                loginContainer.style.display = 'none';
+                adminDashboard.style.display = 'flex';
+                console.log("User is logged in:", user.email);
+
+                // Initialize dashboard views
+                sidebarLinks[0].classList.add('active'); // Set dashboard as active
+                sections['dashboard'].style.display = 'block';
+
+                loadDashboardSummary();
+                loadOrders();
+                loadProductsAdmin();
+                loadCategoriesAdmin();
+                loadSiteContentAdmin();
+                loadUsersAdmin();
+                loadCustomersAdmin();
+            } else {
+                loginContainer.style.display = 'block';
+                adminDashboard.style.display = 'none';
+                console.log("User is logged out.");
+            }
+        });
+
+        // --- Navigasi Sidebar ---
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetSectionId = link.dataset.section;
+
+                // Hide all sections
+                for (const key in sections) {
+                    sections[key].style.display = 'none';
+                }
+                // Show target section
+                sections[targetSectionId].style.display = 'block';
+
+                // Update active class
+                sidebarLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
+
+        // --- FUNGSI UMUM UNTUK LOAD DATA ---
+        async function fetchData(collectionName, orderByField = null, orderDirection = 'asc', filter = null) {
+            let q = collection(db, collectionName);
+            if (filter && filter.field && filter.operator && filter.value) {
+                q = query(q, where(filter.field, filter.operator, filter.value));
+            }
+            if (orderByField) {
+                q = query(q, orderBy(orderByField, orderDirection));
+            }
+
+            try {
+                const snapshot = await getDocs(q);
+                return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            } catch (error) {
+                console.error(`Error fetching data from ${collectionName}: `, error);
+                dashboardErrorDetail.textContent = `Error loading ${collectionName}: ${error.message}`;
+                return [];
+            }
+        }
+
+        // --- DASHBOARD SUMMARY ---
+        async function loadDashboardSummary() {
+            const ordersTodayCount = document.getElementById('orders-today-count');
+            const totalProductsCount = document.getElementById('total-products-count');
+            const totalCustomersCount = document.getElementById('total-customers-count');
+
+            ordersTodayCount.textContent = '...';
+            totalProductsCount.textContent = '...';
+            totalCustomersCount.textContent = '...';
+            dashboardErrorDetail.textContent = '';
+
+            try {
+                // Orders Today
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const orders = await fetchData('orders', 'order_date', 'desc');
+                let countToday = 0;
+                orders.forEach(order => {
+                    if (order.order_date && order.order_date.toDate) {
+                        const orderDate = order.order_date.toDate();
+                        if (orderDate.getFullYear() === today.getFullYear() &&
+                            orderDate.getMonth() === today.getMonth() &&
+                            orderDate.getDate() === today.getDate()) {
+                            countToday++;
+                        }
+                    }
+                });
+                ordersTodayCount.textContent = countToday;
+
+                // Total Products
+                const products = await fetchData('products');
+                totalProductsCount.textContent = products.length;
+
+                // Total Customers
+                const customers = await fetchData('customers');
+                totalCustomersCount.textContent = customers.length;
+
+            } catch (error) {
+                console.error("Error loading dashboard summary:", error);
+                dashboardErrorDetail.textContent = `Failed to load dashboard summary: ${error.message}`;
+                ordersTodayCount.textContent = 'Error';
+                totalProductsCount.textContent = 'Error';
+                totalCustomersCount.textContent = 'Error';
+            }
+        }
+
+
+        // --- MANAGE ORDERS ---
+        const ordersTableBody = document.getElementById('orders-table-body');
+        const orderStatusFilter = document.getElementById('order-status-filter');
+
+        orderStatusFilter.addEventListener('change', () => loadOrders());
+
+        function loadOrders() {
+            const selectedStatus = orderStatusFilter.value;
+            const ordersQuery = selectedStatus === 'all'
+                ? query(collection(db, "orders"), orderBy("order_date", "desc"))
+                : query(collection(db, "orders"), where("status", "==", selectedStatus), orderBy("order_date", "desc"));
+
+            onSnapshot(ordersQuery, (snapshot) => {
+                ordersTableBody.innerHTML = '';
+                if (snapshot.empty) {
+                    ordersTableBody.innerHTML = '<tr><td colspan="6">No orders found.</td></tr>';
+                    return;
+                }
+
+                snapshot.forEach((doc) => {
+                    const order = doc.data();
+                    const orderDate = order.order_date ? order.order_date.toDate().toLocaleString() : 'N/A';
+                    const row = ordersTableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${doc.id}</td>
+                        <td>${order.customer_name || 'N/A'}</td>
+                        <td>Rp ${order.total_amount ? order.total_amount.toLocaleString('id-ID') : '0'}</td>
+                        <td>${order.status || 'N/A'}</td>
+                        <td>${orderDate}</td>
+                        <td>
+                            <button class="action-btn view-order-btn" data-id="${doc.id}"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn delete-order-btn" data-id="${doc.id}"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    `;
+                    row.querySelector('.view-order-btn').addEventListener('click', () => viewOrderDetails(doc.id));
+                    row.querySelector('.delete-order-btn').addEventListener('click', () => deleteOrder(doc.id));
+                });
+            }, (error) => {
+                console.error("Error loading orders: ", error);
+                ordersTableBody.innerHTML = `<tr><td colspan="6">Error loading orders: ${error.message}</td></tr>`;
+            });
+        }
+
+        async function viewOrderDetails(orderId) {
+            try {
+                const docRef = doc(db, "orders", orderId);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const order = docSnap.data();
+                    let itemsHtml = '<ul>';
+                    order.items.forEach(item => {
+                        itemsHtml += `<li>${item.name} (x${item.qty}) - Rp ${item.price.toLocaleString('id-ID')}</li>`;
+                    });
+                    itemsHtml += '</ul>';
+
+                    alert(`Order ID: ${orderId}\nCustomer: ${order.customer_name}\nEmail: ${order.customer_email}\nTotal: Rp ${order.total_amount.toLocaleString('id-ID')}\nStatus: ${order.status}\nOrder Date: ${order.order_date.toDate().toLocaleString()}\nItems:\n${itemsHtml}`);
+                } else {
+                    alert("Order not found.");
+                }
+            } catch (error) {
+                console.error("Error viewing order:", error);
+                alert(`Error viewing order: ${error.message}`);
+            }
+        }
+
+        async function deleteOrder(orderId) {
+            if (!confirm('Are you sure you want to delete this order?')) return;
+            try {
+                await deleteDoc(doc(db, "orders", orderId));
+                console.log("Order deleted successfully.");
+            } catch (error) {
+                console.error("Error deleting order:", error);
+                alert(`Error deleting order: ${error.message}`);
+            }
+        }
+
+
+        // --- MANAGE PRODUCTS ---
+        const productsTableBody = document.getElementById('products-table-body');
+        const addProductBtn = document.getElementById('add-product-btn');
+        const productFormContainer = document.getElementById('product-form-container');
+        const productForm = document.getElementById('product-form');
+        const productIdInput = document.getElementById('product-id');
+        const productNameInput = document.getElementById('product-name');
+        const productDescriptionInput = document.getElementById('product-description');
+        const productPriceInput = document.getElementById('product-price');
+        const productCategorySelect = document.getElementById('product-category');
+        const productImageInput = document.getElementById('product-image');
+        const currentProductImage = document.getElementById('current-product-image');
+        const productAvailableCheckbox = document.getElementById('product-available');
+        const productOrderInput = document.getElementById('product-order');
+        const saveProductBtn = document.getElementById('save-product-btn');
+        const cancelProductBtn = document.getElementById('cancel-product-btn');
+
+        let currentEditingProductId = null; // Track which product is being edited
+
+        addProductBtn.addEventListener('click', () => {
+            resetProductForm();
+            productFormContainer.style.display = 'block';
+        });
+
+        cancelProductBtn.addEventListener('click', () => {
+            productFormContainer.style.display = 'none';
+            resetProductForm();
+        });
+
+        productForm.addEventListener('submit', handleProductFormSubmit);
+
+        async function loadProductsAdmin() {
+            // Populate category dropdown
+            const categories = await fetchData('categories', 'name'); // Fetch all categories
+            productCategorySelect.innerHTML = '<option value="">Select Category</option>';
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat.id;
+                option.textContent = cat.name;
+                productCategorySelect.appendChild(option);
+            });
+
+            // Load products into table
+            onSnapshot(query(collection(db, "products"), orderBy("order", "asc")), (snapshot) => {
+                productsTableBody.innerHTML = '';
+                if (snapshot.empty) {
+                    productsTableBody.innerHTML = '<tr><td colspan="7">No products found.</td></tr>';
+                    return;
+                }
+                snapshot.forEach((doc) => {
+                    const product = doc.data();
+                    const row = productsTableBody.insertRow();
+                    row.innerHTML = `
+                        <td><img src="${product.image_url || 'https://via.placeholder.com/50/CCCCCC/FFFFFF?text=No'}" alt="${product.name}" width="50"></td>
+                        <td>${product.name}</td>
+                        <td>${categories.find(c => c.id === product.category)?.name || 'N/A'}</td>
+                        <td>Rp ${product.price ? product.price.toLocaleString('id-ID') : '0'}</td>
+                        <td>${product.is_available ? '<i class="fas fa-check-circle" style="color:green;"></i>' : '<i class="fas fa-times-circle" style="color:red;"></i>'}</td>
+                        <td>${product.order || 0}</td>
+                        <td>
+                            <button class="action-btn edit-btn" data-id="${doc.id}"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn delete-btn" data-id="${doc.id}"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    `;
+                    row.querySelector('.edit-btn').addEventListener('click', () => editProduct(doc.id));
+                    row.querySelector('.delete-btn').addEventListener('click', () => deleteProduct(doc.id, product.image_url));
+                });
+                totalProductsCount.textContent = snapshot.size; // Update dashboard summary
+            }, (error) => {
+                console.error("Error loading products for admin: ", error);
+                productsTableBody.innerHTML = `<tr><td colspan="7">Error loading products: ${error.message}</td></tr>`;
+            });
+        }
+
+        function resetProductForm() {
+            productForm.reset();
+            productIdInput.value = '';
+            currentEditingProductId = null;
+            currentProductImage.style.display = 'none';
+            currentProductImage.src = '';
+            delete currentProductImage.dataset.originalUrl;
+            saveProductBtn.textContent = 'Save Product';
+        }
+
+        async function handleProductFormSubmit(e) {
+            e.preventDefault();
+            const id = productIdInput.value;
+            const name = productNameInput.value;
+            const description = productDescriptionInput.value;
+            const price = parseFloat(productPriceInput.value);
+            const category = productCategorySelect.value;
+            const imageFile = productImageInput.files[0];
+            const isAvailable = productAvailableCheckbox.checked;
+            const order = parseInt(productOrderInput.value) || 0;
+
+            if (!name || isNaN(price) || !category) {
+                alert('Name, Price (must be a number), and Category are required!');
+                return;
+            }
+
+            let imageUrl = currentProductImage.dataset.originalUrl || ''; // Keep existing image if no new file uploaded
+
+            try {
+                if (imageFile) {
+                    // Upload new image
+                    const imageRef = ref(storage, `product_images/${Date.now()}_${imageFile.name}`);
+                    const uploadResult = await uploadBytes(imageRef, imageFile);
+                    imageUrl = await getDownloadURL(uploadResult.ref);
+
+                    // If updating and old image existed and was from storage, delete it
+                    if (id && currentProductImage.dataset.originalUrl && currentProductImage.dataset.originalUrl.includes('firebasestorage.googleapis.com') && currentProductImage.dataset.originalUrl !== imageUrl) {
+                        try {
+                            const oldImageRef = ref(storage, currentProductImage.dataset.originalUrl);
+                            await deleteObject(oldImageRef);
+                            console.log("Old image deleted from storage.");
+                        } catch (deleteError) {
+                            console.warn("Could not delete old image (might not be from storage or already deleted):", deleteError.message);
+                        }
+                    }
+                } else if (id && !currentProductImage.src && currentProductImage.dataset.originalUrl && currentProductImage.dataset.originalUrl.includes('firebasestorage.googleapis.com')) {
+                    // If image was cleared and it was from storage, delete it
+                     try {
+                        const oldImageRef = ref(storage, currentProductImage.dataset.originalUrl);
+                        await deleteObject(oldImageRef);
+                        console.log("Product image cleared and deleted from storage.");
+                    } catch (deleteError) {
+                        console.warn("Could not delete cleared product image (might not be from storage or already deleted):", deleteError.message);
+                    }
+                    imageUrl = ''; // Clear the URL in Firestore
+                }
+
+
+                const productData = {
+                    name,
+                    description,
+                    price,
+                    category,
+                    image_url: imageUrl,
+                    is_available: isAvailable,
+                    order,
+                    updated_at: serverTimestamp()
+                };
+
+                if (id) {
+                    // Update existing product
+                    await updateDoc(doc(db, "products", id), productData);
+                    console.log("Product updated successfully.");
+                } else {
+                    // Add new product
+                    productData.created_at = serverTimestamp();
+                    await addDoc(collection(db, "products"), productData);
+                    console.log("Product added successfully.");
+                }
+                productFormContainer.style.display = 'none';
+                resetProductForm();
+            } catch (error) {
+                console.error("Error saving product:", error);
+                alert(`Error saving product: ${error.message}`);
+            }
+        }
+
+        async function editProduct(productId) {
+            currentEditingProductId = productId;
+            try {
+                const docSnap = await getDoc(doc(db, "products", productId));
+                if (docSnap.exists()) {
+                    const product = docSnap.data();
+                    productIdInput.value = productId;
+                    productNameInput.value = product.name;
+                    productDescriptionInput.value = product.description;
+                    productPriceInput.value = product.price;
+                    productCategorySelect.value = product.category;
+                    productAvailableCheckbox.checked = product.is_available;
+                    productOrderInput.value = product.order || 0;
+                    if (product.image_url) {
+                        currentProductImage.src = product.image_url;
+                        currentProductImage.dataset.originalUrl = product.image_url; // Store original URL for deletion
+                        currentProductImage.style.display = 'block';
+                    } else {
+                        currentProductImage.style.display = 'none';
+                        currentProductImage.src = '';
+                        delete currentProductImage.dataset.originalUrl;
+                    }
+                    saveProductBtn.textContent = 'Update Product';
+                    productFormContainer.style.display = 'block';
+                } else {
+                    alert("Product not found.");
+                }
+            } catch (error) {
+                console.error("Error editing product:", error);
+                alert(`Error editing product: ${error.message}`);
+            }
+        }
+
+        async function deleteProduct(productId, imageUrl) {
+            if (!confirm('Are you sure you want to delete this product?')) return;
+            try {
+                await deleteDoc(doc(db, "products", productId));
+                // Also delete image from Storage if it exists
+                if (imageUrl && imageUrl.includes('firebasestorage.googleapis.com')) {
+                    const imageRef = ref(storage, imageUrl);
+                    await deleteObject(imageRef).catch(e => console.warn("Could not delete image from storage:", e.message));
+                }
+                console.log("Product deleted successfully.");
+            } catch (error) {
+                console.error("Error deleting product:", error);
+                alert(`Error deleting product: ${error.message}`);
+            }
+        }
+
+
+        // --- MANAGE CATEGORIES ---
+        const categoriesTableBody = document.getElementById('categories-table-body');
+        const addCategoryBtn = document.getElementById('add-category-btn');
+        const categoryFormContainer = document.getElementById('category-form-container');
+        const categoryForm = document.getElementById('category-form');
+        const categoryIdInput = document.getElementById('category-id');
+        const categoryNameInput = document.getElementById('category-name');
+        const categoryOrderInput = document.getElementById('category-order');
+        const saveCategoryBtn = document.getElementById('save-category-btn');
+        const cancelCategoryBtn = document.getElementById('cancel-category-btn');
+
+        let currentEditingCategoryId = null;
+
+        addCategoryBtn.addEventListener('click', () => {
+            resetCategoryForm();
+            categoryFormContainer.style.display = 'block';
+        });
+
+        cancelCategoryBtn.addEventListener('click', () => {
+            categoryFormContainer.style.display = 'none';
+            resetCategoryForm();
+        });
+
+        categoryForm.addEventListener('submit', handleCategoryFormSubmit);
+
+        function loadCategoriesAdmin() {
+            onSnapshot(query(collection(db, "categories"), orderBy("order", "asc")), (snapshot) => {
+                categoriesTableBody.innerHTML = '';
+                if (snapshot.empty) {
+                    categoriesTableBody.innerHTML = '<tr><td colspan="3">No categories found.</td></tr>';
+                    return;
+                }
+                snapshot.forEach((doc) => {
+                    const category = doc.data();
+                    const row = categoriesTableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${category.name}</td>
+                        <td>${category.order || 0}</td>
+                        <td>
+                            <button class="action-btn edit-btn" data-id="${doc.id}"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn delete-btn" data-id="${doc.id}"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    `;
+                    row.querySelector('.edit-btn').addEventListener('click', () => editCategory(doc.id));
+                    row.querySelector('.delete-btn').addEventListener('click', () => deleteCategory(doc.id));
+                });
+            }, (error) => {
+                console.error("Error loading categories for admin: ", error);
+                categoriesTableBody.innerHTML = `<tr><td colspan="3">Error loading categories: ${error.message}</td></tr>`;
+            });
+        }
+
+        function resetCategoryForm() {
+            categoryForm.reset();
+            categoryIdInput.value = '';
+            currentEditingCategoryId = null;
+            saveCategoryBtn.textContent = 'Save Category';
+        }
+
+        async function handleCategoryFormSubmit(e) {
+            e.preventDefault();
+            const id = categoryIdInput.value;
+            const name = categoryNameInput.value;
+            const order = parseInt(categoryOrderInput.value) || 0;
+
+            if (!name) {
+                alert('Category Name is required!');
+                return;
+            }
+
+            const categoryData = { name, order, updated_at: serverTimestamp() };
+
+            try {
+                if (id) {
+                    await updateDoc(doc(db, "categories", id), categoryData);
+                    console.log("Category updated successfully.");
+                } else {
+                    categoryData.created_at = serverTimestamp();
+                    await addDoc(collection(db, "categories"), categoryData);
+                    console.log("Category added successfully.");
+                }
+                categoryFormContainer.style.display = 'none';
+                resetCategoryForm();
+            } catch (error) {
+                console.error("Error saving category:", error);
+                alert(`Error saving category: ${error.message}`);
+            }
+        }
+
+        async function editCategory(categoryId) {
+            currentEditingCategoryId = categoryId;
+            try {
+                const docSnap = await getDoc(doc(db, "categories", categoryId));
+                if (docSnap.exists()) {
+                    const category = docSnap.data();
+                    categoryIdInput.value = categoryId;
+                    categoryNameInput.value = category.name;
+                    categoryOrderInput.value = category.order || 0;
+                    saveCategoryBtn.textContent = 'Update Category';
+                    categoryFormContainer.style.display = 'block';
+                } else {
+                    alert("Category not found.");
+                }
+            } catch (error) {
+                console.error("Error editing category:", error);
+                alert(`Error editing category: ${error.message}`);
+            }
+        }
+
+        async function deleteCategory(categoryId) {
+            if (!confirm('Are you sure you want to delete this category? Products in this category might be affected.')) return;
+            try {
+                await deleteDoc(doc(db, "categories", categoryId));
+                console.log("Category deleted successfully.");
+            } catch (error) {
+                console.error("Error deleting category:", error);
+                alert(`Error deleting category: ${error.message}`);
+            }
+        }
+
+
+        // --- MANAGE SITE CONTENT ---
+        const siteContentTableBody = document.getElementById('site-content-table-body');
+        const addSiteContentBtn = document.getElementById('add-site-content-btn');
+        const siteContentFormContainer = document.getElementById('site-content-form-container');
+        const siteContentForm = document.getElementById('site-content-form');
+        const contentIdInput = document.getElementById('content-id');
+        const contentNameInput = document.getElementById('content-name');
+        const contentTitleInput = document.getElementById('content-title');
+        const contentTextInput = document.getElementById('content-text');
+        const contentImageUrlInput = document.getElementById('content-image-url');
+        const contentImageUploadInput = document.getElementById('content-image-upload');
+        const currentContentImage = document.getElementById('current-content-image');
+        const contentActiveCheckbox = document.getElementById('content-active');
+        const contentOrderInput = document.getElementById('content-order');
+        const saveContentBtn = document.getElementById('save-content-btn');
+        const cancelContentBtn = document.getElementById('cancel-content-btn');
+
+        let currentEditingContentId = null;
+
+        addSiteContentBtn.addEventListener('click', () => {
+            resetSiteContentForm();
+            siteContentFormContainer.style.display = 'block';
+        });
+
+        cancelContentBtn.addEventListener('click', () => {
+            siteContentFormContainer.style.display = 'none';
+            resetSiteContentForm();
+        });
+
+        siteContentForm.addEventListener('submit', handleSiteContentFormSubmit);
+
+        function loadSiteContentAdmin() {
+            onSnapshot(query(collection(db, "siteContent"), orderBy("order", "asc")), (snapshot) => {
+                siteContentTableBody.innerHTML = '';
+                if (snapshot.empty) {
+                    siteContentTableBody.innerHTML = '<tr><td colspan="6">No site content found.</td></tr>';
+                    return;
+                }
+                snapshot.forEach((docSnap) => {
+                    const content = docSnap.data();
+                    const row = siteContentTableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${docSnap.id}</td>
+                        <td>${content.title || 'N/A'}</td>
+                        <td><img src="${content.image_url || 'https://via.placeholder.com/50/CCCCCC/FFFFFF?text=No'}" alt="${content.title}" width="50"></td>
+                        <td>${content.is_active ? '<i class="fas fa-check-circle" style="color:green;"></i>' : '<i class="fas fa-times-circle" style="color:red;"></i>'}</td>
+                        <td>${content.order || 0}</td>
+                        <td>
+                            <button class="action-btn edit-btn" data-id="${docSnap.id}"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn delete-btn" data-id="${docSnap.id}"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    `;
+                    row.querySelector('.edit-btn').addEventListener('click', () => editSiteContent(docSnap.id));
+                    row.querySelector('.delete-btn').addEventListener('click', () => deleteSiteContent(docSnap.id, content.image_url));
+                });
+            }, (error) => {
+                console.error("Error loading site content for admin: ", error);
+                siteContentTableBody.innerHTML = `<tr><td colspan="6">Error loading site content: ${error.message}</td></tr>`;
+            });
+        }
+
+        function resetSiteContentForm() {
+            siteContentForm.reset();
+            contentIdInput.value = '';
+            contentNameInput.readOnly = false; // Enable name input for new content
+            currentEditingContentId = null;
+            currentContentImage.style.display = 'none';
+            currentContentImage.src = '';
+            delete currentContentImage.dataset.originalUrl;
+            saveContentBtn.textContent = 'Save Content';
+        }
+
+        async function handleSiteContentFormSubmit(e) {
+            e.preventDefault();
+            const id = contentIdInput.value; // ID dokumen jika mengedit
+            const name = contentNameInput.value; // ID dokumen jika menambahkan
+            const title = contentTitleInput.value;
+            const text = contentTextInput.value;
+            const imageUrl = contentImageUrlInput.value;
+            const imageFile = contentImageUploadInput.files[0];
+            const isActive = contentActiveCheckbox.checked;
+            const order = parseInt(contentOrderInput.value) || 0;
+
+            if (!name && !id) {
+                alert('Content Identifier is required!');
+                return;
+            }
+
+            let finalImageUrl = imageUrl; // Default to URL from input field
+            if (imageFile) {
+                // Upload new image
+                const imageRef = ref(storage, `site_content_images/${Date.now()}_${imageFile.name}`);
+                const uploadResult = await uploadBytes(imageRef, imageFile);
+                finalImageUrl = await getDownloadURL(uploadResult.ref);
+
+                // If updating and old image existed and was from storage, delete it
+                if (id && currentContentImage.dataset.originalUrl && currentContentImage.dataset.originalUrl.includes('firebasestorage.googleapis.com') && currentContentImage.dataset.originalUrl !== finalImageUrl) {
+                    try {
+                        const oldImageRef = ref(storage, currentContentImage.dataset.originalUrl);
+                        await deleteObject(oldImageRef);
+                        console.log("Old site content image deleted from storage.");
+                    } catch (deleteError) {
+                        console.warn("Could not delete old site content image:", deleteError.message);
+                    }
+                }
+            } else if (id && !imageUrl && currentContentImage.dataset.originalUrl && currentContentImage.dataset.originalUrl.includes('firebasestorage.googleapis.com')) {
+                // If image was cleared (input field empty) and it was from storage, delete it
+                 try {
+                    const oldImageRef = ref(storage, currentContentImage.dataset.originalUrl);
+                    await deleteObject(oldImageRef);
+                    console.log("Site content image cleared and deleted from storage.");
+                } catch (deleteError) {
+                    console.warn("Could not delete cleared site content image:", deleteError.message);
+                }
+                finalImageUrl = ''; // Clear the URL in Firestore
+            }
+
+
+            const contentData = {
+                title,
+                content: text,
+                image_url: finalImageUrl,
+                is_active: isActive,
+                order,
+                updated_at: serverTimestamp()
+            };
+
+            try {
+                if (id) { // If editing, use the existing ID (name) as document ID
+                    await updateDoc(doc(db, "siteContent", id), contentData);
+                    console.log("Site content updated successfully.");
+                } else { // If adding, use the given name as document ID
+                    contentData.created_at = serverTimestamp();
+                    await setDoc(doc(db, "siteContent", name), contentData); // Use setDoc for specific ID
+                    console.log("Site content added successfully.");
+                }
+                siteContentFormContainer.style.display = 'none';
+                resetSiteContentForm();
+            } catch (error) {
+                console.error("Error saving site content:", error);
+                alert(`Error saving site content: ${error.message}`);
+            }
+        }
+
+        async function editSiteContent(contentId) {
+            currentEditingContentId = contentId;
+            try {
+                const docSnap = await getDoc(doc(db, "siteContent", contentId));
+                if (docSnap.exists()) {
+                    const content = docSnap.data();
+                    contentIdInput.value = contentId; // Set the document ID
+                    contentNameInput.value = contentId; // Use ID as name identifier
+                    contentNameInput.readOnly = true; // Disable name input when editing existing content
+                    contentTitleInput.value = content.title;
+                    contentTextInput.value = content.content;
+                    contentImageUrlInput.value = content.image_url || '';
+                    contentActiveCheckbox.checked = content.is_active;
+                    contentOrderInput.value = content.order || 0;
+
+                    if (content.image_url) {
+                        currentContentImage.src = content.image_url;
+                        currentContentImage.dataset.originalUrl = content.image_url;
+                        currentContentImage.style.display = 'block';
+                    } else {
+                        currentContentImage.style.display = 'none';
+                        currentContentImage.src = '';
+                        delete currentContentImage.dataset.originalUrl;
+                    }
+
+                    saveContentBtn.textContent = 'Update Content';
+                    siteContentFormContainer.style.display = 'block';
+                } else {
+                    alert("Site content not found.");
+                }
+            } catch (error) {
+                console.error("Error editing site content:", error);
+                alert(`Error editing site content: ${error.message}`);
+            }
+        }
+
+        async function deleteSiteContent(contentId, imageUrl) {
+            if (!confirm('Are you sure you want to delete this site content?')) return;
+            try {
+                await deleteDoc(doc(db, "siteContent", contentId));
+                // Delete image from Storage if it exists
+                if (imageUrl && imageUrl.includes('firebasestorage.googleapis.com')) {
+                    const imageRef = ref(storage, imageUrl);
+                    await deleteObject(imageRef).catch(e => console.warn("Could not delete image from storage:", e.message));
+                }
+                console.log("Site content deleted successfully.");
+            } catch (error) {
+                console.error("Error deleting site content:", error);
+                alert(`Error deleting site content: ${error.message}`);
+            }
+        }
+
+        // --- MANAGE USERS (ADMIN) ---
+        const usersTableBody = document.getElementById('users-table-body');
+
+        function loadUsersAdmin() {
+            onSnapshot(collection(db, "users"), (snapshot) => {
+                usersTableBody.innerHTML = '';
+                if (snapshot.empty) {
+                    usersTableBody.innerHTML = '<tr><td colspan="3">No admin users found in Firestore.</td></tr>';
+                    return;
+                }
+                snapshot.forEach((docSnap) => {
+                    const user = docSnap.data();
+                    const row = usersTableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${user.email || 'N/A'}</td>
+                        <td>${user.role || 'N/A'}</td>
+                        <td>
+                            <button class="action-btn delete-btn" data-id="${docSnap.id}"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    `;
+                    // Edit/Delete for Firestore user profile (not Firebase Auth user)
+                    row.querySelector('.delete-btn').addEventListener('click', () => deleteUserFromFirestore(docSnap.id));
+                });
+            }, (error) => {
+                console.error("Error loading users for admin: ", error);
+                usersTableBody.innerHTML = `<tr><td colspan="3">Error loading users: ${error.message}</td></tr>`;
+            });
+        }
+
+        async function deleteUserFromFirestore(userId) {
+            if (!confirm('Are you sure you want to delete this user profile from Firestore? This does NOT delete the user from Firebase Authentication.')) return;
+            try {
+                await deleteDoc(doc(db, "users", userId));
+                console.log("User profile deleted from Firestore successfully.");
+            } catch (error) {
+                console.error("Error deleting user profile from Firestore:", error);
+                alert(`Error deleting user profile from Firestore: ${error.message}`);
+            }
+        }
+
+
+        // --- MANAGE CUSTOMERS ---
+        const customersTableBody = document.getElementById('customers-table-body');
+
+        function loadCustomersAdmin() {
+            onSnapshot(collection(db, "customers"), (snapshot) => {
+                customersTableBody.innerHTML = '';
+                if (snapshot.empty) {
+                    customersTableBody.innerHTML = '<tr><td colspan="5">No customers found.</td></tr>';
+                    return;
+                }
+                snapshot.forEach((docSnap) => {
+                    const customer = docSnap.data();
+                    const registeredAt = customer.registered_at ? customer.registered_at.toDate().toLocaleString() : 'N/A';
+                    const row = customersTableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${customer.name || 'N/A'}</td>
+                        <td>${customer.email || 'N/A'}</td>
+                        <td>${customer.phone || 'N/A'}</td>
+                        <td>${registeredAt}</td>
+                        <td>
+                            <button class="action-btn delete-btn" data-id="${docSnap.id}"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    `;
+                    row.querySelector('.delete-btn').addEventListener('click', () => deleteCustomer(docSnap.id));
+                });
+                totalCustomersCount.textContent = snapshot.size;
+            }, (error) => {
+                console.error("Error loading customers for admin: ", error);
+                customersTableBody.innerHTML = `<tr><td colspan="5">Error loading customers: ${error.message}</td></tr>`;
+            });
+        }
+
+        async function deleteCustomer(customerId) {
+            if (!confirm('Are you sure you want to delete this customer?')) return;
+            try {
+                await deleteDoc(doc(db, "customers", customerId));
+                console.log("Customer deleted successfully.");
+            } catch (error) {
+                console.error("Error deleting customer:", error);
+                alert(`Error deleting customer: ${error.message}`);
+            }
+        }
+    </script>
+</body>
+</html>
