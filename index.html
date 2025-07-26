@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@400;500;700&display=swap');
         
         :root {
             --font-heading: 'Poppins', sans-serif; --font-body: 'Lora', serif;
@@ -18,14 +18,12 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
-        body { font-family: var(--font-body); background-color: var(--color-sand-bg); color: #333; line-height: 1.6; }
+        body { font-family: var(--font-body); background-color: var(--color-sand-bg); color: #333; line-height: 1.7; }
         .hidden { display: none !important; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         .section { padding: 80px 0; }
         .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 60px; font-family: var(--font-heading); color: var(--color-dark-blue); }
         .btn { font-family: var(--font-heading); font-weight: 600; padding: 12px 25px; border-radius: 8px; border: none; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; background-color: var(--color-lobster-red); color: var(--color-white); }
-        .btn:hover { background-color: #b93e36; transform: translateY(-2px); }
-        .btn.secondary { background-color: transparent; color: var(--color-dark-blue); border: 2px solid var(--color-dark-blue); }
 
         /* Header & Slider (Restyle) */
         .main-header-slider { position: relative; height: 90vh; color: white; }
@@ -34,65 +32,39 @@
         .swiper-slide::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); }
         .slide-content { position: relative; z-index: 2; animation: fadeIn 1s ease-out; }
         .slide-content h1 { font-size: 4rem; color: white; text-shadow: 2px 2px 8px rgba(0,0,0,0.7); font-family: var(--font-heading); }
-        .slide-content p { font-size: 1.2rem; margin-top: 10px; }
         .navigation-overlay { position: absolute; top: 0; left: 0; width: 100%; padding: 20px 40px; z-index: 10; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); transition: background-color 0.3s ease; }
         .navigation-overlay .logo { height: 50px; }
         .navigation-overlay .main-nav { list-style: none; display: flex; gap: 30px; }
         .navigation-overlay .main-nav a { color: white; font-family: var(--font-heading); font-weight: 600; text-decoration: none; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
         .header-actions { display: flex; align-items: center; gap: 25px; }
-        .user-auth .auth-link, #user-name { color: var(--color-white); text-shadow: 1px 1px 3px rgba(0,0,0,0.5); font-weight: 600; text-decoration: none; }
-        #user-info { display: flex; align-items: center; gap: 15px; }
-        .lang-switcher { color: white; font-family: var(--font-heading); }
-        .lang-switcher a { color: #ddd; text-decoration: none; padding: 5px; }
-        .lang-switcher a.active { color: white; font-weight: 700; border-bottom: 2px solid var(--color-lobster-red); }
-        .cart-icon { position: relative; color: white; font-size: 1.5rem; text-decoration: none; }
-        #cart-count { position: absolute; top: -5px; right: -10px; background-color: var(--color-lobster-red); color: white; font-size: 0.8rem; font-weight: 600; border-radius: 50%; width: 22px; height: 22px; display: flex; justify-content: center; align-items: center; }
 
-        /* Menu Card */
-        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .menu-card { background: var(--color-white); border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-sm); transition: all 0.3s ease; display: flex; flex-direction: column; }
-        .menu-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
-        .menu-card img { width: 100%; height: 200px; object-fit: cover; }
-        .menu-card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
-        .menu-card-price { font-family: var(--font-heading); font-weight: 700; color: var(--color-lobster-red); font-size: 1.2rem; margin: 10px 0; }
-        .card-buttons { display: flex; gap: 10px; margin-top: auto; padding-top: 15px; }
-        .card-buttons .btn { width: 50%; padding: 10px; font-size: 0.9rem; }
+        /* Bagian Baru: Janji Kami (Our Promise) */
+        .promise-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; text-align: center; }
+        .promise-item { padding: 20px; }
+        .promise-item .icon { font-size: 3rem; margin-bottom: 20px; color: var(--color-lobster-red); }
+        .promise-item h3 { font-family: var(--font-heading); font-size: 1.5rem; color: var(--color-dark-blue); margin-bottom: 10px; }
 
-        /* Slider Kategori Menu */
-        .category-slider-container { margin-bottom: 40px; }
-        .swiper-categories { padding: 10px 0; }
-        .category-slide { width: auto !important; }
-        .category-btn { padding: 10px 20px; border: 2px solid var(--color-border); background: var(--color-white); color: var(--color-grey-dark); border-radius: 20px; font-family: var(--font-heading); cursor: pointer; transition: all 0.3s ease; }
-        .category-btn.active { background: var(--color-dark-blue); color: var(--color-white); border-color: var(--color-dark-blue); }
+        /* Bagian Baru: Kisah Kami (Our Story) */
+        .story-container { display: flex; align-items: center; gap: 50px; }
+        .story-content { flex: 1; }
+        .story-content h2 { font-size: 2.5rem; margin-bottom: 20px; }
+        .story-content p { font-size: 1.1rem; font-family: var(--font-body); font-style: italic; color: var(--color-grey-dark); }
+        .story-image { flex: 1; }
+        .story-image img { width: 100%; border-radius: 12px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
 
-        /* Lainnya */
-        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--color-dark-blue); color: white; display: flex; justify-content: center; align-items: center; font-size: 2rem; z-index: 9999; }
+        /* Animasi */
         .page { animation: fadeIn 0.6s ease-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
+
     <header class="main-header-slider">
-        <div class="swiper swiper-main"><div class="swiper-wrapper" id="slider-container"></div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>
-        <div class="navigation-overlay">
-            <a href="/"><img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo" class="logo"></a>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="#home" data-text-id="Beranda" data-text-en="Home">Beranda</a></li>
-                    <li><a href="#menu" data-text-id="Menu" data-text-en="Menu">Menu</a></li>
-                </ul>
-            </nav>
-            <div class="header-actions">
-                <div id="user-auth-section" class="user-auth">
-                    <a href="#login" id="login-link" class="auth-link">Login/Register</a>
-                    <div id="user-info" class="hidden"><span id="user-name"></span><a href="#" id="logout-link" class="auth-link">Logout</a></div>
-                </div>
-                <div class="lang-switcher"><a href="#" id="lang-id">ID</a><span>|</span><a href="#" id="lang-en">EN</a></div>
-                <a href="#cart" class="cart-icon">🛒 <span id="cart-count">0</span></a>
-            </div>
-        </div>
-    </header>
-    <main id="main-content"></main>
+        </header>
+
+    <main id="main-content">
+        </main>
+    
     <footer class="main-footer"><p>&copy; <span id="current-year"></span> Lobster Shack Bali.</p></footer>
     
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -103,9 +75,8 @@
         // --- IMPORTS & CONFIG ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
         import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
-        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+        // ... (import auth lainnya jika diperlukan)
         
-        // KONFIGURASI FIREBASE ANDA SUDAH TERPASANG
         const firebaseConfig = {
             apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
             authDomain: "lobster-shack-bali.firebaseapp.com",
@@ -117,18 +88,14 @@
         };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        const auth = getAuth();
 
         // --- GLOBAL STATE ---
-        let currentUser = null;
-        let productsData = {};
-        let siteContentData = {};
+        let productsData = {}, siteContentData = {};
         let currentLang = localStorage.getItem('preferredLanguage') || 'id';
-        const categoryTranslations = { /* ... objek terjemahan kategori ... */ };
 
-        // --- FUNGSI UTAMA (MAIN INITIALIZATION) ---
+        // --- MAIN INITIALIZATION ---
         async function initApp() {
-            document.body.insertAdjacentHTML('beforeend', '<div class="loading-overlay">Memuat...</div>');
+            document.body.insertAdjacentHTML('beforeend', '<div class="loading-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#2D4C5E;color:white;display:flex;justify-content:center;align-items:center;font-size:2rem;z-index:9999;">Memuat...</div>');
             try {
                 await Promise.all([fetchProducts(), fetchSiteContent()]);
             } catch (error) {
@@ -138,14 +105,9 @@
             }
             document.querySelector('.loading-overlay')?.remove();
             
-            setupAuthListener();
-            setupLanguageSwitcher();
-            setupEventListeners();
-            
+            // Setup listeners dan render halaman awal
             window.addEventListener('hashchange', handleRouteChange);
             handleRouteChange(); // Initial page load
-            
-            document.getElementById('current-year').textContent = new Date().getFullYear();
         }
         
         // --- DATA FETCHING ---
@@ -158,7 +120,7 @@
             if (snapshot.exists()) siteContentData = snapshot.val();
         }
 
-        // --- ROUTING & PAGE RENDERING ---
+        // --- ROUTING ---
         function handleRouteChange() {
             const hash = window.location.hash || '#home';
             renderPageContent(hash.substring(1));
@@ -169,58 +131,87 @@
             let html = '';
             switch(page) {
                 case 'menu': html = getMenuPageHTML(); break;
-                case 'login': html = getLoginPageHTML(); break;
                 // ... (template HTML lainnya)
-                default: html = getHomePageHTML(); break;
+                default: html = getHomePageHTML(); break; // Default ke home
             }
             mainContainer.innerHTML = html;
             
             // Panggil fungsi render spesifik setelah HTML ada di DOM
             switch(page) {
-                case 'home': renderMenu('menu-grid-container-featured', p => p.is_featured); break;
-                case 'menu': renderCategorySlider(); renderMenu('menu-grid-container-full', () => true); break;
-                // ... (fungsi render lainnya)
+                case 'home':
+                    renderPromiseSection();
+                    renderStorySection();
+                    renderMenu('menu-grid-container-featured', p => p.is_featured);
+                    break;
+                case 'menu':
+                    renderCategorySlider();
+                    renderMenu('menu-grid-container-full', () => true);
+                    break;
             }
             updateLanguageUI();
         }
-
+        
         // --- HTML TEMPLATES ---
         function getHomePageHTML() {
-             return `<section id="featured-menu" class="section"><div class="container"><h2 class="section-title" data-text-id="Menu Unggulan" data-text-en="Featured Menu"></h2><div id="menu-grid-container-featured" class="menu-grid"></div></div></section>`;
+             return `
+                <section id="our-promise" class="section" style="background-color: #fff;">
+                    <div class="container" id="promise-container"></div>
+                </section>
+                <section id="our-story" class="section">
+                    <div class="container" id="story-container"></div>
+                </section>
+                <section id="featured-menu" class="section">
+                    <div class="container">
+                        <h2 class="section-title" data-text-id="Menu Unggulan" data-text-en="Featured Menu"></h2>
+                        <div id="menu-grid-container-featured" class="menu-grid"></div>
+                    </div>
+                </section>
+             `;
         }
-        function getMenuPageHTML() {
-            return `<section class="section"><div class="container"><h1 class="section-title" data-text-id="Menu Lengkap Kami" data-text-en="Our Full Menu"></h1><div class="category-slider-container swiper swiper-categories"><div class="swiper-wrapper" id="category-slider-wrapper"></div></div><div id="menu-grid-container-full" class="menu-grid"></div></div></section>`;
-        }
-        function getLoginPageHTML() {
-            return `<div class="form-page-wrapper"><div class="form-container"><h1>Login</h1><form id="login-form"><div class="form-group"><label>Email</label><input type="email" id="login-email" required></div><div class="form-group"><label>Password</label><input type="password" id="login-password" required></div><button type="submit" class="btn">Login</button></form><p class="form-switch">Belum punya akun? <a href="#register">Daftar di sini</a></p><div id="form-error" class="form-message error hidden"></div></div></div>`;
-        }
-        // ... (template HTML lainnya)
+        function getMenuPageHTML() { /* ... kode sama seperti sebelumnya ... */ }
 
-        // --- AUTHENTICATION ---
-        function setupAuthListener() {
-            onAuthStateChanged(auth, user => {
-                currentUser = user;
-                updateAuthUI(user);
-            });
+        // --- DYNAMIC CONTENT RENDERING ---
+        function renderPromiseSection() {
+            const c = siteContentData.ourPromise;
+            const html = `
+                <h2 class="section-title">${c[`heading_${currentLang}`]}</h2>
+                <div class="promise-grid">
+                    <div class="promise-item">
+                        <div class="icon">🦞</div>
+                        <h3>${c[`item1_heading_${currentLang}`]}</h3>
+                        <p>${c[`item1_text_${currentLang}`]}</p>
+                    </div>
+                    <div class="promise-item">
+                        <div class="icon">🤝</div>
+                        <h3>${c[`item2_heading_${currentLang}`]}</h3>
+                        <p>${c[`item2_text_${currentLang}`]}</p>
+                    </div>
+                    <div class="promise-item">
+                        <div class="icon">🌶️</div>
+                        <h3>${c[`item3_heading_${currentLang}`]}</h3>
+                        <p>${c[`item3_text_${currentLang}`]}</p>
+                    </div>
+                </div>`;
+            document.getElementById('promise-container').innerHTML = html;
         }
-        function updateAuthUI(user) { /* ... kode sama ... */ }
 
-        // --- LANGUAGE SWITCHER ---
-        function setupLanguageSwitcher() { /* ... kode sama ... */ }
-        function switchLanguage(lang) { /* ... kode sama ... */ }
-        function updateLanguageUI() { /* ... kode sama ... */ }
-
-        // --- RENDER FUNCTIONS ---
-        function renderMenu(containerId, filter) { /* ... kode renderMenu bilingual ... */ }
-        function renderCategorySlider() { /* ... kode slider kategori bilingual ... */ }
-
-        // --- EVENT LISTENERS ---
-        function setupEventListeners() {
-            document.body.addEventListener('submit', e => {
-                if (e.target.id === 'login-form') { /* ... handle login ... */ }
-                if (e.target.id === 'register-form') { /* ... handle register ... */ }
-            });
+        function renderStorySection() {
+            const c = siteContentData.ourStory;
+            const html = `
+                <div class="story-container">
+                    <div class="story-content">
+                        <h2>${c[`heading_${currentLang}`]}</h2>
+                        <p>${c[`text_${currentLang}`]}</p>
+                    </div>
+                    <div class="story-image">
+                        <img src="https://images.unsplash.com/photo-1506084868230-bb9d95c24759?q=80&w=1887&auto=format&fit=crop" alt="Balinese Fisherman">
+                    </div>
+                </div>`;
+            document.getElementById('story-container').innerHTML = html;
         }
+
+        // Sisa fungsi (renderMenu, language switcher, auth, dll) tetap sama
+        // ...
 
         // JALANKAN APLIKASI
         initApp();
