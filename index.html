@@ -27,11 +27,11 @@
             --color-text-light: #6c757d;
             --color-border: #E0DACE;
             --shadow-sm: 0 2px 8px rgba(45, 76, 94, .07);
-            --shadow-md: 0 4px 15px rgba(45, 76, 94, .12);
-            --shadow-lg: 0 8px 30px rgba(45, 76, 94, .2);
-            --border-radius: 12px;
+            --shadow-md: 0 6px 18px rgba(45, 76, 94, .1);
+            --shadow-lg: 0 10px 35px rgba(45, 76, 94, .15);
+            --border-radius: 16px; /* Increased border radius */
             --transition-speed: .4s;
-            --container-width: 1240px;
+            --container-width: 1200px; /* Slightly adjusted container width */
         }
         *, ::after, ::before { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; font-size: 16px; }
@@ -46,7 +46,7 @@
         body.nav-open { overflow: hidden; }
         .container { width: 100%; max-width: var(--container-width); margin: 0 auto; padding: 0 24px; }
         .section { padding: 6rem 0; }
-        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-header { text-align: center; margin-bottom: 4rem; max-width: 700px; margin-left: auto; margin-right: auto;}
         .section-header .subtitle {
             color: var(--color-primary);
             font-weight: 600;
@@ -57,7 +57,7 @@
         }
         .section-header .title {
             font-family: var(--font-heading);
-            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-size: clamp(2.2rem, 5vw, 3.2rem);
             font-weight: 700;
             color: var(--color-secondary);
             line-height: 1.2;
@@ -68,114 +68,70 @@
         /* ------------------- */
         .btn {
             display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: .75rem;
-            font-family: var(--font-body);
-            font-weight: 600;
-            padding: .875rem 2rem;
-            border-radius: 50px;
-            border: 2px solid transparent;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all var(--transition-speed) ease;
-            text-align: center;
+            align-items: center; justify-content: center; gap: .75rem;
+            font-family: var(--font-body); font-weight: 600; padding: .875rem 2rem;
+            border-radius: 50px; border: 2px solid transparent; cursor: pointer;
+            text-decoration: none; transition: all var(--transition-speed) ease; text-align: center;
         }
         .btn-primary {
-            background-color: var(--color-primary);
-            color: var(--color-surface);
-            border-color: var(--color-primary);
+            background-color: var(--color-primary); color: var(--color-surface); border-color: var(--color-primary);
         }
         .btn-primary:hover {
-            background-color: #b93e36;
-            border-color: #b93e36;
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
+            background-color: #b93e36; border-color: #b93e36; transform: translateY(-3px); box-shadow: var(--shadow-md);
         }
         .btn-secondary {
-            background-color: var(--color-secondary);
-            color: var(--color-surface);
-            border-color: var(--color-secondary);
+            background-color: var(--color-secondary); color: var(--color-surface); border-color: var(--color-secondary);
         }
         .btn-secondary:hover {
-             background-color: #213845;
-             border-color: #213845;
-             transform: translateY(-3px);
-             box-shadow: var(--shadow-md);
-        }
-        .btn-outline {
-            background-color: transparent;
-            color: var(--color-secondary);
-            border-color: var(--color-border);
-        }
-        .btn-outline:hover {
-            background-color: var(--color-secondary);
-            color: var(--color-surface);
-            border-color: var(--color-secondary);
+             background-color: #213845; border-color: #213845; transform: translateY(-3px); box-shadow: var(--shadow-md);
         }
 
         /* ------------------- */
         /* HEADER & NAVIGATION */
         /* ------------------- */
         .main-header {
-            background-color: rgba(255, 255, 255, .85);
-            backdrop-filter: blur(10px);
-            padding: 1rem 0;
-            box-shadow: var(--shadow-sm);
-            position: sticky; top: 0;
-            z-index: 1000;
-            transition: top 0.3s ease-in-out;
+            background-color: rgba(255, 255, 255, .85); backdrop-filter: blur(10px);
+            padding: 1rem 0; box-shadow: var(--shadow-sm); position: sticky; top: 0;
+            z-index: 1000; transition: top 0.3s ease-in-out;
         }
         .main-header .container { display: flex; justify-content: space-between; align-items: center; }
-        .main-header .logo { height: 55px; z-index: 1001; transition: transform .3s ease; }
-        .main-header .logo:hover { transform: scale(1.05); }
+        .main-header .logo { height: 50px; z-index: 1001; }
         .main-nav { display: flex; align-items: center; gap: 2rem; }
         .nav-links { list-style: none; display: flex; gap: 2.5rem; }
-        .nav-links a { text-decoration: none; font-weight: 600; color: var(--color-secondary); position: relative; padding-bottom: .5rem; }
+        .nav-links a { text-decoration: none; font-weight: 600; color: var(--color-secondary); position: relative; padding-bottom: .5rem; transition: color .3s ease; }
+        .nav-links a:hover { color: var(--color-primary); }
         .nav-links a:after {
-            content: ""; position: absolute; bottom: 0; left: 0; width: 0; height: 2px;
-            background-color: var(--color-primary);
+            content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 0; height: 2px; background-color: var(--color-primary);
             transition: width var(--transition-speed) ease;
         }
-        .nav-links a.active:after, .nav-links a:hover:after { width: 100%; }
+        .nav-links a.active:after, .nav-links a:hover:after { width: 60%; }
         .header-actions { display: flex; align-items: center; gap: 1rem; z-index: 1001;}
-        .language-toggle {
-            display: flex; background-color: #e9e5d9; border-radius: 50px;
-            padding: 4px; border: 1px solid var(--color-border);
-        }
+        .language-toggle { display: flex; background-color: #e9e5d9; border-radius: 50px; padding: 4px; }
         .lang-btn {
-            background: 0 0; border: none; padding: .5rem .75rem; cursor: pointer;
+            background: 0 0; border: none; padding: .4rem .7rem; cursor: pointer;
             font-weight: 600; color: var(--color-text-light); border-radius: 50px;
             transition: all var(--transition-speed) ease;
         }
-        .lang-btn.active { background: var(--color-primary); color: #fff; }
-        
+        .lang-btn.active { background: var(--color-primary); color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,.1); }
         .header-cart {
-            position: relative; color: var(--color-secondary); font-size: 1.5rem;
-            text-decoration: none;
+            position: relative; color: var(--color-secondary); font-size: 1.4rem; text-decoration: none;
         }
         .cart-badge {
-            position: absolute; top: -5px; right: -10px;
-            background-color: var(--color-primary); color: white;
-            border-radius: 50%; width: 20px; height: 20px;
-            font-size: 0.75rem; font-weight: bold;
+            position: absolute; top: -5px; right: -10px; background-color: var(--color-primary);
+            color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 0.75rem;
             display: flex; align-items: center; justify-content: center;
-            border: 2px solid var(--color-surface);
-            transform: scale(0); opacity: 0; transition: transform .3s ease, opacity .3s ease;
+            border: 2px solid var(--color-surface); transform: scale(0); transition: transform .3s ease;
         }
-        .header-cart.has-items .cart-badge { transform: scale(1); opacity: 1; }
-        
-        .mobile-menu-toggle {
-            display: none; font-size: 1.5rem; color: var(--color-secondary);
-            background: transparent; border: none; cursor: pointer;
-        }
+        .header-cart.has-items .cart-badge { transform: scale(1); }
+        .mobile-menu-toggle { display: none; }
 
         /* ------------------- */
         /* HERO SECTION        */
         /* ------------------- */
-        .hero-section .swiper-slide {
-            height: 90vh; min-height: 700px;
-            display: flex; align-items: center; justify-content: center;
+        .hero-section { position: relative; }
+        .hero-slider .swiper-slide {
+            height: 90vh; min-height: 700px; display: flex; align-items: center; justify-content: center;
             background-size: cover; background-position: center;
         }
         .hero-section .slide-overlay {
@@ -186,88 +142,82 @@
             position: relative; z-index: 2; text-align: center; color: #fff; padding: 0 1rem;
         }
         .hero-content h1 {
-            font-family: var(--font-heading);
-            font-size: clamp(3.5rem, 8vw, 6rem);
+            font-family: var(--font-heading); font-size: clamp(3rem, 7vw, 5.5rem);
             text-shadow: 2px 2px 10px rgba(0, 0, 0, .5);
         }
-        .hero-content p {
-            font-size: 1.25rem; margin: 1.5rem auto 2.5rem;
-            max-width: 600px; line-height: 1.6;
-        }
+        .hero-content p { font-size: 1.25rem; margin: 1.5rem auto 2.5rem; max-width: 600px; }
         .hero-slider .swiper-button-next, .hero-slider .swiper-button-prev { color: #fff; }
         .hero-slider .swiper-pagination-bullet-active { background-color: var(--color-primary); }
 
         /* ------------------- */
-        /* ABOUT SECTION (TIMELINE) */
-        /* ------------------- */
-        .timeline { position: relative; max-width: 900px; margin: 4rem auto 0; }
-        .timeline:after {
-            content: ""; position: absolute; width: 3px; background-color: var(--color-border);
-            top: 0; bottom: 0; left: 50%; margin-left: -1.5px;
-        }
-        .timeline-item { padding: 10px 40px; position: relative; width: 50%; }
-        .timeline-item.left { left: 0; }
-        .timeline-item.right { left: 50%; }
-        .timeline-item:after {
-            content: " "; position: absolute; width: 20px; height: 20px;
-            background-color: var(--color-background); border: 4px solid var(--color-primary);
-            top: 30px; border-radius: 50%; z-index: 1;
-        }
-        .timeline-item.left:after { right: -11.5px; }
-        .timeline-item.right:after { left: -11.5px; }
-        .timeline-content {
-            padding: 1.5rem 2rem; background-color: var(--color-surface);
-            border-radius: var(--border-radius); box-shadow: var(--shadow-sm);
-            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
-            position: relative; border-left: 5px solid var(--color-primary);
-        }
-        .timeline-content:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
-        .timeline-content .year { font-family: var(--font-heading); color: var(--color-primary); font-size: 2rem; }
-        .timeline-content h3 { font-size: 1.3rem; color: var(--color-secondary); margin-top: .5rem; }
-
-        /* ------------------- */
         /* MENU SECTION        */
         /* ------------------- */
-        .featured-slider .swiper-slide { width: 340px; height: auto; }
+        /* Featured Slider - Portrait Cards */
+        .featured-slider .swiper-slide {
+            width: 280px; /* Portrait width */
+            height: auto;
+        }
+        .featured-slider .menu-card {
+            height: 480px; /* Fixed height for portrait cards */
+        }
         .featured-slider { padding-bottom: 3rem; }
         .featured-slider .swiper-pagination-bullets { bottom: 0; }
         .menu-filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 3rem; }
         .filter-btn {
-            background: 0 0; border: 2px solid var(--color-border); color: var(--color-text-light);
+            background: var(--color-surface); border: 1px solid var(--color-border); color: var(--color-text-light);
             font-weight: 600; padding: .6rem 1.5rem; border-radius: 50px;
             cursor: pointer; transition: all var(--transition-speed) ease;
         }
         .filter-btn.active, .filter-btn:hover {
-            background-color: var(--color-secondary); color: #fff;
-            border-color: var(--color-secondary); transform: translateY(-2px);
+            background-color: var(--color-secondary); color: #fff; border-color: var(--color-secondary);
+            transform: translateY(-2px); box-shadow: var(--shadow-sm);
         }
-        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; }
+        
+        /* Grid Menu - All cards same size */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+        .menu-grid .menu-card {
+            height: 500px; /* Fixed height for all grid cards */
+        }
+        
+        /* General Menu Card Styling */
         .menu-card {
-            background: var(--color-surface); border-radius: var(--border-radius); overflow: hidden;
+            background: var(--color-surface); border-radius: var(--border-radius);
             box-shadow: var(--shadow-sm); display: flex; flex-direction: column;
             opacity: 1; transform: scale(1);
             transition: transform 0.4s ease, opacity 0.4s ease, box-shadow .4s ease;
+            overflow: hidden;
         }
-        .menu-card.hidden { transform: scale(0.9); opacity: 0; height: 0; padding: 0; margin: 0; border: 0; overflow: hidden; }
+        .menu-card.hidden { transform: scale(0.9); opacity: 0; height: 0; padding: 0; margin: 0; border: 0; }
         .menu-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-lg); }
-        .menu-card-image { width: 100%; height: 240px; overflow: hidden; }
+        .menu-card-image { width: 100%; height: 240px; overflow: hidden; flex-shrink: 0; }
         .menu-card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition-speed) ease; }
         .menu-card:hover .menu-card-image img { transform: scale(1.1); }
-        .menu-card-content { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; text-align: center; }
+        .menu-card-content {
+            padding: 1.5rem; flex-grow: 1;
+            display: flex; flex-direction: column; text-align: center;
+        }
         .menu-card h3 { font-family: var(--font-heading); color: var(--color-secondary); font-size: 1.5rem; }
         .menu-card-price { font-weight: 700; color: var(--color-primary); font-size: 1.375rem; margin: 0.5rem 0 1rem; }
         .menu-card .description { flex-grow: 1; margin-bottom: 1.5rem; color: var(--color-text-light); font-size: 0.95rem; }
-        .menu-card-buttons { display: flex; justify-content: center; gap: .75rem; }
+        .menu-card-buttons { display: flex; justify-content: center; gap: .75rem; margin-top: auto; }
         .menu-card-buttons .btn { padding: .6rem 1.2rem; font-size: .9rem; width: 100%; }
 
         /* ------------------- */
         /* GALLERY SECTION     */
         /* ------------------- */
-        .gallery-section { background: var(--color-surface); }
-        .gallery-grid { columns: 4 250px; column-gap: 1rem; }
-        .gallery-grid a { display: block; overflow: hidden; border-radius: var(--border-radius); margin-bottom: 1rem; position: relative; }
-        .gallery-grid img { width: 100%; display: block; transition: transform var(--transition-speed) ease; }
-        .gallery-grid a:hover img { transform: scale(1.05); }
+        .gallery-section { background-color: var(--color-surface); }
+        .gallery-grid { columns: 4 250px; column-gap: 1.5rem; }
+        .gallery-grid a {
+            display: block; overflow: hidden; border-radius: var(--border-radius);
+            margin-bottom: 1.5rem; position: relative; box-shadow: var(--shadow-sm);
+            transition: transform .3s ease, box-shadow .3s ease;
+        }
+        .gallery-grid a:hover { box-shadow: var(--shadow-lg); transform: translateY(-5px); }
+        .gallery-grid img { width: 100%; display: block; }
         .gallery-grid a::after {
             content: '\f00e'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -278,83 +228,71 @@
         .gallery-grid a:hover::after { opacity: 1; }
 
         /* ------------------- */
-        /* FOOTER              */
-        /* ------------------- */
-        .main-footer {
-            background-color: var(--color-secondary); color: rgba(255, 255, 255, .8);
-            padding: 4rem 0 2rem; text-align: center;
-        }
-        .main-footer .logo { height: 70px; margin-bottom: 1.5rem; filter: brightness(0) invert(1); }
-        .main-footer p { max-width: 500px; margin: 0 auto 1.5rem; }
-        .footer-socials { display: flex; justify-content: center; gap: 1.5rem; list-style: none; margin-bottom: 2rem; }
-        .footer-socials a { color: #fff; font-size: 1.5rem; transition: color 0.3s ease, transform 0.3s ease; }
-        .footer-socials a:hover { color: var(--color-primary); transform: scale(1.2) rotate(10deg); }
-        .footer-copyright { border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 2rem; margin-top: 2rem; }
-        .footer-copyright p { font-size: 0.9rem; margin-bottom: 0; }
-
-        /* ------------------- */
-        /* MODAL               */
+        /* MODAL (POPUP ORDER) */
         /* ------------------- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, .6); backdrop-filter: blur(8px);
-            z-index: 2000; display: flex; justify-content: center; align-items: center;
-            padding: 1rem; opacity: 0; visibility: hidden;
+            background: rgba(0, 0, 0, .6); backdrop-filter: blur(8px); z-index: 2000;
+            display: flex; justify-content: center; align-items: center; padding: 1rem;
+            opacity: 0; visibility: hidden;
             transition: opacity var(--transition-speed) ease, visibility 0s var(--transition-speed);
         }
         .modal-overlay.visible { opacity: 1; visibility: visible; transition-delay: 0s; }
         .modal-content {
-            background: var(--color-background); border-radius: var(--border-radius); width: 100%;
-            max-width: 600px; max-height: 90vh; overflow-y: auto; position: relative;
+            background: var(--color-surface); border-radius: var(--border-radius);
+            width: 100%; max-width: 800px; /* Wider modal */
+            max-height: 90vh; overflow-y: auto; position: relative;
             transform: scale(.9); transition: transform var(--transition-speed) ease;
         }
         .modal-overlay.visible .modal-content { transform: scale(1); }
         .modal-header {
-            padding: 1.5rem 2rem; border-bottom: 1px solid var(--color-border);
+            padding: 1rem 2rem; border-bottom: 1px solid var(--color-border);
             display: flex; justify-content: space-between; align-items: center;
-            background-color: var(--color-surface);
-            border-radius: var(--border-radius) var(--border-radius) 0 0;
         }
         .modal-header h2 { font-family: var(--font-heading); color: var(--color-secondary); font-size: 1.5rem; }
         .modal-close-btn {
-            font-size: 1.75rem; background: 0 0; border: none; cursor: pointer;
-            color: #aaa; transition: color 0.3s ease, transform .3s ease;
+            font-size: 1.5rem; background: #f0f0f0; border: none; cursor: pointer;
+            color: var(--color-text-light); transition: all 0.3s ease;
+            width: 40px; height: 40px; border-radius: 50%;
         }
-        .modal-close-btn:hover { color: var(--color-primary); transform: rotate(90deg); }
-        .modal-body { padding: 1.5rem 2rem; }
-        .form-group { margin-bottom: 1.25rem; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: .5rem; color: var(--color-secondary); }
-        .form-group input, .form-group textarea {
-            width: 100%; padding: .8rem 1rem; border-radius: 8px;
+        .modal-close-btn:hover { color: var(--color-primary); transform: rotate(90deg); background: #e0e0e0; }
+        .modal-body {
+            padding: 2rem;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem;
+        }
+        .modal-details-col { text-align: center; }
+        .modal-details-col img {
+            width: 180px; height: 180px; object-fit: cover; border-radius: 50%;
+            margin-bottom: 1rem; border: 6px solid var(--color-background); box-shadow: var(--shadow-md);
+        }
+        .modal-details-col h3 { font-family: var(--font-heading); font-size: 2rem; color: var(--color-secondary); }
+        .modal-details-col .price { font-size: 1.5rem; font-weight: 700; color: var(--color-primary); }
+        
+        .modal-form-col .form-group { margin-bottom: 1.25rem; }
+        .modal-form-col .form-group label {
+            display: block; font-weight: 600; margin-bottom: .5rem;
+            color: var(--color-secondary); font-size: 0.9rem;
+        }
+        .modal-form-col .form-group input, .modal-form-col .form-group textarea {
+            width: 100%; padding: .9rem 1rem; border-radius: 8px;
             border: 1px solid var(--color-border); font-family: var(--font-body);
             font-size: 1rem; transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background: var(--color-background);
         }
-        .form-group textarea { min-height: 100px; resize: vertical; }
-        .form-group input:focus, .form-group textarea:focus {
+        .modal-form-col .form-group textarea { min-height: 90px; resize: vertical; }
+        .modal-form-col .form-group input:focus, .modal-form-col .form-group textarea:focus {
             outline: none; border-color: var(--color-primary);
             box-shadow: 0 0 0 3px rgba(216, 75, 66, 0.2);
         }
-        #address-map { height: 250px; width: 100%; margin-top: 10px; border-radius: 8px; background-color: #eee; }
-        #detect-location-btn { width: 100%; margin: 1rem 0; }
-        
-        /* ------------------- */
-        /* TOAST NOTIFICATION  */
-        /* ------------------- */
-        .toast-notification {
-            position: fixed; bottom: 2rem; right: 2rem;
-            background-color: var(--color-secondary); color: #fff;
-            padding: 1rem 1.5rem; border-radius: var(--border-radius);
-            box-shadow: var(--shadow-lg); z-index: 3000;
-            display: flex; align-items: center; gap: 1rem;
-            transform: translateX(calc(100% + 2rem));
-            transition: transform .5s ease-in-out;
+        #address-map { height: 150px; width: 100%; margin-top: 10px; border-radius: 8px; }
+        #detect-location-btn {
+            display: flex; align-items: center; justify-content: center;
+            width: 100%; background: transparent; color: var(--color-secondary);
+            border: 2px solid var(--color-border); font-weight: 500;
         }
-        .toast-notification.show { transform: translateX(0); }
-        .toast-notification.error { background-color: var(--color-primary); }
-        .toast-notification.success { background-color: #28a745; }
-        .toast-notification.info { background-color: var(--color-secondary); }
-        .toast-notification i { font-size: 1.5rem; }
-        .toast-notification p { margin: 0; }
+        #detect-location-btn:hover { background: #e9e5d9; border-color: #d1ccc0;}
+        #submit-order-btn { width: 100%; font-size: 1.1rem; padding: 1rem; }
+
 
         /* ------------------- */
         /* RESPONSIVE STYLES   */
@@ -370,22 +308,34 @@
             .main-nav.active { transform: translateX(0); }
             .nav-links { flex-direction: column; text-align: center; gap: 2rem; }
             .nav-links a { font-size: 1.5rem; }
-            .mobile-menu-toggle { display: block; z-index: 1001; }
+            .mobile-menu-toggle {
+                display: block; font-size: 1.5rem; color: var(--color-secondary);
+                background: transparent; border: none; cursor: pointer; z-index: 1001;
+            }
             .gallery-grid { columns: 3 200px; }
         }
 
         @media (max-width: 768px) {
-            .timeline:after { left: 20px; }
-            .timeline-item { width: 100%; padding-left: 50px; padding-right: 0; }
-            .timeline-item.left, .timeline-item.right { left: 0%; }
-            .timeline-item.left:after, .timeline-item.right:after { left: 10px; }
             .gallery-grid { columns: 2 200px; }
             .menu-grid { grid-template-columns: 1fr; }
+            .menu-grid .menu-card, .featured-slider .menu-card {
+                height: auto; /* Allow card height to be auto on mobile */
+                min-height: 480px;
+            }
+            .modal-body {
+                grid-template-columns: 1fr; /* Stack modal columns */
+                gap: 2rem;
+            }
+            .modal-details-col {
+                order: -1; /* Show product details first */
+                padding-bottom: 2rem;
+                border-bottom: 1px solid var(--color-border);
+            }
         }
         
         @media (max-width: 576px) {
             .gallery-grid { columns: 1; }
-            .header-actions { gap: .75rem; }
+            .header-actions { gap: .5rem; }
             .lang-btn { padding: .4rem .6rem; }
         }
     </style>
@@ -437,15 +387,6 @@
             </div>
         </section>
 
-        <section id="about" class="section">
-            <div class="container">
-                <div class="section-header" data-aos="fade-up">
-                    <h2 class="title" data-lang-key="history_title">Our Journey</h2>
-                </div>
-                <div class="timeline" id="history-timeline"></div>
-            </div>
-        </section>
-
         <section id="menu" class="section">
             <div class="container">
                 <div class="section-header" data-aos="fade-up">
@@ -478,18 +419,11 @@
         </section>
     </main>
     
-    <footer class="main-footer">
+    <footer class="main-footer" style="background: var(--color-secondary); color: white; padding: 4rem 0 2rem; text-align: center;">
         <div class="container">
-            <img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo Lobster Shack" class="logo">
-            <p data-lang-key="footer_description">Experience the finest catch of the day, grilled to perfection, in a cozy and inviting atmosphere. We look forward to welcoming you.</p>
-            <ul class="footer-socials">
-                <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
-                <li><a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a></li>
-                <li><a href="#" aria-label="TripAdvisor"><i class="fab fa-tripadvisor"></i></a></li>
-            </ul>
-            <div class="footer-copyright">
-                <p data-lang-key="footer_copyright">© 2025 Lobster Shack Bali. All Rights Reserved.</p>
-            </div>
+             <img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo Lobster Shack" style="height: 70px; margin-bottom: 1.5rem; filter: brightness(0) invert(1);">
+             <p data-lang-key="footer_description" style="max-width: 500px; margin: 0 auto 1.5rem; opacity: .8;">Experience the finest catch of the day, grilled to perfection, in a cozy and inviting atmosphere. We look forward to welcoming you.</p>
+             <p style="margin-top: 2rem; border-top: 1px solid rgba(255,255,255,.2); padding-top: 2rem; font-size: .9rem; opacity: .7;" data-lang-key="footer_copyright">© 2025 Lobster Shack Bali. All Rights Reserved.</p>
         </div>
     </footer>
 
@@ -500,35 +434,40 @@
             <button class="modal-close-btn" aria-label="Close modal">&times;</button>
         </div>
         <div class="modal-body">
-            <form id="order-form" novalidate>
-                <div id="modal-product-details" style="text-align:center; margin-bottom: 2rem;"></div>
-                <div class="form-group">
-                    <label for="customer-name" data-lang-key="modal_name_label">Name</label>
-                    <input type="text" id="customer-name" required>
-                </div>
-                <div class="form-group">
-                    <label for="customer-phone" data-lang-key="modal_phone_label">Phone Number</label>
-                    <input type="tel" id="customer-phone" required>
-                </div>
-                <div class="form-group">
-                    <label for="customer-address" data-lang-key="modal_address_label">Address</label>
-                    <textarea id="customer-address" rows="3" required></textarea>
-                    <div id="address-map"></div>
-                    <button type="button" id="detect-location-btn" class="btn btn-outline" style="margin-top: 1rem; width: 100%;">
+            <div class="modal-details-col">
+                <div id="modal-product-details">
+                    </div>
+            </div>
+            <div class="modal-form-col">
+                <form id="order-form" novalidate>
+                    <div class="form-group">
+                        <label for="customer-name" data-lang-key="modal_name_label">Name</label>
+                        <input type="text" id="customer-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customer-phone" data-lang-key="modal_phone_label">Phone Number</label>
+                        <input type="tel" id="customer-phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customer-address" data-lang-key="modal_address_label">Delivery Address</label>
+                        <textarea id="customer-address" rows="3" required></textarea>
+                        <div id="address-map"></div>
+                    </div>
+                    <button type="button" id="detect-location-btn" class="btn">
                         <i class="fas fa-map-marker-alt"></i> <span data-lang-key="modal_detect_location">Detect My Location</span>
                     </button>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
-                    <i class="fas fa-paper-plane"></i> <span data-lang-key="modal_submit_button">Submit Order</span>
-                </button>
-            </form>
+                    <button type="submit" id="submit-order-btn" class="btn btn-primary" style="margin-top: 1rem;">
+                        <i class="fas fa-paper-plane"></i> <span data-lang-key="modal_submit_button">Submit Order</span>
+                    </button>
+                </form>
+            </div>
         </div>
       </div>
     </div>
     
-    <div id="toast" class="toast-notification">
+    <div id="toast" style="position: fixed; bottom: 2rem; right: 2rem; background: var(--color-secondary); color: white; padding: 1rem 1.5rem; border-radius: var(--border-radius); box-shadow: var(--shadow-lg); z-index: 3000; display: flex; align-items: center; gap: 1rem; transform: translateX(calc(100% + 2rem)); transition: transform .5s ease-in-out;">
         <i id="toast-icon" class="fas fa-check-circle"></i>
-        <p id="toast-message">Notification</p>
+        <p id="toast-message" style="margin:0;">Notification</p>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
@@ -541,58 +480,46 @@
     <script>
         'use strict';
         
-        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
             authDomain: "lobster-shack-bali.firebaseapp.com",
-            databaseURL: "https://lobster-shack-bali-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "lobster-shack-bali",
-            storageBucket: "lobster-shack-bali.firebasestorage.app",
-            messagingSenderId: "42452974733",
-            appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // --- GLOBAL APP STATE ---
         let currentLanguage = localStorage.getItem('preferredLanguage') || 'id';
-        let siteData = {};
-        let cart = [];
-        let lightbox;
-        let map, marker, geocoder;
+        let siteData = {}, cart = [], lightbox, map, marker, geocoder;
 
-        const domElements = {
-            body: document.body, mainNav: document.getElementById('main-nav'),
-            mobileMenuToggle: document.getElementById('mobile-menu-toggle'),
-            langToggleContainer: document.querySelector('.language-toggle'),
-            heroSliderWrapper: document.getElementById('hero-slider-wrapper'),
-            historyTimeline: document.getElementById('history-timeline'),
-            featuredMenuWrapper: document.getElementById('featured-menu-wrapper'),
-            menuGrid: document.getElementById('menu-grid'),
-            menuFilters: document.getElementById('menu-filters'),
-            galleryGrid: document.getElementById('gallery-grid'),
-            orderModal: document.getElementById('order-modal'),
-            orderForm: document.getElementById('order-form'),
-            modalProductDetails: document.getElementById('modal-product-details'),
-            modalCloseBtn: document.querySelector('.modal-close-btn'),
-            toast: document.getElementById('toast'),
-            toastIcon: document.getElementById('toast-icon'),
-            toastMessage: document.getElementById('toast-message'),
-            headerCart: document.getElementById('header-cart'),
-            cartBadge: document.getElementById('cart-badge'),
-            detectLocationBtn: document.getElementById('detect-location-btn'),
-            customerAddress: document.getElementById('customer-address')
-        };
-
-        // This function is called by the Google Maps script
         function initAppMaps() {
             geocoder = new google.maps.Geocoder();
             console.log("Google Maps Initialized.");
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            AOS.init({ duration: 800, once: true, offset: 50 });
 
-            // --- TRANSLATION & CONTENT ---
+            const dom = {
+                body: document.body, mainNav: document.getElementById('main-nav'),
+                mobileMenuToggle: document.getElementById('mobile-menu-toggle'),
+                heroSlider: document.getElementById('hero-slider-wrapper'),
+                featuredMenu: document.getElementById('featured-menu-wrapper'),
+                menuGrid: document.getElementById('menu-grid'),
+                menuFilters: document.getElementById('menu-filters'),
+                galleryGrid: document.getElementById('gallery-grid'),
+                orderModal: document.getElementById('order-modal'),
+                orderForm: document.getElementById('order-form'),
+                modalProductDetails: document.getElementById('modal-product-details'),
+                modalCloseBtn: document.querySelector('.modal-close-btn'),
+                toast: document.getElementById('toast'),
+                toastIcon: document.getElementById('toast-icon'),
+                toastMessage: document.getElementById('toast-message'),
+                cartBadge: document.getElementById('cart-badge'),
+                headerCart: document.getElementById('header-cart'),
+                detectLocationBtn: document.getElementById('detect-location-btn'),
+                customerAddress: document.getElementById('customer-address')
+            };
+
             const updateTextContent = () => {
                 document.querySelectorAll('[data-lang-key]').forEach(el => {
                     const key = el.dataset.langKey;
@@ -603,35 +530,6 @@
                     }
                 });
                 document.title = siteData.content?.page_title?.[`text_${currentLanguage}`] || 'Lobster Shack Bali';
-                updateLangButtons();
-            };
-
-            const updateLangButtons = () => {
-                document.querySelectorAll('.lang-btn').forEach(btn => {
-                    btn.classList.toggle('active', btn.dataset.lang === currentLanguage);
-                });
-            };
-
-            // --- RENDER FUNCTIONS ---
-            const renderBanners = () => {
-                domElements.heroSliderWrapper.innerHTML = siteData.banners.map(banner => `
-                    <div class="swiper-slide" style="background-image: url('${banner.image_url}');"></div>`).join('');
-                new Swiper('.hero-slider', { 
-                    loop: true, effect: 'fade', autoplay: { delay: 5000, disableOnInteraction: false },
-                    navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-                    pagination: { el: '.swiper-pagination', clickable: true }
-                });
-            };
-
-            const renderHistory = () => {
-                domElements.historyTimeline.innerHTML = siteData.history.map((item, index) => `
-                    <div class="timeline-item ${index % 2 === 0 ? 'left' : 'right'}" data-aos="fade-up">
-                        <div class="timeline-content">
-                            <div class="year">${item.year}</div>
-                            <h3>${item[`title_${currentLanguage}`] || item.title_id}</h3>
-                            <p>${item[`text_${currentLanguage}`] || item.text_id}</p>
-                        </div>
-                    </div>`).join('');
             };
 
             const renderMenu = () => {
@@ -646,9 +544,9 @@
                             <div class="menu-card-content">
                                 <h3>${p[`name_${currentLanguage}`] || p.name_id}</h3>
                                 <p class="menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(p.price)}</p>
-                                <p class="description">${(p[`description_${currentLanguage}`] || p.description_id).substring(0, 100)}...</p>
+                                <p class="description">${(p[`description_${currentLanguage}`] || p.description_id || '').substring(0, 100)}...</p>
                                 <div class="menu-card-buttons">
-                                    <button class="btn btn-outline add-to-cart-btn" data-product-id="${p.id}"><i class="fas fa-cart-plus"></i> ${cartText}</button>
+                                    <button class="btn btn-outline add-to-cart-btn" style="border-color: var(--color-border);" data-product-id="${p.id}"><i class="fas fa-cart-plus"></i> ${cartText}</button>
                                     <button class="btn btn-secondary order-now-btn" data-product-id="${p.id}"><i class="fas fa-motorcycle"></i> ${orderText}</button>
                                 </div>
                             </div>
@@ -657,11 +555,11 @@
                     if (p.is_featured) featuredHTML += `<div class="swiper-slide">${cardHTML}</div>`;
                 });
 
-                domElements.featuredMenuWrapper.innerHTML = featuredHTML;
-                domElements.menuGrid.innerHTML = gridHTML;
+                dom.featuredMenu.innerHTML = featuredHTML;
+                dom.menuGrid.innerHTML = gridHTML;
                 
                 const allText = currentLanguage === 'id' ? 'Semua' : 'All';
-                domElements.menuFilters.innerHTML = `<button class="filter-btn active" data-filter="all">${allText}</button>` + siteData.categories.map(c => 
+                dom.menuFilters.innerHTML = `<button class="filter-btn active" data-filter="all">${allText}</button>` + siteData.categories.map(c => 
                     `<button class="filter-btn" data-filter="${c.name}">${c.name}</button>`
                 ).join('');
 
@@ -670,160 +568,28 @@
                     pagination: { el: '.swiper-pagination', clickable: true }
                 });
             };
-            
-            const renderGallery = () => {
-                domElements.galleryGrid.innerHTML = siteData.gallery_images.map(img => `
-                    <a href="${img.image_url}" class="glightbox" data-gallery="our-gallery" data-title="${img[`caption_${currentLanguage}`] || img.caption_id}">
-                        <img src="${img.image_url}" alt="${img.caption_en}">
-                    </a>`).join('');
-                if (lightbox) lightbox.reload();
-                else lightbox = GLightbox({ selector: '.glightbox' });
-            };
 
             const renderAll = () => {
-                renderBanners();
-                renderHistory();
-                renderMenu();
-                renderGallery();
-                updateTextContent();
-                AOS.init({ duration: 800, once: true, offset: 50 });
-            };
-
-            // --- FUNCTIONALITY ---
-            const showToast = (message, type = 'success') => {
-                domElements.toastMessage.textContent = message;
-                domElements.toast.className = 'toast-notification';
-                domElements.toast.classList.add(type);
+                dom.heroSlider.innerHTML = siteData.banners.map(b => `<div class="swiper-slide" style="background-image: url('${b.image_url}');"></div>`).join('');
+                new Swiper('.hero-slider', { loop: true, effect: 'fade', autoplay: { delay: 5000 }, navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }, pagination: { el: '.swiper-pagination', clickable: true } });
                 
-                domElements.toastIcon.className = 'fas';
-                if (type === 'success') domElements.toastIcon.classList.add('fa-check-circle');
-                if (type === 'error') domElements.toastIcon.classList.add('fa-times-circle');
-                if (type === 'info') domElements.toastIcon.classList.add('fa-info-circle');
-
-                domElements.toast.classList.add('show');
-                setTimeout(() => domElements.toast.classList.remove('show'), 4000);
-            };
-            
-            const updateCartBadge = () => {
-                domElements.cartBadge.textContent = cart.length;
-                domElements.headerCart.classList.toggle('has-items', cart.length > 0);
-            };
-
-            const handleAddToCart = (productId) => {
-                cart.push(productId);
-                updateCartBadge();
-                const product = siteData.products.find(p => p.id === productId);
-                const msg = currentLanguage === 'id' ? 
-                    `${product.name_id} ditambahkan ke keranjang!` :
-                    `${product.name_en} added to cart!`;
-                showToast(msg, 'info');
-            };
-
-            const handleLanguageSwitch = (e) => {
-                if (!e.target.matches('.lang-btn')) return;
-                currentLanguage = e.target.dataset.lang;
-                localStorage.setItem('preferredLanguage', currentLanguage);
-                renderHistory();
+                dom.galleryGrid.innerHTML = siteData.gallery_images.map(img => `<a href="${img.image_url}" class="glightbox" data-gallery="our-gallery" data-title="${img[`caption_${currentLanguage}`] || img.caption_id}"><img src="${img.image_url}" alt="${img.caption_en}"></a>`).join('');
+                if (lightbox) lightbox.reload(); else lightbox = GLightbox({ selector: '.glightbox' });
+                
                 renderMenu();
-                renderGallery();
                 updateTextContent();
             };
 
-            const handleMenuFilter = (e) => {
-                if (!e.target.matches('.filter-btn')) return;
-                domElements.menuFilters.querySelector('.active').classList.remove('active');
-                e.target.classList.add('active');
-                const filter = e.target.dataset.filter;
-                document.querySelectorAll('.menu-card').forEach(card => {
-                    card.classList.toggle('hidden', !(filter === 'all' || card.dataset.category === filter));
-                });
-            };
-            
-            const handleMobileNav = () => {
-                domElements.mainNav.classList.toggle('active');
-                domElements.body.classList.toggle('nav-open');
-                const icon = domElements.mobileMenuToggle.querySelector('i');
-                icon.classList.toggle('fa-bars');
-                icon.classList.toggle('fa-times');
-            };
-
-            // --- MODAL & MAPS ---
-            const initOrderMap = (lat = -8.7192, lng = 115.1686) => { // Default to Kuta, Bali
-                const mapElement = document.getElementById('address-map');
-                if (!mapElement || !google) return;
-                
-                const position = { lat, lng };
-                map = new google.maps.Map(mapElement, {
-                    center: position, zoom: 15,
-                    disableDefaultUI: true, gestureHandling: 'cooperative'
-                });
-                marker = new google.maps.Marker({ position, map, draggable: true });
-                marker.addListener('dragend', () => geocodePosition(marker.getPosition()));
-                geocodePosition(position);
-            };
-
-            const geocodePosition = (pos) => {
-                geocoder.geocode({ latLng: pos }, (results, status) => {
-                    if (status === 'OK' && results[0]) {
-                        domElements.customerAddress.value = results[0].formatted_address;
-                    } else {
-                        const msg = currentLanguage === 'id' ? 'Alamat tidak ditemukan' : 'Address not found';
-                        domElements.customerAddress.value = msg;
-                    }
-                });
-            };
-
-            const detectLocation = () => {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(position => {
-                        const pos = {
-                            lat: position.coords.latitude,
-                            lng: position.coords.longitude
-                        };
-                        map.setCenter(pos);
-                        marker.setPosition(pos);
-                        geocodePosition(pos);
-                    }, () => {
-                        const msg = currentLanguage === 'id' ? 'Gagal mendapatkan lokasi. Izinkan akses lokasi di browser Anda.' : 'Failed to get location. Please allow location access.';
-                        showToast(msg, 'error');
-                    });
-                } else {
-                    const msg = currentLanguage === 'id' ? 'Browser Anda tidak mendukung Geolocation.' : 'Your browser does not support Geolocation.';
-                    showToast(msg, 'error');
-                }
-            };
-            
-            const openOrderModal = (productId) => {
-                const product = siteData.products.find(p => p.id === productId);
-                if (!product) return;
-                
-                domElements.modalProductDetails.innerHTML = `
-                    <img src="${product.imageUrl}" alt="${product.name_en}" style="width:150px; height:150px; object-fit:cover; border-radius:50%; margin-bottom:1rem; border: 4px solid var(--color-surface); box-shadow: var(--shadow-sm);">
-                    <h3>${product[`name_${currentLanguage}`] || product.name_id}</h3>
-                    <p class="menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(product.price)}</p>`;
-                
-                domElements.orderModal.classList.add('visible');
-                // Defer map initialization until modal is visible to ensure correct rendering
-                setTimeout(() => initOrderMap(), 100);
-            };
-
-            const closeOrderModal = () => {
-                domElements.orderModal.classList.remove('visible');
-                domElements.orderForm.reset();
-            };
-            
-            // --- DATA FETCHING ---
-            async function fetchAllData() {
+            async function fetchData() {
                 try {
-                    const collections = ['products', 'categories', 'content', 'banners', 'gallery_images', 'history'];
+                    const collections = ['products', 'categories', 'content', 'banners', 'gallery_images'];
                     const promises = collections.map(col => db.collection(col).get());
-                    const [productsSnap, categoriesSnap, contentSnap, bannersSnap, gallerySnap, historySnap] = await Promise.all(promises);
+                    const [productsSnap, categoriesSnap, contentSnap, bannersSnap, gallerySnap] = await Promise.all(promises);
 
                     siteData.products = productsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     siteData.categories = categoriesSnap.docs.map(doc => doc.data()).sort((a,b) => a.id - b.id);
                     siteData.banners = bannersSnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
                     siteData.gallery_images = gallerySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
-                    siteData.history = historySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
                     siteData.content = {};
                     contentSnap.docs.forEach(doc => { siteData.content[doc.id] = doc.data(); });
                     
@@ -833,35 +599,104 @@
                     showToast("Failed to load website data.", 'error');
                 }
             }
-            
-            // --- EVENT LISTENERS ---
-            domElements.langToggleContainer.addEventListener('click', handleLanguageSwitch);
-            domElements.mobileMenuToggle.addEventListener('click', handleMobileNav);
-            domElements.mainNav.addEventListener('click', (e) => {
-                 if (e.target.matches('a') && domElements.mainNav.classList.contains('active')) {
-                    handleMobileNav();
-                 }
-            });
-            domElements.menuFilters.addEventListener('click', handleMenuFilter);
-            document.body.addEventListener('click', e => {
-                if (e.target.matches('.order-now-btn')) openOrderModal(e.target.dataset.productId);
-                if (e.target.matches('.add-to-cart-btn')) handleAddToCart(e.target.dataset.productId);
-            });
-            domElements.modalCloseBtn.addEventListener('click', closeOrderModal);
-            domElements.orderModal.addEventListener('click', e => { if (e.target === domElements.orderModal) closeOrderModal(); });
-            domElements.detectLocationBtn.addEventListener('click', detectLocation);
-            domElements.orderForm.addEventListener('submit', e => {
-                e.preventDefault();
-                // In a real app, you would collect all form data and send to backend
-                // const orderData = { name: domElements.orderForm['customer-name'].value, ... };
-                const successMsg = currentLanguage === 'id' ? 'Pesanan berhasil dikirim!' : 'Order submitted successfully!';
-                closeOrderModal();
-                showToast(successMsg, 'success');
+
+            const showToast = (message, type = 'success') => {
+                dom.toastMessage.textContent = message;
+                const toast = dom.toast;
+                toast.style.backgroundColor = type === 'success' ? '#28a745' : (type === 'error' ? 'var(--color-primary)' : 'var(--color-secondary)');
+                dom.toastIcon.className = `fas ${type === 'success' ? 'fa-check-circle' : 'fa-times-circle'}`;
+                toast.style.transform = 'translateX(0)';
+                setTimeout(() => { toast.style.transform = 'translateX(calc(100% + 2rem))'; }, 4000);
+            };
+
+            const openOrderModal = (productId) => {
+                const product = siteData.products.find(p => p.id === productId);
+                if (!product) return;
+                
+                dom.modalProductDetails.innerHTML = `
+                    <img src="${product.imageUrl}" alt="${product.name_en}">
+                    <h3>${product[`name_${currentLanguage}`] || product.name_id}</h3>
+                    <p class="price">Rp ${new Intl.NumberFormat('id-ID').format(product.price)}</p>`;
+                
+                dom.orderModal.classList.add('visible');
+                setTimeout(() => initOrderMap(), 100);
+            };
+
+            const initOrderMap = (lat = -8.7192, lng = 115.1686) => {
+                if (!google || !document.getElementById('address-map')) return;
+                const position = { lat, lng };
+                map = new google.maps.Map(document.getElementById('address-map'), { center: position, zoom: 15, disableDefaultUI: true });
+                marker = new google.maps.Marker({ position, map, draggable: true });
+                marker.addListener('dragend', () => geocodePosition(marker.getPosition()));
+                geocodePosition(position);
+            };
+
+            const geocodePosition = (pos) => {
+                geocoder.geocode({ latLng: pos }, (results, status) => {
+                    if (status === 'OK' && results[0]) {
+                        dom.customerAddress.value = results[0].formatted_address;
+                    }
+                });
+            };
+
+            dom.detectLocationBtn.addEventListener('click', () => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(position => {
+                        const pos = { lat: position.coords.latitude, lng: position.coords.longitude };
+                        map.setCenter(pos);
+                        marker.setPosition(pos);
+                        geocodePosition(pos);
+                    }, () => showToast('Failed to get location.', 'error'));
+                }
             });
 
-            // --- INITIALIZATION ---
-            fetchAllData();
-            updateLangButtons();
+            document.querySelector('.language-toggle').addEventListener('click', (e) => {
+                if (!e.target.matches('.lang-btn')) return;
+                currentLanguage = e.target.dataset.lang;
+                localStorage.setItem('preferredLanguage', currentLanguage);
+                document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                renderMenu();
+                updateTextContent();
+            });
+
+            dom.mobileMenuToggle.addEventListener('click', () => {
+                dom.mainNav.classList.toggle('active');
+                dom.body.classList.toggle('nav-open');
+                const icon = dom.mobileMenuToggle.querySelector('i');
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            });
+
+            dom.menuFilters.addEventListener('click', (e) => {
+                if (!e.target.matches('.filter-btn')) return;
+                dom.menuFilters.querySelector('.active').classList.remove('active');
+                e.target.classList.add('active');
+                const filter = e.target.dataset.filter;
+                document.querySelectorAll('.menu-card').forEach(card => {
+                    card.classList.toggle('hidden', !(filter === 'all' || card.dataset.category === filter));
+                });
+            });
+
+            document.body.addEventListener('click', e => {
+                if (e.target.closest('.order-now-btn')) openOrderModal(e.target.closest('.order-now-btn').dataset.productId);
+                if (e.target.closest('.add-to-cart-btn')) {
+                    cart.push(e.target.closest('.add-to-cart-btn').dataset.productId);
+                    dom.cartBadge.textContent = cart.length;
+                    dom.headerCart.classList.add('has-items');
+                    showToast('Item added to cart', 'info');
+                }
+            });
+
+            dom.modalCloseBtn.addEventListener('click', () => dom.orderModal.classList.remove('visible'));
+            dom.orderModal.addEventListener('click', e => { if (e.target === dom.orderModal) dom.orderModal.classList.remove('visible'); });
+            dom.orderForm.addEventListener('submit', e => {
+                e.preventDefault();
+                dom.orderModal.classList.remove('visible');
+                showToast('Order submitted successfully!', 'success');
+            });
+            
+            fetchData();
         });
     </script>
 </body>
