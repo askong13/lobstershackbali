@@ -286,6 +286,17 @@
             margin-top: 1.5rem;
         }
 
+        /* --- Site Content Image Preview --- */
+        .site-content-image-preview {
+            max-width: 100px;
+            max-height: 100px;
+            margin-top: 5px;
+            border-radius: 5px;
+            display: block;
+            border: 1px solid var(--color-border);
+        }
+
+
         /* --- Mobile / Responsive --- */
         .menu-toggle {
             display: none; position: fixed; top: 1rem; left: 1rem; z-index: 1001;
@@ -485,7 +496,7 @@
                 <div class="page-header"><h1><i class="fas fa-file-alt"></i> Konten Situs</h1></div>
                 <form id="update-content-form">
                     <div class="card">
-                        <div class="card-header"><h2>Konten Utama (Header, About, Footer, etc.)</h2></div>
+                        <div class="card-header"><h2>Konten Umum</h2></div>
                         <div id="general-content-fields">
                             </div>
                     </div>
@@ -631,11 +642,6 @@
         const db = firebase.firestore();
         const storage = firebase.storage();
 
-        // Global variables (from your input, though some may not be directly used in admin)
-        const shackLocation = { lat: -8.7214, lng: 115.1685 };
-        let cart = [];
-        let userLocationMarker = null;
-
         // --- DOM Elements ---
         const loginPage = document.getElementById('login-page');
         const adminPanel = document.getElementById('admin-panel');
@@ -706,7 +712,7 @@
         const bannerTextIdInput = document.getElementById('banner-text-id');
         const bannerTextEnInput = document.getElementById('banner-text-en');
 
-        // NEW: Admin User Elements
+        // Admin User Elements
         const addAdminBtn = document.getElementById('add-admin-btn');
         const adminUsersTableBody = document.getElementById('admin-users-table-body');
         const adminUserModal = document.getElementById('admin-user-modal');
@@ -765,13 +771,23 @@
         };
 
         const deleteImageFromFirebase = async (url) => {
-            if (!url || url.includes('placeholder-') || !url.includes('firebasestorage.googleapis.com')) return; // Don't delete placeholder or non-Firebase URLs
+            // Check if it's a valid Firebase storage URL and not a placeholder
+            if (!url || url.includes('placeholder-') || !url.includes('firebasestorage.googleapis.com')) {
+                // console.log("Skipping deletion for non-Firebase or placeholder URL:", url);
+                return;
+            }
             try {
                 const imageRef = storage.refFromURL(url);
                 await imageRef.delete();
                 console.log("Image deleted:", url);
             } catch (error) {
-                console.warn("Could not delete image (it might not exist or be a placeholder):", url, error);
+                // If the file doesn't exist, it's not a critical error
+                if (error.code === 'storage/object-not-found') {
+                    console.warn("Image to delete not found, possibly already deleted or URL is old:", url);
+                } else {
+                    console.error("Could not delete image:", url, error);
+                    showFeedback(`Gagal menghapus gambar: ${error.message}`, false);
+                }
             }
         };
 
@@ -845,9 +861,11 @@
                 fetchSiteContent();
             } else if (targetId === 'banner') {
                 fetchBannerContent();
-            } else if (targetId === 'admin-users') { // NEW: Admin Users
+            } else if (targetId === 'admin-users') {
                 fetchAdminUsers();
             }
+            // Close sidebar on mobile after navigation
+            if (window.innerWidth <= 1024) sidebar.classList.remove('open');
         }
 
         navLinks.forEach(link => {
@@ -855,7 +873,6 @@
                 e.preventDefault();
                 const targetId = link.getAttribute('href').substring(1);
                 setActiveSection(targetId);
-                if (window.innerWidth <= 1024) sidebar.classList.remove('open');
                 localStorage.setItem('activeAdminTab', targetId);
                 window.scrollTo(0, 0);
             });
@@ -911,14 +928,14 @@
 
                 let tableHtml = '<table class="responsive-table"><thead><tr><th>ID</th><th>Tanggal</th><th>Pelanggan</th><th>Produk</th><th>Harga</th><th>Status</th><th>Aksi</th></tr></thead><tbody>';
                 orders.forEach(order => {
-                    const statusClass = order.status.toLowerCase();
+                    const statusClass = order.status ? order.status.toLowerCase() : 'pending'; // Default to pending if status is missing
                     tableHtml += `<tr>
                         <td data-label="ID">#${order.id.substring(0, 6)}...</td>
                         <td data-label="Tanggal">${formatDate(order.timestamp)}</td>
                         <td data-label="Pelanggan">${order.customerName || 'N/A'}<br><small style="color: var(--color-text-muted);">${order.customerPhone || 'N/A'}</small></td>
                         <td data-label="Produk">${order.productName || 'N/A'}</td>
                         <td data-label="Harga">${formatCurrency(order.totalPrice || 0)}</td>
-                        <td data-label="Status"><span class="status-badge ${statusClass}">${order.status}</span></td>
+                        <td data-label="Status"><span class="status-badge ${statusClass}">${order.status || 'Pending'}</span></td>
                         <td data-label="Aksi" class="actions-cell">
                             <select class="order-status-update" data-order-id="${order.id}">
                                 <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
@@ -1096,6 +1113,8 @@
 
                 orders.forEach(order => {
                     // Ensure 'products' is parsed if it's stored as a JSON string
+                    // Note: Check if 'order.products' is stored as a stringified JSON in your Firestore.
+                    // If it's stored as an array directly, remove JSON.parse().
                     const products = typeof order.products === 'string' ? JSON.parse(order.products) : order.products;
                     
                     if (products && Array.isArray(products) && products.length > 0) {
@@ -1235,7 +1254,7 @@
                     const categoryName = categoriesMap.get(product.category_id) || 'Uncategorized';
                     const row = `
                         <tr>
-                            <td data-label="Gambar"><img src="${product.imageUrl || 'images/placeholder-menu.jpg'}" alt="${product.name_id}"></td>
+                            <td data-label="Gambar"><img src="${product.imageUrl || 'images/placeholder-menu.jpg'}" alt="${product.name_id}" onerror="this.onerror=null;this.src='images/placeholder-menu.jpg';"></td>
                             <td data-label="Nama Menu"><span class="product-name">${product.name_id}</span></td>
                             <td data-label="Kategori">${categoryName}</td>
                             <td data-label="Harga">Rp ${product.price.toLocaleString('id-ID')}</td>
@@ -1333,20 +1352,22 @@
             const imageFile = imageUrlInput.files[0];
             const currentImageUrl = currentImageUrlInput.value;
 
-            if (!imageFile && !isUpdate && !currentImageUrl) {
+            // Validation for new product without image
+            if (!isUpdate && !imageFile) {
                 showFeedback('Gambar wajib diisi untuk menu baru.', false);
                 return;
             }
 
             try {
-                let imageUrl = currentImageUrl;
+                let imageUrl = currentImageUrl; // Start with current image URL
                 if (imageFile) {
-                    if (currentImageUrl && currentImageUrl !== 'images/placeholder-menu.jpg') { // Delete old image if updating with new one
+                    // Delete old image only if it's a Firebase Storage URL and not a placeholder
+                    if (currentImageUrl && !currentImageUrl.includes('placeholder-')) {
                         await deleteImageFromFirebase(currentImageUrl);
                     }
                     imageUrl = await uploadImageToFirebase(imageFile, 'images/menu');
                 } else if (!isUpdate && !currentImageUrl) {
-                     // This case should ideally be caught by the first if condition, but as a safeguard
+                    // This case handles if somehow we get here without an image for a new product
                     showFeedback('Gambar wajib diisi untuk menu baru.', false);
                     return;
                 }
@@ -1360,13 +1381,15 @@
                     stock,
                     category_id,
                     imageUrl: imageUrl || 'images/placeholder-menu.jpg', // Fallback to a placeholder
-                    is_featured
+                    is_featured,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
                 if (isUpdate) {
                     await db.collection('products').doc(productId).update(productData);
                     showFeedback('Menu berhasil diperbarui.', true);
                 } else {
+                    productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                     await db.collection('products').add(productData);
                     showFeedback('Menu baru berhasil ditambahkan.', true);
                 }
@@ -1465,7 +1488,7 @@
                 return;
             }
             try {
-                await db.collection('categories').add({ name: categoryName });
+                await db.collection('categories').add({ name: categoryName, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
                 showFeedback('Kategori baru berhasil ditambahkan.', true);
                 newCategoryNameInput.value = ''; // Clear input
                 fetchCategories(); // Re-fetch list
@@ -1480,7 +1503,7 @@
         const contentKeys = [
             'header_title_main', 'header_title_sub', 'hero_text_1', 'hero_text_2', 'about_title', 'about_text',
             'contact_address', 'contact_phone', 'contact_email', 'footer_copyright_text', 'logo_main_url', 'logo_white_url'
-        ]; // Added logo URLs here
+        ];
         const historyKeys = ['history_1_year', 'history_1_text', 'history_2_year', 'history_2_text', 'history_3_year', 'history_3_text'];
 
         const fetchSiteContent = async () => {
@@ -1500,13 +1523,13 @@
                     const text_en = contentData[key]?.text_en || '';
 
                     let inputHtml = '';
-                    if (key.includes('url')) { // For logo URLs, use file input
+                    if (key.includes('_url')) { // For logo URLs, use file input with preview
                         inputHtml = `
-                            <input type="text" name="content_${key}_id" placeholder="URL Gambar" value="${text_id}" style="margin-bottom: 0.5rem;">
-                             <input type="file" class="content-file-upload" data-content-key="${key}" data-lang="id" accept="image/*">
-                             <img src="${text_id || 'images/placeholder.jpg'}" alt="Preview" style="max-width: 100px; max-height: 100px; margin-top: 5px; border-radius: 5px; display: block;">
-                             <input type="hidden" name="content_${key}_en" value="${text_en}"> `;
-                    } else if (key.includes('description') || key.includes('text')) { // Textarea for longer texts
+                            <input type="hidden" name="content_${key}_current_id" value="${text_id}">
+                            <input type="file" class="content-file-upload" data-content-key="${key}" data-lang="id" accept="image/*" style="margin-bottom: 0.5rem;">
+                            <img src="${text_id || 'images/placeholder.jpg'}" alt="Preview" class="site-content-image-preview" onerror="this.onerror=null;this.src='images/placeholder.jpg';">
+                            <input type="hidden" name="content_${key}_id" value="${text_id}"> <input type="hidden" name="content_${key}_en" value="${text_en}"> `;
+                    } else if (key.includes('description') || key.includes('text') || key.includes('about')) { // Textarea for longer texts
                         inputHtml = `
                             <textarea name="content_${key}_id" rows="3" placeholder="Teks Indonesia">${text_id}</textarea>
                             <textarea name="content_${key}_en" rows="3" placeholder="Teks Inggris" style="margin-top: 0.5rem;">${text_en}</textarea>
@@ -1555,25 +1578,27 @@
                     input.addEventListener('change', async (e) => {
                         const file = e.target.files[0];
                         const contentKey = e.target.dataset.contentKey;
-                        const lang = e.target.dataset.lang;
+                        const lang = e.target.dataset.lang; // Should always be 'id' for URL fields
                         if (!file) return;
 
                         showFeedback(`Uploading ${contentKey}...`, true);
                         try {
-                            // Get current URL to delete old image
-                            const doc = await db.collection('siteContent').doc(contentKey).get();
-                            const currentUrl = doc.exists ? doc.data()[`text_${lang}`] : null;
+                            const currentUrlInput = e.target.previousElementSibling; // Hidden input for current URL
+                            const currentUrl = currentUrlInput.value;
 
                             const newUrl = await uploadImageToFirebase(file, `images/site-content/${contentKey}`);
-                            await db.collection('siteContent').doc(contentKey).set({ [`text_${lang}`]: newUrl }, { merge: true });
+                            
+                            // Update the hidden input field that gets sent with the form
+                            document.querySelector(`input[name="content_${contentKey}_id"]`).value = newUrl;
+                            // Update the image preview
+                            e.target.nextElementSibling.src = newUrl;
 
-                            if (currentUrl && currentUrl !== newUrl && currentUrl.includes('firebasestorage')) {
+                            // Delete old image only if it's a Firebase Storage URL and not a placeholder
+                            if (currentUrl && !currentUrl.includes('placeholder-')) {
                                 await deleteImageFromFirebase(currentUrl);
                             }
                             showFeedback(`${contentKey} image updated successfully!`, true);
-                            // Update the preview image directly
-                            e.target.previousElementSibling.value = newUrl; // Update hidden text input
-                            e.target.nextElementSibling.src = newUrl; // Update img src
+
                         } catch (error) {
                             showFeedback(`Failed to upload ${contentKey} image: ${error.message}`, false);
                             console.error(`Error uploading ${contentKey} image:`, error);
@@ -1582,6 +1607,8 @@
                 });
 
             } catch (error) {
+                generalContentFields.innerHTML = '<p style="text-align:center; color:red;">Gagal memuat konten umum. Pastikan Firebase Security Rules sudah benar.</p>';
+                historyContentFields.innerHTML = '<p style="text-align:center; color:red;">Gagal memuat konten histori. Pastikan Firebase Security Rules sudah benar.</p>';
                 showFeedback('Gagal memuat konten situs. Periksa koneksi dan aturan Firebase.', false);
                 console.error('Error fetching site content:', error);
             }
@@ -1596,7 +1623,7 @@
             try {
                 for (const entry of formData.entries()) {
                     const [name, value] = entry;
-                    if (name.startsWith('content_')) {
+                    if (name.startsWith('content_') && !name.includes('_current_')) { // Exclude current URL hidden fields
                         const parts = name.split('_');
                         const key = parts.slice(1, parts.length - 1).join('_'); // e.g., 'header_title_main'
                         const lang = parts[parts.length - 1]; // 'id' or 'en'
@@ -1662,7 +1689,7 @@
                 await db.collection('siteContent').doc(BANNER_DOC_ID).set({ imageUrl: newImageUrl }, { merge: true });
 
                 // Delete old image from Storage if it's different and not a placeholder
-                if (currentImageUrl && currentImageUrl !== newImageUrl && currentImageUrl.includes('firebasestorage')) {
+                if (currentImageUrl && currentImageUrl !== newImageUrl && !currentImageUrl.includes('placeholder-')) {
                     await deleteImageFromFirebase(currentImageUrl);
                 }
                 
@@ -1686,7 +1713,7 @@
                     imageUrl: 'images/placeholder-banner.jpg', // Set to a default placeholder
                 }, { merge: true });
 
-                if (currentImageUrl && currentImageUrl !== 'images/placeholder-banner.jpg' && currentImageUrl.includes('firebasestorage')) {
+                if (currentImageUrl && !currentImageUrl.includes('placeholder-')) { // Only delete if not already a placeholder
                     await deleteImageFromFirebase(currentImageUrl);
                 }
                 showFeedback('Banner image berhasil dihapus.', true);
@@ -1714,10 +1741,15 @@
             }
         });
 
-        // --- NEW: Admin User Management ---
+        // --- Admin User Management ---
 
         const openAdminUserModal = () => adminUserModal.style.display = 'flex';
-        const closeAdminUserModal = () => adminUserModal.style.display = 'none';
+        const closeAdminUserModal = () => {
+            adminUserModal.style.display = 'none';
+            adminUserForm.reset(); // Reset form on close
+            adminEmailInput.readOnly = false; // Ensure email is editable for new user
+            adminPasswordInput.required = true; // Ensure password is required for new user
+        };
 
         addAdminBtn.addEventListener('click', () => {
             adminUserForm.reset();
@@ -1734,7 +1766,8 @@
         const fetchAdminUsers = async () => {
             adminUsersTableBody.innerHTML = '<td colspan="4" style="text-align:center; padding: 2rem 0;"><i class="fas fa-spinner fa-spin"></i> Memuat admin users...</td>';
             try {
-                const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get(); // Assuming 'users' collection
+                // Fetch users profile from Firestore's 'users' collection
+                const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get();
                 adminUsersTableBody.innerHTML = ''; // Clear existing rows
                 if (snapshot.empty) {
                     adminUsersTableBody.innerHTML = '<td colspan="4" style="text-align:center; padding: 2rem 0;">Tidak ada admin user.</td>';
@@ -1750,7 +1783,7 @@
                             <td data-label="Aksi" class="actions-cell">
                                 <div class="action-buttons">
                                     <button class="btn edit-admin-btn" data-uid="${doc.id}"><i class="fas fa-edit"></i> Edit</button>
-                                    ${auth.currentUser.uid !== doc.id ? `<button class="btn btn-secondary delete-admin-btn" data-uid="${doc.id}"><i class="fas fa-trash"></i> Hapus</button>` : ''}
+                                    ${auth.currentUser && auth.currentUser.uid !== doc.id ? `<button class="btn btn-secondary delete-admin-btn" data-uid="${doc.id}"><i class="fas fa-trash"></i> Hapus</button>` : ''}
                                 </div>
                             </td>
                         </tr>
@@ -1769,7 +1802,7 @@
                             adminUserUidInput.value = uid;
                             adminNameInput.value = userData.name || '';
                             adminEmailInput.value = userData.email || '';
-                            adminEmailInput.readOnly = true; // Prevent changing email for existing users
+                            adminEmailInput.readOnly = true; // Prevent changing email for existing users (security)
                             adminPasswordInput.value = ''; // Clear password field
                             adminPasswordInput.required = false; // Password not required for edit unless specified
                             openAdminUserModal();
@@ -1782,13 +1815,10 @@
                 document.querySelectorAll('.delete-admin-btn').forEach(button => {
                     button.addEventListener('click', async () => {
                         const uid = button.dataset.uid;
-                        if (confirm('Anda yakin ingin menghapus admin user ini? Ini akan menghapus permanen.')) {
+                        if (confirm('Anda yakin ingin menghapus admin user ini? Ini akan menghapus permanen (hanya dari Firestore). Untuk menghapus dari autentikasi Firebase, diperlukan Firebase Cloud Function.')) {
                             try {
-                                // Deleting a user from Firestore doesn't delete them from Firebase Auth.
-                                // To delete from Auth, you'd need a Cloud Function or perform it on a secure backend.
-                                // For client-side, we'll only delete the profile data here.
                                 await db.collection('users').doc(uid).delete();
-                                showFeedback('Admin user berhasil dihapus (dari Firestore).', true);
+                                showFeedback('Admin user berhasil dihapus dari Firestore.', true);
                                 fetchAdminUsers(); // Re-fetch list
                             } catch (error) {
                                 showFeedback(`Gagal menghapus admin user: ${error.message}`, false);
@@ -1819,25 +1849,23 @@
                     await db.collection('users').doc(uid).update({ name: name });
 
                     // Update email/password in Firebase Auth (if changed)
-                    const user = auth.currentUser;
-                    if (user && user.uid === uid) { // Only update current logged in user's profile
-                        if (user.email !== email) {
-                             await user.updateEmail(email);
-                             showFeedback('Email juga diperbarui di autentikasi Firebase. Silakan login ulang.', true);
-                             // Force logout if email changes, as Firebase Auth token becomes invalid
-                             await auth.signOut();
-                             return;
+                    // This can only be done for the CURRENTLY LOGGED IN user client-side.
+                    // For other users, a Firebase Cloud Function (Admin SDK) is needed.
+                    const currentUser = auth.currentUser;
+                    if (currentUser && currentUser.uid === uid) {
+                        if (currentUser.email !== email) {
+                             await currentUser.updateEmail(email);
+                             showFeedback('Email juga diperbarui di autentikasi Firebase. Anda mungkin perlu login ulang.', true);
+                             // To ensure re-authentication, you might want to force a logout here:
+                             // await auth.signOut();
+                             // return;
                         }
                         if (password) {
-                            await user.updatePassword(password);
+                            await currentUser.updatePassword(password);
                             showFeedback('Password juga diperbarui di autentikasi Firebase.', true);
                         }
-                    } else {
-                        // Cannot update other users' email/password client-side directly
-                        // This would typically require Firebase Admin SDK (Cloud Functions)
-                        if (password || user.email !== email) {
-                             showFeedback('Untuk mengubah email/password user lain, diperlukan konfigurasi server-side (Cloud Functions). Hanya nama yang diperbarui.', false);
-                        }
+                    } else if ((email !== adminEmailInput.dataset.originalEmail) || password) {
+                         showFeedback('Untuk mengubah email/password user lain, diperlukan konfigurasi server-side (Firebase Cloud Functions). Hanya nama yang diperbarui.', false);
                     }
                     showFeedback('Profil admin berhasil diperbarui.', true);
 
@@ -1866,9 +1894,11 @@
                 console.error('Error saving admin user:', error);
                 // Handle specific errors like 'auth/email-already-in-use'
                 if (error.code === 'auth/email-already-in-use') {
-                    showFeedback('Email ini sudah digunakan.', false);
+                    showFeedback('Email ini sudah digunakan oleh akun lain.', false);
+                } else if (error.code === 'auth/weak-password') {
+                    showFeedback('Password terlalu lemah.', false);
                 } else if (error.code === 'auth/requires-recent-login') {
-                    showFeedback('Silakan login ulang untuk mengubah profil Anda.', false);
+                    showFeedback('Untuk mengubah email/password Anda sendiri, silakan login ulang dulu.', false);
                 }
             }
         });
