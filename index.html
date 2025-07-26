@@ -1,73 +1,401 @@
-// firebase.js (contoh, pastikan inisialisasi Firebase ada di sini)
-// import { initializeApp } from "firebase/app";
-// import { getFirestore, collection, getDocs, doc, getDoc } from "firebase/firestore";
-
-// const firebaseConfig = { ... }; // Konfigurasi Firebase Anda
-// const app = initializeApp(firebaseConfig);
-// const db = getFirestore(app);
-
-// Fungsi untuk memuat produk
-async function loadProducts() {
-    const productsContainer = document.getElementById('products-list'); // Pastikan ID ini ada di HTML Anda
-    productsContainer.innerHTML = ''; // Bersihkan kontainer
-
-    try {
-        const productsCol = collection(db, 'products');
-        const productSnapshot = await getDocs(productsCol); // Mengambil semua dokumen di koleksi 'products'
-        const productList = productSnapshot.docs.map(doc => doc.data());
-
-        productList.sort((a, b) => a.order - b.order); // Urutkan berdasarkan 'order' jika ada
-
-        productList.forEach(product => {
-            if (product.is_available) { // Hanya tampilkan yang tersedia
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card';
-                productCard.innerHTML = `
-                    <h3>${product.name}</h3>
-                    <p>${product.description}</p>
-                    <p>Price: Rp ${product.price.toLocaleString('id-ID')}</p>
-                    <img src="${product.image_url}" alt="${product.name}" style="width:100px; height:auto;">
-                `;
-                productsContainer.appendChild(productCard);
-            }
-        });
-        console.log("Products loaded successfully for index.html");
-    } catch (error) {
-        console.error("Error loading products for index.html: ", error);
-        // Tampilkan pesan error di UI jika perlu
-        productsContainer.innerHTML = `<p>Failed to load menu data. Please try again later. (${error.message})</p>`;
-    }
-}
-
-// Fungsi untuk memuat banner (contoh)
-async function loadBanner() {
-    const bannerContainer = document.getElementById('main-banner'); // Pastikan ID ini ada
-    try {
-        const docRef = doc(db, "siteContent", "main_banner"); // Mengambil dokumen 'main_banner'
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists() && docSnap.data().is_active) {
-            const bannerData = docSnap.data();
-            bannerContainer.innerHTML = `
-                <img src="${bannerData.image_url}" alt="${bannerData.title}" style="width:100%; height:auto;">
-                <h2>${bannerData.title}</h2>
-                <p>${bannerData.subtitle}</p>
-            `;
-            console.log("Banner loaded successfully.");
-        } else {
-            console.log("No active banner found.");
-            bannerContainer.innerHTML = `<p>No banner available.</p>`;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lobster Shack Bali</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* CSS untuk index.html */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
         }
-    } catch (error) {
-        console.error("Error loading banner: ", error);
-        bannerContainer.innerHTML = `<p>Failed to load banner. (${error.message})</p>`;
-    }
-}
 
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+        }
 
-// Panggil fungsi ini saat DOMContentLoaded
-document.addEventListener('DOMContentLoaded', () => {
-    loadProducts();
-    loadBanner();
-    // Panggil fungsi lain untuk kategori, footer, dll.
-});
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .nav-links li {
+            margin-left: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 50px 0;
+            background-color: #fff;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative; /* Untuk overlay banner */
+            overflow: hidden;
+        }
+
+        .banner-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 0; /* No margin here, overlay handles spacing */
+            display: block;
+        }
+
+        .banner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .banner-overlay h2 {
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+
+        .banner-overlay p {
+            font-size: 1.2em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+        }
+
+        .menu-section, .about-section, .contact-section {
+            background-color: #fff;
+            padding: 30px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .menu-categories {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .menu-category-btn {
+            background-color: #e0e0e0;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu-category-btn.active, .menu-category-btn:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .menu-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .product-card img {
+            max-width: 100%;
+            height: 150px; /* Fixed height */
+            object-fit: cover; /* Crop image to fit */
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .product-card h3 {
+            margin-top: 0;
+            color: #4CAF50;
+        }
+
+        .social-media a {
+            color: #4CAF50;
+            font-size: 1.5rem;
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Lobster Shack Bali</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero-section">
+            <div id="main-banner" class="banner-content">
+                Loading banner...
+            </div>
+        </section>
+
+        <section id="menu" class="menu-section">
+            <h2>Our Delicious Menu</h2>
+            <div class="menu-categories" id="menu-categories">
+                Loading categories...
+            </div>
+            <div class="menu-items" id="menu-items">
+                Loading menu...
+            </div>
+        </section>
+
+        <section id="about" class="about-section">
+            <h2>About Us</h2>
+            <div id="about-content">
+                Loading about us content...
+            </div>
+        </section>
+
+        <section id="contact" class="contact-section">
+            <h2>Contact Us</h2>
+            <p>Jl. Pantai Indah, Kuta, Bali, Indonesia</p>
+            <p>Phone: +62 812-3456-7890</p>
+            <p>Email: info@lobstershackbali.com</p>
+            <div class="social-media">
+                <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Lobster Shack Bali. All rights reserved.</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
+            authDomain: "lobster-shack-bali.firebaseapp.com",
+            databaseURL: "https://lobster-shack-bali-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "lobster-shack-bali",
+            storageBucket: "lobster-shack-bali.firebasestorage.app",
+            messagingSenderId: "42452974733",
+            appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadBanner();
+            await loadCategories();
+            await loadProducts('all'); // Load all products initially
+            await loadAboutUsContent();
+        });
+
+        async function loadBanner() {
+            const bannerContainer = document.getElementById('main-banner');
+            if (!bannerContainer) return;
+
+            try {
+                const docRef = doc(db, "siteContent", "main_banner");
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists() && docSnap.data().is_active) {
+                    const bannerData = docSnap.data();
+                    bannerContainer.innerHTML = `
+                        <img src="${bannerData.image_url || 'https://via.placeholder.com/800x400/0000FF/FFFFFF?text=Lobster+Shack+Banner'}" alt="${bannerData.title}">
+                        <div class="banner-overlay">
+                            <h2>${bannerData.title || 'Welcome!'}</h2>
+                            <p>${bannerData.subtitle || 'Experience the taste of fresh seafood.'}</p>
+                        </div>
+                    `;
+                    console.log("Banner loaded successfully.");
+                } else {
+                    bannerContainer.innerHTML = `<p>No active banner available.</p>`;
+                    console.log("No active banner found or banner document does not exist.");
+                }
+            } catch (error) {
+                console.error("Error loading banner: ", error);
+                bannerContainer.innerHTML = `<p>Failed to load banner. (${error.message})</p>`;
+            }
+        }
+
+        async function loadCategories() {
+            const categoriesContainer = document.getElementById('menu-categories');
+            if (!categoriesContainer) return;
+            categoriesContainer.innerHTML = `<button class="menu-category-btn active" data-category="all">All</button>`; // Default All button
+
+            try {
+                const categoriesCol = collection(db, 'categories');
+                const q = query(categoriesCol, orderBy('order', 'asc'));
+                const categorySnapshot = await getDocs(q);
+                const categoriesList = categorySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                categoriesList.forEach(category => {
+                    const btn = document.createElement('button');
+                    btn.className = 'menu-category-btn';
+                    btn.dataset.category = category.id;
+                    btn.textContent = category.name;
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.menu-category-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        loadProducts(category.id);
+                    });
+                    categoriesContainer.appendChild(btn);
+                });
+                console.log("Categories loaded successfully.");
+            } catch (error) {
+                console.error("Error loading categories: ", error);
+                categoriesContainer.innerHTML = `<p>Failed to load categories. (${error.message})</p>`;
+            }
+
+            // Event listener for "All" button
+            document.querySelector('.menu-category-btn[data-category="all"]').addEventListener('click', function() {
+                document.querySelectorAll('.menu-category-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                loadProducts('all');
+            });
+        }
+
+        async function loadProducts(categoryFilter = 'all') {
+            const productsContainer = document.getElementById('menu-items');
+            if (!productsContainer) return;
+            productsContainer.innerHTML = '<p>Loading products...</p>';
+
+            try {
+                const productsCol = collection(db, 'products');
+                let q;
+                if (categoryFilter === 'all') {
+                    q = query(productsCol, orderBy('order', 'asc'));
+                } else {
+                    q = query(productsCol, where('category', '==', categoryFilter), orderBy('order', 'asc'));
+                }
+
+                const productSnapshot = await getDocs(q);
+                const productList = productSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                productsContainer.innerHTML = '';
+
+                if (productList.length === 0) {
+                    productsContainer.innerHTML = '<p>No products found in this category.</p>';
+                    return;
+                }
+
+                productList.forEach(product => {
+                    if (product.is_available) {
+                        const productCard = document.createElement('div');
+                        productCard.className = 'product-card';
+                        productCard.innerHTML = `
+                            <img src="${product.image_url || 'https://via.placeholder.com/150/CCCCCC/FFFFFF?text=No+Image'}" alt="${product.name}">
+                            <h3>${product.name}</h3>
+                            <p>${product.description || 'No description available.'}</p>
+                            <p>Price: Rp ${product.price ? product.price.toLocaleString('id-ID') : 'N/A'}</p>
+                        `;
+                        productsContainer.appendChild(productCard);
+                    }
+                });
+                console.log(`Products loaded successfully for category: ${categoryFilter}`);
+            } catch (error) {
+                console.error("Error loading products: ", error);
+                productsContainer.innerHTML = `<p>Failed to load menu data. Please try again later. (${error.message})</p>`;
+            }
+        }
+
+        async function loadAboutUsContent() {
+            const aboutContentDiv = document.getElementById('about-content');
+            if (!aboutContentDiv) return;
+
+            try {
+                const docRef = doc(db, "siteContent", "about_us");
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists() && docSnap.data().is_active) {
+                    const data = docSnap.data();
+                    aboutContentDiv.innerHTML = `
+                        ${data.image_url ? `<img src="${data.image_url}" alt="${data.title}" style="max-width:100%; height:auto; border-radius:8px; margin-bottom: 20px;">` : ''}
+                        <h3>${data.title || 'About Us'}</h3>
+                        <p>${data.content || 'Our story will be updated soon.'}</p>
+                    `;
+                } else {
+                    aboutContentDiv.innerHTML = `<p>About Us content will be updated soon.</p>`;
+                }
+            } catch (error) {
+                console.error("Error loading About Us content: ", error);
+                aboutContentDiv.innerHTML = `<p>Failed to load About Us content. (${error.message})</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
