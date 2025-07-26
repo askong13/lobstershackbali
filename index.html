@@ -3,11 +3,499 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lobster Shack Bali - Live & Wild-Caught Lobster</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Lobster Shack Bali - Hidangan Laut Segar di Kuta</title>
+    <meta name="description" content="Rasakan pengalaman menyantap lobster tangkapan liar segar dan hidangan laut terbaik di Kuta, Bali. Lihat menu kami, pesan online, atau reservasi meja Anda hari ini.">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           1. Konfigurasi Dasar & Variabel
+           ========================================================================== */
+        :root {
+            --font-heading: 'Poppins', sans-serif;
+            --font-body: 'Lora', serif;
+            --color-primary: #D84B42; /* Merah Lobster */
+            --color-secondary: #2D4C5E; /* Biru Tua */
+            --color-background: #F4F1E8; /* Krem Pasir */
+            --color-surface: #FFFFFF;
+            --color-text: #333333;
+            --color-text-light: #6c757d;
+            --color-border: #dee2e6;
+            --shadow-sm: 0 2px 8px rgba(45, 76, 94, 0.07);
+            --shadow-md: 0 4px 15px rgba(45, 76, 94, 0.1);
+            --border-radius: 12px;
+            --transition-speed: 0.3s;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* ==========================================================================
+           2. Komponen & Utilitas Umum
+           ========================================================================== */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: clamp(2.25rem, 5vw, 3rem); /* Ukuran font responsif */
+            font-weight: 700;
+            color: var(--color-secondary);
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.125rem;
+            color: var(--color-text-light);
+            max-width: 600px;
+            margin: -3rem auto 4rem;
+        }
+
+        .btn {
+            display: inline-block;
+            font-family: var(--font-heading);
+            font-weight: 600;
+            padding: 0.875rem 2rem;
+            border-radius: var(--border-radius);
+            border: 2px solid transparent;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all var(--transition-speed) ease;
+            background-color: var(--color-primary);
+            color: var(--color-surface);
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: #b93e36;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn.secondary {
+            background-color: transparent;
+            color: var(--color-secondary);
+            border-color: var(--color-secondary);
+        }
+
+        .btn.secondary:hover {
+            background-color: var(--color-secondary);
+            color: var(--color-surface);
+        }
+
+        .hidden { display: none !important; }
+
+        /* ==========================================================================
+           3. Header & Navigasi
+           ========================================================================== */
+        .main-header {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+        }
+
+        .main-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-header .logo {
+            height: 55px;
+            transition: transform var(--transition-speed) ease;
+        }
+        .main-header .logo:hover {
+             transform: scale(1.05);
+        }
+
+        .main-nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .main-nav a {
+            text-decoration: none;
+            font-family: var(--font-heading);
+            font-weight: 600;
+            color: var(--color-secondary);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .main-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--color-primary);
+            transition: width var(--transition-speed) ease;
+        }
+
+        .main-nav a:hover::after {
+            width: 100%;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .cart-icon {
+            font-size: 1.75rem;
+            text-decoration: none;
+            color: var(--color-secondary);
+            position: relative;
+        }
+
+        #cart-count {
+            position: absolute;
+            top: -5px; right: -10px;
+            background-color: var(--color-primary);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 50%;
+            width: 22px; height: 22px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid var(--color-surface);
+        }
+
+        /* Mobile Nav Toggle */
+        .nav-toggle {
+            display: none;
+            cursor: pointer;
+        }
+        
+        /* ==========================================================================
+           4. Konten Halaman Utama (Marketing, Story, etc.)
+           ========================================================================== */
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1559742811-822873691375?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 90vh;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-content h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            font-style: italic;
+            margin: 1.5rem 0 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .promise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            text-align: center;
+        }
+        
+        .promise-item {
+             background: var(--color-surface);
+             padding: 2.5rem;
+             border-radius: var(--border-radius);
+             box-shadow: var(--shadow-sm);
+             transition: all var(--transition-speed) ease;
+        }
+        .promise-item:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .promise-item .icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--color-primary);
+        }
+
+        .promise-item h3 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            color: var(--color-secondary);
+            margin-bottom: 0.75rem;
+        }
+        
+        .story-container {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+        }
+        
+        .story-image img {
+            width: 100%;
+            height: auto;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .story-content h2 {
+            text-align: left;
+            margin-bottom: 1.5rem;
+        }
+        
+        .story-content p {
+            font-size: 1.125rem;
+            color: var(--color-text-light);
+            margin-bottom: 2rem;
+        }
+
+        /* ==========================================================================
+           5. Kartu Menu
+           ========================================================================== */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .menu-card {
+            background: var(--color-surface);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-speed) ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .menu-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .menu-card-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-card h3 {
+            font-family: var(--font-heading);
+            color: var(--color-secondary);
+            font-size: 1.375rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-card-price {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            color: var(--color-primary);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: auto;
+            padding-top: 1.5rem;
+        }
+
+        .card-buttons .btn {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 0.9rem;
+        }
+        
+        /* ==========================================================================
+           6. Google Maps Section
+           ========================================================================== */
+        #map-container {
+            width: 100%;
+            height: 450px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+        
+        /* ==========================================================================
+           7. Modal / Pop-up Pesanan
+           ========================================================================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-speed) ease, visibility 0s var(--transition-speed);
+        }
+
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0s;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transform: scale(0.95);
+            transition: transform var(--transition-speed) ease;
+        }
+
+        .modal-overlay.visible .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            font-size: 2.5rem;
+            font-weight: 300;
+            background: none; border: none;
+            cursor: pointer;
+            color: #aaa;
+            line-height: 1;
+        }
+
+        #modal-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-family: var(--font-heading);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--color-border);
+            border-radius: 5px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+        }
+
+        /* ==========================================================================
+           8. Footer
+           ========================================================================== */
+        .main-footer {
+            background-color: var(--color-secondary);
+            color: #bdc8d1;
+            text-align: center;
+            padding: 3rem 1.5rem;
+            margin-top: auto;
+        }
+        
+        /* ==========================================================================
+           9. Responsivitas
+           ========================================================================== */
+        @media (max-width: 992px) {
+            .story-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            .story-content h2 {
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-nav {
+                display: none; /* Sembunyikan untuk mobile, bisa diganti dengan menu burger */
+            }
+            .nav-toggle {
+                display: block; /* Tampilkan ikon burger */
+            }
+            .hero-content h1 {
+                 font-size: 2.5rem;
+            }
+            .section {
+                padding: 3rem 0;
+            }
+            .menu-grid {
+                 grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <header class="main-header">
@@ -15,65 +503,352 @@
             <a href="/"><img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo Lobster Shack" class="logo"></a>
             <nav class="main-nav">
                 <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/menu.html">Menu</a></li>
-                    <li><a href="/reservation.html">Reservasi</a></li>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#menu">Menu</a></li>
+                    <li><a href="#location">Lokasi</a></li>
                 </ul>
             </nav>
             <div class="header-actions">
                 <a href="/cart.html" class="cart-icon">🛒 <span id="cart-count">0</span></a>
                 <a href="/login.html" class="btn">Login</a>
             </div>
-        </div>
+            </div>
     </header>
 
     <main>
-        <section id="our-story" class="section">
-            <div class="container story-container">
-                <div class="story-content">
-                    <h2 class="section-title" style="text-align: left;">Dari Nelayan, Untuk Anda</h2>
-                    <p>Lobster Shack Bali didirikan dengan misi menyajikan hidangan laut paling segar langsung ke meja Anda.</p>
+        <section id="home" class="hero-section">
+            <div class="hero-content">
+                <h1>Lobster Segar, Langsung dari Lautan</h1>
+                <p>Nikmati pengalaman kuliner tak terlupakan dengan lobster tangkapan liar terbaik dan hidangan laut premium di jantung Kuta, Bali.</p>
+                <a href="#menu" class="btn">Lihat Menu Unggulan</a>
+            </div>
+        </section>
+
+        <section class="section" style="background-color: var(--color-surface);">
+             <div class="container">
+                <h2 class="section-title">Janji Kualitas Kami</h2>
+                <p class="section-subtitle">Setiap hidangan yang kami sajikan adalah bukti komitmen kami terhadap kesegaran dan rasa otentik.</p>
+                <div class="promise-grid">
+                    <div class="promise-item">
+                        <div class="icon">🦞</div>
+                        <h3>100% Tangkapan Liar</h3>
+                        <p>Kami hanya menyajikan lobster segar yang ditangkap secara etis dari perairan laut dalam, bukan hasil ternak.</p>
+                    </div>
+                    <div class="promise-item">
+                        <div class="icon">🌿</div>
+                        <h3>Bumbu Lokal Terbaik</h3>
+                        <p>Setiap hidangan diracik dengan rempah-rempah asli Bali untuk memberikan cita rasa yang tak terlupakan.</p>
+                    </div>
+                    <div class="promise-item">
+                        <div class="icon">👨‍🍳</div>
+                        <h3>Dimasak oleh Profesional</h3>
+                        <p>Chef kami berpengalaman dalam mengolah hidangan laut untuk menjamin kualitas dan kelezatan di setiap gigitan.</p>
+                    </div>
                 </div>
-                <div class="story-image">
+             </div>
+        </section>
+
+        <section id="story" class="section">
+            <div class="container story-container">
+                 <div class="story-image" style="flex: 1 1 40%;">
                     <img src="https://images.unsplash.com/photo-1599052945244-a6a8e5a7b370?q=80&w=1964&auto=format&fit=crop" alt="Suasana Lobster Shack Bali">
+                </div>
+                <div class="story-content" style="flex: 1 1 50%;">
+                    <h2 class="section-title" style="text-align: left;">Dari Nelayan, Untuk Anda</h2>
+                    <p>Berawal dari kecintaan kami terhadap laut dan hasil alamnya, Lobster Shack Bali didirikan dengan satu misi: menyajikan hidangan laut paling segar langsung ke meja Anda. Kami bekerja sama dengan nelayan lokal untuk memastikan setiap lobster yang kami sajikan adalah yang terbaik, menghadirkan cita rasa laut yang murni dan otentik.</p>
+                    <a href="/reservation.html" class="btn secondary">Reservasi Meja Anda</a>
                 </div>
             </div>
         </section>
 
-        <section class="section" style="background-color: var(--color-sand-bg);">
+        <section id="menu" class="section" style="background-color: var(--color-background);">
             <div class="container">
                 <h2 class="section-title">Menu Unggulan Kami</h2>
+                <p class="section-subtitle">Pilihan favorit dari para pelanggan kami. Setiap hidangan disiapkan dengan bahan-bahan segar dan penuh cinta.</p>
                 <div id="menu-grid-container" class="menu-grid">
                     </div>
             </div>
         </section>
+        
+        <section id="location" class="section" style="background-color: var(--color-surface);">
+            <div class="container">
+                <h2 class="section-title">Temukan Kami di Kuta</h2>
+                <p class="section-subtitle">Kunjungi kami untuk pengalaman bersantap yang luar biasa. Kami berlokasi strategis di pusat keramaian Kuta, Bali.</p>
+                <div id="map-container">
+                    </div>
+            </div>
+        </section>
+
     </main>
 
-    <div id="menu-modal" class="modal-overlay hidden">
+    <div id="menu-modal" class="modal-overlay">
         <div class="modal-content">
             <button class="modal-close-btn">&times;</button>
             <div id="modal-body">
                 <img id="modal-img" src="" alt="Menu item">
-                <h2 id="modal-title"></h2>
-                <p id="modal-price"></p>
-                <p id="modal-description"></p>
-                <hr>
-                <h3>Kirim Pesanan Ini</h3>
+                <h2 id="modal-title" style="font-family: var(--font-heading); color: var(--color-secondary);"></h2>
+                <p id="modal-price" style="font-family: var(--font-heading); color: var(--color-primary); font-size: 1.5rem; font-weight: 700;"></p>
+                <p id="modal-description" style="margin: 1rem 0;"></p>
+                <hr style="margin: 1.5rem 0;">
+                <h3 style="font-family: var(--font-heading); margin-bottom: 1rem;">Kirim Pesanan Ini</h3>
                 <div class="form-group">
-                    <label for="delivery-address">Masukkan Alamat Pengiriman:</label>
-                    <input type="text" id="delivery-address" placeholder="Mulai ketik alamat Anda...">
+                    <label for="delivery-address">Masukkan Alamat Pengiriman Anda:</label>
+                    <input type="text" id="delivery-address" placeholder="Contoh: Jl. Pantai Kuta No. 10, Bali">
                 </div>
-                <button class="btn">Kirim ke Alamat Ini</button>
+                <button id="submit-order-btn" class="btn" style="width: 100%;">Kirim ke Alamat Ini</button>
             </div>
         </div>
     </div>
 
     <footer class="main-footer">
         <div class="container">
-            <p>&copy; <span id="current-year"></span> Lobster Shack Bali.</p>
+            <p>&copy; <span id="current-year"></span> Lobster Shack Bali. All Rights Reserved.</p>
         </div>
     </footer>
 
-    <script type="module" src="assets/js/app.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADCv-AX09lIYq6Gr7Gm56rChp4kS0J08Q&callback=initMap"></script>
+
+    <script type="module">
+        // ==========================================================================
+        // JAVASCRIPT UTAMA
+        // ==========================================================================
+
+        // !!! PERINGATAN KEAMANAN !!!
+        // Konfigurasi Firebase Anda disimpan langsung di kode klien.
+        // Ini TIDAK direkomendasikan untuk lingkungan produksi karena dapat
+        // dieksploitasi. Gunakan metode yang lebih aman seperti Netlify Functions
+        // untuk melindungi kunci API Anda.
+        
+        // --- 1. Impor dan Inisialisasi Firebase ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getDatabase, ref, get, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
+            authDomain: "lobster-shack-bali.firebaseapp.com",
+            databaseURL: "https://lobster-shack-bali-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "lobster-shack-bali",
+            storageBucket: "lobster-shack-bali.appspot.com",
+            messagingSenderId: "42452974733",
+            appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // --- 2. State & Variabel Global ---
+        let cart = JSON.parse(localStorage.getItem('lobsterCart')) || [];
+        let currentlyOrderingProduct = null;
+
+        // --- 3. Event Listener Utama ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderFeaturedMenu();
+            setupEventListeners();
+            updateCartCount();
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+        });
+
+        // --- 4. Fungsi-fungsi Utama ---
+
+        /**
+         * Mengambil data menu dari Firebase dan menampilkannya di halaman.
+         */
+        async function renderFeaturedMenu() {
+            const menuContainer = document.getElementById('menu-grid-container');
+            if (!menuContainer) return;
+            
+            menuContainer.innerHTML = '<p>Memuat menu...</p>';
+
+            try {
+                const productsRef = ref(db, 'products');
+                const snapshot = await get(productsRef);
+
+                if (snapshot.exists()) {
+                    const products = snapshot.val();
+                    menuContainer.innerHTML = ''; 
+                    
+                    Object.keys(products).forEach(key => {
+                        const p = products[key];
+                        if (p.is_featured) {
+                            const card = document.createElement('div');
+                            card.className = 'menu-card';
+                            card.innerHTML = `
+                                <img src="${p.imageUrl}" alt="${p.name_en}">
+                                <div class="menu-card-content">
+                                    <h3>${p.name_en}</h3>
+                                    <p class="menu-card-price">Rp ${p.price.toLocaleString('id-ID')}</p>
+                                    <p>${p.description_en.substring(0, 100)}...</p>
+                                    <div class="card-buttons">
+                                        <button class="btn secondary add-to-cart-btn" data-product-key="${key}">+ Keranjang</button>
+                                        <button class="btn order-now-btn" data-product-key="${key}">Pesan</button>
+                                    </div>
+                                </div>`;
+                            menuContainer.appendChild(card);
+                        }
+                    });
+                } else {
+                    menuContainer.innerHTML = '<p>Menu unggulan tidak tersedia.</p>';
+                }
+            } catch (error) {
+                console.error("Gagal memuat menu:", error);
+                menuContainer.innerHTML = '<p>Gagal terhubung ke server. Silakan coba lagi nanti.</p>';
+            }
+        }
+        
+        /**
+         * Menyiapkan semua event listener untuk interaksi pengguna.
+         */
+        function setupEventListeners() {
+            const modal = document.getElementById('menu-modal');
+            const closeBtn = modal.querySelector('.modal-close-btn');
+            const submitOrderBtn = document.getElementById('submit-order-btn');
+
+            // Listener untuk semua klik di body (event delegation)
+            document.body.addEventListener('click', async (e) => {
+                if (e.target.matches('.add-to-cart-btn')) {
+                    handleAddToCart(e.target.dataset.productKey);
+                }
+                if (e.target.matches('.order-now-btn')) {
+                    handleOrderNow(e.target.dataset.productKey);
+                }
+            });
+
+            // Listener untuk menutup modal
+            closeBtn.addEventListener('click', () => toggleModal(false));
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) toggleModal(false);
+            });
+            
+            // Listener untuk mengirim pesanan
+            submitOrderBtn.addEventListener('click', handleSubmitOrder);
+        }
+
+        /**
+         * Menangani klik pada tombol "Add to Cart".
+         */
+        async function handleAddToCart(productKey) {
+            try {
+                const productSnapshot = await get(ref(db, `products/${productKey}`));
+                if (productSnapshot.exists()) {
+                    const product = productSnapshot.val();
+                    const existingInCart = cart.find(item => item.key === productKey);
+                    if (existingInCart) {
+                        alert(`${product.name_en} sudah ada di keranjang!`);
+                    } else {
+                        cart.push({ key: productKey, ...product });
+                        saveCart();
+                        alert(`${product.name_en} berhasil ditambahkan ke keranjang!`);
+                    }
+                }
+            } catch (error) {
+                console.error("Error adding to cart:", error);
+                alert("Gagal menambahkan ke keranjang.");
+            }
+        }
+
+        /**
+         * Menangani klik pada tombol "Order Now" dengan membuka pop-up.
+         */
+        async function handleOrderNow(productKey) {
+            try {
+                const productSnapshot = await get(ref(db, `products/${productKey}`));
+                if (productSnapshot.exists()) {
+                    currentlyOrderingProduct = { key: productKey, ...productSnapshot.val() };
+                    
+                    document.getElementById('modal-img').src = currentlyOrderingProduct.imageUrl;
+                    document.getElementById('modal-title').textContent = currentlyOrderingProduct.name_en;
+                    document.getElementById('modal-price').textContent = `Rp ${currentlyOrderingProduct.price.toLocaleString('id-ID')}`;
+                    document.getElementById('modal-description').textContent = currentlyOrderingProduct.description_en;
+                    
+                    toggleModal(true);
+                }
+            } catch (error) {
+                console.error("Error fetching product for order:", error);
+                alert("Gagal memuat detail pesanan.");
+            }
+        }
+        
+        /**
+         * Menangani pengiriman pesanan dari modal.
+         */
+        async function handleSubmitOrder() {
+             const address = document.getElementById('delivery-address').value;
+             if (!address.trim()) {
+                 alert("Alamat pengiriman tidak boleh kosong!");
+                 return;
+             }
+             if (!currentlyOrderingProduct) return;
+
+             try {
+                const ordersRef = ref(db, 'orders');
+                await push(ordersRef, {
+                    productId: currentlyOrderingProduct.key,
+                    productName: currentlyOrderingProduct.name_en,
+                    price: currentlyOrderingProduct.price,
+                    deliveryAddress: address,
+                    status: 'new',
+                    userEmail: 'guest', // Bisa diintegrasikan dengan login
+                    timestamp: serverTimestamp()
+                });
+                
+                alert('Pesanan Anda telah berhasil dikirim! Kami akan segera memprosesnya.');
+                toggleModal(false);
+                document.getElementById('delivery-address').value = ''; // Reset input
+                
+             } catch (error) {
+                 console.error("Gagal mengirim pesanan:", error);
+                 alert("Terjadi kesalahan saat mengirim pesanan Anda.");
+             }
+        }
+        
+        /**
+         * Menampilkan atau menyembunyikan modal.
+         * @param {boolean} show - True untuk menampilkan, false untuk menyembunyikan.
+         */
+        function toggleModal(show) {
+            const modal = document.getElementById('menu-modal');
+            if (show) {
+                modal.classList.add('visible');
+            } else {
+                modal.classList.remove('visible');
+            }
+        }
+
+        /**
+         * Menyimpan keranjang ke Local Storage dan memperbarui tampilan hitung.
+         */
+        function saveCart() {
+            localStorage.setItem('lobsterCart', JSON.stringify(cart));
+            updateCartCount();
+        }
+
+        /**
+         * Mengupdate angka pada ikon keranjang.
+         */
+        function updateCartCount() {
+            const cartCountEl = document.getElementById('cart-count');
+            if (cartCountEl) {
+                cartCountEl.textContent = cart.length;
+            }
+        }
+        
+        // --- 5. Fungsi Global untuk Google Maps Callback ---
+        // Fungsi ini harus ada di scope global agar bisa dipanggil oleh API Google Maps.
+        window.initMap = function() {
+            const kutaLocation = { lat: -8.7183, lng: 115.1686 };
+            const map = new google.maps.Map(document.getElementById("map-container"), {
+                zoom: 16,
+                center: kutaLocation,
+                mapId: 'LOBSTER_SHACK_BALI_STYLE' // Custom map ID
+            });
+            const marker = new google.maps.Marker({
+                position: kutaLocation,
+                map: map,
+                title: "Lobster Shack Bali",
+            });
+        };
+
+    </script>
 </body>
 </html>
+
