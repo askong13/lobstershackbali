@@ -1,16 +1,28 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Menu Kami - Lobster Shack Bali</title>
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
   <header class="main-header">
       <div class="container">
-        <a href="/"><img src="assets/images/logo-lobster-shack.png" alt="Logo Lobster Shack" class="logo"></a>
-        <nav class="main-nav"><ul><li><a href="/">Home</a></li><li><a href="/menu.html">Menu</a></li><li><a href="/reservation.html">Reservasi</a></li></ul></nav>
-        <a href="/reservation.html" class="btn">Reservasi</a>
+        <a href="/"><img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo Lobster Shack" class="logo"></a>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/menu.html">Menu</a></li>
+                <li><a href="/reservation.html">Reservasi</a></li>
+            </ul>
+        </nav>
+        <div class="header-actions">
+            <a href="/cart.html" class="cart-icon">
+                🛒 <span id="cart-count">0</span>
+            </a>
+            <a href="/login.html" class="btn">Login</a>
+        </div>
       </div>
   </header>
 
@@ -18,35 +30,21 @@
     <section class="section">
       <div class="container">
         <h1 class="section-title">Menu Lengkap Kami</h1>
-        <div id="full-menu-container" class="menu-grid"><p>Memuat menu...</p></div>
+        <div id="full-menu-container" class="menu-grid">
+            </div>
       </div>
     </section>
   </main>
 
-  <div id="menu-modal" class="modal-overlay hidden">
-    <div class="modal-content">
-      <button class="modal-close-btn">&times;</button>
-      <div id="modal-body">
-        <img id="modal-img" src="" alt="Menu item">
-        <h2 id="modal-title"></h2>
-        <p id="modal-price"></p>
-        <p id="modal-description"></p>
-        <hr>
-        <h3>Kirim Pesanan Ini</h3>
-        <div class="form-group">
-          <label for="delivery-address">Masukkan Alamat Pengiriman:</label>
-          <input type="text" id="delivery-address" placeholder="Mulai ketik alamat Anda...">
-        </div>
-        <button class="btn">Kirim ke Alamat Ini</button>
-      </div>
-    </div>
-  </div>
-
   <footer class="main-footer">
-    <p>&copy; <span id="current-year"></span> Lobster Shack Bali.</p>
+    <div class="container">
+        <p>&copy; <span id="current-year">2025</span> Lobster Shack Bali.</p>
+    </div>
   </footer>
 
-  <script type="module" src="assets/js/app.js"></script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADCv-AX09lIYq6Gr7Gm56rChp4kS0J08Q&libraries=places&callback=initMap"></script>
+  <script type="module" src="/assets/js/app.js"></script>
+  <script>
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
