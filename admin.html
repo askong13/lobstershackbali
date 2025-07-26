@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Lobster Shack Bali</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <main class="section">
+    <div class="container">
+      <h1 class="section-title">Admin Panel</h1>
+      
+      <div id="login-container" class="form-container">
+        <form id="login-form">
+          <div class="form-group"><label for="admin-email">Email</label><input type="email" id="admin-email" required></div>
+          <div class="form-group"><label for="admin-password">Password</label><input type="password" id="admin-password" required></div>
+          <button type="submit" class="btn">Login</button>
+        </form>
+        <div id="login-error" class="form-message error hidden"></div>
+      </div>
+
+      <div id="admin-dashboard" class="hidden">
+        <p>Selamat datang, <span id="admin-user-email"></span>!</p>
+        <button id="logout-btn" class="btn">Logout</button>
+        <hr style="margin: 20px 0;">
+        <h2>Reservasi Masuk</h2>
+        <div id="reservations-list">
+          <table>
+            <thead><tr><th>Tanggal</th><th>Nama</th><th>Email</th><th>Telepon</th><th>Orang</th><th>Status</th></tr></thead>
+            <tbody id="reservations-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script type="module" src="assets/js/admin.js"></script>
+</body>
+</html>
