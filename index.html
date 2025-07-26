@@ -4,280 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lobster Shack Bali - Live & Wild-Caught Lobster</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
-    
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@400;500;700&display=swap');
-        
-        :root {
-            --font-heading: 'Poppins', sans-serif; --font-body: 'Lora', serif;
-            --color-dark-blue: #2D4C5E; --color-lobster-red: #D84B42;
-            --color-sand-bg: #F4F1E8; --color-white: #FFFFFF;
-            --color-grey-light: #f8f9fa; --color-grey-dark: #6c757d;
-            --color-border: #dee2e6; --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-        body { font-family: var(--font-body); background-color: var(--color-sand-bg); color: #333; line-height: 1.7; }
-        .hidden { display: none !important; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        .section { padding: 80px 0; }
-        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 60px; font-family: var(--font-heading); color: var(--color-dark-blue); }
-        .btn { font-family: var(--font-heading); font-weight: 600; padding: 12px 25px; border-radius: 8px; border: none; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; background-color: var(--color-lobster-red); color: var(--color-white); }
-        .btn:hover { background-color: #b93e36; transform: translateY(-2px); }
-        .btn.secondary { background-color: transparent; color: var(--color-dark-blue); border: 2px solid var(--color-dark-blue); }
-
-        /* Header & Slider (Restyle) */
-        .main-header-slider { position: relative; height: 90vh; color: white; }
-        .swiper-main { width: 100%; height: 100%; }
-        .swiper-slide { display: flex; justify-content: center; align-items: center; text-align: center; background-size: cover; background-position: center; }
-        .swiper-slide::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); }
-        .slide-content { position: relative; z-index: 2; animation: fadeIn 1s ease-out; }
-        .slide-content h1 { font-size: 4rem; color: white; text-shadow: 2px 2px 8px rgba(0,0,0,0.7); font-family: var(--font-heading); }
-        .slide-content p { font-size: 1.2rem; margin-top: 10px; }
-        .navigation-overlay { position: absolute; top: 0; left: 0; width: 100%; padding: 20px 40px; z-index: 10; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); transition: background-color 0.3s ease; }
-        .navigation-overlay .logo { height: 50px; }
-        .navigation-overlay .main-nav { list-style: none; display: flex; gap: 30px; }
-        .navigation-overlay .main-nav a { color: white; font-family: var(--font-heading); font-weight: 600; text-decoration: none; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
-        .header-actions { display: flex; align-items: center; gap: 25px; }
-        .user-auth .auth-link, #user-name { color: var(--color-white); text-shadow: 1px 1px 3px rgba(0,0,0,0.5); font-weight: 600; text-decoration: none; }
-        #user-info { display: flex; align-items: center; gap: 15px; }
-        .lang-switcher { color: white; font-family: var(--font-heading); }
-        .lang-switcher a { color: #ddd; text-decoration: none; padding: 5px; }
-        .lang-switcher a.active { color: white; font-weight: 700; border-bottom: 2px solid var(--color-lobster-red); }
-        .cart-icon { position: relative; color: white; font-size: 1.5rem; text-decoration: none; }
-        #cart-count { position: absolute; top: -5px; right: -10px; background-color: var(--color-lobster-red); color: white; font-size: 0.8rem; font-weight: 600; border-radius: 50%; width: 22px; height: 22px; display: flex; justify-content: center; align-items: center; }
-
-        /* Bagian Konten: Promise & Story */
-        .promise-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; text-align: center; }
-        .promise-item .icon { font-size: 3rem; margin-bottom: 20px; color: var(--color-lobster-red); }
-        .promise-item h3 { font-family: var(--font-heading); font-size: 1.5rem; color: var(--color-dark-blue); margin-bottom: 10px; }
-        .story-container { display: flex; align-items: center; gap: 50px; flex-wrap: wrap; }
-        .story-content, .story-image { flex: 1 1 400px; }
-        .story-content h2 { font-size: 2.5rem; margin-bottom: 20px; }
-        .story-content p { font-size: 1.1rem; font-style: italic; color: var(--color-grey-dark); }
-        .story-image img { width: 100%; border-radius: 12px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
-
-        /* Menu Card */
-        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .menu-card { background: var(--color-white); border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-sm); transition: all 0.3s ease; display: flex; flex-direction: column; }
-        .menu-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
-        .menu-card img { width: 100%; height: 200px; object-fit: cover; }
-        .menu-card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
-        .menu-card-price { font-family: var(--font-heading); font-weight: 700; color: var(--color-lobster-red); font-size: 1.2rem; margin: 10px 0; }
-        .card-buttons { display: flex; gap: 10px; margin-top: auto; padding-top: 15px; }
-        .card-buttons .btn { width: 50%; padding: 10px; font-size: 0.9rem; }
-
-        /* Slider Kategori Menu */
-        .category-slider-container { margin-bottom: 40px; }
-        .swiper-categories { padding: 10px 0; }
-        .category-slide { width: auto !important; }
-        .category-btn { padding: 10px 20px; border: 2px solid var(--color-border); background: var(--color-white); color: var(--color-grey-dark); border-radius: 20px; font-family: var(--font-heading); cursor: pointer; transition: all 0.3s ease; }
-        .category-btn.active { background: var(--color-dark-blue); color: var(--color-white); border-color: var(--color-dark-blue); }
-
-        /* Modal/Pop-up */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; display: flex; justify-content: center; align-items: center; animation: fadeIn 0.3s ease; }
-        .modal-content { background: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 600px; position: relative; }
-        .modal-close-btn { position: absolute; top: 10px; right: 15px; font-size: 2rem; background: none; border: none; cursor: pointer; color: #aaa; }
-
-        /* Halaman Form & Cart */
-        .form-page-wrapper { display: flex; justify-content: center; align-items: center; min-height: 80vh; }
-        .form-container { background: var(--color-white); padding: 40px; border-radius: 8px; box-shadow: var(--shadow-sm); width: 100%; max-width: 500px; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-family: var(--font-heading); margin-bottom: 8px; font-weight: 600; }
-        .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid var(--color-border); border-radius: 5px; font-family: var(--font-body); font-size: 1rem; }
-        .form-switch { margin-top: 20px; color: var(--color-grey-dark); text-align: center; }
-        .cart-item { display: flex; gap: 20px; border-bottom: 1px solid var(--color-border); padding: 20px 0; }
-        .cart-item img { width: 100px; height: 100px; object-fit: cover; border-radius: 8px; }
-        .cart-summary { margin-top: 30px; text-align: right; border-top: 2px solid var(--color-dark-blue); padding-top: 20px; }
-
-        /* Lainnya */
-        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--color-dark-blue); color: white; display: flex; justify-content: center; align-items: center; font-size: 2rem; z-index: 9999; font-family: var(--font-heading); }
-        .page { animation: fadeIn 0.6s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+    <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
-    <header class="main-header-slider">
-        <div class="swiper swiper-main"><div class="swiper-wrapper" id="slider-container"></div><div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div></div>
-        <div class="navigation-overlay">
-            <a href="/"><img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo" class="logo"></a>
+    <header class="main-header">
+        <div class="container">
+            <a href="/"><img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo Lobster Shack" class="logo"></a>
             <nav class="main-nav">
                 <ul>
-                    <li><a href="#home" data-text-id="Beranda" data-text-en="Home">Beranda</a></li>
-                    <li><a href="#menu" data-text-id="Menu" data-text-en="Menu">Menu</a></li>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/menu.html">Menu</a></li>
+                    <li><a href="/reservation.html">Reservasi</a></li>
                 </ul>
             </nav>
             <div class="header-actions">
-                <div id="user-auth-section" class="user-auth">
-                    <a href="#login" id="login-link" class="auth-link">Login/Register</a>
-                    <div id="user-info" class="hidden"><span id="user-name"></span><a href="#" id="logout-link" class="auth-link">Logout</a></div>
-                </div>
-                <div class="lang-switcher"><a href="#" id="lang-id">ID</a><span>|</span><a href="#" id="lang-en">EN</a></div>
-                <a href="#cart" class="cart-icon">🛒 <span id="cart-count">0</span></a>
+                <a href="/cart.html" class="cart-icon">
+                    🛒 <span id="cart-count">0</span>
+                </a>
+                <a href="/login.html" class="btn">Login</a>
             </div>
         </div>
     </header>
 
-    <main id="main-content"></main>
-    <div id="modal-container"></div>
-    <footer class="main-footer"><p>&copy; <span id="current-year"></span> Lobster Shack Bali.</p></footer>
-    
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script>function initMap() { window.dispatchEvent(new CustomEvent('map-api-loaded')); }</script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADCv-AX09lIYq6Gr7Gm56rChp4kS0J08Q&libraries=places&callback=initMap"></script>
+    <main>
+        <section class="hero-section">
+            <div class="container">
+                <h1>Fresh Lobster, Straight from the Ocean</h1>
+                <p>Experience the best wild-caught lobster in Bali.</p>
+            </div>
+        </section>
 
-    <script type="module">
-        // --- IMPORTS & CONFIG ---
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-        import { getDatabase, ref, get, set, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
-        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
-            authDomain: "lobster-shack-bali.firebaseapp.com",
-            databaseURL: "https://lobster-shack-bali-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "lobster-shack-bali",
-            storageBucket: "lobster-shack-bali.firebasestorage.app",
-            messagingSenderId: "42452974733",
-            appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
-        };
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const auth = getAuth();
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">Menu Unggulan Kami</h2>
+                <div id="featured-menu-container" class="menu-grid">
+                    </div>
+            </div>
+        </section>
+    </main>
 
-        // --- GLOBAL STATE ---
-        let currentUser = null, productsData = {}, siteContentData = {};
-        let cart = JSON.parse(localStorage.getItem('lobsterCart')) || [];
-        let currentLang = localStorage.getItem('preferredLanguage') || 'id';
-        const categoryTranslations = { all: { en: "All", id: "Semua" }, lobster_roll: { en: "Lobster Rolls", id: "Roll Lobster" }, appetizer: { en: "Appetizers", id: "Pembuka" }, grill: { en: "From the Grill", id: "Panggangan" }, main: { en: "Mains", id: "Utama" }, salad: { en: "Salads", id: "Salad" }, pasta: { en: "Pasta", id: "Pasta" }, side: { en: "Sides", id: "Sampingan" }, dessert: { en: "Desserts", id: "Penutup" }, drink: { en: "Drinks", id: "Minuman" }};
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; <span id="current-year">2025</span> Lobster Shack Bali.</p>
+        </div>
+    </footer>
 
-        // --- MAIN INITIALIZATION ---
-        async function initApp() {
-            document.body.insertAdjacentHTML('beforeend', '<div class="loading-overlay">Memuat...</div>');
-            try {
-                await Promise.all([fetchProducts(), fetchSiteContent()]);
-            } catch (error) {
-                document.querySelector('.loading-overlay').textContent = 'Gagal memuat data.'; return;
-            }
-            document.querySelector('.loading-overlay')?.remove();
-            
-            setupAuthListener();
-            setupLanguageSwitcher();
-            setupEventListeners();
-            window.addEventListener('hashchange', handleRouteChange);
-            handleRouteChange();
-            updateCartCount();
-            document.getElementById('current-year').textContent = new Date().getFullYear();
-        }
-        
-        // --- DATA FETCHING ---
-        async function fetchProducts() { const s = await get(ref(db, 'products')); if (s.exists()) productsData = s.val(); }
-        async function fetchSiteContent() { const s = await get(ref(db, 'siteContent')); if (s.exists()) siteContentData = s.val(); }
-
-        // --- ROUTING & PAGE RENDERING ---
-        function handleRouteChange() {
-            const hash = window.location.hash || '#home';
-            renderPageContent(hash.substring(1));
-        }
-
-        function renderPageContent(page) {
-            const mainContainer = document.getElementById('main-content');
-            let html = '';
-            switch(page) {
-                case 'menu': html = getMenuPageHTML(); break;
-                case 'login': html = getLoginPageHTML(); break;
-                case 'register': html = getRegisterPageHTML(); break;
-                case 'cart': html = getCartPageHTML(); break;
-                default: html = getHomePageHTML(); break;
-            }
-            mainContainer.innerHTML = html;
-            
-            switch(page) {
-                case 'home': renderPromiseSection(); renderStorySection(); renderMenu('menu-grid-container-featured', p => p.is_featured); break;
-                case 'menu': renderCategorySlider(); renderMenu('menu-grid-container-full', () => true, 'all'); break;
-                case 'cart': displayCart(); break;
-            }
-            updateLanguageUI();
-        }
-        
-        // --- HTML TEMPLATES ---
-        function getHomePageHTML() { return `<section id="our-promise" class="section" style="background-color: #fff;"><div class="container" id="promise-container"></div></section><section id="our-story" class="section"><div class="container" id="story-container"></div></section><section id="featured-menu" class="section"><div class="container"><h2 class="section-title" data-text-id="Menu Unggulan" data-text-en="Featured Menu"></h2><div id="menu-grid-container-featured" class="menu-grid"></div></div></section>`; }
-        function getMenuPageHTML() { return `<section class="section"><div class="container"><h1 class="section-title" data-text-id="Menu Lengkap Kami" data-text-en="Our Full Menu"></h1><div class="category-slider-container swiper swiper-categories"><div class="swiper-wrapper" id="category-slider-wrapper"></div></div><div id="menu-grid-container-full" class="menu-grid"></div></div></section>`; }
-        function getLoginPageHTML() { return `<div class="form-page-wrapper"><div class="form-container"><h1>Login</h1><form id="login-form"><div class="form-group"><label>Email</label><input type="email" id="login-email" required></div><div class="form-group"><label>Password</label><input type="password" id="login-password" required></div><button type="submit" class="btn">Login</button></form><p class="form-switch" data-text-id="Belum punya akun? " data-text-en="Don't have an account? "><a href="#register" data-text-id="Daftar di sini" data-text-en="Register here"></a></p><div id="form-error" class="form-message error hidden"></div></div></div>`; }
-        function getRegisterPageHTML() { return `<div class="form-page-wrapper"><div class="form-container"><h1>Buat Akun</h1><form id="register-form"><div class="form-group"><label>Nama Lengkap</label><input type="text" id="reg-name" required></div><div class="form-group"><label>Email</label><input type="email" id="reg-email" required></div><div class="form-group"><label>Password</label><input type="password" id="reg-password" required></div><button type="submit" class="btn">Daftar</button></form><p class="form-switch" data-text-id="Sudah punya akun? " data-text-en="Already have an account? "><a href="#login" data-text-id="Login di sini" data-text-en="Login here"></a></p><div id="form-error" class="form-message error hidden"></div></div></div>`; }
-        function getCartPageHTML() { return `<section class="section"><div class="container"><h1 class="section-title" data-text-id="Keranjang Anda" data-text-en="Your Cart"></h1><div id="cart-items-container"></div><div id="cart-summary" class="hidden"><h3 id="cart-total"></h3><button class="btn" id="checkout-btn" data-text-id="Checkout" data-text-en="Checkout"></button></div></div></section>`; }
-
-        // --- AUTHENTICATION ---
-        function setupAuthListener() { onAuthStateChanged(auth, user => { currentUser = user; updateAuthUI(user); }); }
-        function updateAuthUI(user) {
-            const loginLink = document.getElementById('login-link'), userInfo = document.getElementById('user-info');
-            if (user) {
-                loginLink.classList.add('hidden'); userInfo.classList.remove('hidden');
-                get(ref(db, `users/${user.uid}/profile/name`)).then(s => { document.getElementById('user-name').textContent = s.val() || user.email.split('@')[0]; });
-                document.getElementById('logout-link').onclick = e => { e.preventDefault(); signOut(auth); };
-            } else {
-                loginLink.classList.remove('hidden'); userInfo.classList.add('hidden');
-            }
-        }
-        
-        // --- LANGUAGE SWITCHER ---
-        function setupLanguageSwitcher() {
-            document.getElementById('lang-id').addEventListener('click', e => { e.preventDefault(); switchLanguage('id'); });
-            document.getElementById('lang-en').addEventListener('click', e => { e.preventDefault(); switchLanguage('en'); });
-        }
-        function switchLanguage(lang) { currentLang = lang; localStorage.setItem('preferredLanguage', lang); handleRouteChange(); }
-        function updateLanguageUI() {
-            document.getElementById('lang-id').classList.toggle('active', currentLang === 'id');
-            document.getElementById('lang-en').classList.toggle('active', currentLang === 'en');
-            document.documentElement.lang = currentLang;
-            document.querySelectorAll('[data-text-id]').forEach(el => { el.childNodes[0].nodeValue = el.dataset[`text${currentLang}`] + (el.childNodes.length > 1 ? '' : ''); });
-        }
-        
-        // --- DYNAMIC CONTENT RENDERING ---
-        function renderPromiseSection() { /* ... kode sama dari sebelumnya ... */ }
-        function renderStorySection() { /* ... kode sama dari sebelumnya ... */ }
-        function renderMenu(containerId, filter) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = '';
-            for (const key in productsData) {
-                const p = productsData[key];
-                if (filter(p)) {
-                    const priceIDR = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(p.price);
-                    const card = document.createElement('div'); card.className = 'menu-card';
-                    card.innerHTML = `<img src="${p.imageUrl}" alt="${p[`name_${currentLang}`]}"><div class="menu-card-content"><h3>${p[`name_${currentLang}`]}</h3><p class="menu-card-price">${priceIDR}</p><p>${p[`description_${currentLang}`]}</p><div class="card-buttons"><button class="btn secondary add-to-cart-btn" data-product-id="${key}" data-text-id="+ Keranjang" data-text-en="Add to Cart"></button><button class="btn order-now-btn" data-product-id="${key}" data-text-id="Pesan" data-text-en="Order"></button></div></div>`;
-                    container.appendChild(card);
-                }
-            }
-        }
-        function renderCategorySlider() {
-            const wrapper = document.getElementById('category-slider-wrapper');
-            const categories = ['all', ...new Set(Object.values(productsData).map(p => p.category))];
-            wrapper.innerHTML = categories.map(cat => `<div class="swiper-slide category-slide"><button class="category-btn" data-category="${cat}">${categoryTranslations[cat][currentLang]}</button></div>`).join('');
-            new Swiper('.swiper-categories', { slidesPerView: 'auto', spaceBetween: 10, freeMode: true });
-        }
-        
-        // --- EVENT LISTENERS ---
-        function setupEventListeners() {
-            document.body.addEventListener('submit', e => {
-                e.preventDefault();
-                if (e.target.id === 'login-form') { /* ... handle login ... */ }
-                if (e.target.id === 'register-form') { /* ... handle register ... */ }
-            });
-            document.body.addEventListener('click', e => {
-                if (e.target.classList.contains('category-btn')) {
-                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-                    e.target.classList.add('active');
-                    const category = e.target.dataset.category;
-                    renderMenu('menu-grid-container-full', p => category === 'all' ? true : p.category === category);
-                    updateLanguageUI();
-                }
-                // ... (add to cart, order now click listeners)
-            });
-        }
-        
-        // JALANKAN APLIKASI
-        initApp();
+    <script type="module" src="/assets/js/app.js"></script>
+    <script>
+        // Script kecil untuk tahun footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
     </script>
 </body>
 </html>
