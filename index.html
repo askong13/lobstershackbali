@@ -13,186 +13,50 @@
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
     <style>
-        /* ------------------- */
-        /* ROOT & BASE STYLES  */
-        /* ------------------- */
         :root {
-            --font-heading: 'Playfair Display', serif;
-            --font-body: 'Poppins', sans-serif;
-            --color-primary: #D84B42;
-            --color-secondary: #2D4C5E;
-            --color-background: #F8F6F0;
-            --color-surface: #FFFFFF;
-            --color-text: #333333;
-            --color-text-light: #6c757d;
-            --color-border: #E0DACE;
-            --shadow-sm: 0 2px 8px rgba(45, 76, 94, .07);
-            --shadow-md: 0 4px 15px rgba(45, 76, 94, .12);
-            --shadow-lg: 0 8px 30px rgba(45, 76, 94, .2);
-            --border-radius: 12px;
-            --transition-speed: .4s;
-            --container-width: 1240px;
+            --font-heading: 'Playfair Display', serif; --font-body: 'Poppins', sans-serif;
+            --color-primary: #D84B42; --color-secondary: #2D4C5E; --color-background: #F8F6F0;
+            --color-surface: #FFFFFF; --color-text: #333333; --color-text-light: #6c757d;
+            --color-border: #E0DACE; --shadow-sm: 0 2px 8px rgba(45, 76, 94, .07);
+            --shadow-md: 0 4px 15px rgba(45, 76, 94, .12); --shadow-lg: 0 8px 30px rgba(45, 76, 94, .2);
+            --border-radius: 12px; --transition-speed: .4s; --container-width: 1240px;
         }
         *, ::after, ::before { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; font-size: 16px; }
         body {
-            font-family: var(--font-body);
-            background-color: var(--color-background);
-            color: var(--color-text);
-            line-height: 1.8;
-            -webkit-font-smoothing: antialiased;
+            font-family: var(--font-body); background-color: var(--color-background);
+            color: var(--color-text); line-height: 1.8; -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
         }
         .container { width: 100%; max-width: var(--container-width); margin: 0 auto; padding: 0 24px; }
         .section { padding: 6rem 0; }
         .section-header { text-align: center; margin-bottom: 4rem; }
-        .section-header .subtitle {
-            color: var(--color-primary);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: .5rem;
-            display: block;
-        }
-        .section-header .title {
-            font-family: var(--font-heading);
-            font-size: clamp(2.5rem, 5vw, 3.5rem);
-            font-weight: 700;
-            color: var(--color-secondary);
-            line-height: 1.2;
-            margin-bottom: 1rem;
-        }
-
-        /* ------------------- */
-        /* COMPONENTS          */
-        /* ------------------- */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: .75rem;
-            font-family: var(--font-body);
-            font-weight: 600;
-            padding: .875rem 2rem;
-            border-radius: 50px;
-            border: 2px solid var(--color-primary);
-            cursor: pointer;
-            text-decoration: none;
-            transition: all var(--transition-speed) ease;
-            background-color: var(--color-primary);
-            color: var(--color-surface);
-            text-align: center;
-        }
-        .btn:hover {
-            background-color: #b93e36;
-            border-color: #b93e36;
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: var(--shadow-md);
-        }
-
-        /* ------------------- */
-        /* HEADER & NAVIGATION (REVISED) */
-        /* ------------------- */
-        .main-header {
-            background-color: rgba(255, 255, 255, .85);
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-            padding: 1rem 0;
-            box-shadow: var(--shadow-sm);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+        .section-header .subtitle { color: var(--color-primary); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: .5rem; display: block; }
+        .section-header .title { font-family: var(--font-heading); font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 700; color: var(--color-secondary); line-height: 1.2; margin-bottom: 1rem; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: .75rem; font-family: var(--font-body); font-weight: 600; padding: .875rem 2rem; border-radius: 50px; border: 2px solid var(--color-primary); cursor: pointer; text-decoration: none; transition: all var(--transition-speed) ease; background-color: var(--color-primary); color: var(--color-surface); text-align: center; }
+        .btn:hover { background-color: #b93e36; border-color: #b93e36; transform: translateY(-3px) scale(1.05); box-shadow: var(--shadow-md); }
+        .main-header { background-color: rgba(255, 255, 255, .85); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); padding: 1rem 0; box-shadow: var(--shadow-sm); position: sticky; top: 0; z-index: 1000; }
         .header-container { display: flex; justify-content: space-between; align-items: center; position: relative; }
         .main-header .logo { height: 55px; z-index: 1001; }
         .header-actions { display: flex; align-items: center; gap: 1rem; z-index: 1001; }
-        .language-toggle {
-            display: flex;
-            background-color: #e9e5d9;
-            border-radius: 50px;
-            padding: 4px;
-            border: 1px solid var(--color-border);
-        }
-        .lang-btn {
-            background: 0 0;
-            border: none;
-            padding: .5rem .75rem;
-            cursor: pointer;
-            font-weight: 600;
-            color: var(--color-text-light);
-            border-radius: 50px;
-            transition: all var(--transition-speed) ease;
-        }
+        .language-toggle { display: flex; background-color: #e9e5d9; border-radius: 50px; padding: 4px; border: 1px solid var(--color-border); }
+        .lang-btn { background: 0 0; border: none; padding: .5rem .75rem; cursor: pointer; font-weight: 600; color: var(--color-text-light); border-radius: 50px; transition: all var(--transition-speed) ease; }
         .lang-btn.active { background: var(--color-primary); color: #fff; }
-        
         .nav-links { list-style: none; display: flex; gap: 2.5rem; }
         .nav-links a { text-decoration: none; font-weight: 600; color: var(--color-secondary); position: relative; padding-bottom: .5rem; }
-        .nav-links a:after {
-            content: ""; position: absolute; bottom: 0; left: 50%;
-            transform: translateX(-50%); width: 0; height: 2px;
-            background-color: var(--color-primary);
-            transition: width var(--transition-speed) ease;
-        }
+        .nav-links a:after { content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 0; height: 2px; background-color: var(--color-primary); transition: width var(--transition-speed) ease; }
         .nav-links a.active:after, .nav-links a:hover:after { width: 100%; }
-        
-        .mobile-menu-toggle {
-            display: none; font-size: 1.5rem; color: var(--color-secondary);
-            background: transparent; border: none; cursor: pointer;
-        }
-
-        /* ------------------- */
-        /* HERO SECTION (REVISED) */
-        /* ------------------- */
-        @keyframes kenburns {
-            0% { transform: scale(1.1) translate(0, 0); }
-            50% { transform: scale(1.15) translate(2%, -2%); }
-            100% { transform: scale(1.1) translate(0, 0); }
-        }
-        .hero-section { position: relative; }
-        .hero-slider .swiper-slide {
-            height: 90vh;
-            min-height: 700px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-size: cover;
-            background-position: center;
-            overflow: hidden;
-        }
-        .hero-slider .swiper-slide::before {
-             content:''; display: block; position: absolute; top:0; left:0; right:0; bottom:0;
-             background-image: inherit; background-size: cover; background-position: center;
-             animation: kenburns 15s ease-in-out infinite;
-        }
-        .hero-slider .slide-overlay {
-            background: linear-gradient(to top, rgba(216, 75, 66, 0.1), rgba(45, 76, 94, 0.8));
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-        }
-        .hero-content {
-            position: relative; z-index: 2; text-align: center; color: #fff; padding: 0 1rem;
-        }
-        .hero-content h1 {
-            font-family: var(--font-heading);
-            font-size: clamp(3rem, 7vw, 5.5rem);
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, .5);
-        }
-        .hero-content p {
-            font-size: 1.25rem; margin: 1.5rem auto 2.5rem; max-width: 600px; line-height: 1.6;
-        }
-        .hero-slider .swiper-button-next, .hero-slider .swiper-button-prev { color: #fff; }
-        .hero-slider .swiper-pagination-bullet-active { background-color: var(--color-primary); }
-
-        /* ------------------- */
-        /* MENU SECTION (REVISED CARD) */
-        /* ------------------- */
-        .menu-card {
-            background: var(--color-surface); border-radius: var(--border-radius);
-            overflow: hidden; box-shadow: var(--shadow-sm);
-            transition: all var(--transition-speed) ease;
-            display: flex; flex-direction: column; opacity: 1;
-            transform: scale(1); transition: transform 0.4s ease, opacity 0.4s ease;
-        }
+        .mobile-menu-toggle { display: none; font-size: 1.5rem; color: var(--color-secondary); background: transparent; border: none; cursor: pointer; }
+        @keyframes kenburns { 0% { transform: scale(1.1) translate(0, 0); } 50% { transform: scale(1.15) translate(2%, -2%); } 100% { transform: scale(1.1) translate(0, 0); } }
+        .hero-section { padding-top: 4rem; padding-bottom: 4rem; }
+        .hero-content { text-align: center; margin-bottom: 3rem; }
+        .hero-content h1 { font-family: var(--font-heading); font-size: clamp(3rem, 7vw, 4.5rem); color: var(--color-secondary); line-height: 1.1; margin-bottom: 1rem; }
+        .hero-content p { font-size: 1.25rem; margin: 0 auto 2rem; max-width: 650px; color: var(--color-text-light); }
+        .hero-slider .swiper-slide { height: 65vh; min-height: 500px; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; overflow: hidden; border-radius: var(--border-radius); }
+        .hero-slider .swiper-slide::before { content:''; display: block; position: absolute; top:0; left:0; right:0; bottom:0; background-image: inherit; background-size: cover; background-position: center; animation: kenburns 15s ease-in-out infinite; }
+        .hero-slider .slide-overlay { background: linear-gradient(to top, rgba(45, 76, 94, 0.4), rgba(45, 76, 94, 0.1)); position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .hero-slider .swiper-button-next, .hero-slider .swiper-button-prev { color: #fff; } .hero-slider .swiper-pagination-bullet-active { background-color: var(--color-primary); }
+        .menu-card { background: var(--color-surface); border-radius: var(--border-radius); overflow: hidden; box-shadow: var(--shadow-sm); transition: all var(--transition-speed) ease; display: flex; flex-direction: column; opacity: 1; transform: scale(1); transition: transform 0.4s ease, opacity 0.4s ease; }
         .menu-card.hidden { transform: scale(0.9); opacity: 0; height: 0; padding: 0; margin: 0; border: 0; overflow: hidden; }
         .menu-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-md); }
         .menu-card-image { width: 100%; height: 240px; overflow: hidden; }
@@ -202,163 +66,77 @@
         .menu-card h3 { font-family: var(--font-heading); color: var(--color-secondary); font-size: 1.5rem; }
         .menu-card-price { font-weight: 700; color: var(--color-primary); font-size: 1.375rem; margin: 0.5rem 0 1rem; }
         .menu-card .description { flex-grow: 1; margin-bottom: 1.5rem; color: var(--color-text-light); font-size: 0.95rem; }
-
-        /* Featured Slider Landscape Card */
-        .featured-slider .swiper-slide { width: 520px; height: 250px; }
-        .featured-slider { padding-bottom: 3rem; }
-        .featured-slider .menu-card {
-            flex-direction: row; height: 100%;
-        }
-        .featured-slider .menu-card-image { width: 45%; height: 100%; }
+        .featured-slider .swiper-slide { width: 520px; height: 250px; } .featured-slider { padding-bottom: 3rem; }
+        .featured-slider .menu-card { flex-direction: row; height: 100%; } .featured-slider .menu-card-image { width: 45%; height: 100%; }
         .featured-slider .menu-card-content { width: 55%; text-align: left; justify-content: center; }
-        
         .menu-filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 3rem; }
-        .filter-btn {
-            background: 0 0; border: 2px solid var(--color-border); color: var(--color-text-light);
-            font-weight: 600; padding: .6rem 1.5rem; border-radius: 50px;
-            cursor: pointer; transition: all var(--transition-speed) ease;
-        }
+        .filter-btn { background: 0 0; border: 2px solid var(--color-border); color: var(--color-text-light); font-weight: 600; padding: .6rem 1.5rem; border-radius: 50px; cursor: pointer; transition: all var(--transition-speed) ease; }
         .filter-btn.active, .filter-btn:hover { background-color: var(--color-secondary); color: #fff; border-color: var(--color-secondary); }
         .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
-
-        /* ------------------- */
-        /* GALLERY & OTHER SECTIONS (Unchanged, included for completeness) */
-        /* ------------------- */
         .timeline { position: relative; max-width: 900px; margin: 4rem auto 0; }
         .timeline:after { content: ""; position: absolute; width: 3px; background-color: var(--color-border); top: 0; bottom: 0; left: 50%; margin-left: -1.5px; }
-        .timeline-item { padding: 10px 40px; position: relative; width: 50%; }
-        .timeline-item.left { left: 0; }
-        .timeline-item.right { left: 50%; }
+        .timeline-item { padding: 10px 40px; position: relative; width: 50%; } .timeline-item.left { left: 0; } .timeline-item.right { left: 50%; }
         .timeline-item:after { content: "🦞"; font-family: sans-serif; font-size: 1rem; display: flex; align-items: center; justify-content: center; position: absolute; width: 32px; height: 32px; background-color: var(--color-primary); color: #fff; top: 30px; border-radius: 50%; z-index: 1; box-shadow: 0 0 0 4px var(--color-background); }
-        .timeline-item.left:after { right: -17.5px; }
-        .timeline-item.right:after { left: -17.5px; }
+        .timeline-item.left:after { right: -17.5px; } .timeline-item.right:after { left: -17.5px; }
         .timeline-content { padding: 1.5rem 2rem; background-color: var(--color-surface); border-radius: var(--border-radius); box-shadow: var(--shadow-sm); transition: transform var(--transition-speed), box-shadow var(--transition-speed); }
-        .timeline-content:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
-        .timeline-content .year { font-family: var(--font-heading); color: var(--color-primary); font-size: 2rem; }
+        .timeline-content:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); } .timeline-content .year { font-family: var(--font-heading); color: var(--color-primary); font-size: 2rem; }
         .timeline-content h3 { font-size: 1.3rem; color: var(--color-secondary); margin-top: .5rem; }
-        
-        .gallery-section { background: var(--color-surface); }
-        .gallery-grid { columns: 4 250px; column-gap: 1rem; }
+        .gallery-section { background: var(--color-surface); } .gallery-grid { columns: 4 250px; column-gap: 1rem; }
         .gallery-grid a { display: block; overflow: hidden; border-radius: 8px; margin-bottom: 1rem; position: relative; }
-        .gallery-grid img { width: 100%; display: block; transition: transform var(--transition-speed) ease; }
-        .gallery-grid a:hover img { transform: scale(1.05); }
+        .gallery-grid img { width: 100%; display: block; transition: transform var(--transition-speed) ease; } .gallery-grid a:hover img { transform: scale(1.05); }
         .gallery-grid a::after { content: '\f00e'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: rgba(45, 76, 94, 0.6); color: #fff; font-size: 2rem; opacity: 0; transition: opacity var(--transition-speed) ease; }
         .gallery-grid a:hover::after { opacity: 1; }
-
-        /* ------------------- */
-        /* CONTACT & MAP SECTION (NEW) */
-        /* ------------------- */
         .contact-section-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
-        .contact-details h3 { font-family: var(--font-heading); color: var(--color-secondary); font-size: 1.8rem; margin-bottom: 1rem; }
-        .contact-details p { margin-bottom: 1.5rem; }
+        .contact-details h3 { font-family: var(--font-heading); color: var(--color-secondary); font-size: 1.8rem; margin-bottom: 1rem; } .contact-details p { margin-bottom: 1.5rem; }
         .contact-info-item { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
         .contact-info-item i { font-size: 1.5rem; color: var(--color-primary); width: 30px; }
         #address-map { height: 400px; width: 100%; border-radius: var(--border-radius); background-color: #eee; border: 4px solid var(--color-surface); box-shadow: var(--shadow-md); }
-
-
-        /* ------------------- */
-        /* FOOTER              */
-        /* ------------------- */
         .main-footer { background-color: var(--color-secondary); color: rgba(255, 255, 255, .8); padding: 4rem 0 2rem; text-align: center; }
         .main-footer .logo { height: 70px; margin-bottom: 1.5rem; filter: brightness(0) invert(1); }
         .main-footer p { max-width: 500px; margin: 0 auto 1.5rem; }
         .footer-socials { display: flex; justify-content: center; gap: 1.5rem; list-style: none; margin-bottom: 2rem; }
-        .footer-socials a { color: #fff; font-size: 1.5rem; transition: color 0.3s ease, transform 0.3s ease; }
-        .footer-socials a:hover { color: var(--color-primary); transform: scale(1.2); }
-        .footer-copyright { border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 2rem; margin-top: 2rem; }
-        .footer-copyright p { font-size: 0.9rem; margin-bottom: 0; }
-
-        /* ------------------- */
-        /* MODAL & TOAST (Unchanged) */
-        /* ------------------- */
+        .footer-socials a { color: #fff; font-size: 1.5rem; transition: color 0.3s ease, transform 0.3s ease; } .footer-socials a:hover { color: var(--color-primary); transform: scale(1.2); }
+        .footer-copyright { border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 2rem; margin-top: 2rem; } .footer-copyright p { font-size: 0.9rem; margin-bottom: 0; }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, .6); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 1rem; opacity: 0; visibility: hidden; transition: opacity var(--transition-speed) ease, visibility 0s var(--transition-speed); }
         .modal-overlay.visible { opacity: 1; visibility: visible; transition-delay: 0s; }
         .modal-content { background: var(--color-background); border-radius: var(--border-radius); width: 100%; max-width: 550px; max-height: 90vh; overflow-y: auto; position: relative; transform: scale(.9); transition: transform var(--transition-speed) ease; }
         .modal-overlay.visible .modal-content { transform: scale(1); }
         .modal-header { padding: 1.5rem 2rem; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center; background-color: var(--color-surface); border-radius: var(--border-radius) var(--border-radius) 0 0; }
         .modal-header h2 { font-family: var(--font-heading); color: var(--color-secondary); font-size: 1.5rem; }
-        .modal-close-btn { font-size: 1.75rem; background: 0 0; border: none; cursor: pointer; color: #aaa; transition: color 0.3s ease; }
-        .modal-close-btn:hover { color: var(--color-primary); }
+        .modal-close-btn { font-size: 1.75rem; background: 0 0; border: none; cursor: pointer; color: #aaa; transition: color 0.3s ease; } .modal-close-btn:hover { color: var(--color-primary); }
         .modal-body { padding: 1.5rem 2rem; }
         .form-group { margin-bottom: 1.25rem; }
         .form-group label { display: block; font-weight: 600; margin-bottom: .5rem; color: var(--color-secondary); }
-        .form-group input, .form-group textarea { width: 100%; padding: .8rem 1rem; border-radius: 8px; border: 1px solid var(--color-border); font-family: var(--font-body); font-size: 1rem; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
-        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(216, 75, 66, 0.2); }
-        
+        .form-group input { width: 100%; padding: .8rem 1rem; border-radius: 8px; border: 1px solid var(--color-border); font-family: var(--font-body); font-size: 1rem; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        .form-group input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(216, 75, 66, 0.2); }
+        #order-map-container { height: 200px; width: 100%; margin-top: 1.5rem; border-radius: 8px; background-color: #eee; }
         .toast-notification { position: fixed; bottom: 2rem; right: 2rem; background-color: var(--color-secondary); color: #fff; padding: 1rem 1.5rem; border-radius: var(--border-radius); box-shadow: var(--shadow-lg); z-index: 3000; display: flex; align-items: center; gap: 1rem; transform: translateX(calc(100% + 2rem)); transition: transform .5s ease-in-out; }
-        .toast-notification.show { transform: translateX(0); }
-        .toast-notification.error { background-color: var(--color-primary); }
-        .toast-notification.success { background-color: #28a745; }
-        .toast-notification i { font-size: 1.5rem; }
-        .toast-notification p { margin: 0; }
-
-        /* ------------------- */
-        /* RESPONSIVE STYLES (REVISED) */
-        /* ------------------- */
+        .toast-notification.show { transform: translateX(0); } .toast-notification.error { background-color: var(--color-primary); } .toast-notification.success { background-color: #28a745; }
+        .toast-notification i { font-size: 1.5rem; } .toast-notification p { margin: 0; }
         @media (max-width: 992px) {
-            .nav-links { display: none; } /* Hide desktop nav */
-            .main-nav { /* This is the mobile dropdown container */
-                display: block;
-                position: absolute;
-                top: 100%;
-                left: 0; right: 0;
-                background: var(--color-background);
-                box-shadow: var(--shadow-md);
-                border-bottom-left-radius: var(--border-radius);
-                border-bottom-right-radius: var(--border-radius);
-                padding: 1rem 0;
-                transform: translateY(-20px);
-                opacity: 0;
-                visibility: hidden;
-                transition: transform .3s ease, opacity .3s ease, visibility 0s .3s;
-            }
-            .main-nav.active {
-                transform: translateY(0);
-                opacity: 1;
-                visibility: visible;
-                transition: transform .3s ease, opacity .3s ease, visibility 0s 0s;
-            }
-            .main-nav .nav-links { /* Mobile nav links */
-                display: flex;
-                flex-direction: column;
-                text-align: center;
-                gap: .5rem;
-            }
-            .main-nav .nav-links a {
-                padding: .75rem 1.5rem;
-                font-size: 1rem;
-            }
-            .nav-links a:after { display: none; } /* Remove underline effect on mobile */
-            .nav-links a.active, .nav-links a:hover { color: var(--color-primary); background-color: #e9e5d9;}
-            .mobile-menu-toggle { display: block; }
-            .gallery-grid { columns: 3 200px; }
-            .contact-section-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+            .main-nav { display: block; position: absolute; top: 100%; left: 0; right: 0; background: var(--color-background); box-shadow: var(--shadow-md); border-bottom-left-radius: var(--border-radius); border-bottom-right-radius: var(--border-radius); padding: 1rem 0; transform: translateY(-20px); opacity: 0; visibility: hidden; transition: transform .3s ease, opacity .3s ease, visibility 0s .3s; }
+            .main-nav.active { transform: translateY(0); opacity: 1; visibility: visible; transition: transform .3s ease, opacity .3s ease, visibility 0s 0s; }
+            .main-nav .nav-links { display: flex; flex-direction: column; text-align: center; gap: .5rem; } .main-nav .nav-links a { padding: .75rem 1.5rem; font-size: 1rem; }
+            .nav-links a:after { display: none; } .nav-links a.active, .nav-links a:hover { color: var(--color-primary); background-color: #e9e5d9;}
+            .mobile-menu-toggle { display: block; } .gallery-grid { columns: 3 200px; } .contact-section-grid { grid-template-columns: 1fr; }
             .featured-slider .swiper-slide { width: 90%; max-width: 500px; }
         }
-
         @media (max-width: 768px) {
             .timeline:after { left: 31px; }
-            .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; }
-            .timeline-item.left, .timeline-item.right { left: 0%; }
-            .timeline-item.left:after, .timeline-item.right:after { left: 15px; }
-            .gallery-grid { columns: 2 200px; }
-            .featured-slider .menu-card { flex-direction: column; height: auto; }
-            .featured-slider .menu-card-image { width: 100%; height: 240px; }
-            .featured-slider .menu-card-content { width: 100%; text-align: center; }
-            .featured-slider .swiper-slide { width: 340px; height: auto; }
+            .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; } .timeline-item.left, .timeline-item.right { left: 0%; }
+            .timeline-item.left:after, .timeline-item.right:after { left: 15px; } .gallery-grid { columns: 2 200px; }
+            .featured-slider .menu-card { flex-direction: column; height: auto; } .featured-slider .menu-card-image { width: 100%; height: 240px; }
+            .featured-slider .menu-card-content { width: 100%; text-align: center; } .featured-slider .swiper-slide { width: 340px; height: auto; }
         }
-        
-        @media (max-width: 576px) {
-            .gallery-grid { columns: 1; }
-        }
+        @media (max-width: 576px) { .gallery-grid { columns: 1; } }
     </style>
 </head>
 <body>
 
     <header class="main-header">
         <div class="container header-container">
-            <a href="#home"><img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo Lobster Shack" class="logo"></a>
-            
+            <a href="#home"><img src="" alt="Logo Lobster Shack" class="logo" id="header-logo"></a>
             <nav class="main-nav" id="main-nav">
                 <ul class="nav-links">
                     <li><a href="#home" class="active" data-lang-key="nav_home">Home</a></li>
@@ -368,31 +146,30 @@
                     <li><a href="#contact" data-lang-key="nav_contact">Contact</a></li>
                 </ul>
             </nav>
-
             <div class="header-actions">
                 <div class="language-toggle">
                     <button class="lang-btn active" data-lang="id">ID</button>
                     <button class="lang-btn" data-lang="en">EN</button>
                 </div>
-                <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle Menu">
-                    <i class="fas fa-bars"></i>
-                </button>
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle Menu"><i class="fas fa-bars"></i></button>
             </div>
         </div>
     </header>
 
     <main>
         <section id="home" class="hero-section">
-            <div class="swiper hero-slider">
-                <div class="swiper-wrapper" id="hero-slider-wrapper"></div>
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
-                <div class="swiper-pagination"></div>
-            </div>
-            <div class="hero-content" data-aos="fade-up">
-                <h1 data-lang-key="hero_title">Savor the Freshness</h1>
-                <p data-lang-key="hero_subtitle">The best lobster and seafood experience in the heart of Bali.</p>
-                <a href="#menu" class="btn"><i class="fas fa-utensils"></i> <span data-lang-key="hero_button">Explore Our Menu</span></a>
+            <div class="container">
+                <div class="hero-content" data-aos="fade-up">
+                    <h1 data-lang-key="hero_title_v2">From The Net, Straight to Your Plate</h1>
+                    <p data-lang-key="hero_subtitle_v2">Experience the true freshness of live-caught lobster by local Balinese fishermen.</p>
+                    <a href="#menu" class="btn"><i class="fas fa-utensils"></i> <span data-lang-key="hero_button">Explore Our Menu</span></a>
+                </div>
+                <div class="swiper hero-slider" data-aos="fade-up" data-aos-delay="100">
+                    <div class="swiper-wrapper" id="hero-slider-wrapper"></div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-pagination"></div>
+                </div>
             </div>
         </section>
 
@@ -417,7 +194,6 @@
                         <div class="swiper-pagination"></div>
                      </div>
                 </div>
-
                 <div class="section-header" data-aos="fade-up" style="margin-top: 5rem;">
                      <h2 class="title" data-lang-key="full_menu_title">Our Full Menu</h2>
                 </div>
@@ -445,19 +221,13 @@
                 <div class="contact-section-grid" data-aos="fade-up">
                     <div class="contact-details">
                         <h3 data-lang-key="contact_details_title">Lobster Shack Bali</h3>
-                        <p data-lang-key="contact_details_desc">We are located in the vibrant heart of Kuta, easily accessible and ready to welcome you for an unforgettable seafood dining experience. Call us for reservations or simply walk in!</p>
+                        <p data-lang-key="contact_details_desc">We are located in the vibrant heart of Kuta, easily accessible and ready to welcome you...</p>
                         <div class="contact-info-item">
                             <i class="fas fa-map-marker-alt"></i>
                             <span data-lang-key="contact_address">Jl. Pantai Kuta, Kuta, Bali, Indonesia</span>
                         </div>
-                        <div class="contact-info-item">
-                             <i class="fas fa-phone"></i>
-                             <span>+62 812 3456 7890</span>
-                        </div>
-                        <div class="contact-info-item">
-                            <i class="fas fa-envelope"></i>
-                            <span>hello@lobstershackbali.com</span>
-                        </div>
+                        <div class="contact-info-item"> <i class="fas fa-phone"></i> <span>+62 812 3456 7890</span> </div>
+                        <div class="contact-info-item"> <i class="fas fa-envelope"></i> <span>hello@lobstershackbali.com</span> </div>
                     </div>
                     <div id="address-map"></div>
                 </div>
@@ -467,8 +237,8 @@
     
     <footer class="main-footer">
         <div class="container">
-            <img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo Lobster Shack" class="logo">
-            <p data-lang-key="footer_description">Experience the finest catch of the day, grilled to perfection, in a cozy and inviting atmosphere. We look forward to welcoming you.</p>
+            <img src="" alt="Logo Lobster Shack" class="logo" id="footer-logo">
+            <p data-lang-key="footer_description">Experience the finest catch of the day...</p>
             <ul class="footer-socials">
                 <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
                 <li><a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a></li>
@@ -482,104 +252,70 @@
 
     <div id="order-modal" class="modal-overlay">
       <div class="modal-content">
-        <div class="modal-header">
-            <h2 data-lang-key="modal_title">Place Your Order</h2>
-            <button class="modal-close-btn" aria-label="Close modal">&times;</button>
-        </div>
+        <div class="modal-header"> <h2 data-lang-key="modal_title">Place Your Order</h2> <button class="modal-close-btn" aria-label="Close modal">×</button> </div>
         <div class="modal-body">
             <form id="order-form" novalidate>
                 <input type="hidden" id="product-id" name="productId">
                 <div id="modal-product-details" style="text-align:center; margin-bottom: 2rem;"></div>
-                <div class="form-group">
-                    <label for="customer-name" data-lang-key="modal_name_label">Name</label>
-                    <input type="text" id="customer-name" required>
-                </div>
-                <div class="form-group">
-                    <label for="customer-phone" data-lang-key="modal_phone_label">Phone Number</label>
-                    <input type="tel" id="customer-phone" required>
-                </div>
-                <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
-                    <i class="fas fa-paper-plane"></i> <span data-lang-key="modal_submit_button">Submit Order</span>
-                </button>
+                <div class="form-group"> <label for="customer-name" data-lang-key="modal_name_label">Name</label> <input type="text" id="customer-name" required> </div>
+                <div class="form-group"> <label for="customer-phone" data-lang-key="modal_phone_label">Phone Number</label> <input type="tel" id="customer-phone" required> </div>
+                <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;"> <i class="fas fa-paper-plane"></i> <span data-lang-key="modal_submit_button">Submit Order</span> </button>
+                <div id="order-map-container"></div>
             </form>
         </div>
       </div>
     </div>
     
-    <div id="toast" class="toast-notification">
-        <i id="toast-icon" class="fas fa-check-circle"></i>
-        <p id="toast-message">Notification</p>
-    </div>
+    <div id="toast" class="toast-notification"> <i id="toast-icon" class="fas fa-check-circle"></i> <p id="toast-message">Notification</p> </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    
-    <script src="https://maps.googleapis.com/maps/api/js?key=KUNCI_API_Maps_ANDA&callback=initMap" async defer></script>
-    
+    <script src="https://maps.googleapis.com/maps/api/js?key=KUNCI_API_Maps_ANDA&callback=initMaps" async defer></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
 
     <script>
         'use strict';
-
-        // Konfigurasi Firebase Anda
         const firebaseConfig = {
             apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
             authDomain: "lobster-shack-bali.firebaseapp.com",
-            databaseURL: "https://lobster-shack-bali-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "lobster-shack-bali",
-            storageBucket: "lobster-shack-bali.firebasestorage.app",
+            storageBucket: "lobster-shack-bali.appspot.com",
             messagingSenderId: "42452974733",
             appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
         };
-
-        // Inisialisasi Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-
-        // --- FUNGSI INISIALISASI PETA ---
-        function initMap() {
-            const shackLocation = { lat: -8.7214, lng: 115.1685 }; // Contoh koordinat di Kuta
-            const map = new google.maps.Map(document.getElementById("address-map"), {
-                zoom: 16,
-                center: shackLocation,
-                disableDefaultUI: true,
+        const shackLocation = { lat: -8.7214, lng: 115.1685 };
+        let contactMap, modalMap;
+        
+        function initMaps() {
+            const mapOptions = {
+                zoom: 16, center: shackLocation, disableDefaultUI: true,
                 styles: [ { "featureType": "all", "elementType": "labels.text.fill", "stylers": [ { "saturation": 36 }, { "color": "#333333" }, { "lightness": 40 } ] }, { "featureType": "all", "elementType": "labels.text.stroke", "stylers": [ { "visibility": "on" }, { "color": "#ffffff" }, { "lightness": 16 } ] }, { "featureType": "all", "elementType": "labels.icon", "stylers": [ { "visibility": "off" } ] }, { "featureType": "administrative", "elementType": "geometry.fill", "stylers": [ { "color": "#fefefe" }, { "lightness": 20 } ] }, { "featureType": "administrative", "elementType": "geometry.stroke", "stylers": [ { "color": "#fefefe" }, { "lightness": 17 }, { "weight": 1.2 } ] }, { "featureType": "landscape", "elementType": "geometry", "stylers": [ { "color": "#f5f5f5" }, { "lightness": 20 } ] }, { "featureType": "poi", "elementType": "geometry", "stylers": [ { "color": "#f5f5f5" }, { "lightness": 21 } ] }, { "featureType": "poi.park", "elementType": "geometry", "stylers": [ { "color": "#dedede" }, { "lightness": 21 } ] }, { "featureType": "road.highway", "elementType": "geometry.fill", "stylers": [ { "color": "#ffffff" }, { "lightness": 17 } ] }, { "featureType": "road.highway", "elementType": "geometry.stroke", "stylers": [ { "color": "#ffffff" }, { "lightness": 29 }, { "weight": 0.2 } ] }, { "featureType": "road.arterial", "elementType": "geometry", "stylers": [ { "color": "#ffffff" }, { "lightness": 18 } ] }, { "featureType": "road.local", "elementType": "geometry", "stylers": [ { "color": "#ffffff" }, { "lightness": 16 } ] }, { "featureType": "transit", "elementType": "geometry", "stylers": [ { "color": "#f2f2f2" }, { "lightness": 19 } ] }, { "featureType": "water", "elementType": "geometry", "stylers": [ { "color": "#e9e9e9" }, { "lightness": 17 } ] } ]
-            });
-            const marker = new google.maps.Marker({
-                position: shackLocation,
-                map: map,
-                title: "Lobster Shack Bali",
-                icon: {
-                    url: "https://maps.google.com/mapfiles/ms/icons/red-dot.png"
-                }
-            });
+            };
+            contactMap = new google.maps.Map(document.getElementById("address-map"), mapOptions);
+            new google.maps.Marker({ position: shackLocation, map: contactMap, title: "Lobster Shack Bali" });
+            
+            modalMap = new google.maps.Map(document.getElementById("order-map-container"), mapOptions);
+            new google.maps.Marker({ position: shackLocation, map: modalMap, title: "Lobster Shack Bali" });
         }
         
         document.addEventListener('DOMContentLoaded', () => {
             let currentLanguage = localStorage.getItem('preferredLanguage') || 'id';
-            let siteData = {};
-            let lightbox;
+            let siteData = {}; let lightbox;
 
-            const domElements = {
-                mainNav: document.getElementById('main-nav'),
-                mobileMenuToggle: document.getElementById('mobile-menu-toggle'),
-                langToggleContainer: document.querySelector('.language-toggle'),
-                heroSliderWrapper: document.getElementById('hero-slider-wrapper'),
-                historyTimeline: document.getElementById('history-timeline'),
-                featuredMenuWrapper: document.getElementById('featured-menu-wrapper'),
-                menuGrid: document.getElementById('menu-grid'),
-                menuFilters: document.getElementById('menu-filters'),
-                galleryGrid: document.getElementById('gallery-grid'),
-                orderModal: document.getElementById('order-modal'),
-                orderForm: document.getElementById('order-form'),
-                modalProductIdInput: document.getElementById('product-id'),
-                modalProductDetails: document.getElementById('modal-product-details'),
-                modalCloseBtn: document.querySelector('.modal-close-btn'),
-                toast: document.getElementById('toast'),
-                toastIcon: document.getElementById('toast-icon'),
-                toastMessage: document.getElementById('toast-message'),
+            const dom = {
+                headerLogo: document.getElementById('header-logo'), footerLogo: document.getElementById('footer-logo'),
+                mainNav: document.getElementById('main-nav'), mobileMenuToggle: document.getElementById('mobile-menu-toggle'),
+                langToggle: document.querySelector('.language-toggle'), heroSlider: document.getElementById('hero-slider-wrapper'),
+                history: document.getElementById('history-timeline'), featuredMenu: document.getElementById('featured-menu-wrapper'),
+                menuGrid: document.getElementById('menu-grid'), menuFilters: document.getElementById('menu-filters'),
+                galleryGrid: document.getElementById('gallery-grid'), orderModal: document.getElementById('order-modal'),
+                orderForm: document.getElementById('order-form'), modalProductId: document.getElementById('product-id'),
+                modalProductDetails: document.getElementById('modal-product-details'), modalCloseBtn: document.querySelector('.modal-close-btn'),
+                toast: document.getElementById('toast'), toastIcon: document.getElementById('toast-icon'), toastMessage: document.getElementById('toast-message'),
             };
 
             const updateTextContent = () => {
@@ -591,209 +327,112 @@
                     }
                 });
                 document.title = siteData.content?.page_title?.[`text_${currentLanguage}`] || 'Lobster Shack Bali';
-                updateLangButtons();
-            };
-
-            const updateLangButtons = () => {
-                document.querySelectorAll('.lang-btn').forEach(btn => {
-                    btn.classList.toggle('active', btn.dataset.lang === currentLanguage);
-                });
+                dom.langToggle.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.lang === currentLanguage));
             };
 
             const renderBanners = () => {
-                domElements.heroSliderWrapper.innerHTML = siteData.banners.map(banner => `
-                    <div class="swiper-slide" style="background-image: url('${banner.image_url}');">
-                        <div class="slide-overlay"></div>
-                    </div>`).join('');
-                new Swiper('.hero-slider', { 
-                    loop: true, effect: 'fade', autoplay: { delay: 7000, disableOnInteraction: false },
-                    navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-                    pagination: { el: '.swiper-pagination', clickable: true }
-                });
+                dom.heroSlider.innerHTML = siteData.banners.map(b => `<div class="swiper-slide" style="background-image: url('${b.image_url}');"><div class="slide-overlay"></div></div>`).join('');
+                new Swiper('.hero-slider', { loop: true, effect: 'fade', autoplay: { delay: 7000, disableOnInteraction: false }, navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }, pagination: { el: '.swiper-pagination', clickable: true } });
             };
-
             const renderHistory = () => {
-                domElements.historyTimeline.innerHTML = siteData.history.map((item, index) => `
-                    <div class="timeline-item ${index % 2 === 0 ? 'left' : 'right'}" data-aos="fade-up">
-                        <div class="timeline-content">
-                            <div class="year">${item.year}</div>
-                            <h3>${item[`title_${currentLanguage}`] || item.title_id}</h3>
-                            <p>${item[`text_${currentLanguage}`] || item.text_id}</p>
-                        </div>
-                    </div>`).join('');
+                dom.history.innerHTML = siteData.history.map((item, i) => `<div class="timeline-item ${i % 2 === 0 ? 'left' : 'right'}" data-aos="fade-up"><div class="timeline-content"><div class="year">${item.year}</div><h3>${item[`title_${currentLanguage}`]||item.title_id}</h3><p>${item[`text_${currentLanguage}`]||item.text_id}</p></div></div>`).join('');
             };
-
             const createCardHTML = (p, isFeatured = false) => {
-                const description = p[`description_${currentLanguage}`] || p.description_id || '';
-                return `
-                <div class="menu-card" data-category="${p.category_name}">
-                    <div class="menu-card-image"><img src="${p.imageUrl}" alt="${p.name_en}"></div>
-                    <div class="menu-card-content">
-                        <h3>${p[`name_${currentLanguage}`] || p.name_id}</h3>
-                        <p class="menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(p.price)}</p>
-                        <p class="description">${description.substring(0, isFeatured ? 70 : 100)}...</p>
-                        <button class="btn order-now-btn" data-product-id="${p.id}" data-lang-key="modal_order_now">Order Now</button>
-                    </div>
-                </div>`;
+                const desc = p[`description_${currentLanguage}`] || p.description_id || '';
+                return `<div class="menu-card" data-category="${p.category_name}"><div class="menu-card-image"><img src="${p.imageUrl}" alt="${p.name_en}"></div><div class="menu-card-content"><h3>${p[`name_${currentLanguage}`]||p.name_id}</h3><p class="menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(p.price)}</p><p class="description">${desc.substring(0,isFeatured?70:100)}...</p><button class="btn order-now-btn" data-product-id="${p.id}" data-lang-key="modal_order_now">Order Now</button></div></div>`;
             };
-
             const renderMenu = () => {
-                let featuredHTML = '';
-                let gridHTML = '';
-                
+                let featuredHTML = '', gridHTML = '';
                 siteData.products.forEach(p => {
                     gridHTML += createCardHTML(p, false);
-                    if (p.is_featured) {
-                        featuredHTML += `<div class="swiper-slide">${createCardHTML(p, true)}</div>`;
-                    }
+                    if (p.is_featured) featuredHTML += `<div class="swiper-slide">${createCardHTML(p, true)}</div>`;
                 });
-
-                domElements.featuredMenuWrapper.innerHTML = featuredHTML;
-                domElements.menuGrid.innerHTML = gridHTML;
-                
+                dom.featuredMenu.innerHTML = featuredHTML;
+                dom.menuGrid.innerHTML = gridHTML;
                 const allText = currentLanguage === 'id' ? 'Semua' : 'All';
-                domElements.menuFilters.innerHTML = `<button class="filter-btn active" data-filter="all">${allText}</button>` + siteData.categories.map(c => 
-                    `<button class="filter-btn" data-filter="${c.name}">${c[`name_${currentLanguage}`] || c.name}</button>`
-                ).join('');
-
-                new Swiper('.featured-slider', { 
-                    slidesPerView: 'auto', spaceBetween: 30, grabCursor: true, centeredSlides: true, loop: true,
-                    pagination: { el: '.swiper-pagination', clickable: true }
-                });
+                dom.menuFilters.innerHTML = `<button class="filter-btn active" data-filter="all">${allText}</button>` + siteData.categories.map(c => `<button class="filter-btn" data-filter="${c.name}">${c[`name_${currentLanguage}`]||c.name}</button>`).join('');
+                new Swiper('.featured-slider', { slidesPerView: 'auto', spaceBetween: 30, grabCursor: true, centeredSlides: true, loop: true, pagination: { el: '.swiper-pagination', clickable: true } });
             };
-            
             const renderGallery = () => {
-                domElements.galleryGrid.innerHTML = siteData.gallery_images.map(img => `
-                    <a href="${img.image_url}" class="glightbox" data-gallery="our-gallery" data-title="${img[`caption_${currentLanguage}`] || img.caption_id}">
-                        <img src="${img.image_url}" alt="${img.caption_en}">
-                    </a>`).join('');
-                if (lightbox) lightbox.reload();
-                else lightbox = GLightbox({ selector: '.glightbox' });
+                dom.galleryGrid.innerHTML = siteData.gallery_images.map(img => `<a href="${img.image_url}" class="glightbox" data-gallery="our-gallery" data-title="${img[`caption_${currentLanguage}`]||img.caption_id}"><img src="${img.image_url}" alt="${img.caption_en}"></a>`).join('');
+                if (lightbox) lightbox.reload(); else lightbox = GLightbox({ selector: '.glightbox' });
             };
-
-            const renderAll = () => {
-                renderBanners(); renderHistory(); renderMenu(); renderGallery(); updateTextContent();
-                AOS.init({ duration: 800, once: true, offset: 50 });
-            };
-
-            const handleLanguageSwitch = (e) => {
-                if (!e.target.matches('.lang-btn')) return;
-                currentLanguage = e.target.dataset.lang;
-                localStorage.setItem('preferredLanguage', currentLanguage);
-                renderHistory(); renderMenu(); renderGallery(); updateTextContent();
-            };
-
-            const handleMenuFilter = (e) => {
-                if (!e.target.matches('.filter-btn')) return;
-                domElements.menuFilters.querySelector('.active').classList.remove('active');
-                e.target.classList.add('active');
-                const filter = e.target.dataset.filter;
-                document.querySelectorAll('.menu-grid .menu-card').forEach(card => {
-                    const isVisible = filter === 'all' || card.dataset.category === filter;
-                    card.classList.toggle('hidden', !isVisible);
-                });
-            };
-            
-            const handleMobileNav = () => {
-                domElements.mainNav.classList.toggle('active');
-                const icon = domElements.mobileMenuToggle.querySelector('i');
-                icon.classList.toggle('fa-bars'); icon.classList.toggle('fa-times');
-            };
-
             const showToast = (message, type = 'success') => {
-                domElements.toastMessage.textContent = message;
-                domElements.toast.className = 'toast-notification';
-                domElements.toast.classList.add(type);
-                domElements.toastIcon.className = 'fas';
-                domElements.toastIcon.classList.add(type === 'success' ? 'fa-check-circle' : 'fa-times-circle');
-                domElements.toast.classList.add('show');
-                setTimeout(() => domElements.toast.classList.remove('show'), 4000);
+                dom.toastMessage.textContent = message;
+                dom.toast.className = 'toast-notification';
+                dom.toast.classList.add(type, 'show');
+                dom.toastIcon.className = `fas ${type === 'success' ? 'fa-check-circle' : 'fa-times-circle'}`;
+                setTimeout(() => dom.toast.classList.remove('show'), 4000);
             };
-
             const openOrderModal = (productId) => {
                 const product = siteData.products.find(p => p.id === productId);
                 if (!product) return;
-                domElements.modalProductIdInput.value = productId;
-                domElements.modalProductDetails.innerHTML = `
-                    <img src="${product.imageUrl}" alt="${product.name_en}" style="width:150px; height:150px; object-fit:cover; border-radius:50%; margin-bottom:1rem; border: 4px solid var(--color-surface); box-shadow: var(--shadow-sm);">
-                    <h3>${product[`name_${currentLanguage}`] || product.name_id}</h3>
-                    <p class="menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(product.price)}</p>`;
-                domElements.orderModal.classList.add('visible');
+                dom.modalProductId.value = productId;
+                dom.modalProductDetails.innerHTML = `<img src="${product.imageUrl}" alt="${product.name_en}" style="width:150px; height:150px; object-fit:cover; border-radius:50%; margin-bottom:1rem; border: 4px solid var(--color-surface); box-shadow: var(--shadow-sm);"><h3>${product[`name_${currentLanguage}`]||product.name_id}</h3><p class="menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(product.price)}</p>`;
+                dom.orderModal.classList.add('visible');
+                // Refresh map when modal is shown
+                setTimeout(() => google.maps.event.trigger(modalMap, 'resize'), 300);
             };
-
-            const closeOrderModal = () => {
-                domElements.orderModal.classList.remove('visible');
-                domElements.orderForm.reset();
-            };
-            
+            const closeOrderModal = () => { dom.orderModal.classList.remove('visible'); dom.orderForm.reset(); };
             const handleOrderSubmit = async (e) => {
                 e.preventDefault();
-                const form = e.target;
-                const name = form.querySelector('#customer-name').value.trim();
-                const phone = form.querySelector('#customer-phone').value.trim();
-                const productId = form.querySelector('#product-id').value;
-
-                if (!name || !phone || !productId) {
-                    const errorMsg = currentLanguage === 'id' ? 'Nama dan telepon harus diisi.' : 'Name and phone are required.';
-                    showToast(errorMsg, 'error');
-                    return;
-                }
-
+                const name = dom.orderForm.querySelector('#customer-name').value.trim();
+                const phone = dom.orderForm.querySelector('#customer-phone').value.trim();
+                const productId = dom.modalProductId.value;
+                if (!name || !phone) { return showToast(currentLanguage === 'id' ? 'Nama dan telepon harus diisi.' : 'Name and phone are required.', 'error'); }
                 try {
-                    await db.collection('orders').add({
-                        customerName: name,
-                        customerPhone: phone,
-                        productId: productId,
-                        productName: siteData.products.find(p => p.id === productId).name_en,
-                        status: 'new',
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    const successMsg = currentLanguage === 'id' ? 'Pesanan berhasil dikirim! Kami akan segera menghubungi Anda.' : 'Order submitted! We will contact you shortly.';
+                    await db.collection('orders').add({ customerName: name, customerPhone: phone, productId: productId, productName: siteData.products.find(p => p.id === productId).name_en, status: 'new', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                    showToast(currentLanguage === 'id' ? 'Pesanan berhasil dikirim!' : 'Order submitted!', 'success');
                     closeOrderModal();
-                    showToast(successMsg, 'success');
-                } catch (error) {
-                    console.error("Error writing document: ", error);
-                    const errorMsg = currentLanguage === 'id' ? 'Gagal mengirim pesanan. Coba lagi.' : 'Failed to submit order. Please try again.';
-                    showToast(errorMsg, 'error');
-                }
+                } catch (error) { console.error("Error writing document: ", error); showToast(currentLanguage === 'id' ? 'Gagal mengirim pesanan.' : 'Failed to submit order.', 'error'); }
             };
-            
+
             async function fetchAllData() {
                 try {
                     const collections = ['products', 'categories', 'content', 'banners', 'gallery_images', 'history'];
                     const promises = collections.map(col => db.collection(col).get());
                     const [productsSnap, categoriesSnap, contentSnap, bannersSnap, gallerySnap, historySnap] = await Promise.all(promises);
                     siteData.products = productsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    siteData.categories = categoriesSnap.docs.map(doc => doc.data()).sort((a,b) => a.id - b.id);
-                    siteData.banners = bannersSnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
-                    siteData.gallery_images = gallerySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
-                    siteData.history = historySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
+                    siteData.categories = categoriesSnap.docs.map(doc => doc.data()).sort((a, b) => a.id - b.id);
+                    siteData.banners = bannersSnap.docs.map(doc => doc.data()).sort((a, b) => a.sort_order - b.sort_order);
+                    siteData.gallery_images = gallerySnap.docs.map(doc => doc.data()).sort((a, b) => a.sort_order - b.sort_order);
+                    siteData.history = historySnap.docs.map(doc => doc.data()).sort((a, b) => a.sort_order - b.sort_order);
                     siteData.content = {};
                     contentSnap.docs.forEach(doc => { siteData.content[doc.id] = doc.data(); });
-                    renderAll();
-                } catch (error) {
-                    console.error("Error fetching data from Firebase:", error);
-                    showToast("Failed to load website data.", 'error');
-                }
-            }
-            
-            // --- EVENT LISTENERS ---
-            domElements.langToggleContainer.addEventListener('click', handleLanguageSwitch);
-            domElements.mobileMenuToggle.addEventListener('click', handleMobileNav);
-            domElements.mainNav.addEventListener('click', (e) => {
-                 if (e.target.matches('a') && domElements.mainNav.classList.contains('active')) handleMobileNav();
-            });
-            domElements.menuFilters.addEventListener('click', handleMenuFilter);
-            document.addEventListener('click', e => {
-                if (e.target.matches('.order-now-btn')) openOrderModal(e.target.dataset.productId);
-            });
-            domElements.modalCloseBtn.addEventListener('click', closeOrderModal);
-            domElements.orderModal.addEventListener('click', e => { if (e.target === domElements.orderModal) closeOrderModal(); });
-            domElements.orderForm.addEventListener('submit', handleOrderSubmit);
 
-            // --- INITIALIZATION ---
+                    // Set logo from DB
+                    const logoUrl = siteData.content.site_logo?.url || 'https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png';
+                    dom.headerLogo.src = logoUrl; dom.footerLogo.src = logoUrl;
+                    
+                    renderBanners(); renderHistory(); renderMenu(); renderGallery(); updateTextContent();
+                    AOS.init({ duration: 800, once: true, offset: 50 });
+                } catch (error) { console.error("Error fetching data:", error); showToast("Failed to load website data.", 'error'); }
+            }
+
+            dom.langToggle.addEventListener('click', (e) => {
+                if (!e.target.matches('.lang-btn')) return;
+                currentLanguage = e.target.dataset.lang;
+                localStorage.setItem('preferredLanguage', currentLanguage);
+                renderHistory(); renderMenu(); renderGallery(); updateTextContent();
+            });
+            dom.mobileMenuToggle.addEventListener('click', () => {
+                dom.mainNav.classList.toggle('active');
+                dom.mobileMenuToggle.querySelector('i').classList.toggle('fa-bars');
+                dom.mobileMenuToggle.querySelector('i').classList.toggle('fa-times');
+            });
+            dom.mainNav.addEventListener('click', (e) => { if (e.target.matches('a') && dom.mainNav.classList.contains('active')) dom.mobileMenuToggle.click(); });
+            dom.menuFilters.addEventListener('click', (e) => {
+                if (!e.target.matches('.filter-btn')) return;
+                dom.menuFilters.querySelector('.active').classList.remove('active');
+                e.target.classList.add('active');
+                const filter = e.target.dataset.filter;
+                dom.menuGrid.querySelectorAll('.menu-card').forEach(c => c.classList.toggle('hidden', !(filter === 'all' || c.dataset.category === filter)));
+            });
+            document.addEventListener('click', (e) => { if (e.target.matches('.order-now-btn')) openOrderModal(e.target.dataset.productId); });
+            dom.modalCloseBtn.addEventListener('click', closeOrderModal);
+            dom.orderModal.addEventListener('click', (e) => { if (e.target === dom.orderModal) closeOrderModal(); });
+            dom.orderForm.addEventListener('submit', handleOrderSubmit);
             fetchAllData();
-            updateLangButtons();
         });
     </script>
 </body>
