@@ -4,45 +4,59 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lobster Shack Bali - Wild-Caught Lobster Roll</title>
-  <meta name="description" content="Nikmati lobster roll terbaik di Bali, dibuat dari lobster liar segar yang ditangkap setiap hari. Rasakan kesegaran laut dalam setiap gigitan.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-  <header class="main-header">
-    <div class="container">
-      <a href="/"><img src="assets/images/logo-lobster-shack.png" alt="Logo Lobster Shack" class="logo"></a>
-      <nav class="main-nav">
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/menu.html">Menu</a></li>
-          <li><a href="/reservation.html">Reservasi</a></li>
-        </ul>
-      </nav>
-      <div class="header-actions">
-        <div class="lang-switcher"><a href="#" id="lang-id">ID</a><span>|</span><a href="#" id="lang-en">EN</a></div>
+
+  <header class="main-header-slider">
+    <div class="swiper">
+      <div class="swiper-wrapper" id="slider-container">
+        </div>
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+    </div>
+    <div class="navigation-overlay">
+        <a href="/"><img src="assets/images/logo-lobster-shack.png" alt="Logo Lobster Shack" class="logo"></a>
+        <nav class="main-nav">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/menu.html">Menu</a></li>
+            <li><a href="/reservation.html">Reservasi</a></li>
+          </ul>
+        </nav>
         <a href="/reservation.html" class="btn">Reservasi</a>
-      </div>
     </div>
   </header>
+
   <main>
-    <section class="hero">
-      <div class="hero-content container">
-        <h1 id="hero-title-id" class="hidden"></h1>
-        <h1 id="hero-title-en" class="hidden"></h1>
+    <section id="company-profile" class="section animate-on-scroll">
+      <div class="container profile-container">
+        <div class="profile-image">
+          <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1974&auto=format&fit=crop" alt="Tim Lobster Shack Bali">
+        </div>
+        <div class="profile-content">
+          <h2 id="profile-heading-en"></h2>
+          <p id="profile-p1-en"></p>
+          <p id="profile-p2-en"></p>
+        </div>
       </div>
     </section>
-    <section id="featured-menu" class="section">
+
+    <section id="featured-menu" class="section animate-on-scroll" style="background-color: #fff;">
         <div class="container">
             <h2 class="section-title">Menu Unggulan</h2>
             <div id="menu-grid-container" class="menu-grid"><p>Memuat menu...</p></div>
         </div>
     </section>
   </main>
+
   <footer class="main-footer">
-    <div class="container">
-      <p>&copy; <span id="current-year"></span> Lobster Shack Bali. All Rights Reserved.</p>
-    </div>
+    <p>&copy; <span id="current-year"></span> Lobster Shack Bali. All Rights Reserved.</p>
   </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script type="module" src="assets/js/app.js"></script>
 </body>
 </html>
