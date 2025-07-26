@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lobster Shack Bali</title>
+    <title>Lobster Shack Bali - Final Version</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,223 +43,226 @@
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
         }
-        body.modal-open { overflow: hidden; }
-        .container { width: 100%; max-width: var(--container-width); margin: 0 auto; padding: 0 24px; }
-        .section { padding: 6rem 0; }
-        .section-header { text-align: center; margin-bottom: 4rem; max-width: 700px; margin-left: auto; margin-right: auto;}
-        .section-header .subtitle {
+        body.ls-modal-open { overflow: hidden; }
+        .ls-container { width: 100%; max-width: var(--container-width); margin: 0 auto; padding: 0 24px; }
+        .ls-section { padding: 6rem 0; }
+        .ls-section-header { text-align: center; margin-bottom: 4rem; max-width: 700px; margin-left: auto; margin-right: auto;}
+        .ls-section-header .ls-subtitle {
             color: var(--color-primary);
             font-weight: 600; text-transform: uppercase;
             letter-spacing: 1px; margin-bottom: .5rem; display: block;
         }
-        .section-header .title {
+        .ls-section-header .ls-title {
             font-family: var(--font-heading); font-size: clamp(2.2rem, 5vw, 3.2rem);
             font-weight: 700; color: var(--color-secondary); line-height: 1.2;
+        }
+        .ls-btn {
+            display: inline-block; padding: .75rem 1.5rem; border-radius: 50px; text-decoration: none;
+            font-weight: 600; border: 2px solid transparent; transition: all .3s ease; cursor: pointer;
+        }
+        .ls-btn-primary { background-color: var(--color-primary); color: #fff; }
+        .ls-btn-primary:hover { background-color: #b3362d; border-color: #b3362d; }
+        .ls-btn-secondary { background-color: transparent; color: var(--color-secondary); border-color: var(--color-border); }
+        .ls-btn-secondary:hover { background-color: var(--color-secondary); color: #fff; }
+        .ls-form-group { margin-bottom: 1.25rem; }
+        .ls-form-group label { display: block; margin-bottom: .5rem; font-weight: 600; color: var(--color-secondary); }
+        .ls-form-group input, .ls-form-group textarea {
+            width: 100%; padding: .75rem 1rem; border: 1px solid var(--color-border);
+            border-radius: 8px; font-family: var(--font-body); font-size: 1rem;
         }
 
         /* ------------------- */
         /* HEADER & NAVIGATION */
         /* ------------------- */
-        .main-header {
+        .ls-main-header {
             background-color: rgba(255, 255, 255, .85); backdrop-filter: blur(10px);
             padding: 1rem 0; box-shadow: var(--shadow-sm);
             position: sticky; top: 0; z-index: 1000;
         }
-        .main-header .container { display: flex; justify-content: space-between; align-items: center; }
-        .main-header .logo { height: 50px; z-index: 1001; }
-        .main-nav { display: flex; align-items: center; gap: 2rem; }
-        .nav-links { list-style: none; display: flex; gap: 2.5rem; }
-        .nav-links a { text-decoration: none; font-weight: 600; color: var(--color-secondary); position: relative; padding-bottom: .5rem; }
-        .header-actions { display: flex; align-items: center; gap: 1rem; z-index: 1001;}
-        .mobile-menu-toggle { display: none; }
+        .ls-main-header .ls-container { display: flex; justify-content: space-between; align-items: center; }
+        .ls-main-header .ls-logo { height: 50px; z-index: 1001; }
+        .ls-main-nav { display: flex; align-items: center; gap: 2rem; }
+        .ls-nav-links { list-style: none; display: flex; gap: 2.5rem; }
+        .ls-nav-links a { text-decoration: none; font-weight: 600; color: var(--color-secondary); position: relative; padding-bottom: .5rem; }
+        .ls-header-actions { display: flex; align-items: center; gap: 1rem; z-index: 1001;}
+        .ls-header-cart { position: relative; color: var(--color-secondary); font-size: 1.5rem; }
+        .ls-cart-badge {
+            position: absolute; top: -5px; right: -10px; background: var(--color-primary);
+            color: white; width: 20px; height: 20px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: .75rem; font-weight: 700;
+        }
+        .ls-mobile-menu-toggle { display: none; }
 
         /* ------------------- */
-        /* HERO SECTION (NEW)  */
+        /* HERO SECTION        */
         /* ------------------- */
         @keyframes kenBurns {
             0% { transform: scale(1.1) translate(0, 0); }
             100% { transform: scale(1) translate(-5px, 5px); }
         }
-        .hero-section { position: relative; overflow: hidden; }
-        .hero-slider .swiper-slide {
+        .ls-hero-section { position: relative; overflow: hidden; }
+        .ls-hero-slider .swiper-slide {
             height: 95vh; min-height: 700px; display: flex;
             align-items: center; justify-content: center;
             background-size: cover; background-position: center;
         }
-        .hero-slider .swiper-slide-active .slide-bg {
-            animation: kenBurns 10s ease-in-out forwards;
-        }
-        .slide-bg {
-            width: 100%; height: 100%; position: absolute; top: 0; left: 0;
-            background-size: cover; background-position: center;
-        }
-        .hero-section .slide-overlay {
-            background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.7) 100%);
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        }
-        .hero-content {
-            position: relative; z-index: 2; text-align: center; color: #fff;
-            padding: 0 1rem;
-        }
-        .hero-content h1, .hero-content p, .hero-content .btn {
-             opacity: 0;
-             transform: translateY(30px);
-             transition: opacity .8s ease, transform .8s ease;
-        }
-        .swiper-slide-active .hero-content h1 { transition-delay: .3s; }
-        .swiper-slide-active .hero-content p { transition-delay: .5s; }
-        .swiper-slide-active .hero-content .btn { transition-delay: .7s; }
-        .swiper-slide-active .hero-content h1,
-        .swiper-slide-active .hero-content p,
-        .swiper-slide-active .hero-content .btn {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .hero-content h1 {
-            font-family: var(--font-heading); font-size: clamp(3rem, 7vw, 5.5rem);
-            text-shadow: 2px 2px 10px rgba(0, 0, 0, .5);
-        }
-        .hero-content p { font-size: 1.25rem; margin: 1.5rem auto 2.5rem; max-width: 600px; }
+        .ls-hero-slider .swiper-slide-active .ls-slide-bg { animation: kenBurns 10s ease-in-out forwards; }
+        .ls-slide-bg { width: 100%; height: 100%; position: absolute; top: 0; left: 0; background-size: cover; background-position: center; }
+        .ls-hero-section .ls-slide-overlay { background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.7) 100%); position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .ls-hero-content { position: relative; z-index: 2; text-align: center; color: #fff; padding: 0 1rem; }
+        .ls-hero-content h1, .ls-hero-content p, .ls-hero-content .ls-btn { opacity: 0; transform: translateY(30px); transition: opacity .8s ease, transform .8s ease; }
+        .swiper-slide-active .ls-hero-content h1 { transition-delay: .3s; }
+        .swiper-slide-active .ls-hero-content p { transition-delay: .5s; }
+        .swiper-slide-active .ls-hero-content .ls-btn { transition-delay: .7s; }
+        .swiper-slide-active .ls-hero-content h1, .swiper-slide-active .ls-hero-content p, .swiper-slide-active .ls-hero-content .ls-btn { opacity: 1; transform: translateY(0); }
+        .ls-hero-content h1 { font-family: var(--font-heading); font-size: clamp(3rem, 7vw, 5.5rem); text-shadow: 2px 2px 10px rgba(0, 0, 0, .5); }
+        .ls-hero-content p { font-size: 1.25rem; margin: 1.5rem auto 2.5rem; max-width: 600px; }
         
         /* ------------------- */
-        /* MENU SECTION (NEW CARD STYLE) */
+        /* MENU SECTION        */
         /* ------------------- */
-        .featured-slider .swiper-slide { width: 420px; height: auto; } /* Landscape */
-        .featured-slider .menu-card { height: 300px; flex-direction: row; }
-        .featured-slider .menu-card-image { width: 50%; height: 100%; }
-        .featured-slider .menu-card-content { width: 50%; justify-content: center; }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2.5rem;
-            grid-auto-rows: 1fr; /* Make all rows equal height */
+        .ls-featured-slider .swiper-slide { width: 420px; }
+        .ls-featured-slider .ls-menu-card {
+            height: auto; min-height: 280px; flex-direction: row; align-items: stretch;
         }
-        .menu-grid .menu-card {
-            height: 100%; /* Make card fill the grid row height */
-            min-height: 480px;
-        }
+        .ls-featured-slider .ls-menu-card-image { width: 45%; height: auto; flex-shrink: 0; }
+        .ls-featured-slider .ls-menu-card-content { width: 55%; justify-content: space-between; text-align: left; padding: 1.5rem;}
+        .ls-featured-slider .ls-menu-card-buttons { justify-content: flex-start; }
 
-        .menu-card {
+        .ls-menu-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem; grid-auto-rows: 1fr;
+        }
+        .ls-menu-grid .ls-menu-card { height: 100%; min-height: 480px; }
+        .ls-menu-card {
             background: var(--color-surface); border-radius: var(--border-radius);
             box-shadow: var(--shadow-sm); display: flex; flex-direction: column;
-            opacity: 1; transform: scale(1);
-            transition: all 0.4s ease;
-            overflow: hidden;
+            opacity: 1; transform: scale(1); transition: all 0.4s ease; overflow: hidden;
         }
-        .menu-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-lg); }
-        .menu-card-image { width: 100%; height: 240px; overflow: hidden; flex-shrink: 0; }
-        .menu-card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition-speed) ease; }
-        .menu-card:hover .menu-card-image img { transform: scale(1.1); }
-        .menu-card-content {
-            padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; text-align: center;
-        }
-        .menu-card h3 { font-family: var(--font-heading); color: var(--color-secondary); font-size: 1.5rem; }
-        .menu-card-price { font-weight: 700; color: var(--color-primary); font-size: 1.375rem; margin: 0.5rem 0 1rem; }
-        .menu-card .description { flex-grow: 1; margin-bottom: 1.5rem; color: var(--color-text-light); font-size: 0.95rem; }
-        .menu-card-buttons { display: flex; justify-content: center; gap: .75rem; margin-top: auto; }
+        .ls-menu-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-lg); }
+        .ls-menu-card-image { width: 100%; height: 240px; overflow: hidden; flex-shrink: 0; }
+        .ls-menu-card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition-speed) ease; }
+        .ls-menu-card:hover .ls-menu-card-image img { transform: scale(1.1); }
+        .ls-menu-card-content { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; text-align: center; }
+        .ls-menu-card h3 { font-family: var(--font-heading); color: var(--color-secondary); font-size: 1.5rem; }
+        .ls-menu-card-price { font-weight: 700; color: var(--color-primary); font-size: 1.375rem; margin: 0.5rem 0 1rem; }
+        .ls-menu-card .description { flex-grow: 1; margin-bottom: 1.5rem; color: var(--color-text-light); font-size: 0.95rem; }
+        .ls-menu-card-buttons { display: flex; justify-content: center; gap: .75rem; margin-top: auto; flex-wrap: wrap;}
         
         /* ------------------- */
-        /* MODAL (BOTTOM SHEET) */
+        /* GALLERY SECTION     */
         /* ------------------- */
-        .modal-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0, 0, 0, .6); backdrop-filter: blur(5px);
-            z-index: 2000; display: flex;
-            justify-content: center; align-items: flex-end; /* Align to bottom */
-            opacity: 0; visibility: hidden;
-            transition: opacity .4s ease, visibility 0s .4s;
+        .ls-gallery-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;
         }
-        .modal-overlay.visible { opacity: 1; visibility: visible; transition-delay: 0s; }
-        .modal-content {
-            background: var(--color-surface);
-            width: 100%; max-height: 90vh;
-            overflow-y: auto; position: relative;
-            transform: translateY(100%);
+        .ls-gallery-grid a { display: block; overflow: hidden; border-radius: var(--border-radius); box-shadow: var(--shadow-sm); }
+        .ls-gallery-grid img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+        .ls-gallery-grid a:hover img { transform: scale(1.1); }
+
+        /* ------------------- */
+        /* MODAL (BOTTOM SHEET)*/
+        /* ------------------- */
+        .ls-modal-overlay {
+            position: fixed; inset: 0; background: rgba(0, 0, 0, .6); backdrop-filter: blur(5px);
+            z-index: 2000; display: flex; justify-content: center; align-items: flex-end;
+            opacity: 0; visibility: hidden; transition: opacity .4s ease, visibility 0s .4s;
+        }
+        .ls-modal-overlay.visible { opacity: 1; visibility: visible; transition-delay: 0s; }
+        .ls-modal-content {
+            background: var(--color-surface); width: 100%; max-height: 90vh;
+            overflow-y: auto; position: relative; transform: translateY(100%);
             transition: transform var(--transition-speed) ease-in-out;
             border-radius: var(--border-radius) var(--border-radius) 0 0;
         }
-        .modal-overlay.visible .modal-content { transform: translateY(0); }
-        .modal-header {
+        .ls-modal-overlay.visible .ls-modal-content { transform: translateY(0); }
+        .ls-modal-header {
             padding: 1rem 1.5rem; border-bottom: 1px solid var(--color-border);
             display: flex; justify-content: space-between; align-items: center;
             position: sticky; top: 0; background: var(--color-surface); z-index: 10;
         }
-        .modal-header h2 { font-family: var(--font-heading); color: var(--color-secondary); font-size: 1.25rem; }
-        .modal-close-btn {
+        .ls-modal-header h2 { font-family: var(--font-heading); color: var(--color-secondary); font-size: 1.25rem; }
+        .ls-modal-close-btn {
             font-size: 1.5rem; background: #f0f0f0; border: none; cursor: pointer;
             color: var(--color-text-light); transition: all 0.3s ease;
-            width: 40px; height: 40px; border-radius: 50%;
+            width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
         }
-        .modal-body { padding: 1.5rem; }
-
-        #order-modal .modal-body {
-             display: grid; grid-template-columns: 300px 1fr; gap: 2.5rem; max-width: 900px; margin: 0 auto;
-        }
-        #modal-product-details img { width: 100%; border-radius: var(--border-radius); margin-bottom: 1rem; }
+        .ls-modal-body { padding: 1.5rem; }
+        #ls-order-modal .ls-modal-body { display: grid; grid-template-columns: 300px 1fr; gap: 2.5rem; max-width: 900px; margin: 0 auto; }
+        #ls-modal-product-details img { width: 100%; border-radius: var(--border-radius); margin-bottom: 1rem; }
         
         /* Cart Modal Styles */
-        #cart-modal .modal-body { max-width: 700px; margin: 0 auto; }
-        .cart-item { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
-        .cart-item img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }
-        .cart-item-details { flex-grow: 1; }
-        .cart-item-details h4 { font-size: 1.1rem; color: var(--color-secondary); }
-        .cart-item-qty { display: flex; align-items: center; gap: .5rem; }
-        .cart-item-qty button { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--color-border); background: #fff; cursor: pointer; }
-        .cart-summary { margin-top: 2rem; border-top: 2px solid var(--color-secondary); padding-top: 1.5rem; text-align: right; }
-        .cart-summary h3 { font-size: 1.5rem; }
+        #ls-cart-modal .ls-modal-body { max-width: 700px; margin: 0 auto; }
+        .ls-cart-item { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+        .ls-cart-item img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+        .ls-cart-item-details { flex-grow: 1; }
+        .ls-cart-item-details h4 { font-size: 1.1rem; color: var(--color-secondary); }
+        .ls-cart-item-qty { display: flex; align-items: center; gap: .5rem; }
+        .ls-cart-item-qty button { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--color-border); background: #fff; cursor: pointer; }
+        .ls-cart-summary { margin-top: 2rem; border-top: 2px solid var(--color-secondary); padding-top: 1.5rem; }
+        .ls-cart-total-line { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .ls-cart-total-line .label { font-size: 1.5rem; font-weight: 600; color: var(--color-secondary); }
+        .ls-cart-total-line .amount { font-family: var(--font-heading); font-size: 2rem; font-weight: 700; color: var(--color-secondary); }
 
         /* ------------------- */
         /* RESPONSIVE STYLES   */
         /* ------------------- */
         @media (max-width: 992px) {
-            .main-nav {
+            .ls-main-nav {
                 position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
                 background-color: var(--color-background); flex-direction: column;
                 justify-content: center; align-items: center;
                 transform: translateX(100%); transition: transform var(--transition-speed) ease-in-out;
                 z-index: 999;
             }
-            .main-nav.active { transform: translateX(0); }
-            .nav-links { flex-direction: column; text-align: center; gap: 2rem; }
-            .nav-links a { font-size: 1.5rem; }
-            .mobile-menu-toggle {
+            .ls-main-nav.active { transform: translateX(0); }
+            .ls-nav-links { flex-direction: column; text-align: center; gap: 2rem; }
+            .ls-nav-links a { font-size: 1.5rem; }
+            .ls-mobile-menu-toggle {
                 display: block; font-size: 1.5rem; color: var(--color-secondary);
                 background: transparent; border: none; cursor: pointer; z-index: 1001;
             }
         }
         @media (max-width: 768px) {
-            .featured-slider .swiper-slide { width: 320px; }
-            .featured-slider .menu-card { flex-direction: column; height: 420px; }
-            .featured-slider .menu-card-image { width: 100%; height: 200px; }
-            .featured-slider .menu-card-content { width: 100%; }
+            .ls-section { padding: 4rem 0; }
+            .ls-featured-slider .swiper-slide { width: 320px; }
+            .ls-featured-slider .ls-menu-card { flex-direction: column; height: auto; min-height: 420px; }
+            .ls-featured-slider .ls-menu-card-image { width: 100%; height: 200px; }
+            .ls-featured-slider .ls-menu-card-content { width: 100%; text-align: center; padding: 1.25rem; }
+            .ls-featured-slider .ls-menu-card-buttons { justify-content: center; }
 
-            #order-modal .modal-body { grid-template-columns: 1fr; }
-            #modal-product-details { text-align: center; }
-            #modal-product-details img { width: 200px; height: 200px; border-radius: 50%; }
+            #ls-order-modal .ls-modal-body { grid-template-columns: 1fr; }
+            #ls-modal-product-details { text-align: center; }
+            #ls-modal-product-details img { width: 200px; height: 200px; border-radius: 50%; }
+        }
+        @media (max-width: 480px) {
+            .ls-btn { padding: .6rem 1.2rem; font-size: 0.9rem; }
+            .ls-menu-card-buttons { gap: .5rem; }
+            .ls-cart-item { flex-direction: column; align-items: flex-start; }
+            .ls-cart-item-details { margin-bottom: .5rem; }
         }
     </style>
 </head>
 <body>
 
-    <header class="main-header">
-        <div class="container">
-            <a href="#home"><img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo Lobster Shack" class="logo"></a>
+    <header class="ls-main-header">
+        <div class="ls-container">
+            <a href="#home"><img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo Lobster Shack" class="ls-logo"></a>
             
-            <nav class="main-nav" id="main-nav">
-                <ul class="nav-links">
-                    <li><a href="#home" class="active">Home</a></li>
+            <nav class="ls-main-nav" id="ls-main-nav">
+                <ul class="ls-nav-links">
+                    <li><a href="#home">Home</a></li>
                     <li><a href="#menu">Menu</a></li>
                     <li><a href="#gallery">Gallery</a></li>
                 </ul>
             </nav>
 
-            <div class="header-actions">
-                <a href="#" class="header-cart" id="header-cart" aria-label="Shopping Cart">
+            <div class="ls-header-actions">
+                <a href="#" class="ls-header-cart" id="ls-header-cart" aria-label="Shopping Cart">
                     <i class="fas fa-shopping-basket"></i>
-                    <span class="cart-badge" id="cart-badge">0</span>
+                    <span class="ls-cart-badge" id="ls-cart-badge">0</span>
                 </a>
-                <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle Menu">
+                <button class="ls-mobile-menu-toggle" id="ls-mobile-menu-toggle" aria-label="Toggle Menu">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
@@ -267,92 +270,101 @@
     </header>
 
     <main>
-        <section id="home" class="hero-section">
-            <div class="swiper hero-slider">
-                <div class="swiper-wrapper" id="hero-slider-wrapper">
-                    </div>
+        <section id="home" class="ls-hero-section">
+            <div class="swiper ls-hero-slider">
+                <div class="swiper-wrapper" id="ls-hero-slider-wrapper"></div>
                 <div class="swiper-button-prev"></div>
                 <div class="swiper-button-next"></div>
                 <div class="swiper-pagination"></div>
             </div>
-            <div class="slide-overlay"></div>
+            <div class="ls-slide-overlay"></div>
         </section>
 
-        <section id="menu" class="section">
-            <div class="container">
-                <div class="section-header" data-aos="fade-up">
-                    <span class="subtitle">Featured Dishes</span>
-                    <h2 class="title">Chef's Recommendations</h2>
+        <section id="menu" class="ls-section">
+            <div class="ls-container">
+                <div class="ls-section-header" data-aos="fade-up">
+                    <span class="ls-subtitle">Featured Dishes</span>
+                    <h2 class="ls-title">Chef's Recommendations</h2>
                 </div>
                 <div data-aos="fade-up">
-                     <div class="swiper featured-slider">
-                        <div class="swiper-wrapper" id="featured-menu-wrapper"></div>
+                     <div class="swiper ls-featured-slider">
+                        <div class="swiper-wrapper" id="ls-featured-menu-wrapper"></div>
                         <div class="swiper-pagination"></div>
                      </div>
                 </div>
-                <div class="section-header" data-aos="fade-up" style="margin-top: 5rem;">
-                     <h2 class="title">Our Full Menu</h2>
+                <div class="ls-section-header" data-aos="fade-up" style="margin-top: 5rem;">
+                     <h2 class="ls-title">Our Full Menu</h2>
                 </div>
-                <div class="menu-grid" id="menu-grid" data-aos="fade-up"></div>
+                <div class="ls-menu-grid" id="ls-menu-grid" data-aos="fade-up"></div>
             </div>
         </section>
 
-        <section id="gallery" class="gallery-section section" style="background:var(--color-surface);">
-            <div class="container">
-                 <div class="section-header" data-aos="fade-up">
-                    <span class="subtitle">Our Moments</span>
-                    <h2 class="title">Tasteful Memories</h2>
+        <section id="gallery" class="ls-gallery-section ls-section" style="background:var(--color-surface);">
+            <div class="ls-container">
+                 <div class="ls-section-header" data-aos="fade-up">
+                    <span class="ls-subtitle">Our Moments</span>
+                    <h2 class="ls-title">Tasteful Memories</h2>
                 </div>
-                <div class="gallery-grid" id="gallery-grid" data-aos="fade-up"></div>
+                <div class="ls-gallery-grid" id="ls-gallery-grid" data-aos="fade-up"></div>
             </div>
         </section>
     </main>
     
-    <div id="order-modal" class="modal-overlay">
-      <div class="modal-content">
-        <div class="modal-header">
+    <div id="ls-order-modal" class="ls-modal-overlay">
+      <div class="ls-modal-content">
+        <div class="ls-modal-header">
             <h2>Place Your Order</h2>
-            <button class="modal-close-btn">&times;</button>
+            <button class="ls-modal-close-btn">&times;</button>
         </div>
-        <div class="modal-body">
-            <div id="modal-product-details"></div>
-            <form id="order-form" novalidate>
-                <div class="form-group"><label for="customer-name">Name</label><input type="text" id="customer-name" required></div>
-                <div class="form-group"><label for="customer-phone">Phone Number</label><input type="tel" id="customer-phone" required></div>
-                <div class="form-group"><label for="customer-address">Delivery Address</label><textarea id="customer-address" rows="3" required></textarea><div id="address-map" style="height:150px; width:100%; border-radius:8px; margin-top:10px;"></div></div>
-                <button type="button" id="detect-location-btn" class="btn btn-secondary" style="width:100%; margin-top:1rem; background:transparent; color: var(--color-secondary); border-color:var(--color-border);">Detect My Location</button>
-                <button type="submit" class="btn btn-primary" style="width:100%; margin-top:1rem;">Submit Order</button>
+        <div class="ls-modal-body">
+            <div id="ls-modal-product-details"></div>
+            <form id="ls-order-form" novalidate>
+                <div class="ls-form-group"><label for="ls-customer-name">Name</label><input type="text" id="ls-customer-name" required></div>
+                <div class="ls-form-group"><label for="ls-customer-phone">Phone Number</label><input type="tel" id="ls-customer-phone" required></div>
+                <div class="ls-form-group">
+                    <label for="ls-customer-address">Delivery Address</label>
+                    <textarea id="ls-customer-address" rows="3" required></textarea>
+                    <div id="ls-address-map" style="height:150px; width:100%; border-radius:8px; margin-top:10px; background-color: #eee;"></div>
+                </div>
+                <button type="button" id="ls-detect-location-btn" class="ls-btn ls-btn-secondary" style="width:100%; margin: .5rem 0;">
+                    <i class="fas fa-map-marker-alt"></i> Detect My Location
+                </button>
+                <button type="submit" class="ls-btn ls-btn-primary" style="width:100%;">Submit Order</button>
             </form>
         </div>
       </div>
     </div>
 
-    <div id="cart-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
+    <div id="ls-cart-modal" class="ls-modal-overlay">
+        <div class="ls-modal-content">
+            <div class="ls-modal-header">
                 <h2>Your Cart</h2>
-                <button class="modal-close-btn">&times;</button>
+                <button class="ls-modal-close-btn">&times;</button>
             </div>
-            <div class="modal-body">
-                <div id="cart-items-container"></div>
-                <div id="cart-empty-message" style="display:none; text-align:center; padding: 3rem 0;">Your cart is empty.</div>
-                <div class="cart-summary" id="cart-summary" style="display:none;">
-                    <h3>Total: <span id="cart-total"></span></h3>
-                    <button id="checkout-btn" class="btn btn-primary" style="width:100%; margin-top:1rem;">Proceed to Checkout</button>
+            <div class="ls-modal-body">
+                <div id="ls-cart-items-container"></div>
+                <div id="ls-cart-empty-message" style="display:none; text-align:center; padding: 3rem 0;">Your cart is empty.</div>
+                <div class="ls-cart-summary" id="ls-cart-summary" style="display:none;">
+                    <div class="ls-cart-total-line">
+                        <span class="label">Total</span>
+                        <span class="amount" id="ls-cart-total"></span>
+                    </div>
+                    <button id="ls-checkout-btn" class="ls-btn ls-btn-primary" style="width:100%;">Proceed to Checkout</button>
                 </div>
             </div>
         </div>
     </div>
-
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADCv-AX09lIYq6Gr7Gm56rChp4kS0J08Q&libraries=places&callback=initAppMaps"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initAppMaps"></script>
 
     <script>
+    // NOTE: Replace 'YOUR_API_KEY' in the script tag above with your actual Google Maps API Key.
+    // NOTE: The Firebase config below uses public demo credentials. Replace with your own.
     'use strict';
 
     const firebaseConfig = {
@@ -363,10 +375,16 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    let siteData = {}, cart = [], lightbox, map, marker, geocoder;
+    let siteData = { products: [], categories: [], banners: [], gallery_images: [] };
+    let cart = [];
+    let lightbox, map, marker, geocoder;
 
     function initAppMaps() {
-        geocoder = new google.maps.Geocoder();
+        if (typeof google !== 'undefined') {
+            geocoder = new google.maps.Geocoder();
+        } else {
+            console.error("Google Maps API script failed to load.");
+        }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -374,27 +392,24 @@
 
         const dom = {
             body: document.body,
-            mainNav: document.getElementById('main-nav'),
-            mobileMenuToggle: document.getElementById('mobile-menu-toggle'),
-            heroSliderWrapper: document.getElementById('hero-slider-wrapper'),
-            featuredMenuWrapper: document.getElementById('featured-menu-wrapper'),
-            menuGrid: document.getElementById('menu-grid'),
-            galleryGrid: document.getElementById('gallery-grid'),
-            
-            orderModal: document.getElementById('order-modal'),
-            cartModal: document.getElementById('cart-modal'),
-            
-            modalProductDetails: document.getElementById('modal-product-details'),
-            customerAddress: document.getElementById('customer-address'),
-            detectLocationBtn: document.getElementById('detect-location-btn'),
-            
-            headerCart: document.getElementById('header-cart'),
-            cartBadge: document.getElementById('cart-badge'),
-            cartItemsContainer: document.getElementById('cart-items-container'),
-            cartEmptyMessage: document.getElementById('cart-empty-message'),
-            cartSummary: document.getElementById('cart-summary'),
-            cartTotal: document.getElementById('cart-total'),
-            checkoutBtn: document.getElementById('checkout-btn'),
+            mainNav: document.getElementById('ls-main-nav'),
+            mobileMenuToggle: document.getElementById('ls-mobile-menu-toggle'),
+            heroSliderWrapper: document.getElementById('ls-hero-slider-wrapper'),
+            featuredMenuWrapper: document.getElementById('ls-featured-menu-wrapper'),
+            menuGrid: document.getElementById('ls-menu-grid'),
+            galleryGrid: document.getElementById('ls-gallery-grid'),
+            orderModal: document.getElementById('ls-order-modal'),
+            cartModal: document.getElementById('ls-cart-modal'),
+            modalProductDetails: document.getElementById('ls-modal-product-details'),
+            customerAddress: document.getElementById('ls-customer-address'),
+            detectLocationBtn: document.getElementById('ls-detect-location-btn'),
+            headerCart: document.getElementById('ls-header-cart'),
+            cartBadge: document.getElementById('ls-cart-badge'),
+            cartItemsContainer: document.getElementById('ls-cart-items-container'),
+            cartEmptyMessage: document.getElementById('ls-cart-empty-message'),
+            cartSummary: document.getElementById('ls-cart-summary'),
+            cartTotal: document.getElementById('ls-cart-total'),
+            checkoutBtn: document.getElementById('ls-checkout-btn'),
         };
 
         const formatCurrency = (amount) => `Rp ${new Intl.NumberFormat('id-ID').format(amount)}`;
@@ -403,29 +418,31 @@
         const renderBanners = () => {
             dom.heroSliderWrapper.innerHTML = siteData.banners.map(banner => `
                 <div class="swiper-slide">
-                    <div class="slide-bg" style="background-image: url('${banner.image_url}');"></div>
-                    <div class="hero-content">
+                    <div class="ls-slide-bg" style="background-image: url('${banner.image_url}');"></div>
+                    <div class="ls-hero-content">
                         <h1>Savor the Freshness</h1>
                         <p>The best lobster and seafood experience in the heart of Bali.</p>
-                        <a href="#menu" class="btn btn-primary"><i class="fas fa-utensils"></i> Explore Our Menu</a>
+                        <a href="#menu" class="ls-btn ls-btn-primary"><i class="fas fa-utensils"></i> Explore Our Menu</a>
                     </div>
                 </div>`).join('');
-            new Swiper('.hero-slider', { loop: true, effect: 'fade', autoplay: { delay: 7000 }, navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }, pagination: { el: '.swiper-pagination', clickable: true } });
+            new Swiper('.ls-hero-slider', { loop: true, effect: 'fade', autoplay: { delay: 7000 }, navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }, pagination: { el: '.swiper-pagination', clickable: true } });
         };
 
         const renderMenu = () => {
             let featuredHTML = '', gridHTML = '';
             siteData.products.forEach(p => {
                 const cardHTML = `
-                    <div class="menu-card" data-id="${p.id}">
-                        <div class="menu-card-image"><img src="${p.imageUrl}" alt="${p.name_en}"></div>
-                        <div class="menu-card-content">
-                            <h3>${p.name_en}</h3>
-                            <p class="menu-card-price">${formatCurrency(p.price)}</p>
-                            <p class="description">${(p.description_en || '').substring(0, 100)}...</p>
-                            <div class="menu-card-buttons">
-                                <button class="btn btn-secondary add-to-cart-btn"><i class="fas fa-cart-plus"></i> Add to Cart</button>
-                                <button class="btn btn-primary order-now-btn">Order Now</button>
+                    <div class="ls-menu-card" data-id="${p.id}">
+                        <div class="ls-menu-card-image"><img src="${p.imageUrl}" alt="${p.name_en}"></div>
+                        <div class="ls-menu-card-content">
+                            <div>
+                                <h3>${p.name_en}</h3>
+                                <p class="ls-menu-card-price">${formatCurrency(p.price)}</p>
+                                <p class="description">${(p.description_en || '').substring(0, 100)}...</p>
+                            </div>
+                            <div class="ls-menu-card-buttons">
+                                <button class="ls-btn ls-btn-secondary add-to-cart-btn"><i class="fas fa-cart-plus"></i> Add</button>
+                                <button class="ls-btn ls-btn-primary order-now-btn">Order Now</button>
                             </div>
                         </div>
                     </div>`;
@@ -434,14 +451,18 @@
             });
             dom.featuredMenuWrapper.innerHTML = featuredHTML;
             dom.menuGrid.innerHTML = gridHTML;
-            new Swiper('.featured-slider', { slidesPerView: 'auto', spaceBetween: 30, grabCursor: true, pagination: { el: '.swiper-pagination', clickable: true } });
+            new Swiper('.ls-featured-slider', { slidesPerView: 'auto', spaceBetween: 30, grabCursor: true, pagination: { el: '.swiper-pagination', clickable: true } });
         };
 
-        const renderAll = () => {
-            renderBanners();
-            renderMenu();
-            dom.galleryGrid.innerHTML = siteData.gallery_images.map(img => `<a href="${img.image_url}" class="glightbox"><img src="${img.image_url}" alt="${img.caption_en}"></a>`).join('');
+        const renderGallery = () => {
+            dom.galleryGrid.innerHTML = siteData.gallery_images.map(img => `<a href="${img.image_url}" class="glightbox" data-gallery="restaurant-gallery"><img src="${img.image_url}" alt="${img.caption_en}"></a>`).join('');
             lightbox = GLightbox({ selector: '.glightbox' });
+        }
+
+        const renderAll = () => {
+            if (siteData.banners.length) renderBanners();
+            if (siteData.products.length) renderMenu();
+            if (siteData.gallery_images.length) renderGallery();
         };
         
         async function fetchData() {
@@ -449,19 +470,23 @@
                 const collections = ['products', 'categories', 'banners', 'gallery_images'];
                 const promises = collections.map(col => db.collection(col).get());
                 const [productsSnap, categoriesSnap, bannersSnap, gallerySnap] = await Promise.all(promises);
+                
                 siteData.products = productsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 siteData.categories = categoriesSnap.docs.map(doc => doc.data()).sort((a,b) => a.id - b.id);
                 siteData.banners = bannersSnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
                 siteData.gallery_images = gallerySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
+                
                 renderAll();
-            } catch (error) { console.error("Error fetching data:", error); }
+            } catch (error) { 
+                console.error("Error fetching data from Firestore:", error);
+                dom.menuGrid.innerHTML = `<p style="text-align:center; grid-column: 1 / -1;">Could not load menu. Please try again later.</p>`;
+            }
         }
 
         // --- CART LOGIC ---
         const updateCartBadge = () => {
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
             dom.cartBadge.textContent = totalItems;
-            dom.headerCart.classList.toggle('has-items', totalItems > 0);
         };
 
         const renderCart = () => {
@@ -477,20 +502,21 @@
             let total = 0;
             dom.cartItemsContainer.innerHTML = cart.map(item => {
                 const product = siteData.products.find(p => p.id === item.id);
+                if (!product) return '';
                 total += product.price * item.quantity;
                 return `
-                    <div class="cart-item" data-id="${item.id}">
+                    <div class="ls-cart-item" data-id="${item.id}">
                         <img src="${product.imageUrl}" alt="${product.name_en}">
-                        <div class="cart-item-details">
+                        <div class="ls-cart-item-details">
                             <h4>${product.name_en}</h4>
                             <p>${formatCurrency(product.price)}</p>
                         </div>
-                        <div class="cart-item-qty">
+                        <div class="ls-cart-item-qty">
                             <button class="btn-qty-decrease">-</button>
                             <span>${item.quantity}</span>
                             <button class="btn-qty-increase">+</button>
                         </div>
-                        <button class="btn-remove-item" style="background:transparent; border:none; color:var(--color-primary); font-size:1.2rem; cursor:pointer;">&times;</button>
+                        <button class="ls-modal-close-btn btn-remove-item" style="font-size: 1.2rem; width:30px; height:30px; background: transparent;">&times;</button>
                     </div>`;
             }).join('');
             dom.cartTotal.textContent = formatCurrency(total);
@@ -507,18 +533,19 @@
         };
 
         const updateQuantity = (productId, change) => {
-            const item = cart.find(i => i.id === productId);
-            if (!item) return;
-            item.quantity += change;
-            if (item.quantity <= 0) {
-                cart = cart.filter(i => i.id !== productId);
+            const itemIndex = cart.findIndex(i => i.id === productId);
+            if (itemIndex === -1) return;
+            
+            cart[itemIndex].quantity += change;
+            if (cart[itemIndex].quantity <= 0) {
+                cart.splice(itemIndex, 1);
             }
             renderCart();
         };
 
         // --- MODAL & MAP LOGIC ---
         const toggleModal = (modal, show) => {
-            dom.body.classList.toggle('modal-open', show);
+            dom.body.classList.toggle('ls-modal-open', show);
             modal.classList.toggle('visible', show);
         };
 
@@ -528,41 +555,70 @@
             dom.modalProductDetails.innerHTML = `
                 <img src="${product.imageUrl}" alt="${product.name_en}">
                 <h3>${product.name_en}</h3>
-                <p class="menu-card-price">${formatCurrency(product.price)}</p>`;
+                <p class="ls-menu-card-price">${formatCurrency(product.price)}</p>`;
             toggleModal(dom.orderModal, true);
             setTimeout(() => initOrderMap(), 100);
         };
 
         const initOrderMap = (lat = -8.7192, lng = 115.1686) => {
-            if (!google || !document.getElementById('address-map')) return;
+            if (typeof google === 'undefined' || !google.maps || !document.getElementById('ls-address-map')) return;
             const position = { lat, lng };
-            map = new google.maps.Map(document.getElementById('address-map'), { center: position, zoom: 15, disableDefaultUI: true });
+            map = new google.maps.Map(document.getElementById('ls-address-map'), { center: position, zoom: 15, disableDefaultUI: true });
             marker = new google.maps.Marker({ position, map, draggable: true });
             marker.addListener('dragend', () => geocodePosition(marker.getPosition()));
             geocodePosition(position);
         };
-        const geocodePosition = (pos) => geocoder.geocode({ latLng: pos }, (results, status) => { if (status === 'OK' && results[0]) { dom.customerAddress.value = results[0].formatted_address; } });
+
+        const geocodePosition = (pos) => {
+            if (!geocoder) return;
+            geocoder.geocode({ latLng: pos }, (results, status) => { if (status === 'OK' && results[0]) { dom.customerAddress.value = results[0].formatted_address; } });
+        };
 
         // --- EVENT LISTENERS ---
-        dom.mobileMenuToggle.addEventListener('click', () => { dom.mainNav.classList.toggle('active'); dom.body.classList.toggle('modal-open'); dom.mobileMenuToggle.querySelector('i').classList.toggle('fa-times'); });
+        dom.mobileMenuToggle.addEventListener('click', () => { 
+            const isActive = dom.mainNav.classList.toggle('active');
+            dom.body.classList.toggle('ls-modal-open', isActive);
+            dom.mobileMenuToggle.querySelector('i').classList.toggle('fa-times', isActive);
+            dom.mobileMenuToggle.querySelector('i').classList.toggle('fa-bars', !isActive);
+        });
+        
         dom.headerCart.addEventListener('click', (e) => { e.preventDefault(); renderCart(); toggleModal(dom.cartModal, true); });
-        dom.detectLocationBtn.addEventListener('click', () => navigator.geolocation.getCurrentPosition(pos => { const newPos = { lat: pos.coords.latitude, lng: pos.coords.longitude }; map.setCenter(newPos); marker.setPosition(newPos); geocodePosition(newPos); }));
-        dom.checkoutBtn.addEventListener('click', () => { window.location.href = '/checkout'; });
+        
+        dom.detectLocationBtn.addEventListener('click', () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => { 
+                    const newPos = { lat: pos.coords.latitude, lng: pos.coords.longitude }; 
+                    if (map && marker) {
+                        map.setCenter(newPos); 
+                        marker.setPosition(newPos); 
+                        geocodePosition(newPos);
+                    } else {
+                        initOrderMap(newPos.lat, newPos.lng);
+                    }
+                }, () => alert("Could not get your location. Please enter it manually."));
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        });
+        
+        dom.checkoutBtn.addEventListener('click', () => { alert('Redirecting to checkout page...'); window.location.href = '/checkout'; });
         
         document.body.addEventListener('click', e => {
-            const card = e.target.closest('.menu-card');
-            if (card) {
-                if (e.target.closest('.add-to-cart-btn')) addToCart(card.dataset.id);
-                if (e.target.closest('.order-now-btn')) openOrderModal(card.dataset.id);
+            const menuCard = e.target.closest('.ls-menu-card');
+            if (menuCard) {
+                const productId = menuCard.dataset.id;
+                if (e.target.closest('.add-to-cart-btn')) addToCart(productId);
+                if (e.target.closest('.order-now-btn')) openOrderModal(productId);
             }
-            if (e.target.closest('.modal-close-btn')) {
-                toggleModal(e.target.closest('.modal-overlay'), false);
+            if (e.target.closest('.ls-modal-close-btn')) {
+                toggleModal(e.target.closest('.ls-modal-overlay'), false);
             }
-            if (e.target.closest('.cart-item')) {
-                const id = e.target.closest('.cart-item').dataset.id;
-                if (e.target.matches('.btn-qty-increase')) updateQuantity(id, 1);
-                if (e.target.matches('.btn-qty-decrease')) updateQuantity(id, -1);
-                if (e.target.matches('.btn-remove-item')) updateQuantity(id, -Infinity); // Set qty to 0 or less
+            const cartItem = e.target.closest('.ls-cart-item');
+            if (cartItem) {
+                const productId = cartItem.dataset.id;
+                if (e.target.matches('.btn-qty-increase')) updateQuantity(productId, 1);
+                if (e.target.matches('.btn-qty-decrease')) updateQuantity(productId, -1);
+                if (e.target.matches('.btn-remove-item')) updateQuantity(productId, -Infinity);
             }
         });
 
