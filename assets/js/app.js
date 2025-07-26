@@ -122,3 +122,76 @@ function updateCartCount() {
         cartCountEl.textContent = cart.length;
     }
 }
+
+
+// ... (kode app.js yang sudah ada sebelumnya) ...
+
+/**
+ * Merender konten untuk halaman keranjang belanja (cart.html).
+ */
+function renderCartPage() {
+    const container = document.getElementById('cart-items-container');
+    const summary = document.getElementById('cart-summary');
+    const totalEl = document.getElementById('cart-total');
+    if (!container || !summary) return;
+
+    // Ambil data keranjang dari local storage
+    const cart = JSON.parse(localStorage.getItem('lobsterCart')) || [];
+
+    if (cart.length === 0) {
+        container.innerHTML = '<p>Keranjang Anda kosong.</p>';
+        summary.classList.add('hidden');
+        return;
+    }
+
+    container.innerHTML = ''; // Kosongkan sebelum mengisi
+    let totalPrice = 0;
+
+    cart.forEach((item, index) => {
+        const itemEl = document.createElement('div');
+        itemEl.className = 'cart-item';
+        itemEl.innerHTML = `
+            <img src="${item.imageUrl}" alt="${item.name_en}">
+            <div class="cart-item-info">
+                <h4>${item.name_en}</h4>
+                <p>Rp ${item.price.toLocaleString('id-ID')}</p>
+            </div>
+            <button class="btn-remove-from-cart" data-index="${index}">Hapus</button>
+        `;
+        container.appendChild(itemEl);
+        totalPrice += item.price;
+    });
+    
+    // Tampilkan total dan tombol checkout
+    totalEl.textContent = `Total: Rp ${totalPrice.toLocaleString('id-ID')}`;
+    summary.classList.remove('hidden');
+
+    // Tambahkan event listener untuk tombol hapus
+    container.querySelectorAll('.btn-remove-from-cart').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const indexToRemove = parseInt(e.target.dataset.index, 10);
+            removeFromCart(indexToRemove);
+        });
+    });
+}
+
+/**
+ * Menghapus item dari keranjang berdasarkan index-nya.
+ * @param {number} index - Index item yang akan dihapus.
+ */
+function removeFromCart(index) {
+    let cart = JSON.parse(localStorage.getItem('lobsterCart')) || [];
+    cart.splice(index, 1); // Hapus 1 item pada index yang diberikan
+    localStorage.setItem('lobsterCart', JSON.stringify(cart));
+    updateCartCount(); // Update angka di header
+    renderCartPage();  // Render ulang halaman keranjang
+}
+
+// Pastikan fungsi updateCartCount ada dan berfungsi
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('lobsterCart')) || [];
+    const cartCountEl = document.getElementById('cart-count');
+    if (cartCountEl) {
+        cartCountEl.textContent = cart.length;
+    }
+}
