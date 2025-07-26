@@ -1,15 +1,24 @@
-# Konfigurasi dasar untuk build
+# Konfigurasi build dasar
 [build]
-  publish = "/"
-  command = ""
+  # Direktori yang akan di-publish (berisi HTML, CSS, JS front-end)
+  publish = "public"
+  # Direktori tempat fungsi serverless Anda disimpan
+  functions = "netlify/functions"
 
-# Redirect untuk URL yang lebih bersih, misal: website.com/admin
+# Redirect untuk URL yang lebih bersih, seperti /admin -> /admin.html
 [[redirects]]
   from = "/admin"
   to = "/admin.html"
   status = 200
 
-# Headers untuk Caching & Keamanan
+# Proxy: Semua permintaan ke /api/* akan diteruskan ke fungsi serverless Anda.
+# Ini adalah kunci untuk menyembunyikan endpoint Netlify Function yang sebenarnya.
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# Headers untuk Keamanan & Caching
 [[headers]]
   for = "/*"
   [headers.values]
