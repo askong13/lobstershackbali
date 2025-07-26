@@ -13,7 +13,472 @@
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
     <style>
-        :root{--font-heading:'Playfair Display',serif;--font-body:'Poppins',sans-serif;--color-primary:#D84B42;--color-secondary:#2D4C5E;--color-background:#F8F6F0;--color-surface:#FFFFFF;--color-text:#333333;--color-text-light:#6c757d;--color-border:#E0DACE;--shadow-sm:0 2px 8px rgba(45,76,94,.07);--shadow-md:0 4px 15px rgba(45,76,94,.12);--border-radius:12px;--transition-speed:.4s;--container-width:1240px}*,::after,::before{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth;font-size:16px}body{font-family:var(--font-body);background-color:var(--color-background);color:var(--color-text);line-height:1.8;-webkit-font-smoothing:antialiased;overflow-x:hidden}.container{width:100%;max-width:var(--container-width);margin:0 auto;padding:0 24px}.section{padding:6rem 0}.section-header{text-align:center;margin-bottom:4rem}.section-header .subtitle{color:var(--color-primary);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem;display:block}.section-header .title{font-family:var(--font-heading);font-size:clamp(2.5rem,5vw,3.5rem);font-weight:700;color:var(--color-secondary);line-height:1.2;margin-bottom:1rem}.btn{display:inline-flex;align-items:center;justify-content:center;gap:.75rem;font-family:var(--font-body);font-weight:600;padding:.875rem 2rem;border-radius:50px;border:2px solid transparent;cursor:pointer;text-decoration:none;transition:all var(--transition-speed) ease;background-color:var(--color-primary);color:var(--color-surface);text-align:center}.btn:hover{background-color:#b93e36;transform:translateY(-3px) scale(1.05);box-shadow:var(--shadow-md)}.main-header{background-color:rgba(255,255,255,.85);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);padding:1rem 0;box-shadow:var(--shadow-sm);position:sticky;top:0;z-index:1000}.main-header .container{display:flex;justify-content:space-between;align-items:center}.main-header .logo{height:55px}.nav-links{list-style:none;display:flex;gap:2.5rem}.nav-links a{text-decoration:none;font-weight:600;color:var(--color-secondary);position:relative;padding-bottom:.5rem}.nav-links a:after{content:"";position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:2px;background-color:var(--color-primary);transition:width var(--transition-speed) ease}.nav-links a.active:after,.nav-links a:hover:after{width:100%}.header-actions{display:flex;align-items:center;gap:1rem}.language-toggle{display:flex;background-color:#e9e5d9;border-radius:50px;padding:4px;border:1px solid var(--color-border)}.lang-btn{background:0 0;border:none;padding:.5rem .75rem;cursor:pointer;font-weight:600;color:var(--color-text-light);border-radius:50px;transition:all var(--transition-speed) ease}.lang-btn.active{background:var(--color-primary);color:#fff}.hero-section{position:relative}.hero-slider .swiper-slide{height:90vh;min-height:700px;display:flex;align-items:center;justify-content:center;background-size:cover;background-position:center}.hero-slider .slide-overlay{background:linear-gradient(rgba(45,76,94,.65),rgba(45,76,94,.65));position:absolute;top:0;left:0;width:100%;height:100%}.hero-content{position:relative;z-index:2;text-align:center;color:#fff;padding:0 1rem}.hero-content h1{font-family:var(--font-heading);font-size:clamp(3rem,7vw,5.5rem);text-shadow:2px 2px 8px rgba(0,0,0,.5)}.hero-content p{font-size:1.25rem;margin:1.5rem auto 2.5rem;max-width:600px;line-height:1.6}.timeline{position:relative;max-width:900px;margin:4rem auto 0}.timeline:after{content:"";position:absolute;width:3px;background-color:var(--color-border);top:0;bottom:0;left:50%;margin-left:-1.5px}.timeline-item{padding:10px 40px;position:relative;width:50%}.timeline-item.left{left:0}.timeline-item.right{left:50%}.timeline-item:after{content:"ðŸ¦ž";font-family:sans-serif;font-size:1rem;display:flex;align-items:center;justify-content:center;position:absolute;width:32px;height:32px;background-color:var(--color-primary);color:#fff;top:30px;border-radius:50%;z-index:1;box-shadow:0 0 0 4px var(--color-background)}.timeline-item.left:after{right:-17.5px}.timeline-item.right:after{left:-17.5px}.timeline-content{padding:1.5rem 2rem;background-color:var(--color-surface);border-radius:var(--border-radius);box-shadow:var(--shadow-sm)}.timeline-content .year{font-family:var(--font-heading);color:var(--color-primary);font-size:2rem}.timeline-content h3{font-size:1.3rem;color:var(--color-secondary);margin-top:.5rem}.menu-filters{display:flex;flex-wrap:wrap;justify-content:center;gap:1rem;margin-bottom:3rem}.filter-btn{background:0 0;border:2px solid var(--color-border);color:var(--color-text-light);font-weight:600;padding:.6rem 1.5rem;border-radius:50px;cursor:pointer;transition:all var(--transition-speed) ease}.filter-btn.active,.filter-btn:hover{background-color:var(--color-secondary);color:#fff;border-color:var(--color-secondary)}.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem}.menu-card{background:var(--color-surface);border-radius:var(--border-radius);overflow:hidden;box-shadow:var(--shadow-sm);transition:all var(--transition-speed) ease;display:flex;flex-direction:column}.menu-card:hover{transform:translateY(-10px);box-shadow:var(--shadow-md)}.menu-card-image{width:100%;height:240px;overflow:hidden}.menu-card-image img{width:100%;height:100%;-o-object-fit:cover;object-fit:cover;transition:transform var(--transition-speed) ease}.menu-card:hover .menu-card-image img{transform:scale(1.1)}.menu-card-content{padding:1.5rem;flex-grow:1;display:flex;flex-direction:column;text-align:center}.menu-card h3{font-family:var(--font-heading);color:var(--color-secondary);font-size:1.5rem}.menu-card-price{font-weight:700;color:var(--color-primary);font-size:1.375rem;margin-bottom:1rem}.menu-card .description{flex-grow:1;margin-bottom:1.5rem;color:var(--color-text-light)}.featured-slider .swiper-slide{width:340px}.gallery-section{background:var(--color-surface)}.gallery-grid{columns:4;-moz-columns:4;-webkit-columns:4;column-gap:1rem}.gallery-grid a{display:block;overflow:hidden;border-radius:8px;margin-bottom:1rem}.gallery-grid img{width:100%;display:block;transition:transform var(--transition-speed) ease}.gallery-grid a:hover img{transform:scale(1.05)}.main-footer{background-color:var(--color-secondary);color:rgba(255,255,255,.8);padding:4rem 0;text-align:center}.main-footer .logo{height:70px;margin-bottom:1.5rem;filter:brightness(0) invert(1)}.main-footer p{max-width:500px;margin:0 auto 1.5rem}.footer-socials{display:flex;justify-content:center;gap:1.5rem;list-style:none;margin-bottom:2rem}.footer-socials a{color:#fff;font-size:1.5rem}.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);z-index:2000;display:flex;justify-content:center;align-items:center;padding:1rem;opacity:0;visibility:hidden;transition:opacity var(--transition-speed) ease,visibility 0s var(--transition-speed)}.modal-overlay.visible{opacity:1;visibility:visible;transition-delay:0s}.modal-content{background:#fff;border-radius:var(--border-radius);width:100%;max-width:550px;max-height:90vh;overflow-y:auto;position:relative;transform:scale(.9);transition:transform var(--transition-speed) ease}.modal-overlay.visible .modal-content{transform:scale(1)}.modal-header{padding:1.5rem;border-bottom:1px solid var(--color-border);display:flex;justify-content:space-between;align-items:center}.modal-header h2{font-family:var(--font-heading);color:var(--color-secondary);font-size:1.5rem}.modal-close-btn{font-size:1.75rem;background:0 0;border:none;cursor:pointer;color:#aaa}.modal-body{padding:1.5rem 2rem}.form-group{margin-bottom:1.25rem}.form-group label{display:block;font-weight:600;margin-bottom:.5rem}.form-group input{width:100%;padding:.8rem 1rem;border-radius:8px;border:1px solid var(--color-border)}#address-map{height:200px;width:100%;margin-top:10px;border-radius:8px;background-color:#eee}.toast-notification{position:fixed;bottom:2rem;right:2rem;background-color:var(--color-secondary);color:#fff;padding:1rem 1.5rem;border-radius:var(--border-radius);box-shadow:var(--shadow-md);z-index:3000;display:flex;align-items:center;gap:1rem;transform:translateX(calc(100% + 2rem));transition:transform .5s ease-in-out}.toast-notification.show{transform:translateX(0)}.toast-notification.error{background-color:var(--color-primary)}.toast-notification.success{background-color:#28a745}.toast-notification i{font-size:1.5rem}@media (max-width:768px){.nav-links{display:none}.timeline:after{left:31px}.timeline-item{width:100%;padding-left:70px;padding-right:25px}.timeline-item.left,.timeline-item.right{left:0%}.timeline-item.left:after,.timeline-item.right:after{left:15px}.gallery-grid{columns:2;-moz-columns:2;-webkit-columns:2}}@media (max-width:576px){.gallery-grid{columns:1;-moz-columns:1;-webkit-columns:1}}
+        /* ------------------- */
+        /* ROOT & BASE STYLES  */
+        /* ------------------- */
+        :root {
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Poppins', sans-serif;
+            --color-primary: #D84B42;
+            --color-secondary: #2D4C5E;
+            --color-background: #F8F6F0;
+            --color-surface: #FFFFFF;
+            --color-text: #333333;
+            --color-text-light: #6c757d;
+            --color-border: #E0DACE;
+            --shadow-sm: 0 2px 8px rgba(45, 76, 94, .07);
+            --shadow-md: 0 4px 15px rgba(45, 76, 94, .12);
+            --shadow-lg: 0 8px 30px rgba(45, 76, 94, .2);
+            --border-radius: 12px;
+            --transition-speed: .4s;
+            --container-width: 1240px;
+        }
+        *, ::after, ::before { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+        body.nav-open { overflow: hidden; }
+        .container { width: 100%; max-width: var(--container-width); margin: 0 auto; padding: 0 24px; }
+        .section { padding: 6rem 0; }
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-header .subtitle {
+            color: var(--color-primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: .5rem;
+            display: block;
+        }
+        .section-header .title {
+            font-family: var(--font-heading);
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 700;
+            color: var(--color-secondary);
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        /* ------------------- */
+        /* COMPONENTS          */
+        /* ------------------- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .75rem;
+            font-family: var(--font-body);
+            font-weight: 600;
+            padding: .875rem 2rem;
+            border-radius: 50px;
+            border: 2px solid var(--color-primary);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all var(--transition-speed) ease;
+            background-color: var(--color-primary);
+            color: var(--color-surface);
+            text-align: center;
+        }
+        .btn:hover {
+            background-color: #b93e36;
+            border-color: #b93e36;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-md);
+        }
+        .btn-secondary {
+            background-color: var(--color-surface);
+            color: var(--color-secondary);
+            border-color: var(--color-secondary);
+        }
+        .btn-secondary:hover {
+            background-color: var(--color-secondary);
+            color: var(--color-surface);
+        }
+
+        /* ------------------- */
+        /* HEADER & NAVIGATION */
+        /* ------------------- */
+        .main-header {
+            background-color: rgba(255, 255, 255, .85);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: top 0.3s ease-in-out;
+        }
+        .main-header .container { display: flex; justify-content: space-between; align-items: center; }
+        .main-header .logo { height: 55px; z-index: 1001; }
+        .main-nav { display: flex; align-items: center; gap: 2rem; }
+        .nav-links { list-style: none; display: flex; gap: 2.5rem; }
+        .nav-links a { text-decoration: none; font-weight: 600; color: var(--color-secondary); position: relative; padding-bottom: .5rem; }
+        .nav-links a:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: var(--color-primary);
+            transition: width var(--transition-speed) ease;
+        }
+        .nav-links a.active:after, .nav-links a:hover:after { width: 100%; }
+        .header-actions { display: flex; align-items: center; gap: 1rem; }
+        .language-toggle {
+            display: flex;
+            background-color: #e9e5d9;
+            border-radius: 50px;
+            padding: 4px;
+            border: 1px solid var(--color-border);
+        }
+        .lang-btn {
+            background: 0 0;
+            border: none;
+            padding: .5rem .75rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--color-text-light);
+            border-radius: 50px;
+            transition: all var(--transition-speed) ease;
+        }
+        .lang-btn.active { background: var(--color-primary); color: #fff; }
+        .mobile-menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            color: var(--color-secondary);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        /* ------------------- */
+        /* HERO SECTION        */
+        /* ------------------- */
+        .hero-section { position: relative; }
+        .hero-slider .swiper-slide {
+            height: 90vh;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-position: center;
+        }
+        .hero-slider .slide-overlay {
+            background: linear-gradient(rgba(45, 76, 94, .65), rgba(45, 76, 94, .65));
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #fff;
+            padding: 0 1rem;
+        }
+        .hero-content h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(3rem, 7vw, 5.5rem);
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, .5);
+        }
+        .hero-content p {
+            font-size: 1.25rem;
+            margin: 1.5rem auto 2.5rem;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+        .hero-slider .swiper-button-next, .hero-slider .swiper-button-prev { color: #fff; }
+        .hero-slider .swiper-pagination-bullet-active { background-color: var(--color-primary); }
+
+        /* ------------------- */
+        /* ABOUT SECTION (TIMELINE) */
+        /* ------------------- */
+        .timeline { position: relative; max-width: 900px; margin: 4rem auto 0; }
+        .timeline:after {
+            content: "";
+            position: absolute;
+            width: 3px;
+            background-color: var(--color-border);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -1.5px;
+        }
+        .timeline-item { padding: 10px 40px; position: relative; width: 50%; }
+        .timeline-item.left { left: 0; }
+        .timeline-item.right { left: 50%; }
+        .timeline-item:after {
+            content: "🦞";
+            font-family: sans-serif;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            background-color: var(--color-primary);
+            color: #fff;
+            top: 30px;
+            border-radius: 50%;
+            z-index: 1;
+            box-shadow: 0 0 0 4px var(--color-background);
+        }
+        .timeline-item.left:after { right: -17.5px; }
+        .timeline-item.right:after { left: -17.5px; }
+        .timeline-content {
+            padding: 1.5rem 2rem;
+            background-color: var(--color-surface);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        }
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+        .timeline-content .year { font-family: var(--font-heading); color: var(--color-primary); font-size: 2rem; }
+        .timeline-content h3 { font-size: 1.3rem; color: var(--color-secondary); margin-top: .5rem; }
+
+        /* ------------------- */
+        /* MENU SECTION        */
+        /* ------------------- */
+        .featured-slider .swiper-slide { width: 340px; }
+        .featured-slider { padding-bottom: 3rem; }
+        .featured-slider .swiper-pagination-bullets { bottom: 0; }
+        .menu-filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 3rem; }
+        .filter-btn {
+            background: 0 0;
+            border: 2px solid var(--color-border);
+            color: var(--color-text-light);
+            font-weight: 600;
+            padding: .6rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+        }
+        .filter-btn.active, .filter-btn:hover {
+            background-color: var(--color-secondary);
+            color: #fff;
+            border-color: var(--color-secondary);
+        }
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .menu-card {
+            background: var(--color-surface);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-speed) ease;
+            display: flex;
+            flex-direction: column;
+            opacity: 1;
+            transform: scale(1);
+            transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+        .menu-card.hidden { transform: scale(0.9); opacity: 0; height: 0; padding: 0; margin: 0; border: 0; overflow: hidden; }
+        .menu-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-md); }
+        .menu-card-image { width: 100%; height: 240px; overflow: hidden; }
+        .menu-card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition-speed) ease; }
+        .menu-card:hover .menu-card-image img { transform: scale(1.1); }
+        .menu-card-content { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; text-align: center; }
+        .menu-card h3 { font-family: var(--font-heading); color: var(--color-secondary); font-size: 1.5rem; }
+        .menu-card-price { font-weight: 700; color: var(--color-primary); font-size: 1.375rem; margin: 0.5rem 0 1rem; }
+        .menu-card .description { flex-grow: 1; margin-bottom: 1.5rem; color: var(--color-text-light); font-size: 0.95rem; }
+
+        /* ------------------- */
+        /* GALLERY SECTION     */
+        /* ------------------- */
+        .gallery-section { background: var(--color-surface); }
+        .gallery-grid { columns: 4 250px; column-gap: 1rem; }
+        .gallery-grid a {
+            display: block;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        .gallery-grid img { width: 100%; display: block; transition: transform var(--transition-speed) ease; }
+        .gallery-grid a:hover img { transform: scale(1.05); }
+        .gallery-grid a::after {
+            content: '\f00e'; /* Font Awesome search-plus icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(45, 76, 94, 0.6);
+            color: #fff;
+            font-size: 2rem;
+            opacity: 0;
+            transition: opacity var(--transition-speed) ease;
+        }
+        .gallery-grid a:hover::after { opacity: 1; }
+
+        /* ------------------- */
+        /* FOOTER              */
+        /* ------------------- */
+        .main-footer {
+            background-color: var(--color-secondary);
+            color: rgba(255, 255, 255, .8);
+            padding: 4rem 0 2rem;
+            text-align: center;
+        }
+        .main-footer .logo { height: 70px; margin-bottom: 1.5rem; filter: brightness(0) invert(1); }
+        .main-footer p { max-width: 500px; margin: 0 auto 1.5rem; }
+        .footer-socials { display: flex; justify-content: center; gap: 1.5rem; list-style: none; margin-bottom: 2rem; }
+        .footer-socials a { color: #fff; font-size: 1.5rem; transition: color 0.3s ease, transform 0.3s ease; }
+        .footer-socials a:hover { color: var(--color-primary); transform: scale(1.2); }
+        .footer-copyright { border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 2rem; margin-top: 2rem; }
+        .footer-copyright p { font-size: 0.9rem; margin-bottom: 0; }
+
+        /* ------------------- */
+        /* MODAL               */
+        /* ------------------- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .6);
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-speed) ease, visibility 0s var(--transition-speed);
+        }
+        .modal-overlay.visible { opacity: 1; visibility: visible; transition-delay: 0s; }
+        .modal-content {
+            background: var(--color-background);
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 550px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(.9);
+            transition: transform var(--transition-speed) ease;
+        }
+        .modal-overlay.visible .modal-content { transform: scale(1); }
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--color-surface);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+        .modal-header h2 { font-family: var(--font-heading); color: var(--color-secondary); font-size: 1.5rem; }
+        .modal-close-btn { font-size: 1.75rem; background: 0 0; border: none; cursor: pointer; color: #aaa; transition: color 0.3s ease; }
+        .modal-close-btn:hover { color: var(--color-primary); }
+        .modal-body { padding: 1.5rem 2rem; }
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: .5rem; color: var(--color-secondary); }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: .8rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(216, 75, 66, 0.2);
+        }
+        #address-map { height: 200px; width: 100%; margin-top: 10px; border-radius: 8px; background-color: #eee; }
+
+        /* ------------------- */
+        /* TOAST NOTIFICATION  */
+        /* ------------------- */
+        .toast-notification {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--color-secondary);
+            color: #fff;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transform: translateX(calc(100% + 2rem));
+            transition: transform .5s ease-in-out;
+        }
+        .toast-notification.show { transform: translateX(0); }
+        .toast-notification.error { background-color: var(--color-primary); }
+        .toast-notification.success { background-color: #28a745; }
+        .toast-notification i { font-size: 1.5rem; }
+        .toast-notification p { margin: 0; }
+
+        /* ------------------- */
+        /* RESPONSIVE STYLES   */
+        /* ------------------- */
+        @media (max-width: 992px) {
+            .main-nav {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background-color: var(--color-background);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transform: translateX(100%);
+                transition: transform var(--transition-speed) ease-in-out;
+                z-index: 999;
+            }
+            .main-nav.active { transform: translateX(0); }
+            .nav-links {
+                flex-direction: column;
+                text-align: center;
+                gap: 2rem;
+            }
+            .nav-links a { font-size: 1.5rem; }
+            .header-actions { z-index: 1001; }
+            .mobile-menu-toggle { display: block; }
+            .gallery-grid { columns: 3 200px; }
+        }
+
+        @media (max-width: 768px) {
+            .timeline:after { left: 31px; }
+            .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; }
+            .timeline-item.left, .timeline-item.right { left: 0%; }
+            .timeline-item.left:after, .timeline-item.right:after { left: 15px; }
+            .gallery-grid { columns: 2 200px; }
+        }
+        
+        @media (max-width: 576px) {
+            .gallery-grid { columns: 1; }
+        }
     </style>
 </head>
 <body>
@@ -21,20 +486,25 @@
     <header class="main-header">
         <div class="container">
             <a href="#home"><img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo Lobster Shack" class="logo"></a>
-            <nav class="main-nav">
-                <ul class="nav-links">
-                    <li><a href="#home" class="active" data-lang-key="nav_home">...</a></li>
-                    <li><a href="#about" data-lang-key="nav_about">...</a></li>
-                    <li><a href="#menu" data-lang-key="nav_menu">...</a></li>
-                    <li><a href="#gallery" data-lang-key="nav_gallery">...</a></li>
-                </ul>
-            </nav>
+            
             <div class="header-actions">
                 <div class="language-toggle">
                     <button class="lang-btn active" data-lang="id">ID</button>
                     <button class="lang-btn" data-lang="en">EN</button>
                 </div>
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
+            
+            <nav class="main-nav" id="main-nav">
+                <ul class="nav-links">
+                    <li><a href="#home" class="active" data-lang-key="nav_home">Home</a></li>
+                    <li><a href="#about" data-lang-key="nav_about">About Us</a></li>
+                    <li><a href="#menu" data-lang-key="nav_menu">Menu</a></li>
+                    <li><a href="#gallery" data-lang-key="nav_gallery">Gallery</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
@@ -43,10 +513,14 @@
             <div class="swiper hero-slider">
                 <div class="swiper-wrapper" id="hero-slider-wrapper">
                     </div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-pagination"></div>
+
                 <div class="hero-content" data-aos="fade-up">
-                    <h1 data-lang-key="hero_title">...</h1>
-                    <p data-lang-key="hero_subtitle">...</p>
-                    <a href="#menu" class="btn"><i class="fas fa-utensils"></i> <span data-lang-key="hero_button">...</span></a>
+                    <h1 data-lang-key="hero_title">Savor the Freshness</h1>
+                    <p data-lang-key="hero_subtitle">The best lobster and seafood experience in the heart of Bali.</p>
+                    <a href="#menu" class="btn"><i class="fas fa-utensils"></i> <span data-lang-key="hero_button">Explore Our Menu</span></a>
                 </div>
             </div>
         </section>
@@ -54,7 +528,7 @@
         <section id="about" class="section">
             <div class="container">
                 <div class="section-header" data-aos="fade-up">
-                    <h2 class="title" data-lang-key="history_title">...</h2>
+                    <h2 class="title" data-lang-key="history_title">Our Journey</h2>
                 </div>
                 <div class="timeline" id="history-timeline">
                     </div>
@@ -64,21 +538,21 @@
         <section id="menu" class="section">
             <div class="container">
                 <div class="section-header" data-aos="fade-up">
-                    <span class="subtitle" data-lang-key="menu_section_subtitle">...</span>
-                    <h2 class="title" data-lang-key="menu_title">...</h2>
+                    <span class="subtitle" data-lang-key="menu_section_subtitle">Featured Dishes</span>
+                    <h2 class="title" data-lang-key="menu_title">Chef's Recommendations</h2>
                 </div>
                 <div data-aos="fade-up">
                      <div class="swiper featured-slider">
                         <div class="swiper-wrapper" id="featured-menu-wrapper">
                             </div>
+                        <div class="swiper-pagination"></div>
                      </div>
                 </div>
 
                 <div class="section-header" data-aos="fade-up" style="margin-top: 5rem;">
-                     <h2 class="title" data-lang-key="full_menu_title">...</h2>
+                     <h2 class="title" data-lang-key="full_menu_title">Our Full Menu</h2>
                 </div>
                 <div class="menu-filters" id="menu-filters" data-aos="fade-up">
-                    <button class="filter-btn active" data-filter="all">All</button>
                     </div>
                 <div class="menu-grid" id="menu-grid" data-aos="fade-up">
                     </div>
@@ -88,8 +562,8 @@
         <section id="gallery" class="gallery-section section">
             <div class="container">
                  <div class="section-header" data-aos="fade-up">
-                    <span class="subtitle" data-lang-key="gallery_section_subtitle">...</span>
-                    <h2 class="title" data-lang-key="gallery_title">...</h2>
+                    <span class="subtitle" data-lang-key="gallery_section_subtitle">Our Moments</span>
+                    <h2 class="title" data-lang-key="gallery_title">Tasteful Memories</h2>
                 </div>
                 <div class="gallery-grid" id="gallery-grid" data-aos="fade-up">
                      </div>
@@ -100,20 +574,48 @@
     <footer class="main-footer">
         <div class="container">
             <img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo Lobster Shack" class="logo">
-            <p data-lang-key="footer_description">...</p>
+            <p data-lang-key="footer_description">Experience the finest catch of the day, grilled to perfection, in a cozy and inviting atmosphere. We look forward to welcoming you.</p>
             <ul class="footer-socials">
                 <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
                 <li><a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a></li>
                 <li><a href="#" aria-label="TripAdvisor"><i class="fab fa-tripadvisor"></i></a></li>
             </ul>
             <div class="footer-copyright">
-                <p data-lang-key="footer_copyright">...</p>
+                <p data-lang-key="footer_copyright">© 2025 Lobster Shack Bali. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
 
-    <div id="order-modal" class="modal-overlay">...</div>
-    <div id="toast" class="toast-notification">...</div>
+    <div id="order-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h2 data-lang-key="modal_title">Place Your Order</h2>
+            <button class="modal-close-btn" aria-label="Close modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="order-form">
+                <div id="modal-product-details" style="text-align:center; margin-bottom: 2rem;">
+                  </div>
+                <div class="form-group">
+                    <label for="customer-name" data-lang-key="modal_name_label">Name</label>
+                    <input type="text" id="customer-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="customer-phone" data-lang-key="modal_phone_label">Phone Number</label>
+                    <input type="tel" id="customer-phone" required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                    <i class="fas fa-paper-plane"></i> <span data-lang-key="modal_submit_button">Submit Order</span>
+                </button>
+            </form>
+        </div>
+      </div>
+    </div>
+    
+    <div id="toast" class="toast-notification">
+        <i id="toast-icon" class="fas fa-check-circle"></i>
+        <p id="toast-message">Notification</p>
+    </div>
 
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
@@ -142,35 +644,71 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
+        // Dummy initMaps function to avoid console errors
+        function initMaps() { console.log("Google Maps Initialized."); }
+        
         document.addEventListener('DOMContentLoaded', () => {
             let currentLanguage = localStorage.getItem('preferredLanguage') || 'id';
             let siteData = {};
+            let lightbox;
 
-            // --- FUNGSI RENDER ---
-            function renderContent() {
+            const domElements = {
+                body: document.body,
+                mainNav: document.getElementById('main-nav'),
+                mobileMenuToggle: document.getElementById('mobile-menu-toggle'),
+                langToggleContainer: document.querySelector('.language-toggle'),
+                heroSliderWrapper: document.getElementById('hero-slider-wrapper'),
+                historyTimeline: document.getElementById('history-timeline'),
+                featuredMenuWrapper: document.getElementById('featured-menu-wrapper'),
+                menuGrid: document.getElementById('menu-grid'),
+                menuFilters: document.getElementById('menu-filters'),
+                galleryGrid: document.getElementById('gallery-grid'),
+                orderModal: document.getElementById('order-modal'),
+                orderForm: document.getElementById('order-form'),
+                modalProductDetails: document.getElementById('modal-product-details'),
+                modalCloseBtn: document.querySelector('.modal-close-btn'),
+                toast: document.getElementById('toast'),
+                toastIcon: document.getElementById('toast-icon'),
+                toastMessage: document.getElementById('toast-message'),
+            };
+
+            // --- TRANSLATION & CONTENT RENDER ---
+            const updateTextContent = () => {
                 document.querySelectorAll('[data-lang-key]').forEach(el => {
                     const key = el.dataset.langKey;
                     const content = siteData.content[key];
                     if (content) {
-                        el.textContent = content[`text_${currentLanguage}`] || content.text_id;
+                        el.innerHTML = content[`text_${currentLanguage}`] || content.text_id || el.innerHTML;
                     }
                 });
-                document.title = siteData.content?.hero_title?.[`text_${currentLanguage}`] || 'Lobster Shack Bali';
-            }
+                document.title = siteData.content?.page_title?.[`text_${currentLanguage}`] || 'Lobster Shack Bali';
+                updateLangButtons();
+            };
 
-            function renderBanners() {
-                const wrapper = document.getElementById('hero-slider-wrapper');
-                wrapper.innerHTML = siteData.banners.map(banner => `
+            const updateLangButtons = () => {
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.lang === currentLanguage);
+                });
+            };
+
+            // --- RENDER FUNCTIONS ---
+            const renderBanners = () => {
+                domElements.heroSliderWrapper.innerHTML = siteData.banners.map(banner => `
                     <div class="swiper-slide" style="background-image: url('${banner.image_url}');">
                         <div class="slide-overlay"></div>
                     </div>
                 `).join('');
-                new Swiper('.hero-slider', { loop: true, effect: 'fade', autoplay: { delay: 5000 } });
-            }
+                new Swiper('.hero-slider', { 
+                    loop: true, 
+                    effect: 'fade', 
+                    autoplay: { delay: 5000, disableOnInteraction: false },
+                    navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+                    pagination: { el: '.swiper-pagination', clickable: true }
+                });
+            };
 
-            function renderHistory() {
-                const timeline = document.getElementById('history-timeline');
-                timeline.innerHTML = siteData.history.map((item, index) => `
+            const renderHistory = () => {
+                domElements.historyTimeline.innerHTML = siteData.history.map((item, index) => `
                     <div class="timeline-item ${index % 2 === 0 ? 'left' : 'right'}" data-aos="fade-up">
                         <div class="timeline-content">
                             <div class="year">${item.year}</div>
@@ -179,13 +717,9 @@
                         </div>
                     </div>
                 `).join('');
-            }
+            };
 
-            function renderMenu() {
-                const featuredWrapper = document.getElementById('featured-menu-wrapper');
-                const grid = document.getElementById('menu-grid');
-                const filters = document.getElementById('menu-filters');
-                
+            const renderMenu = () => {
                 let featuredHTML = '';
                 let gridHTML = '';
                 
@@ -197,7 +731,7 @@
                                 <h3>${p[`name_${currentLanguage}`] || p.name_id}</h3>
                                 <p class="menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(p.price)}</p>
                                 <p class="description">${(p[`description_${currentLanguage}`] || p.description_id).substring(0, 100)}...</p>
-                                <button class="btn order-now-btn" data-product-id="${p.id}"><span data-lang-key="modal_order_now">Pesan Sekarang</span></button>
+                                <button class="btn order-now-btn" data-product-id="${p.id}" data-lang-key="modal_order_now">Order Now</button>
                             </div>
                         </div>`;
                     gridHTML += cardHTML;
@@ -206,73 +740,160 @@
                     }
                 });
 
-                featuredWrapper.innerHTML = featuredHTML;
-                grid.innerHTML = gridHTML;
+                domElements.featuredMenuWrapper.innerHTML = featuredHTML;
+                domElements.menuGrid.innerHTML = gridHTML;
                 
-                filters.innerHTML = '<button class="filter-btn active" data-filter="all">All</button>' + siteData.categories.map(c => 
+                const allText = currentLanguage === 'id' ? 'Semua' : 'All';
+                domElements.menuFilters.innerHTML = `<button class="filter-btn active" data-filter="all">${allText}</button>` + siteData.categories.map(c => 
                     `<button class="filter-btn" data-filter="${c.name}">${c.name}</button>`
                 ).join('');
 
-                new Swiper('.featured-slider', { slidesPerView: 'auto', spaceBetween: 30, grabCursor: true });
-            }
+                new Swiper('.featured-slider', { 
+                    slidesPerView: 'auto', 
+                    spaceBetween: 30, 
+                    grabCursor: true,
+                    pagination: { el: '.swiper-pagination', clickable: true }
+                });
+            };
             
-            function renderGallery() {
-                const grid = document.getElementById('gallery-grid');
-                grid.innerHTML = siteData.gallery_images.map(img => `
+            const renderGallery = () => {
+                domElements.galleryGrid.innerHTML = siteData.gallery_images.map(img => `
                     <a href="${img.image_url}" class="glightbox" data-gallery="our-gallery" data-title="${img[`caption_${currentLanguage}`] || img.caption_id}">
                         <img src="${img.image_url}" alt="${img.caption_en}">
                     </a>
                 `).join('');
-                GLightbox({ selector: '.glightbox' });
-            }
+                if (lightbox) lightbox.reload();
+                else lightbox = GLightbox({ selector: '.glightbox' });
+            };
 
-            // --- FUNGSI UTAMA PENGAMBIL DATA ---
-            async function fetchAllData() {
-                const collections = ['products', 'categories', 'content', 'banners', 'gallery_images', 'history'];
-                const promises = collections.map(col => db.collection(col).get());
-                
-                const [
-                    productsSnap, categoriesSnap, contentSnap, 
-                    bannersSnap, gallerySnap, historySnap
-                ] = await Promise.all(promises);
-
-                // Ubah snapshot menjadi data yang mudah digunakan
-                siteData.products = productsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                siteData.categories = categoriesSnap.docs.map(doc => doc.data()).sort((a,b) => a.id - b.id);
-                siteData.banners = bannersSnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
-                siteData.gallery_images = gallerySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
-                siteData.history = historySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
-                
-                // Untuk 'content', kita buat object dengan key agar mudah dicari
-                siteData.content = {};
-                contentSnap.docs.forEach(doc => {
-                    siteData.content[doc.id] = doc.data();
-                });
-
-                // Setelah semua data siap, render seluruh halaman
-                renderAll();
-            }
-
-            function renderAll() {
-                renderContent();
+            // --- FULL PAGE RENDER ---
+            const renderAll = () => {
                 renderBanners();
                 renderHistory();
                 renderMenu();
                 renderGallery();
+                updateTextContent();
                 AOS.init({ duration: 800, once: true, offset: 50 });
+            };
+
+            // --- FUNCTIONALITY ---
+            const handleLanguageSwitch = (e) => {
+                if (!e.target.matches('.lang-btn')) return;
+                currentLanguage = e.target.dataset.lang;
+                localStorage.setItem('preferredLanguage', currentLanguage);
+                // Re-render dynamic content without re-fetching all data
+                renderHistory();
+                renderMenu();
+                renderGallery();
+                updateTextContent();
+            };
+
+            const handleMenuFilter = (e) => {
+                if (!e.target.matches('.filter-btn')) return;
+
+                domElements.menuFilters.querySelector('.active').classList.remove('active');
+                e.target.classList.add('active');
+
+                const filter = e.target.dataset.filter;
+                document.querySelectorAll('.menu-card').forEach(card => {
+                    const isVisible = filter === 'all' || card.dataset.category === filter;
+                    card.classList.toggle('hidden', !isVisible);
+                });
+            };
+            
+            const handleMobileNav = () => {
+                domElements.mainNav.classList.toggle('active');
+                domElements.body.classList.toggle('nav-open');
+                const icon = domElements.mobileMenuToggle.querySelector('i');
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            };
+
+            const showToast = (message, type = 'success') => {
+                domElements.toastMessage.textContent = message;
+                domElements.toast.className = 'toast-notification'; // Reset classes
+                domElements.toast.classList.add(type);
+                
+                domElements.toastIcon.className = 'fas';
+                if (type === 'success') domElements.toastIcon.classList.add('fa-check-circle');
+                if (type === 'error') domElements.toastIcon.classList.add('fa-times-circle');
+
+                domElements.toast.classList.add('show');
+                setTimeout(() => domElements.toast.classList.remove('show'), 4000);
+            };
+
+            const openOrderModal = (productId) => {
+                const product = siteData.products.find(p => p.id === productId);
+                if (!product) return;
+                
+                domElements.modalProductDetails.innerHTML = `
+                    <img src="${product.imageUrl}" alt="${product.name_en}" style="width:150px; height:150px; object-fit:cover; border-radius:50%; margin-bottom:1rem; border: 4px solid var(--color-surface); box-shadow: var(--shadow-sm);">
+                    <h3>${product[`name_${currentLanguage}`] || product.name_id}</h3>
+                    <p class="menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(product.price)}</p>
+                `;
+                domElements.orderModal.classList.add('visible');
+            };
+
+            const closeOrderModal = () => {
+                domElements.orderModal.classList.remove('visible');
+                domElements.orderForm.reset();
+            };
+            
+            // --- DATA FETCHING ---
+            async function fetchAllData() {
+                try {
+                    const collections = ['products', 'categories', 'content', 'banners', 'gallery_images', 'history'];
+                    const promises = collections.map(col => db.collection(col).get());
+                    
+                    const [
+                        productsSnap, categoriesSnap, contentSnap, 
+                        bannersSnap, gallerySnap, historySnap
+                    ] = await Promise.all(promises);
+
+                    siteData.products = productsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    siteData.categories = categoriesSnap.docs.map(doc => doc.data()).sort((a,b) => a.id - b.id);
+                    siteData.banners = bannersSnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
+                    siteData.gallery_images = gallerySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
+                    siteData.history = historySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
+                    
+                    siteData.content = {};
+                    contentSnap.docs.forEach(doc => { siteData.content[doc.id] = doc.data(); });
+                    
+                    renderAll();
+                } catch (error) {
+                    console.error("Error fetching data from Firebase:", error);
+                    showToast("Failed to load website data.", 'error');
+                }
             }
             
-            // --- INISIALISASI & EVENT LISTENERS ---
-            fetchAllData();
-
-            // Language switcher
-            document.querySelector('.language-toggle').addEventListener('click', (e) => {
-                if (e.target.matches('.lang-btn')) {
-                    currentLanguage = e.target.dataset.lang;
-                    localStorage.setItem('preferredLanguage', currentLanguage);
-                    renderAll();
+            // --- EVENT LISTENERS ---
+            domElements.langToggleContainer.addEventListener('click', handleLanguageSwitch);
+            domElements.mobileMenuToggle.addEventListener('click', handleMobileNav);
+            domElements.mainNav.addEventListener('click', (e) => { // Close nav on link click
+                 if (e.target.matches('a') && domElements.mainNav.classList.contains('active')) {
+                    handleMobileNav();
+                 }
+            });
+            domElements.menuFilters.addEventListener('click', handleMenuFilter);
+            domElements.menuGrid.addEventListener('click', e => {
+                if (e.target.matches('.order-now-btn')) {
+                    openOrderModal(e.target.dataset.productId);
                 }
             });
+            domElements.modalCloseBtn.addEventListener('click', closeOrderModal);
+            domElements.orderModal.addEventListener('click', e => { // Close on overlay click
+                if (e.target === domElements.orderModal) closeOrderModal();
+            });
+            domElements.orderForm.addEventListener('submit', e => {
+                e.preventDefault();
+                const successMsg = currentLanguage === 'id' ? 'Pesanan berhasil dikirim!' : 'Order submitted successfully!';
+                closeOrderModal();
+                showToast(successMsg, 'success');
+            });
+
+            // --- INITIALIZATION ---
+            fetchAllData();
+            updateLangButtons();
         });
     </script>
 </body>
