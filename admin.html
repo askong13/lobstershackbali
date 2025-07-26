@@ -3,53 +3,1573 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - Lobster Shack Bali</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <title>Admin Dashboard - Lobster Shack</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+    <style>
+        :root {
+            --font-body: 'Poppins', sans-serif;
+            --color-primary: #D84B42; /* Lobster Red */
+            --color-secondary: #2D4C5E; /* Deep Ocean Blue */
+            --color-tertiary: #FFD700; /* Gold for accents */
+            --color-surface: #FFFFFF;
+            --color-background: #f8f9fa;
+            --color-border: #e9ecef;
+            --color-text: #212529;
+            --color-text-muted: #6c757d;
+            --shadow-soft: 0 4px 12px rgba(0,0,0,0.05);
+            --shadow-strong: 0 8px 30px rgba(0,0,0,0.1);
+            --border-radius: 12px;
+            --transition-speed: 0.3s ease;
+            --sidebar-width: 260px;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        body {
+            font-family: var(--font-body); background-color: var(--color-background);
+            color: var(--color-text); margin: 0; font-size: 15px;
+            -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+            display: flex; /* For login page */
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- Login Page Styles --- */
+        #login-page {
+            width: 100%;
+            max-width: 450px;
+            padding: 2rem;
+            background: var(--color-surface);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-strong);
+            text-align: center;
+            display: none; /* Hidden by default, shown by JS */
+        }
+        #login-page .logo-login {
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #login-page .logo-login img {
+            max-width: 100px; /* Adjust as needed */
+            margin-bottom: 1rem;
+        }
+        #login-page .logo-login h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--color-secondary);
+        }
+        #login-page .logo-login p {
+            margin: 0.5rem 0 0;
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+        }
+        #login-page .form-group {
+            margin-bottom: 1.5rem;
+        }
+        #login-page input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            font-family: var(--font-body);
+            transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+        }
+        #login-page input:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 4px rgba(216, 75, 66, 0.2);
+            outline: none;
+        }
+        #login-page button {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-family: var(--font-body);
+            transition: background-color var(--transition-speed), transform var(--transition-speed);
+        }
+        #login-page button:hover {
+            background-color: #c0392b;
+            transform: translateY(-3px);
+        }
+        #login-page button:active {
+            transform: translateY(-1px);
+        }
+        #login-page .error-message {
+            color: var(--color-primary);
+            margin-top: 1.5rem;
+            font-weight: 500;
+            background-color: #f8d7da;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid #f5c2c7;
+            display: none; /* Hidden by default */
+        }
+
+        /* --- Main Admin Layout --- */
+        #admin-panel {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            display: none; /* Hidden by default, shown by JS after login */
+        }
+        .sidebar {
+            width: var(--sidebar-width); background-color: var(--color-secondary);
+            color: white; display: flex; flex-direction: column;
+            position: fixed; top: 0; left: 0; height: 100%; z-index: 1000;
+            transition: transform var(--transition-speed);
+        }
+        .sidebar-header {
+            padding: 1.5rem; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 1.2rem; font-weight: 700;
+            display: flex; flex-direction: column; align-items: center;
+            gap: 0.5rem;
+        }
+        .sidebar-header img {
+            max-width: 60px; /* Adjust logo size */
+            height: auto;
+        }
+        .sidebar-nav { flex-grow: 1; overflow-y: auto; }
+        .sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar-nav-category {
+            padding: 1.75rem 1.5rem 0.75rem; font-size: 0.7rem; text-transform: uppercase;
+            color: #8a9eb1; font-weight: 700; letter-spacing: 0.8px;
+        }
+        .sidebar-nav a {
+            display: flex; align-items: center; gap: 1rem; padding: 0.9rem 1.5rem;
+            color: #cdd5de; text-decoration: none; font-weight: 500;
+            transition: background-color var(--transition-speed), color var(--transition-speed), border-left-color var(--transition-speed);
+            border-left: 4px solid transparent;
+        }
+        .sidebar-nav a:hover { background-color: rgba(255,255,255,0.05); color: white; }
+        .sidebar-nav a.active {
+            background-color: rgba(0,0,0,0.2); color: white;
+            border-left-color: var(--color-primary);
+        }
+        .sidebar-nav i.fa-fw { width: 22px; text-align: center; font-size: 1rem; }
+        .sidebar-nav .badge {
+            margin-left: auto; background-color: var(--color-primary); color: white;
+            font-size: 0.8rem; padding: 3px 9px; border-radius: 50px; font-weight: 600;
+            display: none; transition: all var(--transition-speed);
+        }
+        .sidebar-footer { padding: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-footer a {
+            display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+            text-align: center; color: #cdd5de; text-decoration: none; padding: 0.6rem;
+            border-radius: 8px; transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+        .sidebar-footer a:hover { background-color: var(--color-primary); color: white; }
+
+        /* --- Main Content Area --- */
+        .main-content {
+            margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width));
+            padding: 2.5rem; transition: margin-left var(--transition-speed), width var(--transition-speed);
+            flex-grow: 1; /* Ensure it takes available space */
+        }
+        .page-header {
+            display: flex; align-items: center; gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: space-between;
+        }
+        .page-header h1 {
+            font-size: 2.25rem; font-weight: 700; color: var(--color-secondary);
+            margin: 0; flex-grow: 1;
+        }
+        .content-section { display: none; }
+        .content-section.active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Components --- */
+        .card {
+            background-color: var(--color-surface); border-radius: var(--border-radius);
+            box-shadow: var(--shadow-soft); padding: 2rem; margin-bottom: 2rem; border: 1px solid var(--color-border);
+        }
+        .card-header {
+            padding-bottom: 1.5rem; margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--color-border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .card-header h2 { margin: 0; font-size: 1.25rem; font-weight: 600; color: var(--color-secondary); }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
+        .stat-card {
+            background: var(--color-surface); padding: 1.5rem; border-radius: var(--border-radius);
+            box-shadow: var(--shadow-soft); display: flex; align-items: center; gap: 1rem; border: 1px solid var(--color-border);
+        }
+        .stat-card .icon { font-size: 2rem; color: var(--color-primary); }
+        .stat-card h3 { margin: 0 0 0.25rem; font-size: 0.9rem; font-weight: 500; color: var(--color-text-muted); }
+        .stat-card .value { font-size: 2rem; font-weight: 700; color: var(--color-secondary); line-height: 1.2; }
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            background: var(--color-primary); color: white; border: none; padding: 0.7rem 1.4rem;
+            border-radius: 8px; cursor: pointer; text-decoration: none; font-weight: 600; font-size: 0.95rem;
+            transition: background-color var(--transition-speed), transform var(--transition-speed), box-shadow var(--transition-speed);
+        }
+        .btn:hover { background-color: #c0392b; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(216, 75, 66, 0.3); }
+        .btn-secondary { background-color: var(--color-text-muted); }
+        .btn-secondary:hover { background-color: #5a6268; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .btn-outline { background: transparent; color: var(--color-secondary); border: 2px solid var(--color-border); }
+        .btn-outline:hover { background: var(--color-secondary); color: white; border-color: var(--color-secondary); box-shadow: none; }
+        .action-buttons { display: flex; gap: 0.5rem; }
+        /* --- Forms --- */
+        .form-group { margin-bottom: 1.25rem; }
+        label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--color-secondary); font-size: 0.9rem; }
+        input[type="text"], input[type="password"], input[type="number"], input[type="email"], input[type="file"], select, textarea {
+            width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--color-border); border-radius: 8px;
+            font-family: var(--font-body); font-size: 1rem; transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--color-primary); box-shadow: 0 0 0 4px rgba(216, 75, 66, 0.2); outline: none; }
+        textarea { min-height: 100px; resize: vertical; }
+        .checkbox-group { display: flex; align-items: center; gap: 0.75rem; }
+        .checkbox-group input[type="checkbox"] { width: auto; height: 1.2em; transform: scale(1.2); }
+        /* --- Tables --- */
+        .table-container { overflow-x: auto; }
+        .responsive-table { width: 100%; border-collapse: collapse; }
+        .responsive-table th, .responsive-table td { padding: 1rem 1.25rem; border-bottom: 1px solid var(--color-border); text-align: left; vertical-align: middle; }
+        .responsive-table thead { background-color: #f1f3f5; }
+        .responsive-table th { font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--color-text-muted); }
+        .responsive-table tbody tr:hover { background-color: #f8f9fa; }
+        .responsive-table img { border-radius: 8px; max-width: 60px; height: auto; display: block; }
+        .product-name { font-weight: 600; color: var(--color-secondary); }
+        .status-badge {
+            display: inline-block;
+            padding: 0.3em 0.8em;
+            border-radius: 50px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        .status-badge.pending { background-color: #fff3cd; color: #856404; } /* yellow */
+        .status-badge.completed { background-color: #d4edda; color: #155724; } /* green */
+        .status-badge.cancelled { background-color: #f8d7da; color: #721c24; } /* red */
+
+        /* --- Feedback & Modal --- */
+        .feedback { padding: 1rem 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; font-weight: 500; border: 1px solid transparent; animation: fadeIn 0.5s; display: none; }
+        .feedback.success { background-color: #d1e7dd; color: #0f5132; border-color: #badbcc; }
+        .feedback.error { background-color: #f8d7da; color: #842029; border-color: #f5c2c7; }
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(45, 76, 94, 0.8);
+            backdrop-filter: blur(5px); z-index: 2000; display: none; justify-content: center; align-items: center; padding: 1rem;
+            animation: fadeIn 0.3s;
+        }
+        .modal-content {
+            background: white; padding: 2.5rem; border-radius: var(--border-radius); width: 100%; max-width: 700px;
+            max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-strong);
+            transform: scale(0.95); animation: zoomIn 0.3s forwards;
+        }
+        @keyframes zoomIn { to { transform: scale(1); } }
+        .modal-content h2 { color: var(--color-secondary); margin-top: 0; margin-bottom: 2rem; }
+
+        /* --- Banner Management --- */
+        #banner-preview {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+            border: 1px solid var(--color-border);
+        }
+        .banner-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        /* --- Mobile / Responsive --- */
+        .menu-toggle {
+            display: none; position: fixed; top: 1rem; left: 1rem; z-index: 1001;
+            background: var(--color-secondary); color: white; border: none; font-size: 1.5rem;
+            padding: 0.5rem 0.9rem; border-radius: 8px; box-shadow: var(--shadow-soft);
+        }
+        @media (max-width: 1024px) {
+            :root { --sidebar-width: 240px; }
+            .sidebar { transform: translateX(calc(-1 * var(--sidebar-width))); box-shadow: none; }
+            .sidebar.open { transform: translateX(0); box-shadow: 5px 0 25px rgba(0,0,0,0.2); }
+            .main-content { margin-left: 0; width: 100%; padding: 2rem; padding-top: 6rem; }
+            .page-header { position: fixed; top: 0; left: 0; width: 100%; background: var(--color-background); padding: 1rem 2rem; z-index: 900; box-shadow: var(--shadow-soft); }
+            .page-header h1 { font-size: 1.5rem; }
+            .menu-toggle { display: block; }
+            .stats-grid { grid-template-columns: 1fr; }
+            /* --- Responsive Table to Cards --- */
+            .responsive-table thead { display: none; }
+            .responsive-table, .responsive-table tbody, .responsive-table tr, .responsive-table td { display: block; width: 100%; }
+            .responsive-table tr {
+                background: var(--color-surface); border: 1px solid var(--color-border);
+                border-radius: var(--border-radius); padding: 1rem; margin-bottom: 1rem;
+                box-shadow: var(--shadow-soft);
+            }
+            .responsive-table td {
+                padding: 0.75rem 0.5rem; border-bottom: 1px dashed var(--color-border);
+                display: flex; justify-content: space-between; align-items: center; text-align: right;
+            }
+            .responsive-table td:last-child { border-bottom: none; }
+            .responsive-table td[data-label]::before {
+                content: attr(data-label); font-weight: 600; text-align: left;
+                margin-right: 1rem; color: var(--color-text-muted);
+            }
+            .responsive-table td.actions-cell { justify-content: flex-end; padding-top: 1rem; }
+        }
+        @media (max-width: 480px) {
+            .main-content { padding: 1.5rem; padding-top: 5.5rem; }
+            .page-header { padding: 1rem 1.5rem; }
+            .page-header h1 { font-size: 1.3rem; }
+            .card, .modal-content { padding: 1.5rem; }
+        }
+        .main-footer { text-align: center; padding: 2rem 1rem; margin-top: 2rem; border-top: 1px solid var(--color-border); font-size: 0.9rem; color: var(--color-text-muted); }
+        .main-footer a { color: var(--color-secondary); text-decoration: none; font-weight: 600; }
+        .main-footer a:hover { color: var(--color-primary); }
+    </style>
 </head>
 <body>
 
-    <div id="admin-login-page" class="login-page-wrapper">
-        <div class="login-container">
-            <h1>Admin Panel Login</h1>
-            <form id="admin-login-form">
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="admin-email" required>
+    <div id="login-page">
+        <div class="logo-login">
+            <img src="images/logo-lobster-shack.png" alt="Lobster Shack Logo"> <h1>Lobster Shack</h1>
+            <p>Admin Panel</p>
+        </div>
+        <form id="login-form">
+            <div class="form-group">
+                <input type="email" id="login-email" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+                <input type="password" id="login-password" placeholder="Password" required>
+            </div>
+            <button type="submit">Login</button>
+            <p class="error-message" id="login-error"></p>
+        </form>
+    </div>
+
+    <div id="admin-panel">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="images/logo-lobster-shack-white.png" alt="Lobster Shack Logo"> Lobster Shack Admin
+            </div>
+            <nav class="sidebar-nav">
+                <ul><li><a href="#dashboard" class="nav-link active"><i class="fas fa-tachometer-alt fa-fw"></i> Dasbor</a></li></ul>
+                <div class="sidebar-nav-category">Penjualan</div>
+                <ul>
+                    <li><a href="#orders" class="nav-link"><i class="fas fa-receipt fa-fw"></i> Pesanan <span id="new-orders-badge" class="badge">0</span></a></li>
+                    <li><a href="#customers" class="nav-link"><i class="fas fa-users fa-fw"></i> Pelanggan</a></li>
+                </ul>
+                <div class="sidebar-nav-category">Manajemen</div>
+                <ul>
+                    <li><a href="#menu" class="nav-link"><i class="fas fa-utensils fa-fw"></i> Menu & Stok</a></li>
+                    <li><a href="#categories" class="nav-link"><i class="fas fa-tags fa-fw"></i> Kategori</a></li>
+                    <li><a href="#content" class="nav-link"><i class="fas fa-file-alt fa-fw"></i> Konten Situs</a></li>
+                    <li><a href="#banner" class="nav-link"><i class="fas fa-image fa-fw"></i> Banner</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <button class="menu-toggle"><i class="fas fa-bars"></i></button>
+
+            <div class="feedback" id="feedback-message"></div>
+            
+            <section id="dashboard" class="content-section active">
+                <div class="page-header"><h1><i class="fas fa-tachometer-alt"></i> Dasbor</h1></div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="icon"><i class="fas fa-shopping-cart"></i></div>
+                        <div><h3>Pesanan (Hari Ini)</h3><div class="value" id="stat-today-orders">0</div></div>
+                    </div>
+                    <div class="stat-card">
+                         <div class="icon"><i class="fas fa-dollar-sign"></i></div>
+                         <div><h3>Pendapatan (Hari Ini)</h3><div class="value" id="stat-today-revenue">Rp 0</div></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon"><i class="fas fa-user-plus"></i></div>
+                        <div><h3>Pelanggan Baru (Hari Ini)</h3><div class="value" id="stat-new-customers">0</div></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div><h3>Stok Kritis (&lt;10)</h3><div class="value" id="stat-low-stock">0</div></div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="admin-password" required>
+                <div class="card">
+                    <div class="card-header"><h2>Pesanan Terbaru</h2></div>
+                    <div class="table-container" id="dashboard-orders-table"></div>
                 </div>
-                <button type="submit" class="btn">Login</button>
-            </form>
-            <div id="admin-login-error" class="form-message error hidden"></div>
+            </section>
+
+            <section id="orders" class="content-section">
+                <div class="page-header"><h1><i class="fas fa-receipt"></i> Kelola Pesanan</h1></div>
+                <div class="card">
+                    <div class="filters" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                        <select id="order-filter" style="flex-grow: 1; max-width: 300px;">
+                            <option value="all">Semua Pesanan</option>
+                            <option value="today">Hari Ini</option>
+                            <option value="week">7 Hari Terakhir</option>
+                            <option value="month">Bulan Ini</option>
+                        </select>
+                        <select id="order-status-filter" style="flex-grow: 1; max-width: 300px;">
+                            <option value="all">Semua Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="completed">Selesai</option>
+                            <option value="cancelled">Dibatalkan</option>
+                        </select>
+                        <button id="export-orders-btn" class="btn btn-outline"><i class="fas fa-file-excel"></i> Ekspor CSV</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="table-container" id="orders-table-container"></div>
+                </div>
+            </section>
+            
+            <section id="customers" class="content-section">
+                 <div class="page-header"><h1><i class="fas fa-users"></i> Daftar Pelanggan</h1></div>
+                 <div class="card">
+                     <div class="table-container">
+                         <table class="responsive-table" id="customers-table">
+                            <thead><tr><th>Nama</th><th>Telepon</th><th>Email</th><th>Order Terakhir</th><th>Jumlah Order</th></tr></thead>
+                            <tbody>
+                                </tbody>
+                         </table>
+                     </div>
+                 </div>
+            </section>
+
+            <section id="menu" class="content-section">
+                <div class="page-header">
+                    <h1><i class="fas fa-utensils"></i> Menu & Stok</h1>
+                    <button class="btn" id="add-menu-btn"><i class="fas fa-plus"></i> Tambah Menu</button>
+                </div>
+                <div class="card">
+                    <div class="table-container" id="products-table-container">
+                        <table class="responsive-table">
+                            <thead><tr><th>Gambar</th><th>Nama Menu</th><th>Kategori</th><th>Harga</th><th>Stok</th><th>Unggulan</th><th>Aksi</th></tr></thead>
+                            <tbody id="products-table-body">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="categories" class="content-section">
+                <div class="page-header"><h1><i class="fas fa-tags"></i> Manajemen Kategori</h1></div>
+                <div class="card">
+                    <div class="card-header"><h2>Tambah Kategori Baru</h2></div>
+                    <form id="add-category-form">
+                        <div class="form-group"><label for="new_category_name">Nama Kategori</label><input type="text" id="new_category_name" required></div>
+                        <button type="submit" class="btn"><i class="fas fa-plus"></i> Tambah</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h2>Daftar Kategori</h2></div>
+                    <div class="table-container">
+                        <table class="responsive-table">
+                            <thead><tr><th>Nama Kategori</th><th style="text-align: right;">Aksi</th></tr></thead>
+                            <tbody id="categories-table-body">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="content" class="content-section">
+                <div class="page-header"><h1><i class="fas fa-file-alt"></i> Konten Situs</h1></div>
+                <form id="update-content-form">
+                    <div class="card">
+                        <div class="card-header"><h2>Konten Utama (Header, About, Footer, etc.)</h2></div>
+                        <div id="general-content-fields">
+                            </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><h2>Konten Histori / Timeline</h2></div>
+                        <div id="history-content-fields">
+                            </div>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%; padding: 1rem;"><i class="fas fa-save"></i> Simpan Semua Perubahan</button>
+                </form>
+            </section>
+
+            <section id="banner" class="content-section">
+                <div class="page-header"><h1><i class="fas fa-image"></i> Manajemen Banner</h1></div>
+                <div class="card">
+                    <div class="card-header"><h2>Current Banner</h2></div>
+                    <img id="banner-preview" src="images/placeholder-banner.jpg" alt="Current Banner Image">
+                    <form id="banner-upload-form" style="margin-top: 2rem;">
+                        <div class="form-group">
+                            <label for="banner-image-upload">Upload New Banner Image (JPG, PNG, WEBP)</label>
+                            <input type="file" id="banner-image-upload" accept="image/jpeg,image/png,image/webp">
+                        </div>
+                        <div class="banner-buttons">
+                            <button type="submit" class="btn"><i class="fas fa-upload"></i> Upload Banner</button>
+                            <button type="button" class="btn btn-secondary" id="delete-banner-btn"><i class="fas fa-trash"></i> Delete Banner</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h2>Banner Text</h2></div>
+                    <form id="banner-text-form">
+                        <div class="form-group">
+                            <label for="banner-text-id">Text (Indonesia)</label>
+                            <input type="text" id="banner-text-id" name="banner_text_id" placeholder="Teks Banner Indonesia">
+                        </div>
+                        <div class="form-group">
+                            <label for="banner-text-en">Text (English)</label>
+                            <input type="text" id="banner-text-en" name="banner_text_en" placeholder="Banner Text English">
+                        </div>
+                        <button type="submit" class="btn"><i class="fas fa-save"></i> Save Banner Text</button>
+                    </form>
+                </div>
+            </section>
+
+            <footer class="main-footer">
+                <p>&copy; 2025 Lobster Shack Bali. Developed by <a href="https://wa.me/6285736058049?text=hallo%20jm" target="_blank" rel="noopener noreferrer">jmpartner</a></p>
+            </footer>
+
+        </main>
+        
+        <div id="product-modal" class="modal">
+            <div class="modal-content">
+                <form id="product-form">
+                    <input type="hidden" id="product-id">
+                    <input type="hidden" id="current-imageUrl">
+                    <h2 id="modal-title"></h2>
+                    <div class="form-group"><label for="name_id">Nama (Indonesia)</label><input type="text" id="name_id" required></div>
+                    <div class="form-group"><label for="name_en">Nama (Inggris)</label><input type="text" id="name_en" required></div>
+                    <div class="form-group"><label for="description_id">Deskripsi (Indonesia)</label><textarea id="description_id" rows="3" required></textarea></div>
+                    <div class="form-group"><label for="description_en">Deskripsi (Inggris)</label><textarea id="description_en" rows="3" required></textarea></div>
+                    <div class="form-group"><label for="price">Harga (contoh: 155000)</label><input type="number" id="price" required></div>
+                    <div class="form-group"><label for="stock">Stok</label><input type="number" id="stock" required></div>
+                     <div class="form-group">
+                        <label for="category_id">Kategori</label>
+                        <select id="category_id" required>
+                            </select>
+                    </div>
+                    <div class="form-group"><label for="imageUrl">Gambar Menu (kosongkan jika tidak ingin mengubah)</label><input type="file" id="imageUrl" accept="image/*"></div>
+                     <div class="form-group checkbox-group"><input type="checkbox" id="is_featured"><label for="is_featured" style="margin-bottom: 0;">Tampilkan sebagai Menu Unggulan</label></div>
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button type="submit" class="btn" style="flex-grow: 1;">Simpan</button>
+                        <button type="button" class="btn btn-secondary" style="flex-grow: 1;" id="close-modal-btn">Batal</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
-    <div id="admin-dashboard" class="admin-layout hidden">
-        <aside class="admin-sidebar">
-            <div class="sidebar-header"><h2>Admin Panel</h2></div>
-            <nav class="admin-nav">
-                <button data-target="orders-panel" class="active">
-                    Pesanan Masuk
-                    <span id="order-notification" class="notification-badge hidden">0</span>
-                </button>
-                </nav>
-            <div class="sidebar-footer">
-                <button id="logout-btn" class="btn">Logout</button>
-            </div>
-        </aside>
-        <main class="admin-main-content">
-            <header class="main-header-content">
-                <h1 id="panel-title">Pesanan Masuk</h1>
-                <p id="admin-user-email"></p>
-            </header>
-            <div id="orders-panel" class="content-panel active">
-                <div id="orders-list"><p>Memuat data pesanan...</p></div>
-            </div>
-        </main>
-    </div>
+    <script>
+        'use strict';
+        // Firebase Configuration (from your input)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
+            authDomain: "lobster-shack-bali.firebaseapp.com",
+            projectId: "lobster-shack-bali",
+            storageBucket: "lobster-shack-bali.appspot.com",
+            messagingSenderId: "42452974733",
+            appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
+        };
+        firebase.initializeApp(firebaseConfig);
 
-    <script type="module" src="/assets/js/admin.js"></script>
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // Global variables (from your input, though some may not be directly used in admin)
+        const shackLocation = { lat: -8.7214, lng: 115.1685 };
+        let cart = [];
+        let userLocationMarker = null;
+
+        // --- DOM Elements ---
+        const loginPage = document.getElementById('login-page');
+        const adminPanel = document.getElementById('admin-panel');
+        const loginForm = document.getElementById('login-form');
+        const loginEmailInput = document.getElementById('login-email');
+        const loginPasswordInput = document.getElementById('login-password');
+        const loginErrorMsg = document.getElementById('login-error');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        const feedbackMessage = document.getElementById('feedback-message');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.content-section');
+        const sidebar = document.querySelector('.sidebar');
+        const menuToggle = document.querySelector('.menu-toggle');
+
+        // Dashboard elements
+        const statTodayOrders = document.getElementById('stat-today-orders');
+        const statTodayRevenue = document.getElementById('stat-today-revenue');
+        const statNewCustomers = document.getElementById('stat-new-customers');
+        const statLowStock = document.getElementById('stat-low-stock');
+        const dashboardOrdersTable = document.getElementById('dashboard-orders-table');
+        const newOrdersBadge = document.getElementById('new-orders-badge');
+
+        // Orders elements
+        const orderFilter = document.getElementById('order-filter');
+        const orderStatusFilter = document.getElementById('order-status-filter');
+        const exportOrdersBtn = document.getElementById('export-orders-btn');
+        const ordersTableContainer = document.getElementById('orders-table-container');
+
+        // Customers elements
+        const customersTableBody = document.querySelector('#customers-table tbody');
+
+        // Menu elements
+        const addMenuBtn = document.getElementById('add-menu-btn');
+        const productsTableBody = document.getElementById('products-table-body');
+        const productModal = document.getElementById('product-modal');
+        const productForm = document.getElementById('product-form');
+        const modalTitle = document.getElementById('modal-title');
+        const productIdInput = document.getElementById('product-id');
+        const currentImageUrlInput = document.getElementById('current-imageUrl');
+        const nameIdInput = document.getElementById('name_id');
+        const nameEnInput = document.getElementById('name_en');
+        const descriptionIdInput = document.getElementById('description_id');
+        const descriptionEnInput = document.getElementById('description_en');
+        const priceInput = document.getElementById('price');
+        const stockInput = document.getElementById('stock');
+        const categoryIdSelect = document.getElementById('category_id');
+        const imageUrlInput = document.getElementById('imageUrl');
+        const isFeaturedCheckbox = document.getElementById('is_featured');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+
+        // Categories elements
+        const addCategoryForm = document.getElementById('add-category-form');
+        const newCategoryNameInput = document.getElementById('new_category_name');
+        const categoriesTableBody = document.getElementById('categories-table-body');
+
+        // Content elements
+        const updateContentForm = document.getElementById('update-content-form');
+        const generalContentFields = document.getElementById('general-content-fields');
+        const historyContentFields = document.getElementById('history-content-fields');
+
+        // Banner elements
+        const bannerPreview = document.getElementById('banner-preview');
+        const bannerUploadForm = document.getElementById('banner-upload-form');
+        const bannerImageUpload = document.getElementById('banner-image-upload');
+        const deleteBannerBtn = document.getElementById('delete-banner-btn');
+        const bannerTextForm = document.getElementById('banner-text-form');
+        const bannerTextIdInput = document.getElementById('banner-text-id');
+        const bannerTextEnInput = document.getElementById('banner-text-en');
+
+
+        let lastOrderTimestamp = 0; // For new order checking
+
+        // --- Helper Functions ---
+
+        const showFeedback = (message, isSuccess) => {
+            feedbackMessage.textContent = message;
+            feedbackMessage.className = `feedback ${isSuccess ? 'success' : 'error'}`;
+            feedbackMessage.style.display = 'block';
+            setTimeout(() => {
+                feedbackMessage.style.display = 'none';
+            }, 5000);
+        };
+
+        const formatCurrency = (amount) => `Rp ${parseInt(amount).toLocaleString('id-ID')}`;
+
+        const formatDate = (timestamp) => {
+            if (!timestamp) return 'N/A';
+            let date;
+            if (timestamp.toDate) { // Firestore Timestamp object
+                date = timestamp.toDate();
+            } else if (typeof timestamp === 'object' && timestamp._seconds) { // Raw Firebase Timestamp structure
+                date = new Date(timestamp._seconds * 1000 + timestamp._nanoseconds / 1000000);
+            } else { // Assume it's already a Date object or string parsable by Date
+                date = new Date(timestamp);
+            }
+            return date.toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        };
+
+        const uploadImageToFirebase = async (file, path) => {
+            if (!file) return null;
+            const storageRef = storage.ref();
+            const uniqueFileName = `${Date.now()}-${file.name}`;
+            const imageRef = storageRef.child(`${path}/${uniqueFileName}`);
+            await imageRef.put(file);
+            return await imageRef.getDownloadURL();
+        };
+
+        const deleteImageFromFirebase = async (url) => {
+            if (!url || url.includes('placeholder-')) return; // Don't delete placeholder or non-Firebase URLs
+            try {
+                const imageRef = storage.refFromURL(url);
+                await imageRef.delete();
+                console.log("Image deleted:", url);
+            } catch (error) {
+                console.warn("Could not delete image (it might not exist or be a placeholder):", url, error);
+            }
+        };
+
+        // --- Authentication ---
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                loginPage.style.display = 'none';
+                adminPanel.style.display = 'flex';
+                initializeAdminPanel();
+            } else {
+                loginPage.style.display = 'block';
+                adminPanel.style.display = 'none';
+            }
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = loginEmailInput.value;
+            const password = loginPasswordInput.value;
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                // User will be redirected by onAuthStateChanged
+            } catch (error) {
+                loginErrorMsg.textContent = `Login failed: ${error.message}`;
+                loginErrorMsg.style.display = 'block';
+                console.error("Login Error:", error);
+            }
+        });
+
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                await auth.signOut();
+                localStorage.removeItem('activeAdminTab'); // Clear active tab on logout
+            } catch (error) {
+                showFeedback(`Logout failed: ${error.message}`, false);
+                console.error("Logout Error:", error);
+            }
+        });
+
+        // --- Navigation Logic ---
+        function setActiveSection(targetId) {
+            navLinks.forEach(l => l.classList.remove('active'));
+            const activeLink = document.querySelector(`.nav-link[href="#${targetId}"]`);
+            if (activeLink) activeLink.classList.add('active');
+
+            sections.forEach(section => section.classList.remove('active'));
+            const activeSection = document.getElementById(targetId);
+            if (activeSection) activeSection.classList.add('active');
+
+            // Reset new orders badge when viewing the orders page
+            if (targetId === 'orders') {
+                newOrdersBadge.textContent = '0';
+                newOrdersBadge.style.display = 'none';
+            }
+            // Trigger data loads for active section
+            if (targetId === 'dashboard') {
+                fetchOrders('all', 'dashboard-orders-table');
+                updateDashboardStats();
+            } else if (targetId === 'orders') {
+                fetchOrders(orderFilter.value, 'orders-table-container');
+            } else if (targetId === 'customers') {
+                fetchCustomers();
+            } else if (targetId === 'menu') {
+                fetchCategoriesForProductForm(); // Populate category dropdown
+                fetchProducts();
+            } else if (targetId === 'categories') {
+                fetchCategories();
+            } else if (targetId === 'content') {
+                fetchSiteContent();
+            } else if (targetId === 'banner') {
+                fetchBannerContent();
+            }
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                setActiveSection(targetId);
+                if (window.innerWidth <= 1024) sidebar.classList.remove('open');
+                localStorage.setItem('activeAdminTab', targetId);
+                window.scrollTo(0, 0);
+            });
+        });
+
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sidebar.classList.toggle('open');
+        });
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 1024 && sidebar.classList.contains('open')) {
+                if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                    sidebar.classList.remove('open');
+                }
+            }
+        });
+
+        // --- Dashboard & Orders Management ---
+
+        const fetchOrders = async (filter = 'all', containerId = 'orders-table-container', statusFilter = 'all') => {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '<p style="text-align:center; padding: 2rem 0;"><i class="fas fa-spinner fa-spin"></i> Memuat pesanan...</p>';
+            let query = db.collection('orders');
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Start of today
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - today.getDay()); // Sunday as start of week
+            const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+            if (filter === 'today') {
+                query = query.where('timestamp', '>=', firebase.firestore.Timestamp.fromDate(today));
+            } else if (filter === 'week') {
+                query = query.where('timestamp', '>=', firebase.firestore.Timestamp.fromDate(startOfWeek));
+            } else if (filter === 'month') {
+                query = query.where('timestamp', '>=', firebase.firestore.Timestamp.fromDate(startOfMonth));
+            }
+
+            if (statusFilter !== 'all') {
+                query = query.where('status', '==', statusFilter);
+            }
+            
+            query = query.orderBy('timestamp', 'desc');
+
+            try {
+                const snapshot = await query.get();
+                const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                if (!orders || orders.length === 0) {
+                    container.innerHTML = '<p style="text-align:center; padding: 2rem 0;">Tidak ada pesanan untuk filter ini.</p>';
+                    return;
+                }
+
+                let tableHtml = '<table class="responsive-table"><thead><tr><th>ID</th><th>Tanggal</th><th>Pelanggan</th><th>Produk</th><th>Harga</th><th>Status</th><th>Aksi</th></tr></thead><tbody>';
+                orders.forEach(order => {
+                    const statusClass = order.status.toLowerCase();
+                    tableHtml += `<tr>
+                        <td data-label="ID">#${order.id.substring(0, 6)}...</td>
+                        <td data-label="Tanggal">${formatDate(order.timestamp)}</td>
+                        <td data-label="Pelanggan">${order.customerName || 'N/A'}<br><small style="color: var(--color-text-muted);">${order.customerPhone || 'N/A'}</small></td>
+                        <td data-label="Produk">${order.productName || 'N/A'}</td>
+                        <td data-label="Harga">${formatCurrency(order.totalPrice || 0)}</td>
+                        <td data-label="Status"><span class="status-badge ${statusClass}">${order.status}</span></td>
+                        <td data-label="Aksi" class="actions-cell">
+                            <select class="order-status-update" data-order-id="${order.id}">
+                                <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>Selesai</option>
+                                <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Dibatalkan</option>
+                            </select>
+                        </td>
+                    </tr>`;
+                });
+                tableHtml += '</tbody></table>';
+                container.innerHTML = tableHtml;
+
+                // Add event listeners for status updates
+                container.querySelectorAll('.order-status-update').forEach(select => {
+                    select.addEventListener('change', async (e) => {
+                        const orderId = e.target.dataset.orderId;
+                        const newStatus = e.target.value;
+                        if (confirm(`Yakin ingin mengubah status pesanan #${orderId.substring(0, 6)}... menjadi '${newStatus}'?`)) {
+                            try {
+                                await db.collection('orders').doc(orderId).update({ status: newStatus });
+                                showFeedback('Status pesanan berhasil diperbarui.', true);
+                                // Re-fetch orders to update the table
+                                if (containerId === 'orders-table-container') {
+                                    fetchOrders(orderFilter.value, 'orders-table-container', orderStatusFilter.value);
+                                } else {
+                                    fetchOrders('all', 'dashboard-orders-table');
+                                }
+                            } catch (error) {
+                                showFeedback('Gagal memperbarui status pesanan.', false);
+                                console.error('Error updating order status:', error);
+                            }
+                        } else {
+                            // Revert select back if cancelled
+                            e.target.value = orders.find(o => o.id === orderId).status;
+                        }
+                    });
+                });
+
+                if (orders.length > 0) {
+                    lastOrderTimestamp = orders[0].timestamp.toDate().getTime();
+                }
+
+            } catch (error) {
+                container.innerHTML = '<p style="text-align:center; color:red; padding: 2rem 0;">Gagal memuat pesanan. Silakan coba lagi.</p>';
+                console.error("Fetch Orders Error:", error);
+            }
+        };
+
+        const checkNewOrders = async () => {
+            if (!auth.currentUser) return; // Only check if logged in
+            try {
+                const query = db.collection('orders').orderBy('timestamp', 'desc').limit(1);
+                const snapshot = await query.get();
+                if (!snapshot.empty) {
+                    const latestOrder = snapshot.docs[0].data();
+                    const latestOrderTime = latestOrder.timestamp.toDate().getTime();
+
+                    if (latestOrderTime > lastOrderTimestamp) {
+                        const newOrdersCount = await db.collection('orders')
+                            .where('timestamp', '>', firebase.firestore.Timestamp.fromMillis(lastOrderTimestamp))
+                            .get()
+                            .then(snap => snap.size);
+
+                        if (newOrdersCount > 0) {
+                            newOrdersBadge.textContent = parseInt(newOrdersBadge.textContent) + newOrdersCount;
+                            newOrdersBadge.style.display = 'inline-block';
+                            new Audio('https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-zapsplat/zapsplat_multimedia_notification_alert_short_sharp_002_52042.mp3').play();
+                            
+                            // Update dashboard/orders view if active
+                            if (document.getElementById('dashboard').classList.contains('active')) {
+                                fetchOrders('all', 'dashboard-orders-table');
+                                updateDashboardStats();
+                            }
+                            if (document.getElementById('orders').classList.contains('active')) {
+                                const currentFilter = orderFilter.value;
+                                const currentStatusFilter = orderStatusFilter.value;
+                                fetchOrders(currentFilter, 'orders-table-container', currentStatusFilter);
+                            }
+                            lastOrderTimestamp = latestOrderTime; // Update last checked timestamp
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to check new orders:', error);
+            }
+        };
+
+        const updateDashboardStats = async () => {
+            if (!auth.currentUser) return; // Only update if logged in
+            try {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0); // Start of today
+
+                const todayOrdersQuery = db.collection('orders')
+                    .where('timestamp', '>=', firebase.firestore.Timestamp.fromDate(today));
+                
+                const lowStockQuery = db.collection('products')
+                    .where('stock', '<', 10);
+
+                const todayOrdersSnapshot = await todayOrdersQuery.get();
+                let totalRevenue = 0;
+                todayOrdersSnapshot.forEach(doc => {
+                    totalRevenue += doc.data().totalPrice || 0;
+                });
+
+                const newCustomersSnapshot = await db.collection('customers')
+                    .where('firstOrderDate', '>=', firebase.firestore.Timestamp.fromDate(today))
+                    .get();
+
+                const lowStockSnapshot = await lowStockQuery.get();
+
+                statTodayOrders.textContent = todayOrdersSnapshot.size;
+                statTodayRevenue.textContent = formatCurrency(totalRevenue);
+                statNewCustomers.textContent = newCustomersSnapshot.size;
+                statLowStock.textContent = lowStockSnapshot.size;
+
+            } catch (error) {
+                console.error('Failed to update dashboard stats:', error);
+            }
+        };
+
+        orderFilter.addEventListener('change', () => {
+            fetchOrders(orderFilter.value, 'orders-table-container', orderStatusFilter.value);
+        });
+
+        orderStatusFilter.addEventListener('change', () => {
+            fetchOrders(orderFilter.value, 'orders-table-container', orderStatusFilter.value);
+        });
+
+        exportOrdersBtn.addEventListener('click', async () => {
+            const currentFilter = orderFilter.value;
+            const currentStatusFilter = orderStatusFilter.value;
+            let query = db.collection('orders');
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - today.getDay());
+            const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+            if (currentFilter === 'today') {
+                query = query.where('timestamp', '>=', firebase.firestore.Timestamp.fromDate(today));
+            } else if (currentFilter === 'week') {
+                query = query.where('timestamp', '>=', firebase.firestore.Timestamp.fromDate(startOfWeek));
+            } else if (currentFilter === 'month') {
+                query = query.where('timestamp', '>=', firebase.firestore.Timestamp.fromDate(startOfMonth));
+            }
+
+            if (currentStatusFilter !== 'all') {
+                query = query.where('status', '==', currentStatusFilter);
+            }
+            
+            query = query.orderBy('timestamp', 'desc');
+
+            try {
+                const snapshot = await query.get();
+                const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                if (orders.length === 0) {
+                    showFeedback('Tidak ada data pesanan untuk diekspor dengan filter ini.', false);
+                    return;
+                }
+
+                let csvContent = "data:text/csv;charset=utf-8,";
+                csvContent += "ID Pesanan,Tanggal,Nama Pelanggan,Telepon,Alamat Pengiriman,Produk,Jumlah,Harga Satuan,Total Harga,Status\n";
+
+                orders.forEach(order => {
+                    const products = order.products ? JSON.parse(order.products) : [];
+                    products.forEach(item => {
+                        const row = [
+                            `"${order.id}"`,
+                            `"${formatDate(order.timestamp)}"`,
+                            `"${order.customerName || ''}"`,
+                            `"${order.customerPhone || ''}"`,
+                            `"${order.deliveryAddress || ''}"`,
+                            `"${item.name_id || item.name || ''}"`, // Product name
+                            item.quantity || 1,
+                            item.price || 0,
+                            item.quantity * (item.price || 0),
+                            `"${order.status || ''}"`
+                        ].join(',');
+                        csvContent += row + "\n";
+                    });
+                });
+
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", `laporan_pesanan_${currentFilter}_${new Date().toISOString().slice(0, 10)}.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showFeedback('Data pesanan berhasil diekspor.', true);
+
+            } catch (error) {
+                showFeedback('Gagal mengekspor data pesanan.', false);
+                console.error('Error exporting orders:', error);
+            }
+        });
+
+        // --- Customers Management ---
+        const fetchCustomers = async () => {
+            customersTableBody.innerHTML = '<td colspan="5" style="text-align:center; padding: 2rem 0;"><i class="fas fa-spinner fa-spin"></i> Memuat pelanggan...</td>';
+            try {
+                const snapshot = await db.collection('customers').orderBy('lastOrderDate', 'desc').get();
+                customersTableBody.innerHTML = ''; // Clear existing rows
+                if (snapshot.empty) {
+                    customersTableBody.innerHTML = '<td colspan="5" style="text-align:center; padding: 2rem 0;">Tidak ada data pelanggan.</td>';
+                    return;
+                }
+                snapshot.forEach(doc => {
+                    const customer = doc.data();
+                    const row = `
+                        <tr>
+                            <td data-label="Nama">${customer.name || 'N/A'}</td>
+                            <td data-label="Telepon">${customer.phone || 'N/A'}</td>
+                            <td data-label="Email">${customer.email || 'N/A'}</td>
+                            <td data-label="Order Terakhir">${formatDate(customer.lastOrderDate)}</td>
+                            <td data-label="Jumlah Order">${customer.orderCount || 0}</td>
+                        </tr>
+                    `;
+                    customersTableBody.innerHTML += row;
+                });
+            } catch (error) {
+                showFeedback('Gagal memuat data pelanggan.', false);
+                console.error('Error fetching customers:', error);
+            }
+        };
+
+        // --- Menu (Products) Management ---
+
+        let allCategories = []; // To store categories for product form dropdown
+
+        const fetchCategoriesForProductForm = async () => {
+            try {
+                const snapshot = await db.collection('categories').orderBy('name').get();
+                allCategories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                categoryIdSelect.innerHTML = ''; // Clear existing options
+                if (allCategories.length === 0) {
+                    categoryIdSelect.innerHTML = '<option value="">Tidak ada kategori</option>';
+                    return;
+                }
+                allCategories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.id;
+                    option.textContent = category.name;
+                    categoryIdSelect.appendChild(option);
+                });
+            } catch (error) {
+                showFeedback('Gagal memuat kategori untuk formulir menu.', false);
+                console.error('Error fetching categories for product form:', error);
+            }
+        };
+
+        const fetchProducts = async () => {
+            productsTableBody.innerHTML = '<td colspan="7" style="text-align:center; padding: 2rem 0;"><i class="fas fa-spinner fa-spin"></i> Memuat menu...</td>';
+            try {
+                const productsSnapshot = await db.collection('products').get();
+                const products = productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                const categoriesSnapshot = await db.collection('categories').get();
+                const categoriesMap = new Map();
+                categoriesSnapshot.forEach(doc => {
+                    categoriesMap.set(doc.id, doc.data().name);
+                });
+
+                productsTableBody.innerHTML = ''; // Clear existing rows
+                if (products.length === 0) {
+                    productsTableBody.innerHTML = '<td colspan="7" style="text-align:center; padding: 2rem 0;">Tidak ada menu.</td>';
+                    return;
+                }
+
+                products.forEach(product => {
+                    const categoryName = categoriesMap.get(product.category_id) || 'Uncategorized';
+                    const row = `
+                        <tr>
+                            <td data-label="Gambar"><img src="${product.imageUrl || 'images/placeholder-menu.jpg'}" alt="${product.name_id}"></td>
+                            <td data-label="Nama Menu"><span class="product-name">${product.name_id}</span></td>
+                            <td data-label="Kategori">${categoryName}</td>
+                            <td data-label="Harga">Rp ${product.price.toLocaleString('id-ID')}</td>
+                            <td data-label="Stok" style="font-weight: bold; color: ${product.stock < 10 ? 'var(--color-primary)' : 'inherit'};">${product.stock}</td>
+                            <td data-label="Unggulan"><i class="fas ${product.is_featured ? 'fa-check-circle' : 'fa-times-circle'}" style="color: ${product.is_featured ? 'green' : 'red'};"></i></td>
+                            <td data-label="Aksi" class="actions-cell">
+                                <div class="action-buttons">
+                                    <button class="btn edit-product-btn" data-product-id="${product.id}"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-secondary delete-product-btn" data-product-id="${product.id}" data-image-url="${product.imageUrl || ''}"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    productsTableBody.innerHTML += row;
+                });
+
+                // Attach event listeners for edit/delete buttons
+                document.querySelectorAll('.edit-product-btn').forEach(button => {
+                    button.addEventListener('click', async () => {
+                        const productId = button.dataset.productId;
+                        const productDoc = await db.collection('products').doc(productId).get();
+                        if (productDoc.exists) {
+                            const product = productDoc.data();
+                            modalTitle.textContent = 'Edit Menu';
+                            productIdInput.value = productId;
+                            nameIdInput.value = product.name_id || '';
+                            nameEnInput.value = product.name_en || '';
+                            descriptionIdInput.value = product.description_id || '';
+                            descriptionEnInput.value = product.description_en || '';
+                            priceInput.value = product.price || 0;
+                            stockInput.value = product.stock || 0;
+                            categoryIdSelect.value = product.category_id || '';
+                            isFeaturedCheckbox.checked = product.is_featured || false;
+                            currentImageUrlInput.value = product.imageUrl || ''; // Store current image URL
+                            imageUrlInput.value = ''; // Clear file input
+                            openProductModal();
+                        } else {
+                            showFeedback('Menu tidak ditemukan.', false);
+                        }
+                    });
+                });
+
+                document.querySelectorAll('.delete-product-btn').forEach(button => {
+                    button.addEventListener('click', async () => {
+                        const productId = button.dataset.productId;
+                        const imageUrl = button.dataset.imageUrl;
+                        if (confirm('Anda yakin ingin menghapus menu ini? Ini akan menghapus permanen.')) {
+                            try {
+                                await db.collection('products').doc(productId).delete();
+                                await deleteImageFromFirebase(imageUrl);
+                                showFeedback('Menu berhasil dihapus.', true);
+                                fetchProducts(); // Re-fetch list
+                            } catch (error) {
+                                showFeedback('Gagal menghapus menu.', false);
+                                console.error('Error deleting product:', error);
+                            }
+                        }
+                    });
+                });
+
+            } catch (error) {
+                showFeedback('Gagal memuat data menu.', false);
+                console.error('Error fetching products:', error);
+            }
+        };
+
+        const openProductModal = () => productModal.style.display = 'flex';
+        const closeProductModal = () => productModal.style.display = 'none';
+
+        addMenuBtn.addEventListener('click', () => {
+            productForm.reset();
+            modalTitle.textContent = 'Tambah Menu Baru';
+            productIdInput.value = ''; // Clear for new product
+            currentImageUrlInput.value = '';
+            isFeaturedCheckbox.checked = false;
+            openProductModal();
+        });
+
+        closeModalBtn.addEventListener('click', closeProductModal);
+        productModal.addEventListener('click', e => { if (e.target === productModal) closeProductModal(); });
+
+        productForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const productId = productIdInput.value;
+            const isUpdate = !!productId;
+
+            const name_id = nameIdInput.value;
+            const name_en = nameEnInput.value;
+            const description_id = descriptionIdInput.value;
+            const description_en = descriptionEnInput.value;
+            const price = parseFloat(priceInput.value);
+            const stock = parseInt(stockInput.value);
+            const category_id = categoryIdSelect.value;
+            const is_featured = isFeaturedCheckbox.checked;
+            const imageFile = imageUrlInput.files[0];
+            const currentImageUrl = currentImageUrlInput.value;
+
+            if (!imageFile && !isUpdate) {
+                showFeedback('Gambar wajib diisi untuk menu baru.', false);
+                return;
+            }
+
+            try {
+                let imageUrl = currentImageUrl;
+                if (imageFile) {
+                    if (currentImageUrl) { // Delete old image if updating with new one
+                        await deleteImageFromFirebase(currentImageUrl);
+                    }
+                    imageUrl = await uploadImageToFirebase(imageFile, 'images/menu');
+                } else if (!isUpdate && !currentImageUrl) {
+                     // This case should ideally be caught by the first if condition, but as a safeguard
+                    showFeedback('Gambar wajib diisi untuk menu baru.', false);
+                    return;
+                }
+
+                const productData = {
+                    name_id,
+                    name_en,
+                    description_id,
+                    description_en,
+                    price,
+                    stock,
+                    category_id,
+                    imageUrl: imageUrl || 'images/placeholder-menu.jpg', // Fallback to a placeholder
+                    is_featured
+                };
+
+                if (isUpdate) {
+                    await db.collection('products').doc(productId).update(productData);
+                    showFeedback('Menu berhasil diperbarui.', true);
+                } else {
+                    await db.collection('products').add(productData);
+                    showFeedback('Menu baru berhasil ditambahkan.', true);
+                }
+                closeProductModal();
+                fetchProducts(); // Refresh list
+            } catch (error) {
+                showFeedback(`Gagal menyimpan menu: ${error.message}`, false);
+                console.error('Error saving product:', error);
+            }
+        });
+
+        // --- Categories Management ---
+        const fetchCategories = async () => {
+            categoriesTableBody.innerHTML = '<td colspan="2" style="text-align:center; padding: 2rem 0;"><i class="fas fa-spinner fa-spin"></i> Memuat kategori...</td>';
+            try {
+                const snapshot = await db.collection('categories').orderBy('name').get();
+                categoriesTableBody.innerHTML = ''; // Clear existing rows
+                if (snapshot.empty) {
+                    categoriesTableBody.innerHTML = '<td colspan="2" style="text-align:center; padding: 2rem 0;">Tidak ada kategori.</td>';
+                    return;
+                }
+                snapshot.forEach(doc => {
+                    const category = doc.data();
+                    const row = `
+                        <tr>
+                            <td data-label="Nama Kategori">
+                                <input type="text" value="${category.name}" class="category-name-input" data-category-id="${doc.id}" required>
+                            </td>
+                            <td data-label="Aksi" class="actions-cell">
+                                <div class="action-buttons">
+                                    <button type="button" class="btn update-category-btn" data-category-id="${doc.id}"><i class="fas fa-save"></i> Update</button>
+                                    <button type="button" class="btn btn-secondary delete-category-btn" data-category-id="${doc.id}"><i class="fas fa-trash"></i> Hapus</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    categoriesTableBody.innerHTML += row;
+                });
+
+                // Attach event listeners for update/delete
+                document.querySelectorAll('.update-category-btn').forEach(button => {
+                    button.addEventListener('click', async (e) => {
+                        const categoryId = e.target.dataset.categoryId;
+                        const newName = document.querySelector(`.category-name-input[data-category-id="${categoryId}"]`).value;
+                        if (!newName) {
+                            showFeedback('Nama kategori tidak boleh kosong.', false);
+                            return;
+                        }
+                        try {
+                            await db.collection('categories').doc(categoryId).update({ name: newName });
+                            showFeedback('Kategori berhasil diperbarui.', true);
+                            fetchCategories(); // Re-fetch to update table
+                            fetchCategoriesForProductForm(); // Also update product form dropdown
+                        } catch (error) {
+                            showFeedback('Gagal memperbarui kategori.', false);
+                            console.error('Error updating category:', error);
+                        }
+                    });
+                });
+
+                document.querySelectorAll('.delete-category-btn').forEach(button => {
+                    button.addEventListener('click', async (e) => {
+                        const categoryId = e.target.dataset.categoryId;
+                        if (confirm('Anda yakin ingin menghapus kategori ini? Semua menu yang terkait akan kehilangan kategori.')) {
+                            try {
+                                // Check if any products use this category (optional, but good practice)
+                                const productsUsingCategory = await db.collection('products').where('category_id', '==', categoryId).limit(1).get();
+                                if (!productsUsingCategory.empty) {
+                                    showFeedback('Gagal: Kategori masih digunakan oleh beberapa menu. Hapus menu tersebut terlebih dahulu.', false);
+                                    return;
+                                }
+
+                                await db.collection('categories').doc(categoryId).delete();
+                                showFeedback('Kategori berhasil dihapus.', true);
+                                fetchCategories(); // Re-fetch to update table
+                                fetchCategoriesForProductForm(); // Also update product form dropdown
+                            } catch (error) {
+                                showFeedback('Gagal menghapus kategori.', false);
+                                console.error('Error deleting category:', error);
+                            }
+                        }
+                    });
+                });
+
+            } catch (error) {
+                showFeedback('Gagal memuat kategori.', false);
+                console.error('Error fetching categories:', error);
+            }
+        };
+
+        addCategoryForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const categoryName = newCategoryNameInput.value;
+            if (!categoryName) {
+                showFeedback('Nama kategori tidak boleh kosong.', false);
+                return;
+            }
+            try {
+                await db.collection('categories').add({ name: categoryName });
+                showFeedback('Kategori baru berhasil ditambahkan.', true);
+                newCategoryNameInput.value = ''; // Clear input
+                fetchCategories(); // Re-fetch list
+                fetchCategoriesForProductForm(); // Also update product form dropdown
+            } catch (error) {
+                showFeedback('Gagal menambahkan kategori.', false);
+                console.error('Error adding category:', error);
+            }
+        });
+
+        // --- Site Content Management ---
+        const contentKeys = [
+            'header_title_main', 'header_title_sub', 'hero_text_1', 'hero_text_2', 'about_title', 'about_text',
+            'contact_address', 'contact_phone', 'contact_email', 'footer_copyright_text'
+        ];
+        const historyKeys = ['history_1_year', 'history_1_text', 'history_2_year', 'history_2_text', 'history_3_year', 'history_3_text'];
+
+        const fetchSiteContent = async () => {
+            generalContentFields.innerHTML = '<p style="text-align:center;"><i class="fas fa-spinner fa-spin"></i> Memuat konten...</p>';
+            historyContentFields.innerHTML = '<p style="text-align:center;"><i class="fas fa-spinner fa-spin"></i> Memuat konten...</p>';
+
+            try {
+                const snapshot = await db.collection('siteContent').get();
+                const contentData = {};
+                snapshot.forEach(doc => {
+                    contentData[doc.id] = doc.data();
+                });
+
+                generalContentFields.innerHTML = '';
+                contentKeys.forEach(key => {
+                    const text_id = contentData[key]?.text_id || '';
+                    const text_en = contentData[key]?.text_en || '';
+                    generalContentFields.innerHTML += `
+                        <div class="form-group">
+                            <label>${key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</label>
+                            <input type="text" name="content_${key}_id" placeholder="Teks Indonesia" value="${text_id}" style="margin-bottom: 0.5rem;">
+                            <input type="text" name="content_${key}_en" placeholder="Teks Inggris" value="${text_en}">
+                        </div>
+                    `;
+                });
+
+                historyContentFields.innerHTML = '';
+                for (let i = 1; i <= 3; i++) {
+                    const yearKey = `history_${i}_year`;
+                    const textKey = `history_${i}_text`;
+                    const year_id = contentData[yearKey]?.text_id || '';
+                    const year_en = contentData[yearKey]?.text_en || '';
+                    const text_id = contentData[textKey]?.text_id || '';
+                    const text_en = contentData[textKey]?.text_en || '';
+
+                    historyContentFields.innerHTML += `
+                        <h4 style="color: var(--color-secondary); border-top: 1px solid var(--color-border); padding-top: 1rem; margin-top: 1.5rem;">Timeline Item #${i}</h4>
+                        <div class="form-group">
+                            <label>Tahun</label>
+                            <input type="text" name="content_${yearKey}_id" value="${year_id}" placeholder="Tahun Indonesia">
+                            <input type="text" name="content_${yearKey}_en" value="${year_en}" placeholder="Tahun Inggris" style="margin-top: 0.5rem;">
+                        </div>
+                        <div class="form-group">
+                            <label>Deskripsi</label>
+                            <textarea name="content_${textKey}_id" rows="3" placeholder="Deskripsi Indonesia">${text_id}</textarea>
+                            <textarea name="content_${textKey}_en" rows="3" placeholder="Deskripsi Inggris" style="margin-top: 0.5rem;">${text_en}</textarea>
+                        </div>
+                    `;
+                }
+
+            } catch (error) {
+                showFeedback('Gagal memuat konten situs.', false);
+                console.error('Error fetching site content:', error);
+            }
+        };
+
+        updateContentForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(updateContentForm);
+            const batch = db.batch();
+
+            try {
+                for (const entry of formData.entries()) {
+                    const [name, value] = entry;
+                    if (name.startsWith('content_')) {
+                        const parts = name.split('_');
+                        const key = parts.slice(1, parts.length - 1).join('_'); // e.g., 'header_title'
+                        const lang = parts[parts.length - 1]; // 'id' or 'en'
+
+                        let docRef = db.collection('siteContent').doc(key);
+                        let docData = {};
+                        if (!batch._docs || !batch._docs[docRef.path]) { // Check if doc is already in batch
+                            const currentDoc = await docRef.get();
+                            if (currentDoc.exists) docData = currentDoc.data();
+                        } else {
+                             // If already in batch, this is tricky. For simplicity and robustness,
+                             // we'll get the current data first, then merge, then set.
+                             // A more robust approach would be to process forms data into an object first.
+                        }
+                        docData[`text_${lang}`] = value;
+                        batch.set(docRef, docData, { merge: true }); // Merge to update specific fields
+                    }
+                }
+                await batch.commit();
+                showFeedback('Konten situs berhasil diperbarui.', true);
+                fetchSiteContent(); // Refresh content
+            } catch (error) {
+                showFeedback(`Gagal menyimpan konten situs: ${error.message}`, false);
+                console.error('Error updating site content:', error);
+            }
+        });
+
+        // --- Banner Management ---
+        const BANNER_DOC_ID = 'main_banner'; // Single document for banner info
+        const BANNER_STORAGE_PATH = 'images/banner';
+
+        const fetchBannerContent = async () => {
+            try {
+                const bannerDoc = await db.collection('siteContent').doc(BANNER_DOC_ID).get();
+                const bannerData = bannerDoc.exists ? bannerDoc.data() : { imageUrl: 'images/placeholder-banner.jpg', text_id: '', text_en: '' };
+                
+                bannerPreview.src = bannerData.imageUrl || 'images/placeholder-banner.jpg';
+                bannerTextIdInput.value = bannerData.text_id || '';
+                bannerTextEnInput.value = bannerData.text_en || '';
+
+            } catch (error) {
+                showFeedback('Gagal memuat konten banner.', false);
+                console.error('Error fetching banner content:', error);
+            }
+        };
+
+        bannerUploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const imageFile = bannerImageUpload.files[0];
+            if (!imageFile) {
+                showFeedback('Pilih gambar untuk diunggah.', false);
+                return;
+            }
+
+            try {
+                // Get current banner image URL to delete it later
+                const bannerDoc = await db.collection('siteContent').doc(BANNER_DOC_ID).get();
+                const currentImageUrl = bannerDoc.exists ? bannerDoc.data().imageUrl : null;
+
+                const newImageUrl = await uploadImageToFirebase(imageFile, BANNER_STORAGE_PATH);
+
+                // Update Firestore with new image URL
+                await db.collection('siteContent').doc(BANNER_DOC_ID).set({ imageUrl: newImageUrl }, { merge: true });
+
+                // Delete old image from Storage if it's different and not a placeholder
+                if (currentImageUrl && currentImageUrl !== newImageUrl) {
+                    await deleteImageFromFirebase(currentImageUrl);
+                }
+                
+                showFeedback('Banner image berhasil diunggah.', true);
+                fetchBannerContent(); // Refresh preview
+            } catch (error) {
+                showFeedback(`Gagal mengunggah banner image: ${error.message}`, false);
+                console.error('Error uploading banner image:', error);
+            }
+        });
+
+        deleteBannerBtn.addEventListener('click', async () => {
+            if (!confirm('Anda yakin ingin menghapus banner ini? Ini akan menggantinya dengan placeholder.')) {
+                return;
+            }
+            try {
+                const bannerDoc = await db.collection('siteContent').doc(BANNER_DOC_ID).get();
+                const currentImageUrl = bannerDoc.exists ? bannerDoc.data().imageUrl : null;
+
+                await db.collection('siteContent').doc(BANNER_DOC_ID).set({
+                    imageUrl: 'images/placeholder-banner.jpg', // Set to a default placeholder
+                }, { merge: true });
+
+                if (currentImageUrl && currentImageUrl !== 'images/placeholder-banner.jpg') {
+                    await deleteImageFromFirebase(currentImageUrl);
+                }
+                showFeedback('Banner image berhasil dihapus.', true);
+                fetchBannerContent(); // Refresh preview
+            } catch (error) {
+                showFeedback(`Gagal menghapus banner image: ${error.message}`, false);
+                console.error('Error deleting banner image:', error);
+            }
+        });
+
+        bannerTextForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text_id = bannerTextIdInput.value;
+            const text_en = bannerTextEnInput.value;
+            try {
+                await db.collection('siteContent').doc(BANNER_DOC_ID).set({
+                    text_id: text_id,
+                    text_en: text_en
+                }, { merge: true });
+                showFeedback('Teks banner berhasil disimpan.', true);
+                fetchBannerContent();
+            } catch (error) {
+                showFeedback(`Gagal menyimpan teks banner: ${error.message}`, false);
+                console.error('Error saving banner text:', error);
+            }
+        });
+
+
+        // --- Initialization ---
+        function initializeAdminPanel() {
+            const activeTab = localStorage.getItem('activeAdminTab') || 'dashboard';
+            setActiveSection(activeTab);
+
+            // Initial data loads for active tab are handled by setActiveSection
+            // Setup real-time listeners or periodic updates
+            setInterval(checkNewOrders, 15000); // Check for new orders every 15 seconds
+            setInterval(updateDashboardStats, 60000); // Update dashboard stats every minute
+        }
+
+        // Run once DOM is fully loaded, before Firebase auth state changes
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check auth state immediately
+            if (auth.currentUser) {
+                initializeAdminPanel();
+            }
+        });
+
+    </script>
 </body>
 </html>
