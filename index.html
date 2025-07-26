@@ -240,6 +240,37 @@
             cursor: pointer;
         }
 
+        /* Cart Icon */
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--color-secondary);
+            background: transparent;
+            border: none;
+            padding: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .cart-icon:hover {
+            color: var(--color-primary);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: var(--color-primary);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 50%;
+            padding: 0.2em 0.5em;
+            line-height: 1;
+            transform: translate(30%, -30%);
+            pointer-events: none;
+        }
+
         /* Hero Section */
         @keyframes kenburns {
             0% { transform: scale(1.1) translate(0, 0); }
@@ -874,6 +905,7 @@
         }
 
         #modal-product-details {
+            text-align:center;
             margin-bottom: 2rem;
             background-color: var(--color-surface);
             padding: 1.5rem;
@@ -910,6 +942,82 @@
             border: 4px solid var(--color-surface);
             box-shadow: var(--shadow-sm);
         }
+
+        /* Cart Modal */
+        #cart-modal .modal-body {
+            padding: 0; /* Remove padding here as list items have their own */
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1rem 2.25rem;
+            border-bottom: 1px solid var(--color-border);
+            background-color: var(--color-surface);
+            transition: background-color 0.3s ease;
+        }
+        .cart-item:last-child {
+            border-bottom: none;
+            border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+        }
+        .cart-item:hover {
+            background-color: #fcfcfc;
+        }
+
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: var(--border-radius-sm);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .cart-item-details {
+            flex-grow: 1;
+        }
+
+        .cart-item-details h4 {
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            color: var(--color-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .cart-item-details p {
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+            margin-bottom: 0;
+        }
+
+        .cart-item-price {
+            font-weight: 700;
+            color: var(--color-primary);
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .cart-empty-message {
+            text-align: center;
+            padding: 2rem;
+            color: var(--color-text-light);
+            font-style: italic;
+        }
+
+        .cart-total {
+            padding: 1.5rem 2.25rem;
+            text-align: right;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-secondary);
+            background-color: var(--color-surface);
+            border-top: 1px solid var(--color-border);
+            border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+        }
+        .cart-total span {
+            color: var(--color-primary);
+        }
+
 
         /* Toast Notification */
         .toast-notification {
@@ -1160,6 +1268,19 @@
             .toast-notification i {
                 font-size: 1.2rem;
             }
+            .cart-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.75rem;
+                padding: 1rem 1.5rem;
+            }
+            .cart-item img {
+                width: 60px;
+                height: 60px;
+            }
+            .cart-item-details {
+                margin-bottom: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -1178,6 +1299,10 @@
                 </ul>
             </nav>
             <div class="header-actions">
+                <button class="cart-icon" id="cart-icon" aria-label="Shopping Cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cart-count">0</span>
+                </button>
                 <div class="language-toggle">
                     <button class="lang-btn active" data-lang="id">ID</button>
                     <button class="lang-btn" data-lang="en">EN</button>
@@ -1297,11 +1422,26 @@
       </div>
     </div>
 
+    <div id="cart-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-lang-key="cart_modal_title">Your Cart</h2>
+                <button class="modal-close-btn" aria-label="Close cart modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div id="cart-items-container">
+                    <p class="cart-empty-message" data-lang-key="cart_empty">Your cart is empty.</p>
+                </div>
+                <div class="cart-total" data-lang-key="cart_total">Total: <span id="cart-total-price">Rp 0</span></div>
+            </div>
+        </div>
+    </div>
+
     <div id="toast" class="toast-notification"> <i id="toast-icon" class="fas fa-check-circle"></i> <p id="toast-message">Notification</p> </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=KUNCI_API_Maps_ANDA&callback=initMaps" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADCv-AX09lIYq6Gr7Gm56rChp4kS0J08Q&callback=initMaps" async defer></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
@@ -1320,6 +1460,7 @@
         const db = firebase.firestore();
         const shackLocation = { lat: -8.7214, lng: 115.1685 };
         let contactMap, modalMap;
+        let cart = []; // Array to hold cart items
 
         function initMaps() {
             const mapOptions = {
@@ -1345,8 +1486,12 @@
                 menuGrid: document.getElementById('menu-grid'), menuFilters: document.getElementById('menu-filters'),
                 galleryGrid: document.getElementById('gallery-grid'), orderModal: document.getElementById('order-modal'),
                 orderForm: document.getElementById('order-form'), modalProductId: document.getElementById('product-id'),
-                modalProductDetails: document.getElementById('modal-product-details'), modalCloseBtn: document.querySelector('.modal-close-btn'),
+                modalProductDetails: document.getElementById('modal-product-details'), modalCloseBtn: document.querySelector('#order-modal .modal-close-btn'),
                 toast: document.getElementById('toast'), toastIcon: document.getElementById('toast-icon'), toastMessage: document.getElementById('toast-message'),
+                cartIcon: document.getElementById('cart-icon'), cartCount: document.getElementById('cart-count'),
+                cartModal: document.getElementById('cart-modal'), cartItemsContainer: document.getElementById('cart-items-container'),
+                cartTotal: document.getElementById('cart-total-price'), cartModalCloseBtn: document.querySelector('#cart-modal .modal-close-btn'),
+                cartEmptyMessage: document.querySelector('.cart-empty-message')
             };
 
             const updateTextContent = () => {
@@ -1365,13 +1510,17 @@
                 dom.heroSlider.innerHTML = siteData.banners.map(b => `<div class="swiper-slide" style="background-image: url('${b.image_url}');"><div class="slide-overlay"></div></div>`).join('');
                 new Swiper('.hero-slider', { loop: true, effect: 'fade', autoplay: { delay: 7000, disableOnInteraction: false }, navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }, pagination: { el: '.swiper-pagination', clickable: true } });
             };
+
             const renderHistory = () => {
                 dom.history.innerHTML = siteData.history.map((item, i) => `<div class="timeline-item ${i % 2 === 0 ? 'left' : 'right'}" data-aos="fade-up"><div class="timeline-content"><div class="year">${item.year}</div><h3>${item[`title_${currentLanguage}`]||item.title_id}</h3><p>${item[`text_${currentLanguage}`]||item.text_id}</p></div></div>`).join('');
             };
+
             const createCardHTML = (p, isFeatured = false) => {
                 const desc = p[`description_${currentLanguage}`] || p.description_id || '';
-                return `<div class="menu-card" data-category="${p.category_name}"><div class="menu-card-image"><img src="${p.imageUrl}" alt="${p.name_en}"></div><div class="menu-card-content"><h3>${p[`name_${currentLanguage}`]||p.name_id}</h3><p class="menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(p.price)}</p><p class="description">${desc.substring(0,isFeatured?70:100)}...</p><button class="btn order-now-btn" data-product-id="${p.id}" data-lang-key="modal_order_now">Order Now</button></div></div>`;
+                const displayDesc = desc.length > 100 ? `${desc.substring(0, isFeatured ? 70 : 100)}...` : desc;
+                return `<div class="menu-card" data-category="${p.category_name}"><div class="menu-card-image"><img src="${p.imageUrl}" alt="${p.name_en}"></div><div class="menu-card-content"><h3>${p[`name_${currentLanguage}`]||p.name_id}</h3><p class="menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(p.price)}</p><p class="description">${displayDesc}</p><button class="btn order-now-btn" data-product-id="${p.id}" data-lang-key="modal_order_now">Order Now</button></div></div>`;
             };
+
             const renderMenu = () => {
                 let featuredHTML = '', gridHTML = '';
                 siteData.products.forEach(p => {
@@ -1384,10 +1533,12 @@
                 dom.menuFilters.innerHTML = `<button class="filter-btn active" data-filter="all">${allText}</button>` + siteData.categories.map(c => `<button class="filter-btn" data-filter="${c.name}">${c[`name_${currentLanguage}`]||c.name}</button>`).join('');
                 new Swiper('.featured-slider', { slidesPerView: 'auto', spaceBetween: 30, grabCursor: true, centeredSlides: true, loop: true, pagination: { el: '.swiper-pagination', clickable: true } });
             };
+
             const renderGallery = () => {
                 dom.galleryGrid.innerHTML = siteData.gallery_images.map(img => `<a href="${img.image_url}" class="glightbox" data-gallery="our-gallery" data-title="${img[`caption_${currentLanguage}`]||img.caption_id}"><img src="${img.image_url}" alt="${img.caption_en}"></a>`).join('');
                 if (lightbox) lightbox.reload(); else lightbox = GLightbox({ selector: '.glightbox' });
             };
+
             const showToast = (message, type = 'success') => {
                 dom.toastMessage.textContent = message;
                 dom.toast.className = 'toast-notification';
@@ -1395,6 +1546,7 @@
                 dom.toastIcon.className = `fas ${type === 'success' ? 'fa-check-circle' : 'fa-times-circle'}`;
                 setTimeout(() => dom.toast.classList.remove('show'), 4000);
             };
+
             const openOrderModal = (productId) => {
                 const product = siteData.products.find(p => p.id === productId);
                 if (!product) return;
@@ -1404,18 +1556,85 @@
                 // Refresh map when modal is shown
                 setTimeout(() => google.maps.event.trigger(modalMap, 'resize'), 300);
             };
+
             const closeOrderModal = () => { dom.orderModal.classList.remove('visible'); dom.orderForm.reset(); };
+
             const handleOrderSubmit = async (e) => {
                 e.preventDefault();
                 const name = dom.orderForm.querySelector('#customer-name').value.trim();
                 const phone = dom.orderForm.querySelector('#customer-phone').value.trim();
                 const productId = dom.modalProductId.value;
+                const product = siteData.products.find(p => p.id === productId);
+
                 if (!name || !phone) { return showToast(currentLanguage === 'id' ? 'Nama dan telepon harus diisi.' : 'Name and phone are required.', 'error'); }
+                if (!product) { return showToast(currentLanguage === 'id' ? 'Produk tidak ditemukan.' : 'Product not found.', 'error'); }
+
                 try {
-                    await db.collection('orders').add({ customerName: name, customerPhone: phone, productId: productId, productName: siteData.products.find(p => p.id === productId).name_en, status: 'new', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                    await db.collection('orders').add({
+                        customerName: name,
+                        customerPhone: phone,
+                        productId: productId,
+                        productName: product.name_en,
+                        productPrice: product.price,
+                        productImageUrl: product.imageUrl,
+                        status: 'new',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
                     showToast(currentLanguage === 'id' ? 'Pesanan berhasil dikirim!' : 'Order submitted!', 'success');
                     closeOrderModal();
                 } catch (error) { console.error("Error writing document: ", error); showToast(currentLanguage === 'id' ? 'Gagal mengirim pesanan.' : 'Failed to submit order.', 'error'); }
+            };
+
+            const updateCartCount = () => {
+                dom.cartCount.textContent = cart.length;
+                dom.cartCount.style.display = cart.length > 0 ? 'block' : 'none';
+            };
+
+            const renderCartItems = () => {
+                if (cart.length === 0) {
+                    dom.cartItemsContainer.innerHTML = `<p class="cart-empty-message" data-lang-key="cart_empty">${currentLanguage === 'id' ? 'Keranjang Anda kosong.' : 'Your cart is empty.'}</p>`;
+                    dom.cartTotal.style.display = 'none';
+                    return;
+                }
+
+                dom.cartTotal.style.display = 'block';
+                let cartHTML = '';
+                let total = 0;
+                cart.forEach(item => {
+                    cartHTML += `
+                        <div class="cart-item">
+                            <img src="${item.imageUrl}" alt="${item.name_en}">
+                            <div class="cart-item-details">
+                                <h4>${item[`name_${currentLanguage}`] || item.name_id}</h4>
+                                <p>Quantity: 1</p> </div>
+                            <span class="cart-item-price">Rp ${new Intl.NumberFormat('id-ID').format(item.price)}</span>
+                        </div>
+                    `;
+                    total += item.price;
+                });
+                dom.cartItemsContainer.innerHTML = cartHTML;
+                dom.cartTotal.innerHTML = `${currentLanguage === 'id' ? 'Total:' : 'Total:'} <span id="cart-total-price">Rp ${new Intl.NumberFormat('id-ID').format(total)}</span>`;
+            };
+
+            const openCartModal = () => {
+                renderCartItems();
+                dom.cartModal.classList.add('visible');
+            };
+
+            const closeCartModal = () => {
+                dom.cartModal.classList.remove('visible');
+            };
+
+            // Add to Cart functionality (simplified for this example, assumes direct add to cart from order modal)
+            const addToCart = (productId) => {
+                const product = siteData.products.find(p => p.id === productId);
+                if (product && !cart.some(item => item.id === productId)) { // Prevent adding duplicate items
+                    cart.push(product);
+                    updateCartCount();
+                    showToast(currentLanguage === 'id' ? `${product[`name_${currentLanguage}`] || product.name_id} ditambahkan ke keranjang!` : `${product.name_en} added to cart!`, 'success');
+                } else if (product) {
+                    showToast(currentLanguage === 'id' ? `${product[`name_${currentLanguage}`] || product.name_id} sudah ada di keranjang.` : `${product.name_en} is already in your cart.`, 'error');
+                }
             };
 
             async function fetchAllData() {
@@ -1436,22 +1655,28 @@
                     dom.headerLogo.src = logoUrl; dom.footerLogo.src = logoUrl;
 
                     renderBanners(); renderHistory(); renderMenu(); renderGallery(); updateTextContent();
+                    updateCartCount(); // Initialize cart count on page load
                     AOS.init({ duration: 800, once: true, offset: 50 });
                 } catch (error) { console.error("Error fetching data:", error); showToast("Failed to load website data.", 'error'); }
             }
 
+            // Event Listeners
             dom.langToggle.addEventListener('click', (e) => {
                 if (!e.target.matches('.lang-btn')) return;
                 currentLanguage = e.target.dataset.lang;
                 localStorage.setItem('preferredLanguage', currentLanguage);
                 renderHistory(); renderMenu(); renderGallery(); updateTextContent();
+                renderCartItems(); // Re-render cart items for language change
             });
+
             dom.mobileMenuToggle.addEventListener('click', () => {
                 dom.mainNav.classList.toggle('active');
                 dom.mobileMenuToggle.querySelector('i').classList.toggle('fa-bars');
                 dom.mobileMenuToggle.querySelector('i').classList.toggle('fa-times');
             });
+
             dom.mainNav.addEventListener('click', (e) => { if (e.target.matches('a') && dom.mainNav.classList.contains('active')) dom.mobileMenuToggle.click(); });
+
             dom.menuFilters.addEventListener('click', (e) => {
                 if (!e.target.matches('.filter-btn')) return;
                 dom.menuFilters.querySelector('.active').classList.remove('active');
@@ -1459,10 +1684,25 @@
                 const filter = e.target.dataset.filter;
                 dom.menuGrid.querySelectorAll('.menu-card').forEach(c => c.classList.toggle('hidden', !(filter === 'all' || c.dataset.category === filter)));
             });
-            document.addEventListener('click', (e) => { if (e.target.matches('.order-now-btn')) openOrderModal(e.target.dataset.productId); });
+
+            // Changed from order-now-btn to add-to-cart-btn for clarity, but still opens order modal
+            document.addEventListener('click', (e) => {
+                if (e.target.matches('.order-now-btn')) {
+                    const productId = e.target.dataset.productId;
+                    addToCart(productId); // Add to cart first
+                    openOrderModal(productId); // Then open the order modal
+                }
+            });
+
             dom.modalCloseBtn.addEventListener('click', closeOrderModal);
             dom.orderModal.addEventListener('click', (e) => { if (e.target === dom.orderModal) closeOrderModal(); });
             dom.orderForm.addEventListener('submit', handleOrderSubmit);
+
+            // Cart Modal Event Listeners
+            dom.cartIcon.addEventListener('click', openCartModal);
+            dom.cartModalCloseBtn.addEventListener('click', closeCartModal);
+            dom.cartModal.addEventListener('click', (e) => { if (e.target === dom.cartModal) closeCartModal(); });
+
             fetchAllData();
         });
     </script>
