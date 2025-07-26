@@ -296,6 +296,21 @@
             border: 1px solid var(--color-border);
         }
 
+        /* --- Debugging Styles --- */
+        #debug-detail-error {
+            color: red;
+            margin-top: 20px;
+            padding: 1rem;
+            background-color: #ffe0e0;
+            border: 1px solid #ffb3b3;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            display: none; /* Hidden by default, shown by JS on error */
+            white-space: pre-wrap; /* Preserve line breaks */
+            word-wrap: break-word; /* Break long words */
+        }
+
 
         /* --- Mobile / Responsive --- */
         .menu-toggle {
@@ -391,6 +406,7 @@
             <button class="menu-toggle"><i class="fas fa-bars"></i></button>
 
             <div class="feedback" id="feedback-message"></div>
+            <div id="debug-detail-error" style="color: red; margin-top: 20px; padding: 1rem; background-color: #ffe0e0; border: 1px solid #ffb3b3; border-radius: 8px; text-align: center; font-weight: 600; display: none;"></div>
             
             <section id="dashboard" class="content-section active">
                 <div class="page-header"><h1><i class="fas fa-tachometer-alt"></i> Dasbor</h1></div>
@@ -652,6 +668,7 @@
         const logoutBtn = document.getElementById('logout-btn');
 
         const feedbackMessage = document.getElementById('feedback-message');
+        const debugDetailError = document.getElementById('debug-detail-error'); // Added for detailed errors
         const navLinks = document.querySelectorAll('.nav-link');
         const sections = document.querySelectorAll('.content-section');
         const sidebar = document.querySelector('.sidebar');
@@ -738,6 +755,19 @@
             }, 5000);
         };
 
+        // Centralized error display function
+        const displayDetailedError = (error, fallbackMessage) => {
+            const errorMessage = error.message || 'Unknown error';
+            const errorCode = error.code || 'N/A';
+            const displayMsg = `Detail Error: ${errorMessage} (Kode: ${errorCode}). ${fallbackMessage}`;
+            if (debugDetailError) {
+                debugDetailError.textContent = displayMsg;
+                debugDetailError.style.display = 'block';
+            }
+            console.error("Firebase Operation Error:", error); // Keep console logging for reference if console becomes accessible
+            showFeedback(`Gagal memuat data. ${errorMessage}`, false);
+        };
+
         const formatCurrency = (amount) => `Rp ${parseInt(amount).toLocaleString('id-ID')}`;
 
         const formatDate = (timestamp) => {
@@ -764,8 +794,7 @@
                 showFeedback('Image uploaded successfully.', true);
                 return downloadURL;
             } catch (error) {
-                showFeedback(`Failed to upload image: ${error.message}`, false);
-                console.error("Image Upload Error:", error);
+                displayDetailedError(error, 'Gagal mengunggah gambar.');
                 throw error; // Re-throw to propagate the error
             }
         };
@@ -779,14 +808,13 @@
             try {
                 const imageRef = storage.refFromURL(url);
                 await imageRef.delete();
-                console.log("Image deleted:", url);
+                // console.log("Image deleted:", url); // For console debugging
             } catch (error) {
                 // If the file doesn't exist, it's not a critical error
                 if (error.code === 'storage/object-not-found') {
-                    console.warn("Image to delete not found, possibly already deleted or URL is old:", url);
+                    // console.warn("Image to delete not found, possibly already deleted or URL is old:", url);
                 } else {
-                    console.error("Could not delete image:", url, error);
-                    showFeedback(`Gagal menghapus gambar: ${error.message}`, false);
+                    displayDetailedError(error, `Gagal menghapus gambar: ${url}`);
                 }
             }
         };
@@ -810,11 +838,11 @@
             const password = loginPasswordInput.value;
             try {
                 await auth.signInWithEmailAndPassword(email, password);
-                // User will be redirected by onAuthStateChanged
+                loginErrorMsg.style.display = 'none'; // Clear error on success
             } catch (error) {
                 loginErrorMsg.textContent = `Login failed: ${error.message}`;
                 loginErrorMsg.style.display = 'block';
-                console.error("Login Error:", error);
+                displayDetailedError(error, 'Login gagal.'); // Use debug display
             }
         });
 
@@ -823,11 +851,19 @@
             try {
                 await auth.signOut();
                 localStorage.removeItem('activeAdminTab'); // Clear active tab on logout
+            _clearDebugMessage(); // Clear any debug messages on logout
             } catch (error) {
-                showFeedback(`Logout failed: ${error.message}`, false);
-                console.error("Logout Error:", error);
+                displayDetailedError(error, 'Logout gagal.');
             }
         });
+
+        // Function to clear debug message
+        const _clearDebugMessage = () => {
+            if (debugDetailError) {
+                debugDetailError.textContent = '';
+                debugDetailError.style.display = 'none';
+            }
+        };
 
         // --- Navigation Logic ---
         function setActiveSection(targetId) {
@@ -845,6 +881,7 @@
                 newOrdersBadge.style.display = 'none';
             }
             // Trigger data loads for active section
+            _clearDebugMessage(); // Clear debug message on section change
             if (targetId === 'dashboard') {
                 fetchOrders('all', 'dashboard-orders-table');
                 updateDashboardStats();
@@ -923,6 +960,7 @@
 
                 if (!orders || orders.length === 0) {
                     container.innerHTML = '<p style="text-align:center; padding: 2rem 0;">Tidak ada pesanan untuk filter ini.</p>';
+                    _clearDebugMessage(); // Clear debug message if no data (not an error)
                     return;
                 }
 
@@ -947,6 +985,7 @@
                 });
                 tableHtml += '</tbody></table>';
                 container.innerHTML = tableHtml;
+                _clearDebugMessage(); // Clear debug message on successful load
 
                 // Add event listeners for status updates
                 container.querySelectorAll('.order-status-update').forEach(select => {
@@ -957,6 +996,7 @@
                             try {
                                 await db.collection('orders').doc(orderId).update({ status: newStatus });
                                 showFeedback('Status pesanan berhasil diperbarui.', true);
+                                _clearDebugMessage(); // Clear debug message on success
                                 // Re-fetch orders to update the table
                                 if (containerId === 'orders-table-container') {
                                     fetchOrders(orderFilter.value, 'orders-table-container', orderStatusFilter.value);
@@ -964,8 +1004,9 @@
                                     fetchOrders('all', 'dashboard-orders-table');
                                 }
                             } catch (error) {
-                                showFeedback('Gagal memperbarui status pesanan.', false);
-                                console.error('Error updating order status:', error);
+                                displayDetailedError(error, 'Gagal memperbarui status pesanan.');
+                                // Revert select back if failed
+                                e.target.value = orders.find(o => o.id === orderId).status;
                             }
                         } else {
                             // Revert select back if cancelled
@@ -980,8 +1021,7 @@
 
             } catch (error) {
                 container.innerHTML = '<p style="text-align:center; color:red; padding: 2rem 0;">Gagal memuat pesanan. Silakan coba lagi. Pastikan Firebase Security Rules sudah benar.</p>';
-                console.error("Fetch Orders Error:", error);
-                showFeedback('Gagal memuat data pesanan. Periksa koneksi dan aturan Firebase.', false);
+                displayDetailedError(error, 'Gagal memuat data pesanan. Periksa koneksi dan aturan Firebase.');
             }
         };
 
@@ -1008,7 +1048,7 @@
                                 const audio = new Audio('https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-zapsplat/zapsplat_multimedia_notification_alert_short_sharp_002_52042.mp3');
                                 audio.play();
                             } catch (e) {
-                                console.warn("Could not play notification sound:", e);
+                                // console.warn("Could not play notification sound:", e);
                             }
                             
                             // Update dashboard/orders view if active
@@ -1025,9 +1065,10 @@
                         }
                     }
                 }
+                _clearDebugMessage(); // Clear debug message if successful
             } catch (error) {
-                console.error('Failed to check new orders:', error);
-                // No feedback here to avoid spamming for background check errors
+                // No feedback here to avoid spamming for background check errors, but still log for debug
+                displayDetailedError(error, 'Gagal memeriksa pesanan baru (latar belakang).');
             }
         };
 
@@ -1059,10 +1100,9 @@
                 statTodayRevenue.textContent = formatCurrency(totalRevenue);
                 statNewCustomers.textContent = newCustomersSnapshot.size;
                 statLowStock.textContent = lowStockSnapshot.size;
-
+                _clearDebugMessage(); // Clear debug message if successful
             } catch (error) {
-                console.error('Failed to update dashboard stats:', error);
-                 showFeedback('Gagal memuat statistik dashboard. Periksa koneksi dan aturan Firebase.', false);
+                displayDetailedError(error, 'Gagal memuat statistik dashboard. Periksa koneksi dan aturan Firebase.');
             }
         };
 
@@ -1105,6 +1145,7 @@
 
                 if (orders.length === 0) {
                     showFeedback('Tidak ada data pesanan untuk diekspor dengan filter ini.', false);
+                    _clearDebugMessage();
                     return;
                 }
 
@@ -1171,10 +1212,10 @@
                 link.click();
                 document.body.removeChild(link);
                 showFeedback('Data pesanan berhasil diekspor.', true);
+                _clearDebugMessage();
 
             } catch (error) {
-                showFeedback('Gagal mengekspor data pesanan. Pastikan Firebase Security Rules sudah benar.', false);
-                console.error('Error exporting orders:', error);
+                displayDetailedError(error, 'Gagal mengekspor data pesanan. Pastikan Firebase Security Rules sudah benar.');
             }
         });
 
@@ -1186,6 +1227,7 @@
                 customersTableBody.innerHTML = ''; // Clear existing rows
                 if (snapshot.empty) {
                     customersTableBody.innerHTML = '<td colspan="5" style="text-align:center; padding: 2rem 0;">Tidak ada data pelanggan.</td>';
+                    _clearDebugMessage();
                     return;
                 }
                 snapshot.forEach(doc => {
@@ -1201,9 +1243,9 @@
                     `;
                     customersTableBody.innerHTML += row;
                 });
+                _clearDebugMessage();
             } catch (error) {
-                showFeedback('Gagal memuat data pelanggan. Periksa koneksi dan aturan Firebase.', false);
-                console.error('Error fetching customers:', error);
+                displayDetailedError(error, 'Gagal memuat data pelanggan. Periksa koneksi dan aturan Firebase.');
             }
         };
 
@@ -1218,6 +1260,7 @@
                 categoryIdSelect.innerHTML = ''; // Clear existing options
                 if (allCategories.length === 0) {
                     categoryIdSelect.innerHTML = '<option value="">Tidak ada kategori</option>';
+                    _clearDebugMessage();
                     return;
                 }
                 allCategories.forEach(category => {
@@ -1226,9 +1269,9 @@
                     option.textContent = category.name;
                     categoryIdSelect.appendChild(option);
                 });
+                _clearDebugMessage();
             } catch (error) {
-                showFeedback('Gagal memuat kategori untuk formulir menu. Periksa koneksi dan aturan Firebase.', false);
-                console.error('Error fetching categories for product form:', error);
+                displayDetailedError(error, 'Gagal memuat kategori untuk formulir menu. Periksa koneksi dan aturan Firebase.');
             }
         };
 
@@ -1247,6 +1290,7 @@
                 productsTableBody.innerHTML = ''; // Clear existing rows
                 if (products.length === 0) {
                     productsTableBody.innerHTML = '<td colspan="7" style="text-align:center; padding: 2rem 0;">Tidak ada menu.</td>';
+                    _clearDebugMessage();
                     return;
                 }
 
@@ -1270,29 +1314,35 @@
                     `;
                     productsTableBody.innerHTML += row;
                 });
+                _clearDebugMessage();
 
                 // Attach event listeners for edit/delete buttons
                 document.querySelectorAll('.edit-product-btn').forEach(button => {
                     button.addEventListener('click', async () => {
                         const productId = button.dataset.productId;
-                        const productDoc = await db.collection('products').doc(productId).get();
-                        if (productDoc.exists) {
-                            const product = productDoc.data();
-                            modalTitle.textContent = 'Edit Menu';
-                            productIdInput.value = productId;
-                            nameIdInput.value = product.name_id || '';
-                            nameEnInput.value = product.name_en || '';
-                            descriptionIdInput.value = product.description_id || '';
-                            descriptionEnInput.value = product.description_en || '';
-                            priceInput.value = product.price || 0;
-                            stockInput.value = product.stock || 0;
-                            categoryIdSelect.value = product.category_id || '';
-                            isFeaturedCheckbox.checked = product.is_featured || false;
-                            currentImageUrlInput.value = product.imageUrl || ''; // Store current image URL
-                            imageUrlInput.value = ''; // Clear file input
-                            openProductModal();
-                        } else {
-                            showFeedback('Menu tidak ditemukan.', false);
+                        try {
+                            const productDoc = await db.collection('products').doc(productId).get();
+                            if (productDoc.exists) {
+                                const product = productDoc.data();
+                                modalTitle.textContent = 'Edit Menu';
+                                productIdInput.value = productId;
+                                nameIdInput.value = product.name_id || '';
+                                nameEnInput.value = product.name_en || '';
+                                descriptionIdInput.value = product.description_id || '';
+                                descriptionEnInput.value = product.description_en || '';
+                                priceInput.value = product.price || 0;
+                                stockInput.value = product.stock || 0;
+                                categoryIdSelect.value = product.category_id || '';
+                                isFeaturedCheckbox.checked = product.is_featured || false;
+                                currentImageUrlInput.value = product.imageUrl || ''; // Store current image URL
+                                imageUrlInput.value = ''; // Clear file input
+                                openProductModal();
+                            } else {
+                                showFeedback('Menu tidak ditemukan.', false);
+                            }
+                            _clearDebugMessage();
+                        } catch (error) {
+                            displayDetailedError(error, 'Gagal mengambil data menu untuk diedit.');
                         }
                     });
                 });
@@ -1306,18 +1356,17 @@
                                 await db.collection('products').doc(productId).delete();
                                 await deleteImageFromFirebase(imageUrl);
                                 showFeedback('Menu berhasil dihapus.', true);
+                                _clearDebugMessage();
                                 fetchProducts(); // Re-fetch list
                             } catch (error) {
-                                showFeedback(`Gagal menghapus menu: ${error.message}`, false);
-                                console.error('Error deleting product:', error);
+                                displayDetailedError(error, `Gagal menghapus menu.`);
                             }
                         }
                     });
                 });
 
             } catch (error) {
-                showFeedback('Gagal memuat data menu. Periksa koneksi dan aturan Firebase.', false);
-                console.error('Error fetching products:', error);
+                displayDetailedError(error, 'Gagal memuat data menu. Periksa koneksi dan aturan Firebase.');
             }
         };
 
@@ -1330,6 +1379,7 @@
             productIdInput.value = ''; // Clear for new product
             currentImageUrlInput.value = '';
             isFeaturedCheckbox.checked = false;
+            _clearDebugMessage(); // Clear debug message when opening modal
             openProductModal();
         });
 
@@ -1395,9 +1445,9 @@
                 }
                 closeProductModal();
                 fetchProducts(); // Refresh list
+                _clearDebugMessage();
             } catch (error) {
-                showFeedback(`Gagal menyimpan menu: ${error.message}`, false);
-                console.error('Error saving product:', error);
+                displayDetailedError(error, `Gagal menyimpan menu.`);
             }
         });
 
@@ -1409,6 +1459,7 @@
                 categoriesTableBody.innerHTML = ''; // Clear existing rows
                 if (snapshot.empty) {
                     categoriesTableBody.innerHTML = '<td colspan="2" style="text-align:center; padding: 2rem 0;">Tidak ada kategori.</td>';
+                    _clearDebugMessage();
                     return;
                 }
                 snapshot.forEach(doc => {
@@ -1428,6 +1479,7 @@
                     `;
                     categoriesTableBody.innerHTML += row;
                 });
+                _clearDebugMessage();
 
                 // Attach event listeners for update/delete
                 document.querySelectorAll('.update-category-btn').forEach(button => {
@@ -1441,11 +1493,11 @@
                         try {
                             await db.collection('categories').doc(categoryId).update({ name: newName });
                             showFeedback('Kategori berhasil diperbarui.', true);
+                            _clearDebugMessage();
                             fetchCategories(); // Re-fetch to update table
                             fetchCategoriesForProductForm(); // Also update product form dropdown
                         } catch (error) {
-                            showFeedback(`Gagal memperbarui kategori: ${error.message}`, false);
-                            console.error('Error updating category:', error);
+                            displayDetailedError(error, `Gagal memperbarui kategori.`);
                         }
                     });
                 });
@@ -1464,19 +1516,18 @@
 
                                 await db.collection('categories').doc(categoryId).delete();
                                 showFeedback('Kategori berhasil dihapus.', true);
+                                _clearDebugMessage();
                                 fetchCategories(); // Re-fetch to update table
                                 fetchCategoriesForProductForm(); // Also update product form dropdown
                             } catch (error) {
-                                showFeedback(`Gagal menghapus kategori: ${error.message}`, false);
-                                console.error('Error deleting category:', error);
+                                displayDetailedError(error, `Gagal menghapus kategori.`);
                             }
                         }
                     });
                 });
 
             } catch (error) {
-                showFeedback('Gagal memuat kategori. Periksa koneksi dan aturan Firebase.', false);
-                console.error('Error fetching categories:', error);
+                displayDetailedError(error, 'Gagal memuat kategori. Periksa koneksi dan aturan Firebase.');
             }
         };
 
@@ -1491,11 +1542,11 @@
                 await db.collection('categories').add({ name: categoryName, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
                 showFeedback('Kategori baru berhasil ditambahkan.', true);
                 newCategoryNameInput.value = ''; // Clear input
+                _clearDebugMessage();
                 fetchCategories(); // Re-fetch list
                 fetchCategoriesForProductForm(); // Also update product form dropdown
             } catch (error) {
-                showFeedback(`Gagal menambahkan kategori: ${error.message}`, false);
-                console.error('Error adding category:', error);
+                displayDetailedError(error, `Gagal menambahkan kategori.`);
             }
         });
 
@@ -1572,6 +1623,7 @@
                         </div>
                     `;
                 }
+                _clearDebugMessage();
 
                 // Add event listeners for logo uploads
                 document.querySelectorAll('.content-file-upload').forEach(input => {
@@ -1598,10 +1650,10 @@
                                 await deleteImageFromFirebase(currentUrl);
                             }
                             showFeedback(`${contentKey} image updated successfully!`, true);
+                            _clearDebugMessage();
 
                         } catch (error) {
-                            showFeedback(`Failed to upload ${contentKey} image: ${error.message}`, false);
-                            console.error(`Error uploading ${contentKey} image:`, error);
+                            displayDetailedError(error, `Gagal mengunggah gambar ${contentKey}.`);
                         }
                     });
                 });
@@ -1609,8 +1661,7 @@
             } catch (error) {
                 generalContentFields.innerHTML = '<p style="text-align:center; color:red;">Gagal memuat konten umum. Pastikan Firebase Security Rules sudah benar.</p>';
                 historyContentFields.innerHTML = '<p style="text-align:center; color:red;">Gagal memuat konten histori. Pastikan Firebase Security Rules sudah benar.</p>';
-                showFeedback('Gagal memuat konten situs. Periksa koneksi dan aturan Firebase.', false);
-                console.error('Error fetching site content:', error);
+                displayDetailedError(error, 'Gagal memuat konten situs. Periksa koneksi dan aturan Firebase.');
             }
         };
 
@@ -1644,10 +1695,10 @@
                 
                 await batch.commit();
                 showFeedback('Konten situs berhasil diperbarui.', true);
+                _clearDebugMessage();
                 fetchSiteContent(); // Refresh content after successful save
             } catch (error) {
-                showFeedback(`Gagal menyimpan konten situs: ${error.message}`, false);
-                console.error('Error updating site content:', error);
+                displayDetailedError(error, `Gagal menyimpan konten situs.`);
             }
         });
 
@@ -1663,10 +1714,10 @@
                 bannerPreview.src = bannerData.imageUrl || 'images/placeholder-banner.jpg';
                 bannerTextIdInput.value = bannerData.text_id || '';
                 bannerTextEnInput.value = bannerData.text_en || '';
+                _clearDebugMessage();
 
             } catch (error) {
-                showFeedback('Gagal memuat konten banner. Periksa koneksi dan aturan Firebase.', false);
-                console.error('Error fetching banner content:', error);
+                displayDetailedError(error, 'Gagal memuat konten banner. Periksa koneksi dan aturan Firebase.');
             }
         };
 
@@ -1694,10 +1745,10 @@
                 }
                 
                 showFeedback('Banner image berhasil diunggah.', true);
+                _clearDebugMessage();
                 fetchBannerContent(); // Refresh preview
             } catch (error) {
-                showFeedback(`Gagal mengunggah banner image: ${error.message}`, false);
-                console.error('Error uploading banner image:', error);
+                displayDetailedError(error, `Gagal mengunggah banner image.`);
             }
         });
 
@@ -1717,10 +1768,10 @@
                     await deleteImageFromFirebase(currentImageUrl);
                 }
                 showFeedback('Banner image berhasil dihapus.', true);
+                _clearDebugMessage();
                 fetchBannerContent(); // Refresh preview
             } catch (error) {
-                showFeedback(`Gagal menghapus banner image: ${error.message}`, false);
-                console.error('Error deleting banner image:', error);
+                displayDetailedError(error, `Gagal menghapus banner image.`);
             }
         });
 
@@ -1734,10 +1785,10 @@
                     text_en: text_en
                 }, { merge: true });
                 showFeedback('Teks banner berhasil disimpan.', true);
+                _clearDebugMessage();
                 fetchBannerContent();
             } catch (error) {
-                showFeedback(`Gagal menyimpan teks banner: ${error.message}`, false);
-                console.error('Error saving banner text:', error);
+                displayDetailedError(error, `Gagal menyimpan teks banner.`);
             }
         });
 
@@ -1749,6 +1800,7 @@
             adminUserForm.reset(); // Reset form on close
             adminEmailInput.readOnly = false; // Ensure email is editable for new user
             adminPasswordInput.required = true; // Ensure password is required for new user
+            _clearDebugMessage(); // Clear debug message when closing modal
         };
 
         addAdminBtn.addEventListener('click', () => {
@@ -1757,6 +1809,7 @@
             adminUserUidInput.value = ''; // Clear for new user
             adminEmailInput.readOnly = false; // Allow editing email for new users
             adminPasswordInput.required = true; // Password is required for new users
+            _clearDebugMessage(); // Clear debug message when opening modal
             openAdminUserModal();
         });
 
@@ -1771,6 +1824,7 @@
                 adminUsersTableBody.innerHTML = ''; // Clear existing rows
                 if (snapshot.empty) {
                     adminUsersTableBody.innerHTML = '<td colspan="4" style="text-align:center; padding: 2rem 0;">Tidak ada admin user.</td>';
+                    _clearDebugMessage();
                     return;
                 }
                 snapshot.forEach(doc => {
@@ -1790,24 +1844,30 @@
                     `;
                     adminUsersTableBody.innerHTML += row;
                 });
+                _clearDebugMessage();
 
                 // Add event listeners for edit/delete buttons
                 document.querySelectorAll('.edit-admin-btn').forEach(button => {
                     button.addEventListener('click', async () => {
                         const uid = button.dataset.uid;
-                        const userDoc = await db.collection('users').doc(uid).get();
-                        if (userDoc.exists) {
-                            const userData = userDoc.data();
-                            adminModalTitle.textContent = 'Edit Admin User';
-                            adminUserUidInput.value = uid;
-                            adminNameInput.value = userData.name || '';
-                            adminEmailInput.value = userData.email || '';
-                            adminEmailInput.readOnly = true; // Prevent changing email for existing users (security)
-                            adminPasswordInput.value = ''; // Clear password field
-                            adminPasswordInput.required = false; // Password not required for edit unless specified
-                            openAdminUserModal();
-                        } else {
-                            showFeedback('Admin user tidak ditemukan.', false);
+                        try {
+                            const userDoc = await db.collection('users').doc(uid).get();
+                            if (userDoc.exists) {
+                                const userData = userDoc.data();
+                                adminModalTitle.textContent = 'Edit Admin User';
+                                adminUserUidInput.value = uid;
+                                adminNameInput.value = userData.name || '';
+                                adminEmailInput.value = userData.email || '';
+                                adminEmailInput.readOnly = true; // Prevent changing email for existing users (security)
+                                adminPasswordInput.value = ''; // Clear password field
+                                adminPasswordInput.required = false; // Password not required for edit unless specified
+                                openAdminUserModal();
+                            } else {
+                                showFeedback('Admin user tidak ditemukan.', false);
+                            }
+                            _clearDebugMessage();
+                        } catch (error) {
+                            displayDetailedError(error, 'Gagal mengambil data admin user untuk diedit.');
                         }
                     });
                 });
@@ -1819,18 +1879,17 @@
                             try {
                                 await db.collection('users').doc(uid).delete();
                                 showFeedback('Admin user berhasil dihapus dari Firestore.', true);
+                                _clearDebugMessage();
                                 fetchAdminUsers(); // Re-fetch list
                             } catch (error) {
-                                showFeedback(`Gagal menghapus admin user: ${error.message}`, false);
-                                console.error('Error deleting admin user:', error);
+                                displayDetailedError(error, `Gagal menghapus admin user.`);
                             }
                         }
                     });
                 });
 
             } catch (error) {
-                showFeedback('Gagal memuat admin users. Periksa koneksi dan aturan Firebase.', false);
-                console.error('Error fetching admin users:', error);
+                displayDetailedError(error, 'Gagal memuat admin users. Periksa koneksi dan aturan Firebase.');
             }
         };
 
@@ -1889,9 +1948,9 @@
                 }
                 closeAdminUserModal();
                 fetchAdminUsers(); // Refresh list
+                _clearDebugMessage();
             } catch (error) {
-                showFeedback(`Gagal menyimpan admin user: ${error.message}`, false);
-                console.error('Error saving admin user:', error);
+                displayDetailedError(error, `Gagal menyimpan admin user.`);
                 // Handle specific errors like 'auth/email-already-in-use'
                 if (error.code === 'auth/email-already-in-use') {
                     showFeedback('Email ini sudah digunakan oleh akun lain.', false);
