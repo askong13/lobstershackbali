@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Login - Lobster Shack Bali</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <style>/* ... Salin SEMUA kode dari style.css sebelumnya di sini ... */</style>
 </head>
 <body>
     <div class="form-page-wrapper">
@@ -17,6 +17,21 @@
             <div id="form-error" class="form-message error hidden"></div>
         </div>
     </div>
-    <script type="module" src="assets/js/app.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+        const firebaseConfig = { /* ... Masukkan Konfigurasi Firebase Anda ... */ };
+        initializeApp(firebaseConfig);
+        const auth = getAuth();
+        
+        document.getElementById('login-form').addEventListener('submit', e => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => window.location.href = '/')
+                .catch(err => document.getElementById('form-error').textContent = err.message);
+        });
+    </script>
 </body>
 </html>
