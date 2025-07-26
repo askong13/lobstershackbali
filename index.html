@@ -1,71 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lobster Shack Bali</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+    <style>
+        :root{--font-heading:'Playfair Display',serif;--font-body:'Poppins',sans-serif;--color-primary:#D84B42;--color-secondary:#2D4C5E;--color-background:#F8F6F0;--color-surface:#FFFFFF;--color-text:#333333;--color-text-light:#6c757d;--color-border:#E0DACE;--shadow-sm:0 2px 8px rgba(45,76,94,.07);--shadow-md:0 4px 15px rgba(45,76,94,.12);--border-radius:12px;--transition-speed:.4s;--container-width:1240px}*,::after,::before{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth;font-size:16px}body{font-family:var(--font-body);background-color:var(--color-background);color:var(--color-text);line-height:1.8;-webkit-font-smoothing:antialiased;overflow-x:hidden}.container{width:100%;max-width:var(--container-width);margin:0 auto;padding:0 24px}.section{padding:6rem 0}.section-header{text-align:center;margin-bottom:4rem}.section-header .subtitle{color:var(--color-primary);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem;display:block}.section-header .title{font-family:var(--font-heading);font-size:clamp(2.5rem,5vw,3.5rem);font-weight:700;color:var(--color-secondary);line-height:1.2;margin-bottom:1rem}.btn{display:inline-flex;align-items:center;justify-content:center;gap:.75rem;font-family:var(--font-body);font-weight:600;padding:.875rem 2rem;border-radius:50px;border:2px solid transparent;cursor:pointer;text-decoration:none;transition:all var(--transition-speed) ease;background-color:var(--color-primary);color:var(--color-surface);text-align:center}.btn:hover{background-color:#b93e36;transform:translateY(-3px) scale(1.05);box-shadow:var(--shadow-md)}.main-header{background-color:rgba(255,255,255,.85);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);padding:1rem 0;box-shadow:var(--shadow-sm);position:sticky;top:0;z-index:1000}.main-header .container{display:flex;justify-content:space-between;align-items:center}.main-header .logo{height:55px}.nav-links{list-style:none;display:flex;gap:2.5rem}.nav-links a{text-decoration:none;font-weight:600;color:var(--color-secondary);position:relative;padding-bottom:.5rem}.nav-links a:after{content:"";position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:2px;background-color:var(--color-primary);transition:width var(--transition-speed) ease}.nav-links a.active:after,.nav-links a:hover:after{width:100%}.header-actions{display:flex;align-items:center;gap:1rem}.language-toggle{display:flex;background-color:#e9e5d9;border-radius:50px;padding:4px;border:1px solid var(--color-border)}.lang-btn{background:0 0;border:none;padding:.5rem .75rem;cursor:pointer;font-weight:600;color:var(--color-text-light);border-radius:50px;transition:all var(--transition-speed) ease}.lang-btn.active{background:var(--color-primary);color:#fff}.hero-section{position:relative}.hero-slider .swiper-slide{height:90vh;min-height:700px;display:flex;align-items:center;justify-content:center;background-size:cover;background-position:center}.hero-slider .slide-overlay{background:linear-gradient(rgba(45,76,94,.65),rgba(45,76,94,.65));position:absolute;top:0;left:0;width:100%;height:100%}.hero-content{position:relative;z-index:2;text-align:center;color:#fff;padding:0 1rem}.hero-content h1{font-family:var(--font-heading);font-size:clamp(3rem,7vw,5.5rem);text-shadow:2px 2px 8px rgba(0,0,0,.5)}.hero-content p{font-size:1.25rem;margin:1.5rem auto 2.5rem;max-width:600px;line-height:1.6}.timeline{position:relative;max-width:900px;margin:4rem auto 0}.timeline:after{content:"";position:absolute;width:3px;background-color:var(--color-border);top:0;bottom:0;left:50%;margin-left:-1.5px}.timeline-item{padding:10px 40px;position:relative;width:50%}.timeline-item.left{left:0}.timeline-item.right{left:50%}.timeline-item:after{content:"🦞";font-family:sans-serif;font-size:1rem;display:flex;align-items:center;justify-content:center;position:absolute;width:32px;height:32px;background-color:var(--color-primary);color:#fff;top:30px;border-radius:50%;z-index:1;box-shadow:0 0 0 4px var(--color-background)}.timeline-item.left:after{right:-17.5px}.timeline-item.right:after{left:-17.5px}.timeline-content{padding:1.5rem 2rem;background-color:var(--color-surface);border-radius:var(--border-radius);box-shadow:var(--shadow-sm)}.timeline-content .year{font-family:var(--font-heading);color:var(--color-primary);font-size:2rem}.timeline-content h3{font-size:1.3rem;color:var(--color-secondary);margin-top:.5rem}.menu-filters{display:flex;flex-wrap:wrap;justify-content:center;gap:1rem;margin-bottom:3rem}.filter-btn{background:0 0;border:2px solid var(--color-border);color:var(--color-text-light);font-weight:600;padding:.6rem 1.5rem;border-radius:50px;cursor:pointer;transition:all var(--transition-speed) ease}.filter-btn.active,.filter-btn:hover{background-color:var(--color-secondary);color:#fff;border-color:var(--color-secondary)}.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem}.menu-card{background:var(--color-surface);border-radius:var(--border-radius);overflow:hidden;box-shadow:var(--shadow-sm);transition:all var(--transition-speed) ease;display:flex;flex-direction:column}.menu-card:hover{transform:translateY(-10px);box-shadow:var(--shadow-md)}.menu-card-image{width:100%;height:240px;overflow:hidden}.menu-card-image img{width:100%;height:100%;-o-object-fit:cover;object-fit:cover;transition:transform var(--transition-speed) ease}.menu-card:hover .menu-card-image img{transform:scale(1.1)}.menu-card-content{padding:1.5rem;flex-grow:1;display:flex;flex-direction:column;text-align:center}.menu-card h3{font-family:var(--font-heading);color:var(--color-secondary);font-size:1.5rem}.menu-card-price{font-weight:700;color:var(--color-primary);font-size:1.375rem;margin-bottom:1rem}.menu-card .description{flex-grow:1;margin-bottom:1.5rem;color:var(--color-text-light)}.featured-slider .swiper-slide{width:340px}.gallery-section{background:var(--color-surface)}.gallery-grid{columns:4;-moz-columns:4;-webkit-columns:4;column-gap:1rem}.gallery-grid a{display:block;overflow:hidden;border-radius:8px;margin-bottom:1rem}.gallery-grid img{width:100%;display:block;transition:transform var(--transition-speed) ease}.gallery-grid a:hover img{transform:scale(1.05)}.main-footer{background-color:var(--color-secondary);color:rgba(255,255,255,.8);padding:4rem 0;text-align:center}.main-footer .logo{height:70px;margin-bottom:1.5rem;filter:brightness(0) invert(1)}.main-footer p{max-width:500px;margin:0 auto 1.5rem}.footer-socials{display:flex;justify-content:center;gap:1.5rem;list-style:none;margin-bottom:2rem}.footer-socials a{color:#fff;font-size:1.5rem}.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);z-index:2000;display:flex;justify-content:center;align-items:center;padding:1rem;opacity:0;visibility:hidden;transition:opacity var(--transition-speed) ease,visibility 0s var(--transition-speed)}.modal-overlay.visible{opacity:1;visibility:visible;transition-delay:0s}.modal-content{background:#fff;border-radius:var(--border-radius);width:100%;max-width:550px;max-height:90vh;overflow-y:auto;position:relative;transform:scale(.9);transition:transform var(--transition-speed) ease}.modal-overlay.visible .modal-content{transform:scale(1)}.modal-header{padding:1.5rem;border-bottom:1px solid var(--color-border);display:flex;justify-content:space-between;align-items:center}.modal-header h2{font-family:var(--font-heading);color:var(--color-secondary);font-size:1.5rem}.modal-close-btn{font-size:1.75rem;background:0 0;border:none;cursor:pointer;color:#aaa}.modal-body{padding:1.5rem 2rem}.form-group{margin-bottom:1.25rem}.form-group label{display:block;font-weight:600;margin-bottom:.5rem}.form-group input{width:100%;padding:.8rem 1rem;border-radius:8px;border:1px solid var(--color-border)}#address-map{height:200px;width:100%;margin-top:10px;border-radius:8px;background-color:#eee}.toast-notification{position:fixed;bottom:2rem;right:2rem;background-color:var(--color-secondary);color:#fff;padding:1rem 1.5rem;border-radius:var(--border-radius);box-shadow:var(--shadow-md);z-index:3000;display:flex;align-items:center;gap:1rem;transform:translateX(calc(100% + 2rem));transition:transform .5s ease-in-out}.toast-notification.show{transform:translateX(0)}.toast-notification.error{background-color:var(--color-primary)}.toast-notification.success{background-color:#28a745}.toast-notification i{font-size:1.5rem}@media (max-width:768px){.nav-links{display:none}.timeline:after{left:31px}.timeline-item{width:100%;padding-left:70px;padding-right:25px}.timeline-item.left,.timeline-item.right{left:0%}.timeline-item.left:after,.timeline-item.right:after{left:15px}.gallery-grid{columns:2;-moz-columns:2;-webkit-columns:2}}@media (max-width:576px){.gallery-grid{columns:1;-moz-columns:1;-webkit-columns:1}}
+    </style>
+</head>
+<body>
+
+    <header class="main-header">...</header>
+    <main>...</main>
+    <footer class="main-footer">...</footer>
+    <div id="order-modal" class="modal-overlay">...</div>
+    <div id="toast" class="toast-notification">...</div>
+
+
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initMaps" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places" async defer></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
 
     <script>
         'use strict';
-        
-        // Fungsi untuk mengambil konfigurasi dan memulai aplikasi
-        async function initializeApp() {
-            try {
-                // 1. Ambil konfigurasi dari Netlify Function
-                const response = await fetch('/.netlify/functions/get-firebase-config');
-                const firebaseConfig = await response.json();
 
-                // 2. Inisialisasi Firebase dengan konfigurasi yang didapat
-                firebase.initializeApp(firebaseConfig);
-                const db = firebase.firestore();
+        // ==========================================================================
+        // LANGKAH 1: KONFIGURASI & INISIALISASI FIREBASE
+        // ==========================================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
+            authDomain: "lobster-shack-bali.firebaseapp.com",
+            databaseURL: "https://lobster-shack-bali-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "lobster-shack-bali",
+            storageBucket: "lobster-shack-bali.firebasestorage.app",
+            messagingSenderId: "42452974733",
+            appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
+        };
 
-                // 3. Jalankan sisa logika aplikasi setelah Firebase siap
-                runApp(db);
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-            } catch (error) {
-                console.error("Gagal menginisialisasi Firebase:", error);
-                document.body.innerHTML = "<h1>Error: Gagal memuat konfigurasi. Silakan coba lagi nanti.</h1>";
-            }
-        }
-
-        function runApp(db) {
-            // Seluruh kode JavaScript Anda dari `DOMContentLoaded` sebelumnya
-            // dipindahkan ke dalam fungsi ini.
+        // ==========================================================================
+        // LANGKAH 2: JALANKAN APLIKASI SETELAH DOM SIAP
+        // ==========================================================================
+        document.addEventListener('DOMContentLoaded', () => {
             
+            // Variabel global untuk state aplikasi
             let currentLanguage = localStorage.getItem('preferredLanguage') || 'id';
-            let siteData = {};
-            
-            // --- FUNGSI RENDER ---
-            function renderContent() {
-                // ... (fungsi renderContent sama seperti sebelumnya)
-            }
-            // ... (semua fungsi render lainnya juga sama)
+            let siteData = {}; // Akan diisi data dari Firestore
+            let currentlyOrderingProductId = null;
 
-            // --- FUNGSI UTAMA PENGAMBIL DATA ---
-            async function fetchAllData() {
-                const collections = ['products', 'categories', 'content', 'banners', 'gallery_images', 'history'];
-                const promises = collections.map(col => db.collection(col).get());
-                
-                // ... (sisa fungsi fetchAllData sama seperti sebelumnya)
-                // ... (pastikan semua referensi `db` sudah benar)
-                
-                // Setelah semua data siap, render seluruh halaman
-                renderAll();
-            }
-
+            // --- FUNGSI RENDER (menampilkan data ke HTML) ---
             function renderAll() {
-                 // ... (fungsi renderAll sama seperti sebelumnya)
+                // Render teks umum
+                document.querySelectorAll('[data-lang-key]').forEach(el => {
+                    const key = el.dataset.langKey;
+                    const content = siteData.content[key];
+                    if (content) el.textContent = content[`text_${currentLanguage}`] || content.text_id;
+                });
+                document.title = siteData.content?.hero_title?.[`text_${currentLanguage}`] || 'Lobster Shack Bali';
+
+                // Render banner
+                const bannerWrapper = document.getElementById('hero-slider-wrapper');
+                if (bannerWrapper) {
+                    bannerWrapper.innerHTML = siteData.banners.map(banner => `<div class="swiper-slide" style="background-image: url('${banner.image_url}');"><div class="slide-overlay"></div></div>`).join('');
+                    new Swiper('.hero-slider', { loop: true, effect: 'fade', autoplay: { delay: 5000 } });
+                }
+
+                // Render history
+                const timeline = document.getElementById('history-timeline');
+                if (timeline) {
+                    timeline.innerHTML = siteData.history.map((item, index) => `
+                        <div class="timeline-item ${index % 2 === 0 ? 'left' : 'right'}" data-aos="fade-up">
+                            <div class="timeline-content">
+                                <div class="year">${item.year}</div>
+                                <h3>${item[`title_${currentLanguage}`] || item.title_id}</h3>
+                                <p>${item[`text_${currentLanguage}`] || item.text_id}</p>
+                            </div>
+                        </div>`).join('');
+                }
+
+                // Render menu dan filter
+                const featuredWrapper = document.getElementById('featured-menu-wrapper');
+                const grid = document.getElementById('menu-grid');
+                const filters = document.getElementById('menu-filters');
+                if (grid) {
+                    let featuredHTML = '';
+                    let gridHTML = '';
+                    siteData.products.forEach(p => {
+                        const cardHTML = `
+                            <div class="menu-card" data-category="${p.category_name}">
+                                <div class="menu-card-image"><img src="${p.imageUrl}" alt="${p.name_en}"></div>
+                                <div class="menu-card-content">
+                                    <h3>${p[`name_${currentLanguage}`] || p.name_id}</h3>
+                                    <p class="menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(p.price)}</p>
+                                    <p class="description">${(p[`description_${currentLanguage}`] || p.description_id).substring(0, 100)}...</p>
+                                    <button class="btn order-now-btn" data-product-id="${p.id}"><span data-lang-key="modal_order_now">${siteData.content.modal_order_now[`text_${currentLanguage}`]}</span></button>
+                                </div>
+                            </div>`;
+                        gridHTML += cardHTML;
+                        if (p.is_featured) featuredHTML += `<div class="swiper-slide">${cardHTML}</div>`;
+                    });
+                    featuredWrapper.innerHTML = featuredHTML;
+                    grid.innerHTML = gridHTML;
+                    filters.innerHTML = '<button class="filter-btn active" data-filter="all">All</button>' + siteData.categories.map(c => `<button class="filter-btn" data-filter="${c.name}">${c.name}</button>`).join('');
+                    new Swiper('.featured-slider', { slidesPerView: 'auto', spaceBetween: 30, grabCursor: true });
+                }
+
+                // Render galeri
+                const galleryGrid = document.getElementById('gallery-grid');
+                if (galleryGrid) {
+                    galleryGrid.innerHTML = siteData.gallery_images.map(img => `
+                        <a href="${img.image_url}" class="glightbox" data-gallery="our-gallery" data-title="${img[`caption_${currentLanguage}`] || img.caption_id}">
+                            <img src="${img.image_url}" alt="${img.caption_en}">
+                        </a>`).join('');
+                    GLightbox({ selector: '.glightbox' });
+                }
+                
+                // Inisialisasi ulang AOS setelah render
+                AOS.init({ duration: 800, once: true, offset: 50 });
             }
 
-            // ... (Semua fungsi dan event listener lainnya dipindahkan ke sini)
+            // --- FUNGSI UTAMA PENGAMBIL DATA DARI FIRESTORE ---
+            async function fetchAllData() {
+                try {
+                    const collections = ['products', 'categories', 'content', 'banners', 'gallery_images', 'history'];
+                    const promises = collections.map(col => db.collection(col).get());
+                    
+                    const [productsSnap, categoriesSnap, contentSnap, bannersSnap, gallerySnap, historySnap] = await Promise.all(promises);
 
+                    siteData.products = productsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    siteData.categories = categoriesSnap.docs.map(doc => doc.data()).sort((a,b) => a.id - b.id);
+                    siteData.banners = bannersSnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
+                    siteData.gallery_images = gallerySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
+                    siteData.history = historySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
+                    
+                    siteData.content = {};
+                    contentSnap.docs.forEach(doc => { siteData.content[doc.id] = doc.data(); });
+
+                    renderAll();
+                } catch (error) {
+                    console.error("Gagal mengambil data dari Firestore:", error);
+                    document.body.innerHTML = "<h1>Error: Gagal mengambil data dari database.</h1>";
+                }
+            }
+
+            // --- INISIALISASI & EVENT LISTENERS ---
             fetchAllData();
-            // ... (setup event listeners, dll.)
-        }
 
-        // Mulai aplikasi
-        initializeApp();
+            // Language switcher
+            document.querySelector('.language-toggle').addEventListener('click', (e) => {
+                if (e.target.matches('.lang-btn')) {
+                    currentLanguage = e.target.dataset.lang;
+                    localStorage.setItem('preferredLanguage', currentLanguage);
+                    renderAll(); // Render ulang semua dengan bahasa baru
+                }
+            });
+            // ... (Event listener lain seperti untuk modal, filter, dll bisa ditambahkan di sini)
+        });
+
+        // --- GOOGLE MAPS ---
+        function initMaps() { /* Fungsi ini bisa dibiarkan kosong karena peta akan diinisialisasi saat modal terbuka */ }
     </script>
 </body>
 </html>
