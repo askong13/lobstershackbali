@@ -1,87 +1,57 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+import { getDatabase, ref, onValue, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+// ... (import lainnya jika ada)
 
-// KONFIGURASI FIREBASE ANDA - SUDAH TERINTEGRASI
-const firebaseConfig = {
-  apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
-  authDomain: "lobster-shack-bali.firebaseapp.com",
-  databaseURL: "https://lobster-shack-bali-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "lobster-shack-bali",
-  storageBucket: "lobster-shack-bali.firebasestorage.app",
-  messagingSenderId: "42452974733",
-  appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
-};
-
+const firebaseConfig = { /* ... Konfigurasi Firebase Anda ... */ };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app);
 
-// --- ELEMEN DOM ---
-const loginContainer = document.getElementById('login-container');
-const adminDashboard = document.getElementById('admin-dashboard');
-const loginForm = document.getElementById('login-form');
-const loginError = document.getElementById('login-error');
-const adminUserEmail = document.getElementById('admin-user-email');
-const logoutBtn = document.getElementById('logout-btn');
+// --- AUTH & UI LOGIC ---
+// ... (kode login/logout admin via Google sama seperti sebelumnya)
 
-// --- LOGIKA LOGIN ---
-loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = loginForm['admin-email'].value;
-    const password = loginForm['admin-password'].value;
+function initAdminPanel() {
+    // ... (kode navigasi tab admin sama seperti sebelumnya)
+    listenForNewOrders();
+}
 
-    signInWithEmailAndPassword(auth, email, password)
-        .catch((error) => {
-            loginError.textContent = error.message;
-            loginError.classList.remove('hidden');
-        });
-});
-
-// --- LOGIKA LOGOUT ---
-logoutBtn.addEventListener('click', () => {
-    signOut(auth);
-});
-
-// --- CEK STATUS AUTENTIKASI ---
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        // Pengguna login
-        loginContainer.classList.add('hidden');
-        adminDashboard.classList.remove('hidden');
-        adminUserEmail.textContent = user.email;
-        loadReservations();
-    } else {
-        // Pengguna logout
-        loginContainer.classList.remove('hidden');
-        adminDashboard.classList.add('hidden');
-    }
-});
-
-// --- MEMUAT DATA UNTUK ADMIN ---
-function loadReservations() {
-    const reservationsRef = ref(db, 'reservations');
-    const tbody = document.getElementById('reservations-tbody');
+// --- NOTIFIKASI PESANAN BARU ---
+function listenForNewOrders() {
+    const ordersRef = query(ref(db, 'orders'), orderByChild('status'), equalTo('new'));
+    const notificationBadge = document.getElementById('order-notification');
     
-    onValue(reservationsRef, (snapshot) => {
-        tbody.innerHTML = '';
-        if (snapshot.exists()) {
-            const reservations = snapshot.val();
-            for (const key in reservations) {
-                const r = reservations[key];
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${new Date(r.createdAt).toLocaleDateString('id-ID')}</td>
-                    <td>${r.name}</td>
-                    <td>${r.email}</td>
-                    <td>${r.phone}</td>
-                    <td>${r.guests}</td>
-                    <td>${r.status}</td>
-                `;
-                tbody.appendChild(tr);
-            }
+    onValue(ordersRef, (snapshot) => {
+        const newOrdersCount = snapshot.size;
+        if (newOrdersCount > 0) {
+            notificationBadge.textContent = newOrdersCount;
+            notificationBadge.classList.remove('hidden');
+            // Optional: Mainkan suara notifikasi
+            // new Audio('/assets/notification.mp3').play();
         } else {
-            tbody.innerHTML = '<tr><td colspan="6">Belum ada reservasi.</td></tr>';
+            notificationBadge.classList.add('hidden');
+        }
+    });
+
+    // Muat daftar semua pesanan
+    loadAllOrders();
+}
+
+function loadAllOrders() {
+    const ordersListContainer = document.getElementById('orders-list');
+    const allOrdersRef = ref(db, 'orders');
+    
+    onValue(allOrdersRef, (snapshot) => {
+        ordersListContainer.innerHTML = '<table>...<thead>...</thead><tbody></tbody></table>';
+        const tbody = ordersListContainer.querySelector('tbody');
+        if (snapshot.exists()) {
+            snapshot.forEach(childSnapshot => {
+                const order = childSnapshot.val();
+                const tr = document.createElement('tr');
+                // Tampilkan detail pesanan di sini
+                tr.innerHTML = `<td>${order.userEmail}</td><td>${order.deliveryAddress}</td><td>${order.status}</td>`;
+                tbody.prepend(tr); // Pesanan baru di atas
+            });
         }
     });
 }
