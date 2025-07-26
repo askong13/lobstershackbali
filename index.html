@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lobster Shack Bali - Live & Wild-Caught Lobster</title>
     <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="main-header">
@@ -27,14 +30,53 @@
     </header>
 
     <main>
-        <section class="hero-section">
-            <div class="container">
-                <h1>Fresh Lobster, Straight from the Ocean</h1>
-                <p>Experience the best wild-caught lobster in Bali.</p>
+        <section class="hero-section" style="background-image: url('https://images.unsplash.com/photo-1559742811-822873691375?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center; color: white; text-align: center; padding: 120px 20px;">
+            <div class="container" style="background-color: rgba(0,0,0,0.5); padding: 40px; border-radius: 8px;">
+                <h1 style="font-size: 4rem; font-family: 'Poppins', sans-serif;">Fresh Lobster, Straight from the Ocean</h1>
+                <p style="font-size: 1.2rem; font-family: 'Lora', serif; margin-top: 10px;">Rasakan pengalaman menyantap lobster tangkapan liar terbaik di Bali.</p>
+                <a href="/menu.html" class="btn" style="margin-top: 30px;">Lihat Menu Kami</a>
             </div>
         </section>
 
-        <section class="section">
+        <section id="our-promise" class="section" style="background-color: #fff;">
+            <div class="container">
+                <h2 class="section-title">Janji Kami</h2>
+                <div class="promise-grid">
+                    <div class="promise-item">
+                        <div class="icon">🦞</div>
+                        <h3>100% Tangkapan Liar</h3>
+                        <p>Kami hanya menyajikan lobster segar yang ditangkap secara etis dari perairan laut dalam, bukan hasil ternak.</p>
+                    </div>
+                    <div class="promise-item">
+                        <div class="icon">🌿</div>
+                        <h3>Bumbu Lokal Terbaik</h3>
+                        <p>Setiap hidangan diracik dengan rempah-rempah asli Bali untuk memberikan cita rasa yang tak terlupakan.</p>
+                    </div>
+                    <div class="promise-item">
+                        <div class="icon">👨‍🍳</div>
+                        <h3>Dimasak oleh Profesional</h3>
+                        <p>Chef kami berpengalaman dalam mengolah hidangan laut untuk menjamin kualitas dan kelezatan di setiap gigitan.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="our-story" class="section">
+            <div class="container story-container">
+                <div class="story-image">
+                    <img src="https://images.unsplash.com/photo-1599052945244-a6a8e5a7b370?q=80&w=1964&auto=format&fit=crop" alt="Suasana Lobster Shack Bali" style="width: 100%; border-radius: 12px; box-shadow: 0 15px 40px rgba(0,0,0,0.1);">
+                </div>
+                <div class="story-content">
+                    <h2 class="section-title" style="text-align: left;">Dari Nelayan, Untuk Anda</h2>
+                    <p style="font-size: 1.1rem; font-style: italic; color: #6c757d;">
+                        "Berawal dari kecintaan kami terhadap laut dan hasil alamnya, Lobster Shack Bali didirikan dengan satu misi: menyajikan hidangan laut paling segar langsung ke meja Anda. Kami bekerja sama dengan nelayan lokal untuk memastikan setiap lobster yang kami sajikan adalah yang terbaik."
+                    </p>
+                    <a href="/reservation.html" class="btn secondary" style="margin-top: 20px;">Reservasi Sekarang</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="background-color: var(--color-sand-bg);">
             <div class="container">
                 <h2 class="section-title">Menu Unggulan Kami</h2>
                 <div id="featured-menu-container" class="menu-grid">
@@ -45,14 +87,21 @@
 
     <footer class="main-footer">
         <div class="container">
-            <p>&copy; <span id="current-year">2025</span> Lobster Shack Bali.</p>
+            <p>&copy; <span id="current-year"></span> Lobster Shack Bali. All Rights Reserved.</p>
         </div>
     </footer>
 
     <script type="module" src="/assets/js/app.js"></script>
     <script>
-        // Script kecil untuk tahun footer
+        // Script kecil untuk tahun footer dan mengupdate jumlah keranjang saat halaman dimuat
         document.getElementById('current-year').textContent = new Date().getFullYear();
+        document.addEventListener('DOMContentLoaded', () => {
+            const cart = JSON.parse(localStorage.getItem('lobsterCart')) || [];
+            const cartCountEl = document.getElementById('cart-count');
+            if(cartCountEl) {
+                cartCountEl.textContent = cart.length;
+            }
+        });
     </script>
 </body>
 </html>
