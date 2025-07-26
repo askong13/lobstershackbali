@@ -11,26 +11,28 @@
       <h1 class="section-title">Admin Panel</h1>
       
       <div id="login-container" class="form-container">
-        <form id="login-form">
-          <div class="form-group"><label for="admin-email">Email</label><input type="email" id="admin-email" required></div>
-          <div class="form-group"><label for="admin-password">Password</label><input type="password" id="admin-password" required></div>
-          <button type="submit" class="btn">Login</button>
-        </form>
+        <p>Silakan login dengan akun Google yang terdaftar sebagai admin.</p>
+        <button id="google-login-btn" class="btn google-btn">Login with Google</button>
         <div id="login-error" class="form-message error hidden"></div>
       </div>
 
       <div id="admin-dashboard" class="hidden">
-        <p>Selamat datang, <span id="admin-user-email"></span>!</p>
-        <button id="logout-btn" class="btn">Logout</button>
-        <hr style="margin: 20px 0;">
-        <h2>Reservasi Masuk</h2>
-        <div id="reservations-list">
-          <table>
-            <thead><tr><th>Tanggal</th><th>Nama</th><th>Email</th><th>Telepon</th><th>Orang</th><th>Status</th></tr></thead>
-            <tbody id="reservations-tbody"></tbody>
-          </table>
+        <div class="admin-header">
+            <p>Welcome, <span id="admin-user-email"></span></p>
+            <button id="logout-btn" class="btn">Logout</button>
         </div>
-      </div>
+        
+        <nav class="admin-nav">
+          <button data-target="orders-panel" class="active">
+            Pesanan Masuk <span id="order-notification" class="notification-badge hidden"></span>
+          </button>
+          </nav>
+
+        <div id="orders-panel" class="admin-panel active">
+          <h2>Pesanan Masuk</h2>
+          <div id="orders-list"></div>
+        </div>
+        </div>
     </div>
   </main>
   <script type="module" src="assets/js/admin.js"></script>
