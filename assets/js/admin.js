@@ -1,213 +1,137 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - Lobster Shack Bali</title>
-    
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@400;500&display=swap');
-        :root {
-            --font-heading: 'Poppins', sans-serif; --font-body: 'Lora', serif;
-            --color-dark-blue: #2D4C5E; --color-lobster-red: #D84B42;
-            --color-white: #FFFFFF; --color-grey-light: #f8f9fa;
-            --color-grey-dark: #6c757d; --color-border: #dee2e6;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: var(--font-body); background-color: var(--color-grey-light); color: #333; }
-        .hidden { display: none !important; }
+document.addEventListener('DOMContentLoaded', () => {
+    // Cek apakah ada token yang tersimpan
+    const token = localStorage.getItem('adminToken');
+    if (token) {
+        showDashboard();
+        fetchOrders(token);
+    } else {
+        showLoginPage();
+    }
 
-        /* Halaman Login */
-        .login-page-wrapper { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: var(--color-dark-blue); }
-        .login-container { background: var(--color-white); padding: 40px 50px; border-radius: 12px; box-shadow: var(--shadow-sm); text-align: center; max-width: 450px; }
-        .login-container h1 { font-size: 1.8rem; color: var(--color-dark-blue); margin-bottom: 10px; }
-        .login-container p { color: var(--color-grey-dark); margin-bottom: 30px; }
-        .btn { font-family: var(--font-heading); font-weight: 600; padding: 12px 25px; border-radius: 8px; border: none; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 100%; }
-        .google-btn { background-color: #4285F4; color: white; }
-        .google-btn:hover { background-color: #357ae8; }
-        .google-btn svg { background-color: white; border-radius: 50%; padding: 2px; }
-        .form-message.error { color: var(--color-lobster-red); margin-top: 15px; }
-        
-        /* Layout Dashboard */
-        .admin-layout { display: flex; min-height: 100vh; }
-        .admin-sidebar { width: 260px; background-color: var(--color-dark-blue); color: var(--color-white); padding: 30px 20px; display: flex; flex-direction: column; }
-        .sidebar-header { text-align: center; margin-bottom: 40px; }
-        .admin-nav button { display: block; width: 100%; text-align: left; padding: 15px; background: transparent; border: none; color: #bdc8d1; font-family: var(--font-heading); font-size: 1rem; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; }
-        .admin-nav button.active { background-color: var(--color-lobster-red); color: var(--color-white); font-weight: 600; }
-        .admin-nav .notification-badge { background-color: var(--color-white); color: var(--color-lobster-red); border-radius: 50%; padding: 2px 8px; font-size: 0.8rem; margin-left: 10px; }
-        .sidebar-footer { margin-top: auto; }
-        #logout-btn { background-color: rgba(255, 255, 255, 0.1); color: var(--color-white); }
-        
-        /* Konten Utama Dashboard */
-        .admin-main-content { flex-grow: 1; padding: 40px; overflow-y: auto; }
-        .main-header-content { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .main-header-content h1 { font-size: 2rem; }
-        .content-panel.active { display: block; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    // Tambahkan event listeners
+    const loginForm = document.getElementById('admin-login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleAdminLogin);
+    }
 
-        /* Tabel Pesanan */
-        .orders-table { width: 100%; border-collapse: collapse; background: var(--color-white); box-shadow: var(--shadow-sm); border-radius: 8px; overflow: hidden; }
-        .orders-table th, .orders-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--color-border); }
-        .orders-table th { background-color: var(--color-grey-light); font-family: var(--font-heading); font-weight: 600; }
-        .status-badge { padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; text-transform: capitalize; }
-        .status-badge.new { background-color: #ffe0e6; color: #c92a2a; }
-    </style>
-</head>
-<body>
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
+    }
+});
 
-    <div id="login-page" class="login-page-wrapper">
-        <div class="login-container">
-            <h1>Lobster Shack</h1>
-            <p>Admin Dashboard</p>
-            <button id="google-login-btn" class="btn google-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.06-6.06C9.84,6.053,6.306,10.121,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.574l6.19,5.238C42.022,35.637,44,30.138,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
-                Login with Google
-            </button>
-            <div id="login-error" class="form-message error hidden"></div>
-        </div>
-    </div>
+// UI-related functions
+const showDashboard = () => {
+    document.getElementById('admin-login-page').classList.add('hidden');
+    document.getElementById('admin-dashboard').classList.remove('hidden');
+};
 
-    <div id="admin-dashboard" class="admin-layout hidden">
-        <aside class="admin-sidebar">
-            <div class="sidebar-header"><h2>Admin Panel</h2></div>
-            <nav class="admin-nav">
-                <button data-target="orders-panel" class="active">
-                    Pesanan Masuk 
-                    <span id="order-notification" class="notification-badge hidden"></span>
-                </button>
-            </nav>
-            <div class="sidebar-footer">
-                <button id="logout-btn" class="btn">Logout</button>
-            </div>
-        </aside>
-        <main class="admin-main-content">
-            <header class="main-header-content">
-                <h1 id="panel-title">Pesanan Masuk</h1>
-                <p id="admin-user-email"></p>
-            </header>
-            <div id="orders-panel" class="content-panel active">
-                <div id="orders-list"><p>Memuat data pesanan...</p></div>
-            </div>
-        </main>
-    </div>
+const showLoginPage = () => {
+    document.getElementById('admin-login-page').classList.remove('hidden');
+    document.getElementById('admin-dashboard').classList.add('hidden');
+};
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-        import { getDatabase, ref, onValue, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
-        import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+async function handleAdminLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('admin-email').value;
+    const password = document.getElementById('admin-password').value;
+    const errorEl = document.getElementById('admin-login-error');
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyADCv-AX09lIYq6Gr7Gm56rChp4kS0J08Q",
-            authDomain: "lobster-shack-bali.firebaseapp.com",
-            databaseURL: "https://lobster-shack-bali-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "lobster-shack-bali",
-            storageBucket: "lobster-shack-bali.appspot.com",
-            messagingSenderId: "42452974733",
-            appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
-        };
+    try {
+        const response = await fetch('/api/admin-login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+        });
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const auth = getAuth(app);
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message);
 
-        const loginPage = document.getElementById('login-page');
-        const adminDashboard = document.getElementById('admin-dashboard');
-        
-        onAuthStateChanged(auth, user => {
-            if (user) {
-                checkAdminAuthorization(user);
-            } else {
-                loginPage.classList.remove('hidden');
-                adminDashboard.classList.add('hidden');
+        // Jika berhasil, simpan token ke local storage
+        localStorage.setItem('adminToken', result.token);
+        localStorage.setItem('adminEmail', email);
+
+        // Tampilkan dashboard dan ambil data
+        showDashboard();
+        fetchOrders(result.token);
+
+    } catch (error) {
+        errorEl.textContent = error.message;
+        errorEl.classList.remove('hidden');
+    }
+}
+
+function handleLogout() {
+    // Hapus token dan email dari local storage
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('adminEmail');
+    // Tampilkan halaman login
+    showLoginPage();
+}
+
+async function fetchOrders(token) {
+    const ordersList = document.getElementById('orders-list');
+    const userEmailEl = document.getElementById('admin-user-email');
+
+    userEmailEl.textContent = localStorage.getItem('adminEmail') || '';
+    ordersList.innerHTML = '<p>Mengambil data pesanan...</p>';
+
+    try {
+        const response = await fetch('/api/get-orders', {
+            headers: {
+                // Kirim token untuk otorisasi
+                'Authorization': `Bearer ${token}`
             }
         });
 
-        document.getElementById('google-login-btn').addEventListener('click', () => {
-            signInWithPopup(auth, new GoogleAuthProvider()).catch(error => {
-                document.getElementById('login-error').textContent = `Login Gagal: ${error.code}`;
-                document.getElementById('login-error').classList.remove('hidden');
-            });
-        });
-
-        document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
-
-        function checkAdminAuthorization(user) {
-            get(ref(db, 'authorized_admins/' + user.uid)).then(snapshot => {
-                if (snapshot.exists()) {
-                    loginPage.classList.add('hidden');
-                    adminDashboard.classList.remove('hidden');
-                    document.getElementById('admin-user-email').textContent = user.email;
-                    initAdminPanel();
-                } else {
-                    document.getElementById('login-error').textContent = "Akses Ditolak. Anda bukan admin.";
-                    document.getElementById('login-error').classList.remove('hidden');
-                    signOut(auth);
-                }
-            });
+        if (response.status === 401 || response.status === 403) {
+            // Jika token tidak valid atau expired
+            handleLogout();
+            return;
         }
 
-        function initAdminPanel() {
-            listenForNewOrders();
-        }
+        const orders = await response.json();
 
-        async function loadAllOrders() {
-            const ordersListContainer = document.getElementById('orders-list');
-            const allOrdersQuery = query(ref(db, 'orders'), orderByChild('timestamp'));
-            
-            // Ambil semua data produk sekali untuk referensi
-            const productsSnapshot = await get(ref(db, 'products'));
-            const productsData = productsSnapshot.val() || {};
+        // Render data pesanan ke dalam tabel
+        renderOrdersTable(orders);
 
-            onValue(allOrdersQuery, (snapshot) => {
-                if (!snapshot.exists()) {
-                    ordersListContainer.innerHTML = '<p>Belum ada pesanan masuk.</p>';
-                    return;
-                }
+    } catch (error) {
+        ordersList.innerHTML = `<p class="error">Gagal mengambil data pesanan.</p>`;
+    }
+}
 
-                let tableHTML = `<table class="orders-table"><thead><tr><th>Tanggal</th><th>Email Pemesan</th><th>Produk</th><th>Alamat</th><th>Status</th></tr></thead><tbody>`;
-                
-                let orders = [];
-                snapshot.forEach(childSnapshot => {
-                    orders.push({ key: childSnapshot.key, ...childSnapshot.val() });
-                });
-                
-                orders.reverse().forEach(order => {
-                    const productName = productsData[order.productId] ? productsData[order.productId].name_en : 'Produk Tidak Dikenal';
-                    tableHTML += `
-                        <tr>
-                            <td>${new Date(order.timestamp).toLocaleString('id-ID')}</td>
-                            <td>${order.userEmail || 'N/A'}</td>
-                            <td>${productName}</td>
-                            <td>${order.deliveryAddress || 'N/A'}</td>
-                            <td><span class="status-badge ${order.status}">${order.status}</span></td>
-                        </tr>
-                    `;
-                });
-                
-                tableHTML += `</tbody></table>`;
-                ordersListContainer.innerHTML = tableHTML;
-            });
-        }
+function renderOrdersTable(orders) {
+    const container = document.getElementById('orders-list');
+    if (Object.keys(orders).length === 0) {
+        container.innerHTML = '<p>Belum ada pesanan masuk.</p>';
+        return;
+    }
 
-        function listenForNewOrders() {
-            const newOrdersQuery = query(ref(db, 'orders'), orderByChild('status'), equalTo('new'));
-            const notificationBadge = document.getElementById('order-notification');
-            
-            onValue(newOrdersQuery, (snapshot) => {
-                const newOrdersCount = snapshot.size;
-                if (newOrdersCount > 0) {
-                    notificationBadge.textContent = newOrdersCount;
-                    notificationBadge.classList.remove('hidden');
-                } else {
-                    notificationBadge.classList.add('hidden');
-                }
-            });
-            
-            // Panggil loadAllOrders di sini agar daftar pesanan selalu ter-update
-            loadAllOrders();
-        }
+    let tableHTML = `<table class="orders-table">
+        <thead>
+            <tr>
+                <th>Tanggal</th>
+                <th>Email Pemesan</th>
+                <th>Alamat</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>`;
 
-    </script>
-</body>
-</html>
+    // Urutkan pesanan dari yang terbaru
+    const sortedOrders = Object.values(orders).sort((a, b) => b.timestamp - a.timestamp);
+
+    sortedOrders.forEach(order => {
+        tableHTML += `
+            <tr>
+                <td>${new Date(order.timestamp).toLocaleString('id-ID')}</td>
+                <td>${order.userEmail || 'N/A'}</td>
+                <td>${order.deliveryAddress || 'N/A'}</td>
+                <td><span class="status-badge ${order.status}">${order.status}</span></td>
+            </tr>
+        `;
+    });
+
+    tableHTML += `</tbody></table>`;
+    container.innerHTML = tableHTML;
+}
