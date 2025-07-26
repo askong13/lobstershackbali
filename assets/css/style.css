@@ -1,0 +1,90 @@
+/* LOBSTER SHACK - PROFESSIONAL STYLESHEET */
+
+/* Import Fonts dari Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Poppins:wght@400;600;700&display=swap');
+
+/* Variabel Desain Global */
+:root {
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Lora', serif;
+  --color-dark-blue: #2D4C5E;
+  --color-lobster-red: #D84B42;
+  --color-sand-bg: #F4F1E8;
+  --color-light-water: #7BC8D3;
+  --color-text: #333333;
+  --color-white: #FFFFFF;
+  --color-border: #e0dccc;
+  --color-success: #28a745;
+  --color-error: #dc3545;
+}
+
+/* Reset & Aturan Dasar */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-sand-bg);
+  color: var(--color-text);
+  line-height: 1.7;
+  font-size: 16px;
+  background-image: url('https://www.transparenttextures.com/patterns/light-paper-fibers.png');
+}
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+h1, h2, h3 { font-family: var(--font-heading); color: var(--color-dark-blue); font-weight: 700; line-height: 1.2; }
+a { text-decoration: none; color: var(--color-lobster-red); transition: color 0.3s ease; }
+a:hover { color: var(--color-dark-blue); }
+.hidden { display: none !important; }
+
+/* Header & Navigasi */
+.main-header { background-color: var(--color-white); padding: 15px 0; border-bottom: 2px solid var(--color-border); position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.main-header .container { display: flex; justify-content: space-between; align-items: center; }
+.logo { height: 50px; width: auto; }
+.main-nav ul { list-style: none; display: flex; gap: 30px; }
+.main-nav a { font-family: var(--font-heading); font-weight: 600; color: var(--color-dark-blue); font-size: 1rem; }
+.header-actions { display: flex; align-items: center; gap: 20px; }
+.lang-switcher a { font-family: var(--font-heading); font-weight: 400; color: var(--color-light-water); padding: 5px; }
+.lang-switcher a.active { font-weight: 700; color: var(--color-dark-blue); border-bottom: 2px solid var(--color-lobster-red); }
+.btn { font-family: var(--font-heading); background-color: var(--color-lobster-red); color: var(--color-white); padding: 12px 25px; border-radius: 5px; font-weight: 600; display: inline-block; transition: background-color 0.3s ease, transform 0.2s ease; border: none; cursor: pointer; }
+.btn:hover { background-color: #b93e36; color: var(--color-white); transform: translateY(-2px); }
+
+/* Sections & Hero */
+.section { padding: 80px 0; }
+.section-title { text-align: center; font-size: 2.5rem; margin-bottom: 60px; }
+.hero { padding: 80px 0; text-align: center; background: url('https://images.unsplash.com/photo-1590134439032-4740a133e031?q=80&w=2670&auto=format&fit=crop') no-repeat center center/cover; color: var(--color-white); position: relative; }
+.hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(45, 76, 94, 0.7); }
+.hero-content { position: relative; z-index: 2; }
+.hero h1 { font-size: 3rem; color: var(--color-white); margin-bottom: 20px; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
+
+/* Menu Card & Grid */
+.menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+.menu-card { background: var(--color-white); border: 1px solid var(--color-border); border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column; }
+.menu-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+.menu-card img { width: 100%; height: 200px; object-fit: cover; }
+.menu-card-content { padding: 20px; flex-grow: 1; }
+.menu-card h3 { font-size: 1.4rem; }
+.menu-card-price { font-family: var(--font-heading); font-weight: 700; color: var(--color-lobster-red); font-size: 1.2rem; margin: 10px 0; }
+
+/* Form (Reservasi & Admin) */
+.form-container { max-width: 600px; margin: 0 auto; background: var(--color-white); padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-family: var(--font-heading); margin-bottom: 8px; font-weight: 600; }
+.form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid var(--color-border); border-radius: 5px; font-family: var(--font-body); font-size: 1rem; }
+.form-message { padding: 10px; border-radius: 5px; margin-top: 20px; }
+.form-message.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.form-message.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+/* Admin Dashboard */
+#admin-dashboard table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+#admin-dashboard th, #admin-dashboard td { padding: 12px; border: 1px solid var(--color-border); text-align: left; }
+#admin-dashboard th { background-color: #e9ecef; font-family: var(--font-heading); }
+
+/* Footer */
+.main-footer { background-color: var(--color-dark-blue); color: var(--color-white); padding: 40px 0; text-align: center; margin-top: 80px; }
+.main-footer p { opacity: 0.8; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-nav { display: none; } /* Perlu JS untuk menu hamburger */
+  .hero h1 { font-size: 2.2rem; }
+  .section-title { font-size: 2rem; }
+}
