@@ -1,16 +1,70 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lobster Shack Bali - Live & Wild-Caught Lobster</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
-  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    /* ... (Seluruh isi dari assets/css/style.css akan disalin ke sini) ... */
+    :root {
+      --font-heading: 'Poppins', sans-serif;
+      --font-body: 'Lora', serif;
+      --color-dark-blue: #2D4C5E;
+      --color-lobster-red: #D84B42;
+    }
+    body { font-family: var(--font-body); }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
+    .section { padding: 60px 0; }
+    .section-title { text-align: center; font-family: var(--font-heading); font-size: 2.5rem; margin-bottom: 40px; }
+    .btn { background-color: var(--color-lobster-red); color: white; padding: 12px 25px; text-decoration: none; border-radius: 8px; font-family: var(--font-heading); }
+    .hidden { display: none !important; }
+
+    /* Header & Navigasi */
+    .main-header-slider { position: relative; color: white; }
+    .navigation-overlay { position: absolute; top: 0; left: 0; width: 100%; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding: 20px; }
+    .logo { height: 50px; }
+    .main-nav ul { list-style: none; display: flex; gap: 20px; }
+    .main-nav a { color: white; text-decoration: none; font-weight: bold; }
+    .header-actions { display: flex; align-items: center; gap: 20px; }
+    #user-auth-section a, #user-auth-section span { color: white; }
+    .cart-icon { color: white; text-decoration: none; font-size: 1.5rem; }
+
+    /* Menu Grid */
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+    .menu-card { border: 1px solid #eee; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .menu-card img { width: 100%; height: 200px; object-fit: cover; }
+    .menu-card-content { padding: 20px; }
+    .card-buttons { margin-top: 15px; display: flex; gap: 10px; }
+
+    /* Form Styles */
+    .form-page-wrapper { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f4f1e8; }
+    .form-container { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); width: 90%; max-width: 450px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+    .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+    .form-message.error { color: var(--color-lobster-red); margin-top: 15px; }
+
+    /* Cart */
+    .cart-item { display: flex; gap: 15px; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+    .cart-item img { width: 100px; height: 100px; object-fit: cover; border-radius: 8px; }
+
+    /* Responsiveness */
+    @media (max-width: 768px) {
+      .navigation-overlay { flex-direction: column; gap: 15px; }
+      .main-nav ul { padding: 0; }
+      .section-title { font-size: 2rem; }
+      .menu-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
   <header class="main-header-slider">
     <div class="swiper">
       <div class="swiper-wrapper" id="slider-container"></div>
-      <div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div>
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
     </div>
     <div class="navigation-overlay">
         <a href="/"><img src="assets/images/logo-lobster-shack.png" alt="Logo Lobster Shack" class="logo"></a>
@@ -43,7 +97,194 @@
     </section>
   </main>
   <footer class="main-footer"><p>&copy; <span id="current-year"></span> Lobster Shack Bali.</p></footer>
+  
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  <script type="module" src="assets/js/app.js"></script>
+  <script type="module">
+    // ... (Seluruh isi dari assets/js/app.js akan disalin ke sini) ...
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    import { getDatabase, ref, get, set, push } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+    import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+
+    const firebaseConfig = { /* ... Konfigurasi Firebase Anda ... */ };
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const auth = getAuth(app);
+
+    // --- LOGIKA KERANJANG (CART) ---
+    let cart = JSON.parse(localStorage.getItem('lobsterCart')) || [];
+
+    function saveCart() {
+        localStorage.setItem('lobsterCart', JSON.stringify(cart));
+        updateCartCount();
+    }
+
+    function addToCart(productId, product) {
+        cart.push({ ...product, productId });
+        saveCart();
+        alert(`${product.name_en} telah ditambahkan ke keranjang!`);
+    }
+
+    function updateCartCount() {
+        const cartCountEl = document.getElementById('cart-count');
+        if (cartCountEl) cartCountEl.textContent = cart.length;
+    }
+
+    // --- LOGIKA AUTENTIKASI & UPDATE UI ---
+    onAuthStateChanged(auth, user => {
+        const userAuthSection = document.getElementById('user-auth-section');
+        if (!userAuthSection) return;
+
+        const loginLink = document.getElementById('login-link');
+        const userInfo = document.getElementById('user-info');
+        const userNameEl = document.getElementById('user-name');
+        const logoutLink = document.getElementById('logout-link');
+
+        if (user) {
+            loginLink.classList.add('hidden');
+            userInfo.classList.remove('hidden');
+            get(ref(db, `users/${user.uid}/profile/name`)).then(snapshot => {
+                userNameEl.textContent = snapshot.val() || user.email;
+            });
+            logoutLink.onclick = (e) => { e.preventDefault(); signOut(auth).then(() => window.location.reload()); };
+        } else {
+            loginLink.classList.remove('hidden');
+            userInfo.classList.add('hidden');
+        }
+    });
+
+    // --- EKSEKUSI SKRIP UTAMA ---
+    document.addEventListener('DOMContentLoaded', () => {
+        updateCartCount();
+        const path = window.location.pathname;
+
+        if (path === '/' || path.endsWith('index.html')) {
+            renderMenu('menu-grid-container', p => p.is_featured);
+            // Anda bisa tambahkan logika untuk slider di sini jika perlu
+        }
+        if (path.endsWith('login.html')) handleLoginForm();
+        if (path.endsWith('register.html')) handleRegisterForm();
+        if (path.endsWith('cart.html')) displayCart();
+        if (path.endsWith('menu.html')) renderMenu('full-menu-container', () => true); // Tampilkan semua menu
+
+        // Inisialisasi Swiper untuk slider header
+        if (document.querySelector('.swiper')) {
+            new Swiper('.swiper', {
+                loop: true,
+                pagination: { el: '.swiper-pagination', clickable: true },
+                navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+            });
+        }
+    });
+
+    // --- FUNGSI SPESIFIK HALAMAN ---
+    function handleLoginForm() { /* ... */ }
+    function handleRegisterForm() { /* ... */ }
+    function renderMenu(containerId, filter) { /* ... */ }
+    function displayCart() { /* ... */ }
+
+    // Implementasi detail fungsi-fungsi di atas
+    function handleLoginForm() {
+        const form = document.getElementById('login-form');
+        if (!form) return;
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => { window.location.href = '/'; })
+                .catch(err => { document.getElementById('form-error').textContent = err.message; });
+        });
+    }
+
+    function handleRegisterForm() {
+        const form = document.getElementById('register-form');
+        if (!form) return;
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const phone = document.getElementById('reg-phone').value;
+            const address = document.getElementById('reg-address').value;
+            const password = document.getElementById('reg-password').value;
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then(cred => {
+                    const user = cred.user;
+                    set(ref(db, `users/${user.uid}/profile`), { name, phone, address });
+                    window.location.href = '/';
+                })
+                .catch(err => { document.getElementById('form-error').textContent = err.message; });
+        });
+    }
+
+    function renderMenu(containerId, filter) {
+        const menuContainer = document.getElementById(containerId);
+        if (!menuContainer) return;
+        const productsRef = ref(db, 'products');
+        
+        get(productsRef).then((snapshot) => {
+            if (snapshot.exists()) {
+                menuContainer.innerHTML = '';
+                const products = snapshot.val();
+                for (const key in products) {
+                    const p = products[key];
+                    if (filter(p)) {
+                        const card = document.createElement('div');
+                        card.className = 'menu-card';
+                        card.innerHTML = `
+                            <img src="${p.imageUrl}" alt="${p.name_en}">
+                            <div class="menu-card-content">
+                                <h3>${p.name_en}</h3>
+                                <p>Rp ${p.price.toLocaleString('id-ID')}</p>
+                                <p>${p.description_en}</p>
+                                <div class="card-buttons">
+                                    <button class="btn add-to-cart-btn" data-product-id="${key}">Add to Cart</button>
+                                </div>
+                            </div>`;
+                        menuContainer.appendChild(card);
+                    }
+                }
+            }
+        });
+
+        menuContainer.addEventListener('click', e => {
+            if (e.target.classList.contains('add-to-cart-btn')) {
+                const productId = e.target.dataset.productId;
+                get(ref(db, `products/${productId}`)).then(snapshot => {
+                    if (snapshot.exists()) addToCart(productId, snapshot.val());
+                });
+            }
+        });
+    }
+
+    function displayCart() {
+        const container = document.getElementById('cart-items-container');
+        const summary = document.getElementById('cart-summary');
+        if (!container) return;
+        if (cart.length === 0) {
+            container.innerHTML = '<p>Keranjang Anda kosong.</p>';
+            if(summary) summary.classList.add('hidden');
+            return;
+        }
+        
+        container.innerHTML = '';
+        let total = 0;
+        cart.forEach(item => {
+            total += item.price;
+            container.innerHTML += `<div class="cart-item">
+                                        <img src="${item.imageUrl}" alt="${item.name_en}">
+                                        <div>
+                                            <h3>${item.name_en}</h3>
+                                            <p>Rp ${item.price.toLocaleString('id-ID')}</p>
+                                        </div>
+                                   </div>`;
+        });
+
+        if(summary) {
+          document.getElementById('cart-total').textContent = `Total: Rp ${total.toLocaleString('id-ID')}`;
+          summary.classList.remove('hidden');
+        }
+    }
+  </script>
 </body>
 </html>
