@@ -368,6 +368,7 @@
                     <li><a href="#categories" class="nav-link"><i class="fas fa-tags fa-fw"></i> Kategori</a></li>
                     <li><a href="#content" class="nav-link"><i class="fas fa-file-alt fa-fw"></i> Konten Situs</a></li>
                     <li><a href="#banner" class="nav-link"><i class="fas fa-image fa-fw"></i> Banner</a></li>
+                    <li><a href="#admin-users" class="nav-link"><i class="fas fa-user-shield fa-fw"></i> Admin Users</a></li>
                 </ul>
             </nav>
             <div class="sidebar-footer">
@@ -529,6 +530,29 @@
                 </div>
             </section>
 
+            <section id="admin-users" class="content-section">
+                <div class="page-header">
+                    <h1><i class="fas fa-user-shield"></i> Manajemen Admin Users</h1>
+                    <button class="btn" id="add-admin-btn"><i class="fas fa-plus"></i> Tambah Admin Baru</button>
+                </div>
+                <div class="card">
+                    <div class="table-container">
+                        <table class="responsive-table">
+                            <thead>
+                                <tr>
+                                    <th>Nama</th>
+                                    <th>Email</th>
+                                    <th>Tanggal Dibuat</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-users-table-body">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
             <footer class="main-footer">
                 <p>&copy; 2025 Lobster Shack Bali. Developed by <a href="https://wa.me/6285736058049?text=hallo%20jm" target="_blank" rel="noopener noreferrer">jmpartner</a></p>
             </footer>
@@ -561,6 +585,33 @@
                 </form>
             </div>
         </div>
+
+        <div id="admin-user-modal" class="modal">
+            <div class="modal-content">
+                <form id="admin-user-form">
+                    <input type="hidden" id="admin-user-uid">
+                    <h2 id="admin-modal-title"></h2>
+                    <div class="form-group">
+                        <label for="admin-name">Nama Admin</label>
+                        <input type="text" id="admin-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-email">Email</label>
+                        <input type="email" id="admin-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-password">Password (kosongkan jika tidak ingin mengubah)</label>
+                        <input type="password" id="admin-password" placeholder="Min. 6 karakter">
+                        <small style="color: var(--color-text-muted); font-size: 0.8em; display: block; margin-top: 0.25rem;">Isi hanya jika membuat baru atau mengubah password.</small>
+                    </div>
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button type="submit" class="btn" style="flex-grow: 1;">Simpan</button>
+                        <button type="button" class="btn btn-secondary" style="flex-grow: 1;" id="close-admin-modal-btn">Batal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -655,6 +706,18 @@
         const bannerTextIdInput = document.getElementById('banner-text-id');
         const bannerTextEnInput = document.getElementById('banner-text-en');
 
+        // NEW: Admin User Elements
+        const addAdminBtn = document.getElementById('add-admin-btn');
+        const adminUsersTableBody = document.getElementById('admin-users-table-body');
+        const adminUserModal = document.getElementById('admin-user-modal');
+        const adminUserForm = document.getElementById('admin-user-form');
+        const adminModalTitle = document.getElementById('admin-modal-title');
+        const adminUserUidInput = document.getElementById('admin-user-uid');
+        const adminNameInput = document.getElementById('admin-name');
+        const adminEmailInput = document.getElementById('admin-email');
+        const adminPasswordInput = document.getElementById('admin-password');
+        const closeAdminModalBtn = document.getElementById('close-admin-modal-btn');
+
 
         let lastOrderTimestamp = 0; // For new order checking
 
@@ -689,12 +752,20 @@
             const storageRef = storage.ref();
             const uniqueFileName = `${Date.now()}-${file.name}`;
             const imageRef = storageRef.child(`${path}/${uniqueFileName}`);
-            await imageRef.put(file);
-            return await imageRef.getDownloadURL();
+            try {
+                await imageRef.put(file);
+                const downloadURL = await imageRef.getDownloadURL();
+                showFeedback('Image uploaded successfully.', true);
+                return downloadURL;
+            } catch (error) {
+                showFeedback(`Failed to upload image: ${error.message}`, false);
+                console.error("Image Upload Error:", error);
+                throw error; // Re-throw to propagate the error
+            }
         };
 
         const deleteImageFromFirebase = async (url) => {
-            if (!url || url.includes('placeholder-')) return; // Don't delete placeholder or non-Firebase URLs
+            if (!url || url.includes('placeholder-') || !url.includes('firebasestorage.googleapis.com')) return; // Don't delete placeholder or non-Firebase URLs
             try {
                 const imageRef = storage.refFromURL(url);
                 await imageRef.delete();
@@ -762,7 +833,7 @@
                 fetchOrders('all', 'dashboard-orders-table');
                 updateDashboardStats();
             } else if (targetId === 'orders') {
-                fetchOrders(orderFilter.value, 'orders-table-container');
+                fetchOrders(orderFilter.value, 'orders-table-container', orderStatusFilter.value);
             } else if (targetId === 'customers') {
                 fetchCustomers();
             } else if (targetId === 'menu') {
@@ -774,6 +845,8 @@
                 fetchSiteContent();
             } else if (targetId === 'banner') {
                 fetchBannerContent();
+            } else if (targetId === 'admin-users') { // NEW: Admin Users
+                fetchAdminUsers();
             }
         }
 
@@ -889,8 +962,9 @@
                 }
 
             } catch (error) {
-                container.innerHTML = '<p style="text-align:center; color:red; padding: 2rem 0;">Gagal memuat pesanan. Silakan coba lagi.</p>';
+                container.innerHTML = '<p style="text-align:center; color:red; padding: 2rem 0;">Gagal memuat pesanan. Silakan coba lagi. Pastikan Firebase Security Rules sudah benar.</p>';
                 console.error("Fetch Orders Error:", error);
+                showFeedback('Gagal memuat data pesanan. Periksa koneksi dan aturan Firebase.', false);
             }
         };
 
@@ -912,7 +986,13 @@
                         if (newOrdersCount > 0) {
                             newOrdersBadge.textContent = parseInt(newOrdersBadge.textContent) + newOrdersCount;
                             newOrdersBadge.style.display = 'inline-block';
-                            new Audio('https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-zapsplat/zapsplat_multimedia_notification_alert_short_sharp_002_52042.mp3').play();
+                            // Play a subtle notification sound
+                            try {
+                                const audio = new Audio('https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-zapsplat/zapsplat_multimedia_notification_alert_short_sharp_002_52042.mp3');
+                                audio.play();
+                            } catch (e) {
+                                console.warn("Could not play notification sound:", e);
+                            }
                             
                             // Update dashboard/orders view if active
                             if (document.getElementById('dashboard').classList.contains('active')) {
@@ -930,6 +1010,7 @@
                 }
             } catch (error) {
                 console.error('Failed to check new orders:', error);
+                // No feedback here to avoid spamming for background check errors
             }
         };
 
@@ -964,6 +1045,7 @@
 
             } catch (error) {
                 console.error('Failed to update dashboard stats:', error);
+                 showFeedback('Gagal memuat statistik dashboard. Periksa koneksi dan aturan Firebase.', false);
             }
         };
 
@@ -1013,23 +1095,54 @@
                 csvContent += "ID Pesanan,Tanggal,Nama Pelanggan,Telepon,Alamat Pengiriman,Produk,Jumlah,Harga Satuan,Total Harga,Status\n";
 
                 orders.forEach(order => {
-                    const products = order.products ? JSON.parse(order.products) : [];
-                    products.forEach(item => {
+                    // Ensure 'products' is parsed if it's stored as a JSON string
+                    const products = typeof order.products === 'string' ? JSON.parse(order.products) : order.products;
+                    
+                    if (products && Array.isArray(products) && products.length > 0) {
+                        products.forEach(item => {
+                            const row = [
+                                `"${order.id}"`,
+                                `"${formatDate(order.timestamp)}"`,
+                                `"${order.customerName || ''}"`,
+                                `"${order.customerPhone || ''}"`,
+                                `"${(order.deliveryAddress || '').replace(/"/g, '""')}"`, // Handle quotes in address
+                                `"${(item.name_id || item.name || '').replace(/"/g, '""')}"`, // Product name
+                                item.quantity || 1,
+                                item.price || 0,
+                                (item.quantity * (item.price || 0)),
+                                `"${order.status || ''}"`
+                            ].map(field => {
+                                // Enclose fields in quotes if they contain commas or quotes
+                                if (typeof field === 'string' && (field.includes(',') || field.includes('"'))) {
+                                    return `"${field.replace(/"/g, '""')}"`;
+                                }
+                                return field;
+                            }).join(',');
+                            csvContent += row + "\n";
+                        });
+                    } else {
+                        // Handle orders with no product details (e.g., if structure changed or missing)
                         const row = [
                             `"${order.id}"`,
                             `"${formatDate(order.timestamp)}"`,
                             `"${order.customerName || ''}"`,
                             `"${order.customerPhone || ''}"`,
-                            `"${order.deliveryAddress || ''}"`,
-                            `"${item.name_id || item.name || ''}"`, // Product name
-                            item.quantity || 1,
-                            item.price || 0,
-                            item.quantity * (item.price || 0),
+                            `"${(order.deliveryAddress || '').replace(/"/g, '""')}"`,
+                            `"N/A"`, // Product name
+                            0,
+                            0,
+                            (order.totalPrice || 0),
                             `"${order.status || ''}"`
-                        ].join(',');
+                        ].map(field => {
+                            if (typeof field === 'string' && (field.includes(',') || field.includes('"'))) {
+                                return `"${field.replace(/"/g, '""')}"`;
+                            }
+                            return field;
+                        }).join(',');
                         csvContent += row + "\n";
-                    });
+                    }
                 });
+
 
                 const encodedUri = encodeURI(csvContent);
                 const link = document.createElement("a");
@@ -1041,7 +1154,7 @@
                 showFeedback('Data pesanan berhasil diekspor.', true);
 
             } catch (error) {
-                showFeedback('Gagal mengekspor data pesanan.', false);
+                showFeedback('Gagal mengekspor data pesanan. Pastikan Firebase Security Rules sudah benar.', false);
                 console.error('Error exporting orders:', error);
             }
         });
@@ -1070,7 +1183,7 @@
                     customersTableBody.innerHTML += row;
                 });
             } catch (error) {
-                showFeedback('Gagal memuat data pelanggan.', false);
+                showFeedback('Gagal memuat data pelanggan. Periksa koneksi dan aturan Firebase.', false);
                 console.error('Error fetching customers:', error);
             }
         };
@@ -1095,7 +1208,7 @@
                     categoryIdSelect.appendChild(option);
                 });
             } catch (error) {
-                showFeedback('Gagal memuat kategori untuk formulir menu.', false);
+                showFeedback('Gagal memuat kategori untuk formulir menu. Periksa koneksi dan aturan Firebase.', false);
                 console.error('Error fetching categories for product form:', error);
             }
         };
@@ -1176,7 +1289,7 @@
                                 showFeedback('Menu berhasil dihapus.', true);
                                 fetchProducts(); // Re-fetch list
                             } catch (error) {
-                                showFeedback('Gagal menghapus menu.', false);
+                                showFeedback(`Gagal menghapus menu: ${error.message}`, false);
                                 console.error('Error deleting product:', error);
                             }
                         }
@@ -1184,7 +1297,7 @@
                 });
 
             } catch (error) {
-                showFeedback('Gagal memuat data menu.', false);
+                showFeedback('Gagal memuat data menu. Periksa koneksi dan aturan Firebase.', false);
                 console.error('Error fetching products:', error);
             }
         };
@@ -1220,7 +1333,7 @@
             const imageFile = imageUrlInput.files[0];
             const currentImageUrl = currentImageUrlInput.value;
 
-            if (!imageFile && !isUpdate) {
+            if (!imageFile && !isUpdate && !currentImageUrl) {
                 showFeedback('Gambar wajib diisi untuk menu baru.', false);
                 return;
             }
@@ -1228,7 +1341,7 @@
             try {
                 let imageUrl = currentImageUrl;
                 if (imageFile) {
-                    if (currentImageUrl) { // Delete old image if updating with new one
+                    if (currentImageUrl && currentImageUrl !== 'images/placeholder-menu.jpg') { // Delete old image if updating with new one
                         await deleteImageFromFirebase(currentImageUrl);
                     }
                     imageUrl = await uploadImageToFirebase(imageFile, 'images/menu');
@@ -1308,7 +1421,7 @@
                             fetchCategories(); // Re-fetch to update table
                             fetchCategoriesForProductForm(); // Also update product form dropdown
                         } catch (error) {
-                            showFeedback('Gagal memperbarui kategori.', false);
+                            showFeedback(`Gagal memperbarui kategori: ${error.message}`, false);
                             console.error('Error updating category:', error);
                         }
                     });
@@ -1317,7 +1430,7 @@
                 document.querySelectorAll('.delete-category-btn').forEach(button => {
                     button.addEventListener('click', async (e) => {
                         const categoryId = e.target.dataset.categoryId;
-                        if (confirm('Anda yakin ingin menghapus kategori ini? Semua menu yang terkait akan kehilangan kategori.')) {
+                        if (confirm('Anda yakin ingin menghapus kategori ini? Ini akan menghapus permanen.')) {
                             try {
                                 // Check if any products use this category (optional, but good practice)
                                 const productsUsingCategory = await db.collection('products').where('category_id', '==', categoryId).limit(1).get();
@@ -1331,7 +1444,7 @@
                                 fetchCategories(); // Re-fetch to update table
                                 fetchCategoriesForProductForm(); // Also update product form dropdown
                             } catch (error) {
-                                showFeedback('Gagal menghapus kategori.', false);
+                                showFeedback(`Gagal menghapus kategori: ${error.message}`, false);
                                 console.error('Error deleting category:', error);
                             }
                         }
@@ -1339,7 +1452,7 @@
                 });
 
             } catch (error) {
-                showFeedback('Gagal memuat kategori.', false);
+                showFeedback('Gagal memuat kategori. Periksa koneksi dan aturan Firebase.', false);
                 console.error('Error fetching categories:', error);
             }
         };
@@ -1358,7 +1471,7 @@
                 fetchCategories(); // Re-fetch list
                 fetchCategoriesForProductForm(); // Also update product form dropdown
             } catch (error) {
-                showFeedback('Gagal menambahkan kategori.', false);
+                showFeedback(`Gagal menambahkan kategori: ${error.message}`, false);
                 console.error('Error adding category:', error);
             }
         });
@@ -1366,8 +1479,8 @@
         // --- Site Content Management ---
         const contentKeys = [
             'header_title_main', 'header_title_sub', 'hero_text_1', 'hero_text_2', 'about_title', 'about_text',
-            'contact_address', 'contact_phone', 'contact_email', 'footer_copyright_text'
-        ];
+            'contact_address', 'contact_phone', 'contact_email', 'footer_copyright_text', 'logo_main_url', 'logo_white_url'
+        ]; // Added logo URLs here
         const historyKeys = ['history_1_year', 'history_1_text', 'history_2_year', 'history_2_text', 'history_3_year', 'history_3_text'];
 
         const fetchSiteContent = async () => {
@@ -1385,11 +1498,30 @@
                 contentKeys.forEach(key => {
                     const text_id = contentData[key]?.text_id || '';
                     const text_en = contentData[key]?.text_en || '';
+
+                    let inputHtml = '';
+                    if (key.includes('url')) { // For logo URLs, use file input
+                        inputHtml = `
+                            <input type="text" name="content_${key}_id" placeholder="URL Gambar" value="${text_id}" style="margin-bottom: 0.5rem;">
+                             <input type="file" class="content-file-upload" data-content-key="${key}" data-lang="id" accept="image/*">
+                             <img src="${text_id || 'images/placeholder.jpg'}" alt="Preview" style="max-width: 100px; max-height: 100px; margin-top: 5px; border-radius: 5px; display: block;">
+                             <input type="hidden" name="content_${key}_en" value="${text_en}"> `;
+                    } else if (key.includes('description') || key.includes('text')) { // Textarea for longer texts
+                        inputHtml = `
+                            <textarea name="content_${key}_id" rows="3" placeholder="Teks Indonesia">${text_id}</textarea>
+                            <textarea name="content_${key}_en" rows="3" placeholder="Teks Inggris" style="margin-top: 0.5rem;">${text_en}</textarea>
+                        `;
+                    } else { // Default to text input
+                        inputHtml = `
+                            <input type="text" name="content_${key}_id" placeholder="Teks Indonesia" value="${text_id}" style="margin-bottom: 0.5rem;">
+                            <input type="text" name="content_${key}_en" placeholder="Teks Inggris" value="${text_en}">
+                        `;
+                    }
+
                     generalContentFields.innerHTML += `
                         <div class="form-group">
                             <label>${key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</label>
-                            <input type="text" name="content_${key}_id" placeholder="Teks Indonesia" value="${text_id}" style="margin-bottom: 0.5rem;">
-                            <input type="text" name="content_${key}_en" placeholder="Teks Inggris" value="${text_en}">
+                            ${inputHtml}
                         </div>
                     `;
                 });
@@ -1418,8 +1550,39 @@
                     `;
                 }
 
+                // Add event listeners for logo uploads
+                document.querySelectorAll('.content-file-upload').forEach(input => {
+                    input.addEventListener('change', async (e) => {
+                        const file = e.target.files[0];
+                        const contentKey = e.target.dataset.contentKey;
+                        const lang = e.target.dataset.lang;
+                        if (!file) return;
+
+                        showFeedback(`Uploading ${contentKey}...`, true);
+                        try {
+                            // Get current URL to delete old image
+                            const doc = await db.collection('siteContent').doc(contentKey).get();
+                            const currentUrl = doc.exists ? doc.data()[`text_${lang}`] : null;
+
+                            const newUrl = await uploadImageToFirebase(file, `images/site-content/${contentKey}`);
+                            await db.collection('siteContent').doc(contentKey).set({ [`text_${lang}`]: newUrl }, { merge: true });
+
+                            if (currentUrl && currentUrl !== newUrl && currentUrl.includes('firebasestorage')) {
+                                await deleteImageFromFirebase(currentUrl);
+                            }
+                            showFeedback(`${contentKey} image updated successfully!`, true);
+                            // Update the preview image directly
+                            e.target.previousElementSibling.value = newUrl; // Update hidden text input
+                            e.target.nextElementSibling.src = newUrl; // Update img src
+                        } catch (error) {
+                            showFeedback(`Failed to upload ${contentKey} image: ${error.message}`, false);
+                            console.error(`Error uploading ${contentKey} image:`, error);
+                        }
+                    });
+                });
+
             } catch (error) {
-                showFeedback('Gagal memuat konten situs.', false);
+                showFeedback('Gagal memuat konten situs. Periksa koneksi dan aturan Firebase.', false);
                 console.error('Error fetching site content:', error);
             }
         };
@@ -1428,32 +1591,33 @@
             e.preventDefault();
             const formData = new FormData(updateContentForm);
             const batch = db.batch();
+            const updates = {}; // To aggregate updates before batching
 
             try {
                 for (const entry of formData.entries()) {
                     const [name, value] = entry;
                     if (name.startsWith('content_')) {
                         const parts = name.split('_');
-                        const key = parts.slice(1, parts.length - 1).join('_'); // e.g., 'header_title'
+                        const key = parts.slice(1, parts.length - 1).join('_'); // e.g., 'header_title_main'
                         const lang = parts[parts.length - 1]; // 'id' or 'en'
 
-                        let docRef = db.collection('siteContent').doc(key);
-                        let docData = {};
-                        if (!batch._docs || !batch._docs[docRef.path]) { // Check if doc is already in batch
-                            const currentDoc = await docRef.get();
-                            if (currentDoc.exists) docData = currentDoc.data();
-                        } else {
-                             // If already in batch, this is tricky. For simplicity and robustness,
-                             // we'll get the current data first, then merge, then set.
-                             // A more robust approach would be to process forms data into an object first.
+                        if (!updates[key]) {
+                            updates[key] = {};
                         }
-                        docData[`text_${lang}`] = value;
-                        batch.set(docRef, docData, { merge: true }); // Merge to update specific fields
+                        updates[key][`text_${lang}`] = value;
                     }
                 }
+
+                for (const key in updates) {
+                    if (updates.hasOwnProperty(key)) {
+                        const docRef = db.collection('siteContent').doc(key);
+                        batch.set(docRef, updates[key], { merge: true });
+                    }
+                }
+                
                 await batch.commit();
                 showFeedback('Konten situs berhasil diperbarui.', true);
-                fetchSiteContent(); // Refresh content
+                fetchSiteContent(); // Refresh content after successful save
             } catch (error) {
                 showFeedback(`Gagal menyimpan konten situs: ${error.message}`, false);
                 console.error('Error updating site content:', error);
@@ -1474,7 +1638,7 @@
                 bannerTextEnInput.value = bannerData.text_en || '';
 
             } catch (error) {
-                showFeedback('Gagal memuat konten banner.', false);
+                showFeedback('Gagal memuat konten banner. Periksa koneksi dan aturan Firebase.', false);
                 console.error('Error fetching banner content:', error);
             }
         };
@@ -1498,7 +1662,7 @@
                 await db.collection('siteContent').doc(BANNER_DOC_ID).set({ imageUrl: newImageUrl }, { merge: true });
 
                 // Delete old image from Storage if it's different and not a placeholder
-                if (currentImageUrl && currentImageUrl !== newImageUrl) {
+                if (currentImageUrl && currentImageUrl !== newImageUrl && currentImageUrl.includes('firebasestorage')) {
                     await deleteImageFromFirebase(currentImageUrl);
                 }
                 
@@ -1522,7 +1686,7 @@
                     imageUrl: 'images/placeholder-banner.jpg', // Set to a default placeholder
                 }, { merge: true });
 
-                if (currentImageUrl && currentImageUrl !== 'images/placeholder-banner.jpg') {
+                if (currentImageUrl && currentImageUrl !== 'images/placeholder-banner.jpg' && currentImageUrl.includes('firebasestorage')) {
                     await deleteImageFromFirebase(currentImageUrl);
                 }
                 showFeedback('Banner image berhasil dihapus.', true);
@@ -1550,6 +1714,164 @@
             }
         });
 
+        // --- NEW: Admin User Management ---
+
+        const openAdminUserModal = () => adminUserModal.style.display = 'flex';
+        const closeAdminUserModal = () => adminUserModal.style.display = 'none';
+
+        addAdminBtn.addEventListener('click', () => {
+            adminUserForm.reset();
+            adminModalTitle.textContent = 'Tambah Admin Baru';
+            adminUserUidInput.value = ''; // Clear for new user
+            adminEmailInput.readOnly = false; // Allow editing email for new users
+            adminPasswordInput.required = true; // Password is required for new users
+            openAdminUserModal();
+        });
+
+        closeAdminModalBtn.addEventListener('click', closeAdminUserModal);
+        adminUserModal.addEventListener('click', e => { if (e.target === adminUserModal) closeAdminUserModal(); });
+
+        const fetchAdminUsers = async () => {
+            adminUsersTableBody.innerHTML = '<td colspan="4" style="text-align:center; padding: 2rem 0;"><i class="fas fa-spinner fa-spin"></i> Memuat admin users...</td>';
+            try {
+                const snapshot = await db.collection('users').orderBy('createdAt', 'desc').get(); // Assuming 'users' collection
+                adminUsersTableBody.innerHTML = ''; // Clear existing rows
+                if (snapshot.empty) {
+                    adminUsersTableBody.innerHTML = '<td colspan="4" style="text-align:center; padding: 2rem 0;">Tidak ada admin user.</td>';
+                    return;
+                }
+                snapshot.forEach(doc => {
+                    const user = doc.data();
+                    const row = `
+                        <tr>
+                            <td data-label="Nama">${user.name || 'N/A'}</td>
+                            <td data-label="Email">${user.email || 'N/A'}</td>
+                            <td data-label="Tanggal Dibuat">${formatDate(user.createdAt)}</td>
+                            <td data-label="Aksi" class="actions-cell">
+                                <div class="action-buttons">
+                                    <button class="btn edit-admin-btn" data-uid="${doc.id}"><i class="fas fa-edit"></i> Edit</button>
+                                    ${auth.currentUser.uid !== doc.id ? `<button class="btn btn-secondary delete-admin-btn" data-uid="${doc.id}"><i class="fas fa-trash"></i> Hapus</button>` : ''}
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    adminUsersTableBody.innerHTML += row;
+                });
+
+                // Add event listeners for edit/delete buttons
+                document.querySelectorAll('.edit-admin-btn').forEach(button => {
+                    button.addEventListener('click', async () => {
+                        const uid = button.dataset.uid;
+                        const userDoc = await db.collection('users').doc(uid).get();
+                        if (userDoc.exists) {
+                            const userData = userDoc.data();
+                            adminModalTitle.textContent = 'Edit Admin User';
+                            adminUserUidInput.value = uid;
+                            adminNameInput.value = userData.name || '';
+                            adminEmailInput.value = userData.email || '';
+                            adminEmailInput.readOnly = true; // Prevent changing email for existing users
+                            adminPasswordInput.value = ''; // Clear password field
+                            adminPasswordInput.required = false; // Password not required for edit unless specified
+                            openAdminUserModal();
+                        } else {
+                            showFeedback('Admin user tidak ditemukan.', false);
+                        }
+                    });
+                });
+
+                document.querySelectorAll('.delete-admin-btn').forEach(button => {
+                    button.addEventListener('click', async () => {
+                        const uid = button.dataset.uid;
+                        if (confirm('Anda yakin ingin menghapus admin user ini? Ini akan menghapus permanen.')) {
+                            try {
+                                // Deleting a user from Firestore doesn't delete them from Firebase Auth.
+                                // To delete from Auth, you'd need a Cloud Function or perform it on a secure backend.
+                                // For client-side, we'll only delete the profile data here.
+                                await db.collection('users').doc(uid).delete();
+                                showFeedback('Admin user berhasil dihapus (dari Firestore).', true);
+                                fetchAdminUsers(); // Re-fetch list
+                            } catch (error) {
+                                showFeedback(`Gagal menghapus admin user: ${error.message}`, false);
+                                console.error('Error deleting admin user:', error);
+                            }
+                        }
+                    });
+                });
+
+            } catch (error) {
+                showFeedback('Gagal memuat admin users. Periksa koneksi dan aturan Firebase.', false);
+                console.error('Error fetching admin users:', error);
+            }
+        };
+
+        adminUserForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const uid = adminUserUidInput.value;
+            const isUpdate = !!uid;
+
+            const name = adminNameInput.value;
+            const email = adminEmailInput.value;
+            const password = adminPasswordInput.value;
+
+            try {
+                if (isUpdate) {
+                    // Update user profile in Firestore
+                    await db.collection('users').doc(uid).update({ name: name });
+
+                    // Update email/password in Firebase Auth (if changed)
+                    const user = auth.currentUser;
+                    if (user && user.uid === uid) { // Only update current logged in user's profile
+                        if (user.email !== email) {
+                             await user.updateEmail(email);
+                             showFeedback('Email juga diperbarui di autentikasi Firebase. Silakan login ulang.', true);
+                             // Force logout if email changes, as Firebase Auth token becomes invalid
+                             await auth.signOut();
+                             return;
+                        }
+                        if (password) {
+                            await user.updatePassword(password);
+                            showFeedback('Password juga diperbarui di autentikasi Firebase.', true);
+                        }
+                    } else {
+                        // Cannot update other users' email/password client-side directly
+                        // This would typically require Firebase Admin SDK (Cloud Functions)
+                        if (password || user.email !== email) {
+                             showFeedback('Untuk mengubah email/password user lain, diperlukan konfigurasi server-side (Cloud Functions). Hanya nama yang diperbarui.', false);
+                        }
+                    }
+                    showFeedback('Profil admin berhasil diperbarui.', true);
+
+                } else { // Add New Admin User
+                    if (!password || password.length < 6) {
+                        showFeedback('Password minimal 6 karakter.', false);
+                        return;
+                    }
+                    // Create user in Firebase Authentication
+                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                    const newUid = userCredential.user.uid;
+
+                    // Store additional profile info in Firestore
+                    await db.collection('users').doc(newUid).set({
+                        name: name,
+                        email: email,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        role: 'admin' // Assign a default role
+                    });
+                    showFeedback('Admin baru berhasil ditambahkan.', true);
+                }
+                closeAdminUserModal();
+                fetchAdminUsers(); // Refresh list
+            } catch (error) {
+                showFeedback(`Gagal menyimpan admin user: ${error.message}`, false);
+                console.error('Error saving admin user:', error);
+                // Handle specific errors like 'auth/email-already-in-use'
+                if (error.code === 'auth/email-already-in-use') {
+                    showFeedback('Email ini sudah digunakan.', false);
+                } else if (error.code === 'auth/requires-recent-login') {
+                    showFeedback('Silakan login ulang untuk mengubah profil Anda.', false);
+                }
+            }
+        });
 
         // --- Initialization ---
         function initializeAdminPanel() {
