@@ -1,60 +1,75 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lobster Shack Bali - Live & Wild-Caught Lobster</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
-  <link rel="stylesheet" href="assets/css/style.css">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lobster Shack Bali - Live & Wild-Caught Lobster</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <style>/* ... Salin SEMUA kode dari style.css sebelumnya di sini ... */</style>
 </head>
 <body>
-  <header class="main-header-slider">
-    <div class="swiper">
-      <div class="swiper-wrapper" id="slider-container"></div>
-      <div class="swiper-pagination"></div><div class="swiper-button-prev"></div><div class="swiper-button-next"></div>
-    </div>
-    <div class="navigation-overlay">
-        <a href="/"><img src="assets/images/logo-lobster-shack.png" alt="Logo Lobster Shack" class="logo"></a>
-        <nav class="main-nav">
-          <ul id="main-nav-ul">
-            <li><a href="/" data-text-id="Beranda" data-text-en="Home">Beranda</a></li>
-            <li><a href="/menu.html" data-text-id="Menu" data-text-en="Menu">Menu</a></li>
-          </ul>
-        </nav>
-        <div class="header-actions">
-          <div id="user-auth-section" class="user-auth">
-            <a href="/login.html" id="login-link" class="auth-link">Login/Register</a>
-            <div id="user-info" class="hidden">
-              <span id="user-name"></span>
-              <a href="#" id="logout-link" class="auth-link">Logout</a>
+    <header class="main-header-slider">
+        <div class="swiper"><div class="swiper-wrapper" id="slider-container"></div></div>
+        <div class="navigation-overlay">
+            <a href="/"><img src="assets/images/logo-lobster-shack.png" alt="Logo" class="logo"></a>
+            <nav class="main-nav"><ul><li><a href="/">Home</a></li><li><a href="/menu.html">Menu</a></li></ul></nav>
+            <div class="header-actions">
+                <div id="user-auth-section" class="user-auth">
+                    <a href="/login.html" id="login-link" class="auth-link">Login/Register</a>
+                    <div id="user-info" class="hidden">
+                        <span id="user-name"></span>
+                        <a href="#" id="logout-link" class="auth-link">Logout</a>
+                    </div>
+                </div>
+                <a href="/cart.html" class="cart-icon">🛒 <span id="cart-count">0</span></a>
             </div>
-          </div>
-          <a href="/cart.html" class="cart-icon">🛒 <span id="cart-count">0</span></a>
         </div>
-    </div>
-  </header>
-  <main>
-    <section id="marketing" class="section">
-      <div class="container">
-        <h2 class="section-title" data-lang-key="tagline"></h2>
-        <div class="marketing-grid">
-          <div class="marketing-item animate-on-scroll">
-            <h3 data-lang-key="point1_heading"></h3><p data-lang-key="point1_text"></p>
-          </div>
-          <div class="marketing-item animate-on-scroll">
-            <h3 data-lang-key="point2_heading"></h3><p data-lang-key="point2_text"></p>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section id="featured-menu" class="section animate-on-scroll" style="background-color: #fff;">
-        <div class="container">
-            <h2 class="section-title" data-text-id="Menu Unggulan" data-text-en="Featured Menu">Menu Unggulan</h2>
-            <div id="menu-grid-container" class="menu-grid"><p>Loading menu...</p></div>
-        </div>
-    </section>
-  </main>
-  <footer class="main-footer"><p>&copy; <span id="current-year"></span> Lobster Shack Bali.</p></footer>
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  <script type="module" src="assets/js/app.js"></script>
+    </header>
+    <main>
+        <section id="featured-menu" class="section">
+            <div class="container">
+                <h2 class="section-title">Menu Unggulan</h2>
+                <div id="menu-grid-container" class="menu-grid"><p>Memuat menu...</p></div>
+            </div>
+        </section>
+    </main>
+    <footer class="main-footer"><p>&copy; <span id="current-year"></span> Lobster Shack Bali.</p></footer>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script type="module">
+        // --- IMPORTS & CONFIG ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+        const firebaseConfig = { /* ... Masukkan Konfigurasi Firebase Anda ... */ };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth(app);
+        
+        // --- AUTH & UI LOGIC ---
+        onAuthStateChanged(auth, user => {
+            const loginLink = document.getElementById('login-link');
+            const userInfo = document.getElementById('user-info');
+            if (user) {
+                loginLink.classList.add('hidden');
+                userInfo.classList.remove('hidden');
+                get(ref(db, `users/${user.uid}/profile/name`)).then(snapshot => {
+                    document.getElementById('user-name').textContent = snapshot.val() || user.email.split('@')[0];
+                });
+                document.getElementById('logout-link').onclick = e => { e.preventDefault(); signOut(auth); };
+            } else {
+                loginLink.classList.remove('hidden');
+                userInfo.classList.add('hidden');
+            }
+        });
+
+        // --- PAGE LOGIC ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSlider();
+            renderMenu('menu-grid-container', p => p.is_featured);
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+        });
+
+        function loadSlider() { /* ... kode loadSlider sama seperti sebelumnya ... */ }
+        function renderMenu(containerId, filter) { /* ... kode renderMenu sama seperti sebelumnya ... */ }
+    </script>
 </body>
 </html>
