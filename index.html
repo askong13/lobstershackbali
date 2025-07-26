@@ -887,7 +887,8 @@
             font-size: 0.95rem;
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group textarea {
             width: 100%;
             padding: 0.9rem 1.2rem;
             border-radius: var(--border-radius-sm);
@@ -898,7 +899,8 @@
             background-color: var(--color-surface);
         }
 
-        .form-group input:focus {
+        .form-group input:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: var(--color-primary);
             box-shadow: 0 0 0 4px rgba(216, 75, 66, 0.2);
@@ -933,7 +935,8 @@
             margin: 0;
         }
 
-        #order-map-container {
+        #order-map-container,
+        #checkout-map-container {
             height: 220px;
             width: 100%;
             margin-top: 2rem;
@@ -957,7 +960,7 @@
             background-color: var(--color-surface);
             transition: background-color 0.3s ease;
         }
-        .cart-item:last-child {
+        .cart-item:last-of-type { /* Use last-of-type to target the actual last item */
             border-bottom: none;
             border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
         }
@@ -1012,12 +1015,26 @@
             color: var(--color-secondary);
             background-color: var(--color-surface);
             border-top: 1px solid var(--color-border);
-            border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
         }
         .cart-total span {
             color: var(--color-primary);
         }
+        .cart-actions {
+            padding: 1.5rem 2.25rem;
+            background-color: var(--color-surface);
+            border-top: 1px solid var(--color-border);
+            border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+            display: flex;
+            justify-content: flex-end;
+        }
 
+        /* Checkout Modal */
+        #checkout-modal .modal-body {
+            padding-top: 1rem;
+        }
+        #checkout-modal .btn {
+            margin-top: 1.5rem;
+        }
 
         /* Toast Notification */
         .toast-notification {
@@ -1415,6 +1432,8 @@
                 <div id="modal-product-details" style="text-align:center; margin-bottom: 2rem;"></div>
                 <div class="form-group"> <label for="customer-name" data-lang-key="modal_name_label">Name</label> <input type="text" id="customer-name" required> </div>
                 <div class="form-group"> <label for="customer-phone" data-lang-key="modal_phone_label">Phone Number</label> <input type="tel" id="customer-phone" required> </div>
+                <div class="form-group"> <label for="customer-address" data-lang-key="modal_address_label">Delivery Address</label> <textarea id="customer-address" rows="3" required></textarea> </div>
+                <button type="button" class="btn" id="detect-location-btn" style="width: 100%; margin-top: 0.5rem; background-color: var(--color-secondary); border-color: var(--color-secondary);"> <i class="fas fa-map-marker-alt"></i> <span data-lang-key="modal_detect_location">Detect My Location</span> </button>
                 <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;"> <i class="fas fa-paper-plane"></i> <span data-lang-key="modal_submit_button">Submit Order</span> </button>
                 <div id="order-map-container"></div>
             </form>
@@ -1434,14 +1453,33 @@
                 </div>
                 <div class="cart-total" data-lang-key="cart_total">Total: <span id="cart-total-price">Rp 0</span></div>
             </div>
+            <div class="cart-actions">
+                <button class="btn" id="checkout-btn" data-lang-key="cart_checkout_button" style="width: auto;"> <i class="fas fa-cash-register"></i> Checkout </button>
+            </div>
         </div>
+    </div>
+
+    <div id="checkout-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header"> <h2 data-lang-key="checkout_modal_title">Complete Your Order</h2> <button class="modal-close-btn" aria-label="Close checkout modal">×</button> </div>
+        <div class="modal-body">
+            <form id="checkout-form" novalidate>
+                <div class="form-group"> <label for="checkout-name" data-lang-key="modal_name_label">Name</label> <input type="text" id="checkout-name" required> </div>
+                <div class="form-group"> <label for="checkout-phone" data-lang-key="modal_phone_label">Phone Number</label> <input type="tel" id="checkout-phone" required> </div>
+                <div class="form-group"> <label for="checkout-address" data-lang-key="modal_address_label">Delivery Address</label> <textarea id="checkout-address" rows="3" required></textarea> </div>
+                <button type="button" class="btn" id="checkout-detect-location-btn" style="width: 100%; margin-top: 0.5rem; background-color: var(--color-secondary); border-color: var(--color-secondary);"> <i class="fas fa-map-marker-alt"></i> <span data-lang-key="modal_detect_location">Detect My Location</span> </button>
+                <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;"> <i class="fas fa-paper-plane"></i> <span data-lang-key="checkout_submit_button">Confirm Order</span> </button>
+                <div id="checkout-map-container"></div>
+            </form>
+        </div>
+      </div>
     </div>
 
     <div id="toast" class="toast-notification"> <i id="toast-icon" class="fas fa-check-circle"></i> <p id="toast-message">Notification</p> </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADCv-AX09lIYq6Gr7Gm56rChp4kS0J08Q&callback=initMaps" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADCv-AX09lIYq6Gr7Gm56rChp4kS0J08Q&libraries=places&callback=initMaps" async defer></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
@@ -1459,8 +1497,9 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const shackLocation = { lat: -8.7214, lng: 115.1685 };
-        let contactMap, modalMap;
+        let contactMap, orderMap, checkoutMap;
         let cart = []; // Array to hold cart items
+        let userLocationMarker = null; // Marker for user's detected location
 
         function initMaps() {
             const mapOptions = {
@@ -1470,8 +1509,11 @@
             contactMap = new google.maps.Map(document.getElementById("address-map"), mapOptions);
             new google.maps.Marker({ position: shackLocation, map: contactMap, title: "Lobster Shack Bali" });
 
-            modalMap = new google.maps.Map(document.getElementById("order-map-container"), mapOptions);
-            new google.maps.Marker({ position: shackLocation, map: modalMap, title: "Lobster Shack Bali" });
+            orderMap = new google.maps.Map(document.getElementById("order-map-container"), mapOptions);
+            new google.maps.Marker({ position: shackLocation, map: orderMap, title: "Lobster Shack Bali" });
+
+            checkoutMap = new google.maps.Map(document.getElementById("checkout-map-container"), mapOptions);
+            new google.maps.Marker({ position: shackLocation, map: checkoutMap, title: "Lobster Shack Bali" });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -1491,7 +1533,17 @@
                 cartIcon: document.getElementById('cart-icon'), cartCount: document.getElementById('cart-count'),
                 cartModal: document.getElementById('cart-modal'), cartItemsContainer: document.getElementById('cart-items-container'),
                 cartTotal: document.getElementById('cart-total-price'), cartModalCloseBtn: document.querySelector('#cart-modal .modal-close-btn'),
-                cartEmptyMessage: document.querySelector('.cart-empty-message')
+                cartEmptyMessage: document.querySelector('.cart-empty-message'), checkoutBtn: document.getElementById('checkout-btn'),
+                checkoutModal: document.getElementById('checkout-modal'), checkoutForm: document.getElementById('checkout-form'),
+                checkoutModalCloseBtn: document.querySelector('#checkout-modal .modal-close-btn'),
+                detectLocationBtn: document.getElementById('detect-location-btn'),
+                checkoutDetectLocationBtn: document.getElementById('checkout-detect-location-btn'),
+                customerNameInput: document.getElementById('customer-name'),
+                customerPhoneInput: document.getElementById('customer-phone'),
+                customerAddressInput: document.getElementById('customer-address'),
+                checkoutNameInput: document.getElementById('checkout-name'),
+                checkoutPhoneInput: document.getElementById('checkout-phone'),
+                checkoutAddressInput: document.getElementById('checkout-address')
             };
 
             const updateTextContent = () => {
@@ -1518,7 +1570,7 @@
             const createCardHTML = (p, isFeatured = false) => {
                 const desc = p[`description_${currentLanguage}`] || p.description_id || '';
                 const displayDesc = desc.length > 100 ? `${desc.substring(0, isFeatured ? 70 : 100)}...` : desc;
-                return `<div class="menu-card" data-category="${p.category_name}"><div class="menu-card-image"><img src="${p.imageUrl}" alt="${p.name_en}"></div><div class="menu-card-content"><h3>${p[`name_${currentLanguage}`]||p.name_id}</h3><p class="menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(p.price)}</p><p class="description">${displayDesc}</p><button class="btn order-now-btn" data-product-id="${p.id}" data-lang-key="modal_order_now">Order Now</button></div></div>`;
+                return `<div class="menu-card" data-category="${p.category_name}"><div class="menu-card-image"><img src="${p.imageUrl}" alt="${p.name_en}"></div><div class="menu-card-content"><h3>${p[`name_${currentLanguage}`]||p.name_id}</h3><p class="menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(p.price)}</p><p class="description">${displayDesc}</p><button class="btn add-to-cart-btn" data-product-id="${p.id}" data-lang-key="add_to_cart_button"><i class="fas fa-cart-plus"></i> <span data-lang-key="add_to_cart_button_text">Add to Cart</span></button></div></div>`;
             };
 
             const renderMenu = () => {
@@ -1554,36 +1606,91 @@
                 dom.modalProductDetails.innerHTML = `<img src="${product.imageUrl}" alt="${product.name_en}" style="width:150px; height:150px; object-fit:cover; border-radius:50%; margin-bottom:1rem; border: 4px solid var(--color-surface); box-shadow: var(--shadow-sm);"><h3>${product[`name_${currentLanguage}`]||product.name_id}</h3><p class="menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(product.price)}</p>`;
                 dom.orderModal.classList.add('visible');
                 // Refresh map when modal is shown
-                setTimeout(() => google.maps.event.trigger(modalMap, 'resize'), 300);
+                setTimeout(() => google.maps.event.trigger(orderMap, 'resize'), 300);
             };
 
-            const closeOrderModal = () => { dom.orderModal.classList.remove('visible'); dom.orderForm.reset(); };
+            const closeOrderModal = () => { dom.orderModal.classList.remove('visible'); dom.orderForm.reset(); userLocationMarker?.setMap(null); };
+
+            const openCheckoutModal = () => {
+                closeCartModal();
+                dom.checkoutModal.classList.add('visible');
+                // Populate checkout form with user data if available (e.g., from local storage or previous input)
+                dom.checkoutNameInput.value = localStorage.getItem('customerName') || '';
+                dom.checkoutPhoneInput.value = localStorage.getItem('customerPhone') || '';
+                dom.checkoutAddressInput.value = localStorage.getItem('customerAddress') || '';
+                setTimeout(() => google.maps.event.trigger(checkoutMap, 'resize'), 300);
+            };
+
+            const closeCheckoutModal = () => { dom.checkoutModal.classList.remove('visible'); dom.checkoutForm.reset(); userLocationMarker?.setMap(null); };
 
             const handleOrderSubmit = async (e) => {
                 e.preventDefault();
-                const name = dom.orderForm.querySelector('#customer-name').value.trim();
-                const phone = dom.orderForm.querySelector('#customer-phone').value.trim();
+                const name = dom.customerNameInput.value.trim();
+                const phone = dom.customerPhoneInput.value.trim();
+                const address = dom.customerAddressInput.value.trim();
                 const productId = dom.modalProductId.value;
                 const product = siteData.products.find(p => p.id === productId);
 
-                if (!name || !phone) { return showToast(currentLanguage === 'id' ? 'Nama dan telepon harus diisi.' : 'Name and phone are required.', 'error'); }
+                if (!name || !phone || !address) { return showToast(currentLanguage === 'id' ? 'Nama, telepon, dan alamat harus diisi.' : 'Name, phone, and address are required.', 'error'); }
                 if (!product) { return showToast(currentLanguage === 'id' ? 'Produk tidak ditemukan.' : 'Product not found.', 'error'); }
 
                 try {
                     await db.collection('orders').add({
                         customerName: name,
                         customerPhone: phone,
+                        customerAddress: address,
                         productId: productId,
                         productName: product.name_en,
                         productPrice: product.price,
                         productImageUrl: product.imageUrl,
                         status: 'new',
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        location: userLocationMarker ? { lat: userLocationMarker.getPosition().lat(), lng: userLocationMarker.getPosition().lng() } : null
                     });
                     showToast(currentLanguage === 'id' ? 'Pesanan berhasil dikirim!' : 'Order submitted!', 'success');
                     closeOrderModal();
+                    // Optionally clear cart or specific item if ordered directly from this modal
                 } catch (error) { console.error("Error writing document: ", error); showToast(currentLanguage === 'id' ? 'Gagal mengirim pesanan.' : 'Failed to submit order.', 'error'); }
             };
+
+            const handleCheckoutSubmit = async (e) => {
+                e.preventDefault();
+                const name = dom.checkoutNameInput.value.trim();
+                const phone = dom.checkoutPhoneInput.value.trim();
+                const address = dom.checkoutAddressInput.value.trim();
+
+                if (!name || !phone || !address) { return showToast(currentLanguage === 'id' ? 'Nama, telepon, dan alamat harus diisi.' : 'Name, phone, and address are required.', 'error'); }
+                if (cart.length === 0) { return showToast(currentLanguage === 'id' ? 'Keranjang Anda kosong.' : 'Your cart is empty.', 'error'); }
+
+                try {
+                    await db.collection('orders').add({
+                        customerName: name,
+                        customerPhone: phone,
+                        customerAddress: address,
+                        items: cart.map(item => ({
+                            productId: item.id,
+                            productName: item.name_en,
+                            productPrice: item.price,
+                            productImageUrl: item.imageUrl,
+                            quantity: 1 // Assuming 1 quantity per item for now
+                        })),
+                        totalPrice: cart.reduce((sum, item) => sum + item.price, 0),
+                        status: 'new',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        location: userLocationMarker ? { lat: userLocationMarker.getPosition().lat(), lng: userLocationMarker.getPosition().lng() } : null
+                    });
+                    showToast(currentLanguage === 'id' ? 'Checkout berhasil! Pesanan Anda sedang diproses.' : 'Checkout successful! Your order is being processed.', 'success');
+                    closeCheckoutModal();
+                    cart = []; // Clear the cart after successful checkout
+                    updateCartCount();
+                    renderCartItems(); // Update cart display
+                    // Save user info
+                    localStorage.setItem('customerName', name);
+                    localStorage.setItem('customerPhone', phone);
+                    localStorage.setItem('customerAddress', address);
+                } catch (error) { console.error("Error during checkout: ", error); showToast(currentLanguage === 'id' ? 'Gagal melakukan checkout.' : 'Failed to checkout.', 'error'); }
+            };
+
 
             const updateCartCount = () => {
                 dom.cartCount.textContent = cart.length;
@@ -1594,10 +1701,12 @@
                 if (cart.length === 0) {
                     dom.cartItemsContainer.innerHTML = `<p class="cart-empty-message" data-lang-key="cart_empty">${currentLanguage === 'id' ? 'Keranjang Anda kosong.' : 'Your cart is empty.'}</p>`;
                     dom.cartTotal.style.display = 'none';
+                    dom.checkoutBtn.style.display = 'none'; // Hide checkout button if cart is empty
                     return;
                 }
 
                 dom.cartTotal.style.display = 'block';
+                dom.checkoutBtn.style.display = 'flex'; // Show checkout button
                 let cartHTML = '';
                 let total = 0;
                 cart.forEach(item => {
@@ -1606,7 +1715,8 @@
                             <img src="${item.imageUrl}" alt="${item.name_en}">
                             <div class="cart-item-details">
                                 <h4>${item[`name_${currentLanguage}`] || item.name_id}</h4>
-                                <p>Quantity: 1</p> </div>
+                                <p>Quantity: 1</p>
+                            </div>
                             <span class="cart-item-price">Rp ${new Intl.NumberFormat('id-ID').format(item.price)}</span>
                         </div>
                     `;
@@ -1625,10 +1735,9 @@
                 dom.cartModal.classList.remove('visible');
             };
 
-            // Add to Cart functionality (simplified for this example, assumes direct add to cart from order modal)
             const addToCart = (productId) => {
                 const product = siteData.products.find(p => p.id === productId);
-                if (product && !cart.some(item => item.id === productId)) { // Prevent adding duplicate items
+                if (product && !cart.some(item => item.id === productId)) {
                     cart.push(product);
                     updateCartCount();
                     showToast(currentLanguage === 'id' ? `${product[`name_${currentLanguage}`] || product.name_id} ditambahkan ke keranjang!` : `${product.name_en} added to cart!`, 'success');
@@ -1636,6 +1745,52 @@
                     showToast(currentLanguage === 'id' ? `${product[`name_${currentLanguage}`] || product.name_id} sudah ada di keranjang.` : `${product.name_en} is already in your cart.`, 'error');
                 }
             };
+
+            const detectUserLocation = (mapInstance, addressInput) => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        const userLatLng = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+
+                        // Clear existing marker if any
+                        if (userLocationMarker) {
+                            userLocationMarker.setMap(null);
+                        }
+
+                        userLocationMarker = new google.maps.Marker({
+                            position: userLatLng,
+                            map: mapInstance,
+                            title: currentLanguage === 'id' ? 'Lokasi Anda' : 'Your Location',
+                            icon: {
+                                url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+                            }
+                        });
+
+                        mapInstance.setCenter(userLatLng);
+                        mapInstance.setZoom(15);
+
+                        // Reverse Geocoding to get address
+                        const geocoder = new google.maps.Geocoder();
+                        geocoder.geocode({ 'location': userLatLng }, (results, status) => {
+                            if (status === 'OK' && results[0]) {
+                                addressInput.value = results[0].formatted_address;
+                                showToast(currentLanguage === 'id' ? 'Lokasi berhasil dideteksi!' : 'Location detected successfully!', 'success');
+                            } else {
+                                showToast(currentLanguage === 'id' ? 'Gagal mendapatkan alamat dari lokasi.' : 'Could not get address from location.', 'error');
+                            }
+                        });
+
+                    }, (error) => {
+                        console.error("Error getting location:", error);
+                        showToast(currentLanguage === 'id' ? 'Gagal mendeteksi lokasi. Pastikan GPS aktif.' : 'Failed to detect location. Ensure GPS is enabled.', 'error');
+                    }, { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 });
+                } else {
+                    showToast(currentLanguage === 'id' ? 'Geolokasi tidak didukung oleh browser ini.' : 'Geolocation is not supported by this browser.', 'error');
+                }
+            };
+
 
             async function fetchAllData() {
                 try {
@@ -1685,12 +1840,11 @@
                 dom.menuGrid.querySelectorAll('.menu-card').forEach(c => c.classList.toggle('hidden', !(filter === 'all' || c.dataset.category === filter)));
             });
 
-            // Changed from order-now-btn to add-to-cart-btn for clarity, but still opens order modal
+            // Add to Cart button on menu cards
             document.addEventListener('click', (e) => {
-                if (e.target.matches('.order-now-btn')) {
-                    const productId = e.target.dataset.productId;
-                    addToCart(productId); // Add to cart first
-                    openOrderModal(productId); // Then open the order modal
+                if (e.target.closest('.add-to-cart-btn')) {
+                    const productId = e.target.closest('.add-to-cart-btn').dataset.productId;
+                    addToCart(productId);
                 }
             });
 
@@ -1702,6 +1856,16 @@
             dom.cartIcon.addEventListener('click', openCartModal);
             dom.cartModalCloseBtn.addEventListener('click', closeCartModal);
             dom.cartModal.addEventListener('click', (e) => { if (e.target === dom.cartModal) closeCartModal(); });
+            dom.checkoutBtn.addEventListener('click', openCheckoutModal);
+
+            // Checkout Modal Event Listeners
+            dom.checkoutModalCloseBtn.addEventListener('click', closeCheckoutModal);
+            dom.checkoutModal.addEventListener('click', (e) => { if (e.target === dom.checkoutModal) closeCheckoutModal(); });
+            dom.checkoutForm.addEventListener('submit', handleCheckoutSubmit);
+
+            // Detect Location buttons
+            dom.detectLocationBtn.addEventListener('click', () => detectUserLocation(orderMap, dom.customerAddressInput));
+            dom.checkoutDetectLocationBtn.addEventListener('click', () => detectUserLocation(checkoutMap, dom.checkoutAddressInput));
 
             fetchAllData();
         });
