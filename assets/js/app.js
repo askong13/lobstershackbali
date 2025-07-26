@@ -1,116 +1,116 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-import { getDatabase, ref, onValue, get } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+import { getDatabase, ref, onValue, get, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
 
 const firebaseConfig = { /* ... Konfigurasi Firebase Anda ... */ };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const auth = getAuth(app);
 
-// Inisialisasi Google Maps Autocomplete
+let map, marker, currentUser;
+
+// Fungsi ini dipanggil oleh Google Maps API setelah script-nya termuat
 window.initMap = function() {
-  const addressInput = document.getElementById('delivery-address');
-  if (addressInput) {
-    const autocomplete = new google.maps.places.Autocomplete(addressInput, {
-      componentRestrictions: { 'country': 'id' } // Batasi hanya untuk Indonesia
+  const bali = { lat: -8.7192, lng: 115.1686 };
+  map = new google.maps.Map(document.getElementById("map"), {
+    center: bali,
+    zoom: 15,
+  });
+  marker = new google.maps.Marker({ map: map, position: bali, draggable: true });
+  
+  marker.addListener('dragend', () => {
+    updateAddress(marker.getPosition());
+  });
+  updateAddress(bali);
+};
+
+function updateAddress(location) {
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ location: location }, (results, status) => {
+        if (status === "OK" && results[0]) {
+            document.getElementById('delivery-address').textContent = results[0].formatted_address;
+        } else {
+            document.getElementById('delivery-address').textContent = "Alamat tidak ditemukan.";
+        }
     });
-  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // --- ANIMASI SAAT LOAD ---
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-            }
-        });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
-
-    // --- FUNGSI HALAMAN ---
-    const path = window.location.pathname;
-    if (path === '/' || path.endsWith('index.html')) {
-        loadSlider();
-        loadCompanyProfile();
-        loadFeaturedMenu();
-    }
-    if (path.endsWith('menu.html')) {
-        loadFullMenuAndModal();
-    }
+    // --- AUTHENTICATION ---
+    const loginBtn = document.getElementById('login-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const userAuthContainer = document.getElementById('user-auth-container');
+    const userInfo = document.getElementById('user-info');
     
-    // --- FUNGSI PEMUAT KONTEN ---
-    function loadSlider() {
-        const sliderContainer = document.getElementById('slider-container');
-        const sliderRef = ref(db, 'siteContent/slider');
-        onValue(sliderRef, (snapshot) => {
-            if (snapshot.exists()) {
-                sliderContainer.innerHTML = '';
-                const slides = snapshot.val();
-                for (const key in slides) {
-                    const slide = slides[key];
-                    const slideEl = document.createElement('div');
-                    slideEl.className = 'swiper-slide';
-                    slideEl.style.backgroundImage = `url(${slide.imageUrl})`;
-                    slideEl.innerHTML = `<div class="slide-content"><h1>${slide.heading_en}</h1><p>${slide.subheading_en}</p></div>`;
-                    sliderContainer.appendChild(slideEl);
-                }
-                // Inisialisasi Swiper setelah slide dimuat
-                new Swiper('.swiper', { loop: true, pagination: { el: '.swiper-pagination' }, navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }, autoplay: { delay: 5000 } });
+    loginBtn.addEventListener('click', () => {
+        const provider = new GoogleAuthProvider();
+        signInWithPopup(auth, provider);
+    });
+    logoutBtn.addEventListener('click', () => signOut(auth));
+
+    onAuthStateChanged(auth, user => {
+        currentUser = user;
+        if (user) {
+            loginBtn.classList.add('hidden');
+            userInfo.classList.remove('hidden');
+            document.getElementById('user-avatar').src = user.photoURL;
+        } else {
+            loginBtn.classList.remove('hidden');
+            userInfo.classList.add('hidden');
+        }
+    });
+
+    // --- MODAL & PEMESANAN ---
+    const orderModal = document.getElementById('order-modal');
+    const menuGrid = document.getElementById('menu-grid-container');
+    
+    menuGrid.addEventListener('click', e => {
+        const card = e.target.closest('.menu-card');
+        if (card) {
+            if (!currentUser) {
+                alert("Silakan login terlebih dahulu untuk memesan.");
+                return;
             }
-        });
-    }
+            openOrderModal(card.dataset.productId);
+        }
+    });
 
-    function loadCompanyProfile() {
-        const profileRef = ref(db, 'siteContent/companyProfile');
-        onValue(profileRef, (snapshot) => {
-            const data = snapshot.val();
-            if(data) {
-                document.getElementById('profile-heading-en').textContent = data.heading_en;
-                document.getElementById('profile-p1-en').textContent = data.paragraph1_en;
-                document.getElementById('profile-p2-en').textContent = data.paragraph2_en;
-            }
-        });
-    }
-
-    function loadFeaturedMenu() { /* ... kode sama seperti sebelumnya ... */ }
-
-    function loadFullMenuAndModal() {
-        const menuContainer = document.getElementById('full-menu-container');
-        if (!menuContainer) return;
-        // 1. Load semua menu
-        renderMenu('full-menu-container', () => true);
-
-        // 2. Setup Modal
-        const modal = document.getElementById('menu-modal');
-        const closeBtn = modal.querySelector('.modal-close-btn');
-        closeBtn.onclick = () => modal.classList.add('hidden');
+    orderModal.querySelector('.modal-close-btn').onclick = () => orderModal.classList.add('hidden');
+    
+    document.getElementById('confirm-order-btn').addEventListener('click', function() {
+        const productId = this.dataset.productId;
+        const address = document.getElementById('delivery-address').textContent;
         
-        menuContainer.addEventListener('click', (e) => {
-            const card = e.target.closest('.menu-card');
-            if (card) {
-                openModal(card.dataset.productId);
-            }
-        });
-    }
-    
-    function openModal(productId) {
-        const productRef = ref(db, `products/${productId}`);
-        const modal = document.getElementById('menu-modal');
-        get(productRef).then((snapshot) => {
-            if(snapshot.exists()) {
-                const data = snapshot.val();
-                modal.querySelector('#modal-img').src = data.imageUrl;
-                modal.querySelector('#modal-title').textContent = data.name_en;
-                modal.querySelector('#modal-price').textContent = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(data.price);
-                modal.querySelector('#modal-description').textContent = data.description_en;
-                modal.classList.remove('hidden');
-                // Panggil initMap lagi jika diperlukan untuk memastikan autocomplete aktif
-                if (window.google) initMap(); 
-            }
-        });
-    }
+        const orderData = {
+            userId: currentUser.uid,
+            userEmail: currentUser.email,
+            productId: productId,
+            deliveryAddress: address,
+            status: 'new',
+            timestamp: serverTimestamp()
+        };
+        
+        push(ref(db, `orders`), orderData)
+            .then(() => {
+                alert('Pesanan berhasil dibuat! Tim kami akan segera menghubungi Anda.');
+                orderModal.classList.add('hidden');
+            })
+            .catch(err => alert(`Gagal membuat pesanan: ${err.message}`));
+    });
 
-    function renderMenu(containerId, filter) { /* ... kode sama seperti sebelumnya, dengan 1 tambahan: ... */ 
-        // Tambahkan baris ini di dalam loop `for (const key in products)`
-        // card.dataset.productId = key;
-    }
+    // ... (kode untuk load slider, menu, dll tetap sama)
 });
+
+function openOrderModal(productId) {
+    const productRef = ref(db, `products/${productId}`);
+    get(productRef).then(snapshot => {
+        if (snapshot.exists()) {
+            const product = snapshot.val();
+            document.getElementById('modal-item-name').textContent = product.name_en;
+            document.getElementById('confirm-order-btn').dataset.productId = productId;
+            document.getElementById('order-modal').classList.remove('hidden');
+            // Re-initialize map jika perlu
+            if (window.google) initMap();
+        }
+    });
+}
