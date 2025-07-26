@@ -1,0 +1,23 @@
+# Konfigurasi dasar untuk build
+[build]
+  publish = "/"
+  command = ""
+
+# Redirect untuk URL yang lebih bersih, misal: website.com/admin
+[[redirects]]
+  from = "/admin"
+  to = "/admin.html"
+  status = 200
+
+# Headers untuk Caching & Keamanan
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
