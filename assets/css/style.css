@@ -373,15 +373,17 @@ body.ls-nav-open, body.ls-modal-open { overflow: hidden; }
 }
 
 
-/* ======== 11. FLOATING ACTION BUTTON (UPDATED) ======== */
+/* /* ======== 11. FLOATING ACTION BUTTON & POPUP (UPDATED) ======== */
+
+/* FAB Container */
 .ls-fab-container {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
+    bottom: 15px; /* Lebih dekat ke bawah */
+    right: 15px;  /* Lebih dekat ke kanan */
     z-index: 998;
     display: flex;
-    flex-direction: column-reverse;
-    align-items: flex-end; /* Align items to the right */
+    flex-direction: column;
+    align-items: flex-end;
 }
 
 .ls-fab-main {
@@ -398,7 +400,7 @@ body.ls-nav-open, body.ls-modal-open { overflow: hidden; }
     align-items: center;
     font-size: 1.8rem;
     transition: transform 0.3s ease, background-color 0.3s ease;
-    z-index: 2; /* Ensure it's above the menu */
+    z-index: 2;
 }
 
 .ls-fab-main:hover {
@@ -408,12 +410,12 @@ body.ls-nav-open, body.ls-modal-open { overflow: hidden; }
 .ls-fab-menu {
     display: flex;
     flex-direction: column;
-    align-items: flex-end; /* Align items to the right */
-    gap: 1rem;
+    align-items: flex-end;
+    gap: 1.2rem; /* Jarak antar item diperbesar */
     margin-bottom: 1.5rem;
     list-style: none;
     padding: 0;
-    transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    transition: all 0.4s ease;
 }
 
 .ls-fab-item {
@@ -423,22 +425,20 @@ body.ls-nav-open, body.ls-modal-open { overflow: hidden; }
     text-decoration: none;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(20px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateY(20px) scale(0.9);
+    transition: all 0.3s ease;
 }
 
-/* Animation when container is active */
 .ls-fab-container.active .ls-fab-menu .ls-fab-item {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
 }
 
 /* Staggered animation delay */
-.ls-fab-container.active .ls-fab-item:nth-child(1) { transition-delay: 0.2s; }
+.ls-fab-container.active .ls-fab-item:nth-child(1) { transition-delay: 0s; }
 .ls-fab-container.active .ls-fab-item:nth-child(2) { transition-delay: 0.1s; }
-.ls-fab-container.active .ls-fab-item:nth-child(3) { transition-delay: 0s; }
-
+.ls-fab-container.active .ls-fab-item:nth-child(3) { transition-delay: 0.2s; }
 
 .ls-fab-container.active .ls-fab-main {
     transform: rotate(135deg);
@@ -468,8 +468,91 @@ body.ls-nav-open, body.ls-modal-open { overflow: hidden; }
     font-size: 1.4rem;
     box-shadow: 0 3px 10px rgba(0,0,0,0.2);
     transition: background-color 0.3s ease;
+    flex-shrink: 0;
 }
 
 .ls-fab-item:hover i {
     background-color: var(--ls-color-primary);
+}
+
+/* Dine In Popup Styles */
+.ls-fab-popup-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(45, 76, 94, .85);
+    backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 1.5rem; z-index: 2001;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0s 0.4s ease;
+}
+
+.ls-fab-popup-overlay.visible {
+    opacity: 1; visibility: visible;
+}
+
+.ls-fab-popup-content {
+    background: var(--ls-color-surface);
+    border-radius: var(--ls-border-radius);
+    width: 100%; max-width: 400px;
+    box-shadow: var(--ls-shadow-lg);
+    transform: scale(0.95);
+    transition: transform 0.4s ease;
+}
+
+.ls-fab-popup-overlay.visible .ls-fab-popup-content {
+    transform: scale(1);
+}
+
+.ls-fab-popup-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--ls-color-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.ls-fab-popup-header h2 {
+    font-family: var(--ls-font-heading);
+    color: var(--ls-color-secondary);
+    font-size: 1.4rem;
+    margin: 0;
+}
+.ls-fab-popup-close {
+    font-size: 1.8rem; background: transparent; border: none;
+    cursor: pointer; color: #aaa; line-height: 1;
+}
+.ls-fab-popup-body {
+    padding: 1.5rem;
+    text-align: center;
+}
+.popup-info { color: var(--ls-color-text-light); margin-bottom: 1.5rem; font-size: 0.95rem; }
+.popup-instruction { color: var(--ls-color-text-light); margin-top: 1rem; font-size: 0.9rem; font-style: italic; }
+
+.popup-form-group { margin-bottom: 1.5rem; text-align: left; }
+.popup-form-group label { display: block; font-weight: 600; margin-bottom: .5rem; }
+.popup-form-group input {
+    width: 100%; padding: 12px;
+    border-radius: 8px; border: 1px solid var(--ls-color-border);
+    font-size: 1rem;
+}
+
+.popup-details {
+    display: flex;
+    justify-content: space-between;
+    background: var(--ls-color-background);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.reservation-code-display {
+    background-color: var(--ls-color-secondary);
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem auto;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    font-family: monospace;
 }
