@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lobster Shack Bali - Admin Panel</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+    <div id="auth-container">
+        <h2>Admin Login</h2>
+        <form id="login-form">
+            <input type="email" id="login-email" placeholder="Email" required>
+            <input type="password" id="login-password" placeholder="Password" required>
+            <button type="submit">Login</button>
+            <p id="auth-error-message" style="color: red;"></p>
+        </form>
+    </div>
+
+    <div id="admin-panel" style="display: none;">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Lobster Shack Admin</h3>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#dashboard" class="nav-link active" data-section="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="#orders" class="nav-link" data-section="orders"><i class="fas fa-receipt"></i> Orders</a></li>
+                    <li><a href="#products" class="nav-link" data-section="products"><i class="fas fa-lobster"></i> Products</a></li>
+                    <li><a href="#categories" class="nav-link" data-section="categories"><i class="fas fa-tags"></i> Categories</a></li>
+                    <li><a href="#banners" class="nav-link" data-section="banners"><i class="fas fa-images"></i> Banners</a></li>
+                    <li><a href="#gallery" class="nav-link" data-section="gallery"><i class="fas fa-camera"></i> Gallery</a></li>
+                    <li><a href="#history" class="nav-link" data-section="history"><i class="fas fa-history"></i> History</a></li>
+                    <li><a href="#content" class="nav-link" data-section="content"><i class="fas fa-language"></i> Content (ID/EN)</a></li>
+                    <li><button id="logout-btn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <header class="content-header">
+                <h1 id="current-section-title">Dashboard</h1>
+            </header>
+            <div class="section-content" id="dashboard-section">
+                </div>
+            <div class="section-content" id="orders-section" style="display: none;">
+                </div>
+            <div class="section-content" id="products-section" style="display: none;">
+                </div>
+            <div class="section-content" id="categories-section" style="display: none;">
+                </div>
+            <div class="section-content" id="banners-section" style="display: none;">
+                </div>
+            <div class="section-content" id="gallery-section" style="display: none;">
+                </div>
+            <div class="section-content" id="history-section" style="display: none;">
+                </div>
+            <div class="section-content" id="content-section" style="display: none;">
+                </div>
+        </main>
+    </div>
+
+    <div id="loading-spinner" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999;">
+        <i class="fas fa-spinner fa-spin fa-3x"></i>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/orders.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/categories.js"></script>
+    <script src="js/banners.js"></script>
+    <script src="js/gallery.js"></script>
+    <script src="js/history.js"></script>
+    <script src="js/content.js"></script>
+</body>
+</html>
