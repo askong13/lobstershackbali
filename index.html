@@ -13,22 +13,23 @@
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
     <style>
+        /* ======== BASE & VARIABLES ======== */
         :root {
-            --ls-font-heading: 'Playfair Display', serif;
-            --ls-font-body: 'Poppins', sans-serif;
-            --ls-color-primary: #D84B42;
-            --ls-color-secondary: #2D4C5E;
-            --ls-color-background: #F9F7F2;
-            --ls-color-surface: #FFFFFF;
+            --ls-font-heading: 'TOLYER Bold', sans-serif; /* MODIFIED FONT */
+            --ls-font-body: 'TOLYER Bold', sans-serif; /* MODIFIED FONT */
+            --ls-color-primary: #D84B42; /* Merah Lobster */
+            --ls-color-secondary: #2D4C5E; /* Biru Gelap / Abu-abu Kebiruan */
+            --ls-color-background: #F9F7F2; /* Refined Cream */
+            --ls-color-surface: #FFFFFF; /* Putih Bersih */
             --ls-color-text: #333333;
             --ls-color-text-light: #6c757d;
             --ls-color-border: #E0DACE;
             --ls-shadow-sm: 0 4px 12px rgba(45, 76, 94, .08);
             --ls-shadow-md: 0 8px 25px rgba(45, 76, 94, .12);
             --ls-shadow-lg: 0 12px 40px rgba(45, 76, 94, .20);
-            --ls-border-radius: 16px;
+            --ls-border-radius: 16px; /* Slightly larger radius */
             --ls-transition-speed: .4s;
-            --ls-container-width: 1320px;
+            --ls-container-width: 1320px; /* Wider container */
         }
         *, ::after, ::before { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; font-size: 16px; }
@@ -73,6 +74,8 @@
             background-color: #b93e36; border-color: #b93e36;
             transform: translateY(-4px); box-shadow: var(--ls-shadow-md);
         }
+
+        /* ======== HEADER ======== */
         .ls-main-header {
             background-color: rgba(255, 255, 255, .85);
             -webkit-backdrop-filter: blur(15px); backdrop-filter: blur(15px);
@@ -98,26 +101,47 @@
             transition: width var(--ls-transition-speed) ease;
         }
         .ls-nav-links a.active:after, .ls-nav-links a:hover:after { width: 100%; }
+        
+        /* ======== HERO SECTION (CORRECTED) ======== */
         .ls-hero-section {
-            position: relative; padding: 0; height: 95vh; min-height: 700px;
-            display: flex; align-items: center; justify-content: center; overflow: hidden;
+            position: relative;
+            padding: 0;
+            height: 95vh;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
-        .ls-hero-slider { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        .ls-hero-slider .swiper-slide { height: 100%; width: 100%; overflow: hidden; }
+        .ls-hero-slider {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+        .ls-hero-slider .swiper-slide {
+            height: 100%; width: 100%;
+            overflow: hidden;
+        }
         .ls-hero-slider .ls-slide-background {
-            width: 100%; height: 100%; background-size: cover; background-position: center;
+            width: 100%; height: 100%;
+            background-size: cover; background-position: center;
             transform: scale(1.15);
         }
         .ls-hero-slider .swiper-slide-active .ls-slide-background {
-            transform: scale(1); transition: transform 9s ease-out;
+            transform: scale(1);
+            transition: transform 9s ease-out;
         }
         .ls-hero-slider .ls-slide-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(45, 76, 94, .65);
         }
         .ls-hero-content {
-            position: relative; z-index: 2; text-align: center;
-            color: var(--ls-color-surface); padding: 0 1.5rem;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: var(--ls-color-surface);
+            padding: 0 1.5rem;
         }
         .ls-hero-content h1 {
             font-family: var(--ls-font-heading);
@@ -126,12 +150,18 @@
             margin-bottom: 1.5rem;
         }
         .ls-hero-content p {
-            font-size: 1.3rem; margin: 1.5rem auto 2.5rem; max-width: 700px;
-            line-height: 1.7; font-weight: 400; color: rgba(255, 255, 255, 0.95);
+            font-size: 1.3rem;
+            margin: 1.5rem auto 2.5rem;
+            max-width: 700px;
+            line-height: 1.7;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.95);
         }
         .ls-hero-slider .swiper-pagination { bottom: 30px !important; }
         .ls-hero-slider .swiper-pagination-bullet { background: rgba(255,255,255,0.7); width: 10px; height: 10px; opacity: 1; }
         .ls-hero-slider .swiper-pagination-bullet-active { background-color: var(--ls-color-primary); }
+        
+        /* ======== ABOUT SECTION (TIMELINE) ======== */
         .ls-timeline { position: relative; max-width: 900px; margin: 4rem auto 0; }
         .ls-timeline:after {
             content: ""; position: absolute; width: 3px;
@@ -154,9 +184,11 @@
             border: 1px solid var(--ls-color-border);
         }
         .ls-timeline-content:hover { transform: translateY(-8px); box-shadow: var(--ls-shadow-lg); }
-        .ls-timeline-content .ls-year { font-family: var(--ls-font-heading); color: var(--ls-color-primary); font-size: 2rem; font-weight: 700;}
-        .ls-timeline-content h3 { font-size: 1.3rem; color: var(--ls-color-secondary); margin-top: .5rem; line-height: 1.4; font-weight: 600;}
+        .ls-timeline-content .ls-year { font-family: var(--ls-font-heading); color: var(--ls-color-primary); font-size: 2rem; }
+        .ls-timeline-content h3 { font-size: 1.3rem; color: var(--ls-color-secondary); margin-top: .5rem; line-height: 1.4; }
         .ls-timeline-content p { font-size: 1rem; color: var(--ls-color-text-light); }
+
+        /* ======== MENU SECTION ======== */
         .ls-menu-section { background-color: var(--ls-color-surface); border-top: 1px solid var(--ls-color-border); border-bottom: 1px solid var(--ls-color-border); }
         .ls-featured-slider { padding-bottom: 4rem; }
         .ls-featured-slider .swiper-pagination { bottom: 0 !important; }
@@ -182,10 +214,12 @@
         .ls-menu-card:hover .ls-menu-card-image img { transform: scale(1.1); }
         .ls-menu-card-content { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; text-align: left; }
         .ls-menu-card .title-price { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.75rem; }
-        .ls-menu-card h3 { font-family: var(--ls-font-heading); color: var(--ls-color-secondary); font-size: 1.5rem; line-height: 1.3; font-weight: 700;}
+        .ls-menu-card h3 { font-family: var(--ls-font-heading); color: var(--ls-color-secondary); font-size: 1.5rem; line-height: 1.3; }
         .ls-menu-card-price { font-weight: 700; color: var(--ls-color-primary); font-size: 1.3rem; white-space: nowrap; }
         .ls-menu-card .ls-description { flex-grow: 1; margin-bottom: 1.5rem; color: var(--ls-color-text-light); font-size: 0.95rem; }
         .ls-menu-card .ls-btn { margin-top: auto; align-self: flex-start; }
+
+        /* ======== GALLERY SECTION ======== */
         .ls-gallery-grid { columns: 4 280px; column-gap: 1.25rem; }
         .ls-gallery-grid a {
             display: block; overflow: hidden; border-radius: var(--ls-border-radius);
@@ -203,6 +237,8 @@
             opacity: 0; transition: opacity var(--ls-transition-speed) ease;
         }
         .ls-gallery-grid a:hover::after { opacity: 1; }
+
+        /* ======== FOOTER ======== */
         .ls-main-footer {
             background-color: var(--ls-color-secondary); color: rgba(255, 255, 255, .85);
             padding: 6rem 0 2rem;
@@ -213,7 +249,7 @@
         }
         .ls-main-footer .footer-about .ls-logo { height: 70px; margin-bottom: 1.5rem; filter: brightness(0) invert(1); }
         .ls-main-footer .footer-about p { font-size: 1rem; line-height: 1.7; }
-        .ls-footer-title { font-family: var(--ls-font-heading); color: #fff; font-size: 1.8rem; margin-bottom: 1.5rem; font-weight: 700;}
+        .ls-footer-title { font-family: var(--ls-font-heading); color: #fff; font-size: 1.8rem; margin-bottom: 1.5rem; }
         .ls-footer-contact-info ul { list-style: none; padding: 0; margin: 0; line-height: 1.8; }
         .ls-footer-contact-info li { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; font-size: 1rem; }
         .ls-footer-contact-info li i { color: var(--ls-color-primary); font-size: 1.1rem; margin-top: 6px; flex-shrink: 0; width: 20px; text-align: center; }
@@ -226,6 +262,8 @@
         .ls-footer-socials a:hover { color: var(--ls-color-primary); background: #fff; }
         .ls-footer-copyright { border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 2rem; margin-top: 2rem; text-align: center; }
         .ls-footer-copyright p { font-size: 0.9rem; margin-bottom: 0; color: rgba(255, 255, 255, .7); }
+        
+        /* ======== PRODUCT DETAIL MODAL ======== */
         .ls-modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(45, 76, 94, .85); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
@@ -250,22 +288,26 @@
         }
         .ls-modal-close:hover { color: var(--ls-color-primary); transform: rotate(90deg); }
         .ls-modal-body {
-            display: grid; grid-template-columns: 1fr; padding: 2rem;
+            display: grid; grid-template-columns: 1fr;
+            padding: 2rem;
         }
         .ls-modal-body .modal-image {
-            width: 100%; height: 350px; border-radius: var(--ls-border-radius);
+            width: 100%; height: 350px;
+            border-radius: var(--ls-border-radius);
             overflow: hidden; margin-bottom: 2rem;
         }
         .ls-modal-body .modal-image img { width: 100%; height: 100%; object-fit: cover; }
         .ls-modal-body .modal-text h3 {
             font-family: var(--ls-font-heading); color: var(--ls-color-secondary);
-            font-size: 2.5rem; margin-bottom: 0.5rem; font-weight: 700;
+            font-size: 2.5rem; margin-bottom: 0.5rem;
         }
         .ls-modal-body .modal-text .modal-price {
             font-weight: 700; color: var(--ls-color-primary);
             font-size: 1.8rem; margin-bottom: 1.5rem; display: block;
         }
         .ls-modal-body .modal-text .modal-description { font-size: 1.1rem; line-height: 1.8; color: var(--ls-color-text); }
+        
+        /* ======== RESPONSIVE ADJUSTMENTS ======== */
         @media (min-width: 769px) {
             .ls-modal-body { grid-template-columns: 2fr 3fr; gap: 2.5rem; padding: 3rem; align-items: center; }
             .ls-modal-body .modal-image { margin-bottom: 0; height: 100%; min-height: 400px; }
@@ -280,7 +322,7 @@
             .ls-main-nav.active { transform: translateY(0); }
             .ls-nav-links { flex-direction: column; text-align: center; gap: 2.5rem; }
             .ls-nav-links a { font-size: 1.8rem; padding: .85rem 0; width: 100%; }
-            .ls-nav-links a:after { right: 0; margin: 0 auto; width: 60%; }
+            .ls-nav-links a:after { width: 60%; }
             .ls-header-actions { z-index: 1001; }
             .ls-mobile-menu-toggle { display: block; }
         }
@@ -309,7 +351,7 @@
 <body>
     <header class="ls-main-header">
         <div class="ls-container">
-            <a href="#home"><img src="" alt="Logo Lobster Shack" class="ls-logo" id="header-logo"></a>
+            <a href="#home"><img src=https://firebasestorage.googleapis.com/v0/b/lobster-shack-bali.firebasestorage.app/o/1753624796681.png?alt=media&token=7f6ba3b9-08a4-4a92-a3bc-1dc569944b48" alt="Logo Lobster Shack" class="ls-logo"></a>
             
             <nav class="ls-main-nav" id="ls-main-nav">
                 <ul class="ls-nav-links">
@@ -335,7 +377,8 @@
     <main>
         <section id="home" class="ls-hero-section">
             <div class="swiper ls-hero-slider">
-                <div class="swiper-wrapper" id="ls-hero-slider-wrapper"></div>
+                <div class="swiper-wrapper" id="ls-hero-slider-wrapper">
+                    </div>
                 <div class="swiper-pagination"></div>
             </div>
             <div class="ls-hero-content" data-aos="fade-up">
@@ -351,7 +394,8 @@
                     <span class="ls-subtitle" data-lang-key="history_section_subtitle">Since 2025</span>
                     <h2 class="ls-title" data-lang-key="history_title">Our Journey</h2>
                 </div>
-                <div class="ls-timeline" id="ls-history-timeline" data-aos="fade-up"></div>
+                <div class="ls-timeline" id="ls-history-timeline" data-aos="fade-up">
+                    </div>
             </div>
         </section>
 
@@ -363,7 +407,8 @@
                 </div>
                 <div data-aos="fade-up">
                      <div class="swiper ls-featured-slider">
-                        <div class="swiper-wrapper" id="ls-featured-menu-wrapper"></div>
+                        <div class="swiper-wrapper" id="ls-featured-menu-wrapper">
+                            </div>
                         <div class="swiper-pagination"></div>
                      </div>
                 </div>
@@ -371,8 +416,10 @@
                 <div class="ls-section-header" data-aos="fade-up" style="margin-top: 7rem; margin-bottom: 3rem;">
                      <h2 class="ls-title" data-lang-key="full_menu_title">Our Full Menu</h2>
                 </div>
-                <div class="ls-menu-filters" id="ls-menu-filters" data-aos="fade-up"></div>
-                <div class="ls-menu-grid" id="ls-menu-grid" data-aos="fade-up"></div>
+                <div class="ls-menu-filters" id="ls-menu-filters" data-aos="fade-up">
+                    </div>
+                <div class="ls-menu-grid" id="ls-menu-grid" data-aos="fade-up">
+                    </div>
             </div>
         </section>
 
@@ -382,7 +429,8 @@
                     <span class="ls-subtitle" data-lang-key="gallery_section_subtitle">Our Moments</span>
                     <h2 class="ls-title" data-lang-key="gallery_title">Tasteful Memories</h2>
                 </div>
-                <div class="ls-gallery-grid" id="ls-gallery-grid" data-aos="fade-up"></div>
+                <div class="ls-gallery-grid" id="ls-gallery-grid" data-aos="fade-up">
+                    </div>
             </div>
         </section>
     </main>
@@ -391,7 +439,7 @@
         <div class="ls-container">
             <div class="footer-content">
                 <div class="footer-about">
-                    <img src="" alt="Logo Lobster Shack" class="ls-logo" id="footer-logo">
+                    <img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo Lobster Shack" class="ls-logo">
                     <p data-lang-key="footer_description">Experience the finest catch of the day, grilled to perfection, in a cozy and inviting atmosphere. We look forward to welcoming you.</p>
                 </div>
                 <div class="footer-contact">
@@ -407,7 +455,7 @@
                 </div>
                  <div class="footer-social-links">
                     <h3 class="ls-footer-title" data-lang-key="nav_gallery">Follow Us</h3>
-                    <p data-lang-key="footer_follow_us">Stay connected for the latest updates and offers.</p>
+                    <p>Stay connected for the latest updates and offers.</p>
                     <ul class="ls-footer-socials">
                         <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
                         <li><a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a></li>
@@ -422,9 +470,10 @@
     </footer>
 
     <div class="ls-modal-overlay" id="ls-product-modal-overlay">
-        <div class="ls-modal-content">
+        <div class="ls-modal-content" id="ls-product-modal-content">
             <button class="ls-modal-close" id="ls-modal-close-btn" aria-label="Close modal">&times;</button>
-            <div class="ls-modal-body" id="ls-modal-body"></div>
+            <div class="ls-modal-body" id="ls-modal-body">
+                </div>
         </div>
     </div>
 
@@ -437,32 +486,28 @@
 
     <script>
     'use strict';
-    
-    // ======== FIREBASE CONFIGURATION ========
-    // GANTI DENGAN KONFIGURASI PROYEK FIREBASE ANDA SENDIRI
+
+    // ======== FIREBASE CONFIGURATION (UNCHANGED) ========
     const firebaseConfig = {
-      apiKey: "AIzaSyxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", // GANTI INI
-      authDomain: "your-project-id.firebaseapp.com", // GANTI INI
-      projectId: "your-project-id", // GANTI INI
-      storageBucket: "your-project-id.appspot.com", // GANTI INI
-      messagingSenderId: "1234567890", // GANTI INI
-      appId: "1:1234567890:web:xxxxxxxxxxxxxxxx" // GANTI INI
+      apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
+      authDomain: "lobster-shack-bali.firebaseapp.com",
+      projectId: "lobster-shack-bali",
+      storageBucket: "lobster-shack-bali.appspot.com",
+      messagingSenderId: "42452974733",
+      appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
     };
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // ======== GLOBAL VARIABLES ========
+    // Global variables
     let currentLanguage = localStorage.getItem('preferredLanguage') || 'id';
     let siteData = {};
     let lightbox;
 
-    // ======== DOM ELEMENT SELECTOR ========
     const domElements = {
         body: document.body,
-        headerLogo: document.getElementById('header-logo'),
-        footerLogo: document.getElementById('footer-logo'),
         mainNav: document.getElementById('ls-main-nav'),
         mobileMenuToggle: document.getElementById('ls-mobile-menu-toggle'),
         langToggleContainer: document.querySelector('.ls-language-toggle'),
@@ -472,59 +517,31 @@
         menuGrid: document.getElementById('ls-menu-grid'),
         menuFilters: document.getElementById('ls-menu-filters'),
         galleryGrid: document.getElementById('ls-gallery-grid'),
+        // New Modal Elements
         modalOverlay: document.getElementById('ls-product-modal-overlay'),
         modalBody: document.getElementById('ls-modal-body'),
         modalCloseBtn: document.getElementById('ls-modal-close-btn'),
     };
-
-    // ======== DATA FETCHING FUNCTION ========
-    async function fetchAllData() {
-        try {
-            const collections = ['products', 'categories', 'content', 'banners', 'gallery_images', 'history'];
-            const promises = collections.map(col => db.collection(col).get());
-            const [ productsSnap, categoriesSnap, contentSnap, bannersSnap, gallerySnap, historySnap ] = await Promise.all(promises);
-
-            siteData.products = productsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            siteData.categories = categoriesSnap.docs.map(doc => doc.data()).sort((a,b) => a.id - b.id);
-            siteData.banners = bannersSnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
-            siteData.gallery_images = gallerySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
-            siteData.history = historySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
-            
-            siteData.content = {};
-            contentSnap.docs.forEach(doc => { siteData.content[doc.id] = doc.data(); });
-            
-            renderAll();
-        } catch (error) {
-            console.error("Error fetching data from Firebase:", error);
-            document.body.innerHTML = `
-                <div style="padding: 40px; text-align: center; font-family: sans-serif;">
-                    <h1>Gagal Memuat Data</h1>
-                    <p>Tidak dapat terhubung ke database. Pastikan Anda telah mengikuti langkah-langkah pengaturan Firebase dengan benar.</p>
-                    <p><strong>Cek Console (F12) untuk melihat detail error.</strong> Error umum adalah 'PERMISSION_DENIED'.</p>
-                </div>
-            `;
-        }
-    }
     
-    // ======== RENDER FUNCTIONS ========
-    const renderAll = () => {
-        renderLogo();
-        renderBanners();
-        renderHistory();
-        renderMenu();
-        renderGallery();
-        updateTextContent();
-        AOS.init({ duration: 800, once: true, offset: 50 });
+    const updateTextContent = () => {
+        document.querySelectorAll('[data-lang-key]').forEach(el => {
+            const key = el.dataset.langKey;
+            const content = siteData.content[key];
+            if (content) {
+                el.innerHTML = content[`text_${currentLanguage}`] || content.text_id || el.innerHTML;
+            }
+        });
+        document.title = siteData.content?.ls_page_title?.[`text_${currentLanguage}`] || 'Lobster Shack Bali';
+        updateLangButtons();
     };
 
-    const renderLogo = () => {
-        const logoUrl = siteData.content?.logo?.image_url;
-        if (logoUrl) {
-            if (domElements.headerLogo) domElements.headerLogo.src = logoUrl;
-            if (domElements.footerLogo) domElements.footerLogo.src = logoUrl;
-        }
+    const updateLangButtons = () => {
+        document.querySelectorAll('.ls-lang-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.lang === currentLanguage);
+        });
     };
-
+    
+    // --- RENDER FUNCTIONS (BANNER FUNCTION CORRECTED) ---
     const renderBanners = () => {
         if (!siteData.banners || siteData.banners.length === 0) return;
         domElements.heroSliderWrapper.innerHTML = siteData.banners.map(banner => `
@@ -544,7 +561,7 @@
     const renderHistory = () => {
         if (!siteData.history || siteData.history.length === 0) return;
         domElements.historyTimeline.innerHTML = [...siteData.history]
-            .sort((a, b) => a.sort_order - b.sort_order)
+            .sort((a, b) => b.sort_order - a.sort_order)
             .map((item, index) => `
             <div class="ls-timeline-item ${index % 2 === 0 ? 'left' : 'right'}" data-aos="fade-up">
                 <div class="ls-timeline-content">
@@ -558,6 +575,7 @@
 
     const renderMenu = () => {
         if (!siteData.products || !siteData.categories) return;
+        
         const getCardHTML = (p) => `
             <div class="ls-menu-card" data-category="${p.category_name}" data-product-id="${p.id}"> 
                 <div class="ls-menu-card-image"><img src="${p.imageUrl}" alt="${p.name_en}"></div> 
@@ -571,11 +589,15 @@
                 </div> 
             </div>`;
         
-        domElements.featuredMenuWrapper.innerHTML = siteData.products
+        let featuredHTML = siteData.products
             .filter(p => p.is_featured)
-            .map(p => `<div class="swiper-slide">${getCardHTML(p)}</div>`).join('');
+            .map(p => `<div class="swiper-slide">${getCardHTML(p)}</div>`)
+            .join('');
             
-        domElements.menuGrid.innerHTML = siteData.products.map(p => getCardHTML(p)).join('');
+        let gridHTML = siteData.products.map(p => getCardHTML(p)).join('');
+        
+        domElements.featuredMenuWrapper.innerHTML = featuredHTML;
+        domElements.menuGrid.innerHTML = gridHTML;
 
         const allText = currentLanguage === 'id' ? 'Semua' : 'All';
         domElements.menuFilters.innerHTML = `<button class="ls-filter-btn active" data-filter="all">${allText}</button>` +
@@ -598,26 +620,8 @@
         if (lightbox) { lightbox.reload(); } 
         else { lightbox = GLightbox({ selector: '.glightbox' }); }
     };
-    
-    // ======== UI/UX FUNCTIONS ========
-    const updateTextContent = () => {
-        document.querySelectorAll('[data-lang-key]').forEach(el => {
-            const key = el.dataset.langKey;
-            const content = siteData.content[key];
-            if (content) {
-                el.innerHTML = content[`text_${currentLanguage}`] || content.text_id || el.innerHTML;
-            }
-        });
-        document.title = siteData.content?.ls_page_title?.[`text_${currentLanguage}`] || 'Lobster Shack Bali';
-        updateLangButtons();
-    };
 
-    const updateLangButtons = () => {
-        document.querySelectorAll('.ls-lang-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.lang === currentLanguage);
-        });
-    };
-
+    // --- NEW: MODAL RENDER FUNCTION ---
     const showProductModal = (productId) => {
         const product = siteData.products.find(p => p.id === productId);
         if (!product) return;
@@ -641,33 +645,62 @@
         domElements.modalOverlay.classList.remove('visible');
     };
     
-    // ======== EVENT LISTENERS INITIALIZATION ========
+    const renderAll = () => {
+        renderBanners();
+        renderHistory();
+        renderMenu();
+        renderGallery();
+        updateTextContent();
+        AOS.init({ duration: 800, once: true, offset: 50 });
+    };
+    
+    // --- DATA FETCHING (UNCHANGED) ---
+    async function fetchAllData() {
+        try {
+            const collections = ['products', 'categories', 'content', 'banners', 'gallery_images', 'history'];
+            const promises = collections.map(col => db.collection(col).get());
+            const [ productsSnap, categoriesSnap, contentSnap, bannersSnap, gallerySnap, historySnap ] = await Promise.all(promises);
+            
+            siteData.products = productsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            siteData.categories = categoriesSnap.docs.map(doc => doc.data()).sort((a,b) => a.id - b.id);
+            siteData.banners = bannersSnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
+            siteData.gallery_images = gallerySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
+            siteData.history = historySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
+            
+            siteData.content = {};
+            contentSnap.docs.forEach(doc => { siteData.content[doc.id] = doc.data(); });
+            
+            renderAll();
+        } catch (error) {
+            console.error("Error fetching data from Firebase:", error);
+            document.body.innerHTML = "<h1>Error loading site data. Please try again later.</h1>";
+        }
+    }
+    
+    // --- EVENT LISTENERS (MODIFIED) ---
     document.addEventListener('DOMContentLoaded', () => {
-        fetchAllData();
-
+        // Language Toggle
         domElements.langToggleContainer.addEventListener('click', e => {
             if (!e.target.matches('.ls-lang-btn')) return;
             currentLanguage = e.target.dataset.lang;
             localStorage.setItem('preferredLanguage', currentLanguage);
-            renderHistory();
-            renderMenu();
-            renderGallery();
-            updateTextContent();
+            renderHistory(); renderMenu(); renderGallery(); updateTextContent();
         });
         
+        // Mobile Menu
         domElements.mobileMenuToggle.addEventListener('click', () => {
             domElements.mainNav.classList.toggle('active');
             domElements.body.classList.toggle('ls-nav-open');
             const icon = domElements.mobileMenuToggle.querySelector('i');
             icon.classList.toggle('fa-bars'); icon.classList.toggle('fa-times');
         });
-        
         domElements.mainNav.addEventListener('click', (e) => {
             if (e.target.matches('a') && domElements.mainNav.classList.contains('active')) {
                 domElements.mobileMenuToggle.click();
             }
         });
         
+        // Menu Filtering
         domElements.menuFilters.addEventListener('click', e => {
             if (!e.target.matches('.ls-filter-btn')) return;
             domElements.menuFilters.querySelector('.active').classList.remove('active');
@@ -679,6 +712,8 @@
             });
         });
 
+        // --- NEW: MODAL EVENT LISTENERS ---
+        // Open modal on "View Details" click (using event delegation)
         document.body.addEventListener('click', (e) => {
             const detailsButton = e.target.closest('.ls-view-details-btn');
             if (detailsButton) {
@@ -689,30 +724,30 @@
                 }
             }
         });
-
+        // Close modal
         domElements.modalCloseBtn.addEventListener('click', hideProductModal);
         domElements.modalOverlay.addEventListener('click', e => {
             if (e.target === domElements.modalOverlay) { hideProductModal(); }
         });
         
+        // Active Nav Link on Scroll
         const sections = document.querySelectorAll('main section');
         const navLinks = document.querySelectorAll('.ls-nav-links a');
         window.addEventListener('scroll', () => {
-            let current = 'home';
+            let current = '';
             sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                if (window.pageYOffset >= sectionTop - 150) {
-                    current = section.getAttribute('id');
-                }
+                if (pageYOffset >= section.offsetTop - 150) { current = section.getAttribute('id'); }
             });
             navLinks.forEach(a => {
                 a.classList.remove('active');
-                if (a.getAttribute('href').includes(current)) {
-                    a.classList.add('active');
-                }
+                if (a.getAttribute('href').includes(current)) { a.classList.add('active'); }
             });
-        }, { passive: true });
+        });
+
+        fetchAllData();
     });
     </script>
 </body>
 </html>
+
+
