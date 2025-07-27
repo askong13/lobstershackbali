@@ -87,7 +87,7 @@ const renderMenu = () => {
                 <p class="ls-description">${(p[`description_${currentLanguage}`] || p.description_id).substring(0, 90)}...</p>
                 <div class="ls-card-actions">
                     <button class="ls-btn ls-view-details-btn"><i class="fas fa-eye"></i> <span data-lang-key="view_details_btn">View Details</span></button>
-                    ${p.gofood_link ? `<a href="${p.gofood_link}" target="_blank" rel="noopener noreferrer" class="ls-order-link" aria-label="Order on GoFood"><img src="https://i.ibb.co/LzPWW1M/gofood-logo-2022-48x48-1.png" alt="GoFood Logo" style="width:24px; height:24px;"></a>` : ''}
+                    ${p.gofood_link ? `<a href="${p.gofood_link}" target="_blank" rel="noopener noreferrer" class="ls-order-link" aria-label="Order on GoFood"><img src="https://brandlogos.net/wp-content/uploads/2022/06/gofood-logo_brandlogos.net_qgsxw.png" alt="GoFood Logo" style="width:24px; height:24px;"></a>` : ''}
                     ${p.grabfood_link ? `<a href="${p.grabfood_link}" target="_blank" rel="noopener noreferrer" class="ls-order-link" aria-label="Order on GrabFood"><img src="https://i.ibb.co/qDWMzWd/grab-logo-48x48.png" alt="GrabFood Logo" style="width:24px; height:24px;"></a>` : ''}
                 </div>
             </div> 
