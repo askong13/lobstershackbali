@@ -23,6 +23,9 @@ body {
     display: flex; /* For sidebar layout */
     min-height: 100vh;
 }
+body.nav-open {
+    overflow: hidden; /* Prevent scrolling when mobile nav is open */
+}
 
 /* Login Page */
 #auth-container {
@@ -62,28 +65,6 @@ body {
     font-size: 1rem;
 }
 
-#login-form button {
-    background-color: var(--primary-color);
-    color: var(--surface-color);
-    border: none;
-    padding: 12px 25px;
-    border-radius: 50px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    font-weight: 600;
-    transition: background-color var(--transition-speed) ease;
-    width: 100%;
-}
-
-#login-form button:hover {
-    background-color: #b93e36;
-}
-
-#auth-error-message {
-    margin-top: 1rem;
-    font-weight: 500;
-}
-
 /* Admin Panel Layout */
 #admin-panel {
     display: flex;
@@ -99,11 +80,18 @@ body {
     flex-direction: column;
     box-shadow: var(--shadow-md);
     flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh; /* Make sidebar take full height */
+    overflow-y: auto; /* Enable scrolling for many menu items */
 }
 
 .sidebar-header {
     text-align: center;
     margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .sidebar-header h3 {
@@ -316,6 +304,7 @@ body {
 
 .form-group input[type="checkbox"] {
     margin-right: 0.5rem;
+    transform: scale(1.2); /* Make checkbox slightly larger */
 }
 
 /* Modal Styles */
@@ -336,7 +325,7 @@ body {
     visibility: hidden;
     transition: opacity var(--transition-speed) ease, visibility 0s var(--transition-speed);
 }
-.modal-overlay[style*="display: flex"] { /* Override display: none when JS sets flex */
+.modal-overlay.visible {
     opacity: 1;
     visibility: visible;
     transition-delay: 0s;
@@ -353,7 +342,7 @@ body {
     transform: scale(.9);
     transition: transform var(--transition-speed) ease;
 }
-.modal-overlay[style*="display: flex"] .modal-content {
+.modal-overlay.visible .modal-content {
     transform: scale(1);
 }
 
@@ -382,6 +371,40 @@ body {
 }
 .modal-close-btn:hover { color: var(--primary-color); }
 .modal-body { padding: 1.5rem 2rem; }
+
+
+/* Order Details specific styling */
+.order-details-modal .modal-content {
+    max-width: 800px;
+}
+.order-summary, .order-items {
+    margin-bottom: 1.5rem;
+}
+.order-summary p {
+    margin-bottom: 0.5rem;
+}
+.order-summary strong {
+    color: var(--secondary-color);
+}
+.order-items table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+.order-items th, .order-items td {
+    border: 1px solid var(--border-color);
+    padding: 8px 12px;
+    text-align: left;
+}
+.order-items th {
+    background-color: #f0f0f0;
+}
+.order-status-select {
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    font-size: 1rem;
+}
 
 /* Toast Notification */
 .toast-notification {
@@ -416,6 +439,7 @@ body {
 /* Utility classes */
 .text-success { color: #28a745; }
 .text-danger { color: #dc3545; }
+.text-warning { color: #ffc107; }
 
 /* Responsive adjustments */
 @media (max-width: 992px) {
@@ -432,28 +456,43 @@ body {
         position: sticky;
         top: 0;
         z-index: 1000;
+        overflow-y: visible; /* Allow content to overflow if nav is expanded */
     }
     .sidebar .main-nav {
         display: none; /* Hide nav links on small screens initially */
-    }
-    .sidebar.active .main-nav {
-        display: flex;
-        flex-direction: column;
         position: absolute;
-        top: 60px; /* Adjust based on sidebar header height */
+        top: 100%; /* Position below header */
         left: 0;
         width: 100%;
         background-color: var(--secondary-color);
-        padding: 1rem;
         box-shadow: var(--shadow-md);
+        flex-direction: column;
+        padding: 1rem 0;
+        height: auto; /* Allow height to adjust */
     }
-    .mobile-nav-toggle { /* You'd need a hamburger icon for mobile sidebar */
+    .sidebar.active .main-nav {
+        display: flex;
+    }
+    .sidebar .main-nav ul {
+        width: 100%;
+        text-align: center;
+    }
+    .sidebar .main-nav li {
+        margin-bottom: 0;
+    }
+    .sidebar .main-nav a, .sidebar .logout-btn {
+        padding: 0.75rem 0;
+        justify-content: center;
+        border-radius: 0;
+    }
+    .mobile-nav-toggle {
         display: block;
         font-size: 1.5rem;
         color: #fff;
         background: none;
         border: none;
         cursor: pointer;
+        z-index: 1001; /* Ensure it's clickable */
     }
     .content {
         padding: 1rem;
@@ -475,5 +514,9 @@ body {
     }
     .admin-table th, .admin-table td {
         padding: 8px 10px;
+    }
+    .btn {
+        padding: .6rem 1rem;
+        font-size: 0.85rem;
     }
 }
