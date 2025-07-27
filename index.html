@@ -451,6 +451,7 @@
         .footer-contact-info li span:last-of-type {
             flex-grow: 1;
             text-align: left;
+            word-break: break-word; /* FIX: Prevents text overflow */
         }
         .modal-overlay {
             position: fixed;
@@ -963,7 +964,6 @@ const firebaseConfig = {
     let autocomplete;
     let currentAddressLatLng = { lat: -8.7223, lng: 115.1687 }; // Default: Kuta Beach
 
-    // DOM Elements
     const domElements = {
         body: document.body,
         mainNav: document.getElementById('main-nav'),
@@ -997,14 +997,13 @@ const firebaseConfig = {
         continueShoppingBtn: document.getElementById('continue-shopping-btn')
     };
 
-    // --- Google Maps Initialization & Autocomplete ---
     window.initMaps = () => {
         map = new google.maps.Map(domElements.addressMap, {
             center: currentAddressLatLng,
             zoom: 15,
             mapTypeControl: false,
             streetViewControl: false,
-            fullscreenControl: false,
+            fullscreenControl: true // FIX: Mengaktifkan tombol fullscreen
         });
         marker = new google.maps.Marker({
             position: currentAddressLatLng,
@@ -1013,17 +1012,15 @@ const firebaseConfig = {
         });
         geocoder = new google.maps.Geocoder();
 
-        // Initialize Autocomplete for address suggestions
         autocomplete = new google.maps.places.Autocomplete(
             domElements.customerAddressInput,
             {
                 types: ['address'],
-                componentRestrictions: { 'country': 'id' }, // Bias results to Indonesia
+                componentRestrictions: { 'country': 'id' },
                 fields: ['formatted_address', 'geometry']
             }
         );
 
-        // Handle place selection from Autocomplete
         autocomplete.addListener('place_changed', () => {
             const place = autocomplete.getPlace();
             if (place.geometry && place.geometry.location) {
@@ -1070,7 +1067,6 @@ const firebaseConfig = {
         }
     };
 
-    // --- RENDER FUNCTIONS ---
     const renderBanners = () => {
         domElements.heroSliderWrapper.innerHTML = siteData.banners.map(banner => `
             <div class="swiper-slide">
