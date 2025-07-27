@@ -4,109 +4,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lobster Shack Bali - Admin Panel</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
     <style>
-        /* CSS dasar untuk layout sidebar & content */
-        body { font-family: 'Poppins', sans-serif; display: flex; min-height: 100vh; margin: 0; background-color: #f8f6f0; }
-        #admin-sidebar {
-            width: 250px;
-            background-color: #2D4C5E; /* Warna sekunder dari tema Anda */
-            color: #fff;
-            padding: 20px;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        /* --- Variabel CSS dari Situs Utama (Dipertahankan untuk Konsistensi) --- */
+        :root {
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Poppins', sans-serif;
+            --color-primary: #D84B42; /* Merah Lobster */
+            --color-secondary: #2D4C5E; /* Biru Gelap / Abu-abu Kebiruan */
+            --color-background: #F8F6F0; /* Krem Muda */
+            --color-surface: #FFFFFF; /* Putih Bersih */
+            --color-text: #333333; /* Hitam Pekat */
+            --color-text-light: #6c757d; /* Abu-abu Teks */
+            --color-border: #E0DACE; /* Garis Krem */
+            --shadow-sm: 0 2px 8px rgba(45, 76, 94, .07);
+            --shadow-md: 0 4px 15px rgba(45, 76, 94, .12);
+            --shadow-lg: 0 8px 30px rgba(45, 76, 94, .2);
+            --border-radius: 12px;
+            --transition-speed: .4s;
+        }
+
+        /* --- Global Admin Styles --- */
+        body {
+            font-family: var(--font-body);
+            display: flex; /* Menggunakan flexbox untuk layout sidebar-content */
+            min-height: 100vh;
+            margin: 0;
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* --- Login Page Styles --- */
+        #login-page {
             display: flex;
-            flex-direction: column;
-            position: sticky;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            background-color: var(--color-background);
+            position: fixed; /* Penting agar tidak terganggu oleh panel admin di bawahnya */
             top: 0;
-            height: 100vh;
-            overflow-y: auto;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 10000; /* Pastikan selalu di atas */
         }
-        #admin-sidebar .logo {
-            height: 60px;
-            filter: brightness(0) invert(1); /* Untuk logo putih di latar belakang gelap */
-            margin-bottom: 30px;
+        #login-form-container {
+            background: var(--color-surface);
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            width: 90%;
+            max-width: 400px;
             text-align: center;
         }
-        #admin-sidebar nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        #login-form-container .logo {
+            height: 80px;
+            margin-bottom: 2rem;
         }
-        #admin-sidebar nav ul li {
-            margin-bottom: 10px;
-        }
-        #admin-sidebar nav ul li a {
-            display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            border-radius: 8px;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        #admin-sidebar nav ul li a i {
-            margin-right: 10px;
-            font-size: 1.1em;
-        }
-        #admin-sidebar nav ul li a:hover,
-        #admin-sidebar nav ul li a.active {
-            background-color: #D84B42; /* Warna primer dari tema Anda */
-            color: #fff;
-        }
-        #admin-content {
-            flex-grow: 1;
-            padding: 30px;
-            overflow-y: auto;
-        }
-        #admin-header {
-            background-color: #FFFFFF;
-            padding: 20px 30px;
-            border-bottom: 1px solid #E0DACE;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            border-radius: 12px;
-            box-shadow: var(--shadow-sm);
-        }
-        #admin-header h1 {
-            margin: 0;
+        #login-form-container h2 {
             font-family: var(--font-heading);
             color: var(--color-secondary);
-            font-size: 2em;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
         }
-        #admin-footer {
-            text-align: center;
-            padding: 20px;
-            color: var(--color-text-light);
-            font-size: 0.9em;
-            border-top: 1px solid #E0DACE;
-            margin-top: 40px;
+        #login-form .form-group {
+            margin-bottom: 1.25rem;
+            text-align: left;
         }
-        .content-section {
-            background-color: #FFFFFF;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: var(--shadow-sm);
-            margin-bottom: 30px;
-        }
-        .content-section h2 {
-            font-family: var(--font-heading);
+        #login-form .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: .5rem;
             color: var(--color-secondary);
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-size: 1.8em;
-            border-bottom: 1px dashed var(--color-border);
-            padding-bottom: 15px;
         }
-        /* Tambahkan gaya untuk form, tabel, dll. */
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: .5rem; color: var(--color-secondary); }
-        .form-group input[type="text"],
-        .form-group input[type="number"],
-        .form-group input[type="url"],
-        .form-group textarea,
-        .form-group select {
+        #login-form .form-group input {
             width: 100%;
             padding: .8rem 1rem;
             border-radius: 8px;
@@ -115,11 +94,200 @@
             font-size: 1rem;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
-        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+        #login-form .form-group input:focus {
             outline: none;
             border-color: var(--color-primary);
             box-shadow: 0 0 0 3px rgba(216, 75, 66, 0.2);
         }
+        #login-form button.btn {
+            width: 100%;
+            margin-top: 1.5rem;
+        }
+        #login-error-message {
+            color: var(--color-primary);
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+
+        /* --- Layout Admin Panel --- */
+        #admin-panel-container {
+            display: flex;
+            width: 100%;
+            /* Sembunyikan secara default, hanya ditampilkan setelah login */
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0s 0.3s;
+        }
+        #admin-panel-container.visible {
+            visibility: visible;
+            opacity: 1;
+            transition-delay: 0s;
+        }
+
+        #admin-sidebar {
+            width: 280px; /* Lebih lebar sedikit untuk kenyamanan */
+            background-color: var(--color-secondary);
+            color: rgba(255, 255, 255, 0.9);
+            padding: 25px 20px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 999;
+        }
+        #admin-sidebar .logo {
+            height: 70px;
+            filter: brightness(0) invert(1); /* Untuk logo putih di latar belakang gelap */
+            margin-bottom: 30px;
+            display: block; /* Agar margin-bottom bekerja */
+            text-align: center; /* Untuk menengahkan logo jika lebih kecil dari lebar sidebar */
+        }
+        #admin-sidebar nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #admin-sidebar nav ul li {
+            margin-bottom: 8px;
+        }
+        #admin-sidebar nav ul li a,
+        #admin-sidebar #logout-btn {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+            font-weight: 500;
+            background: none; /* Untuk tombol logout */
+            border: none; /* Untuk tombol logout */
+            width: 100%; /* Untuk tombol logout */
+            text-align: left; /* Untuk tombol logout */
+            cursor: pointer; /* Untuk tombol logout */
+        }
+        #admin-sidebar nav ul li a i,
+        #admin-sidebar #logout-btn i {
+            margin-right: 12px;
+            font-size: 1.1em;
+        }
+        #admin-sidebar nav ul li a:hover,
+        #admin-sidebar #logout-btn:hover,
+        #admin-sidebar nav ul li a.active {
+            background-color: var(--color-primary);
+            color: var(--color-surface);
+        }
+
+        #admin-content {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        #admin-header {
+            background-color: var(--color-surface);
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+        }
+        #admin-header h1 {
+            margin: 0;
+            font-family: var(--font-heading);
+            color: var(--color-secondary);
+            font-size: 2.2em;
+        }
+        #admin-header .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        #admin-header .header-actions .btn {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9em;
+        }
+        #admin-header .header-actions .btn .cart-badge {
+            position: static;
+            margin-left: 8px;
+            padding: 2px 6px;
+            min-width: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 24px;
+        }
+
+        #admin-footer {
+            text-align: center;
+            padding: 25px;
+            color: var(--color-text-light);
+            font-size: 0.9em;
+            border-top: 1px solid var(--color-border);
+            margin-top: 40px;
+        }
+
+        /* --- Content Sections & General Elements --- */
+        .content-section {
+            background-color: var(--color-surface);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 30px;
+        }
+        .content-section h2 {
+            font-family: var(--font-heading);
+            color: var(--color-secondary);
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 2em;
+            border-bottom: 1px dashed var(--color-border);
+            padding-bottom: 15px;
+        }
+
+        /* Form Styling */
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: .6rem;
+            color: var(--color-secondary);
+            font-size: 0.95em;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="password"],
+        .form-group input[type="number"],
+        .form-group input[type="url"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: .9rem 1.2rem;
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            color: var(--color-text);
+            background-color: var(--color-background);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(216, 75, 66, 0.2);
+            background-color: var(--color-surface);
+        }
+        .form-group input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        /* Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -136,12 +304,13 @@
             background-color: var(--color-primary);
             color: var(--color-surface);
             text-align: center;
+            white-space: nowrap; /* Prevent text wrap on buttons */
         }
         .btn:hover {
             background-color: #b93e36;
             border-color: #b93e36;
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: var(--shadow-md);
+            transform: translateY(-2px); /* Slightly less aggressive than public site */
+            box-shadow: var(--shadow-sm);
         }
         .btn-secondary {
             background-color: var(--color-surface);
@@ -152,18 +321,26 @@
             background-color: var(--color-secondary);
             color: var(--color-surface);
         }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Table Styling */
         .table-responsive { overflow-x: auto; }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 25px;
             background-color: var(--color-surface);
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
             box-shadow: var(--shadow-sm);
         }
         th, td {
-            padding: 12px 15px;
+            padding: 15px 20px;
             text-align: left;
             border-bottom: 1px solid var(--color-border);
         }
@@ -174,214 +351,677 @@
             text-transform: uppercase;
             font-size: 0.9em;
         }
-        tr:last-child td { border-bottom: none; }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:nth-child(even) { background-color: #FDFBFA; } /* Slight stripe effect */
+
+        /* Status Badges */
         .status-badge {
             display: inline-block;
-            padding: .3em .7em;
+            padding: .35em .8em;
             border-radius: 50px;
-            font-size: 0.8em;
+            font-size: 0.85em;
             font-weight: 600;
             color: #fff;
+            text-transform: capitalize;
+            min-width: 80px; /* Consistent width */
+            text-align: center;
         }
         .status-badge.new { background-color: #007bff; }
         .status-badge.processing { background-color: #ffc107; color: #333; }
         .status-badge.completed { background-color: #28a745; }
         .status-badge.cancelled { background-color: #dc3545; }
+
+        /* Action Buttons in Tables/Lists */
         .action-buttons button {
             background: none;
             border: none;
-            font-size: 1.1em;
+            font-size: 1.15em;
             cursor: pointer;
-            margin-right: 8px;
+            margin-right: 12px;
             color: var(--color-secondary);
             transition: color 0.3s ease;
+            padding: 5px; /* Increase click area */
         }
+        .action-buttons button:last-child { margin-right: 0; }
         .action-buttons button:hover { color: var(--color-primary); }
+
+        /* Dashboard Stats */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .dashboard-stat-card {
+            background-color: var(--color-surface);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+        }
+        .dashboard-stat-card h3 {
+            font-family: var(--font-heading);
+            color: var(--color-secondary);
+            font-size: 1.5em;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        .dashboard-stat-card p {
+            font-size: 2.8em;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin: 0;
+            line-height: 1;
+        }
+        .dashboard-stat-card p.small {
+            font-size: 1.2em;
+            color: var(--color-text);
+        }
+
+        /* Image Previews */
+        .image-preview {
+            max-width: 120px;
+            max-height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 1px solid var(--color-border);
+            display: none; /* Hidden by default */
+        }
+        .image-upload-group {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .6);
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-speed) ease, visibility 0s var(--transition-speed);
+        }
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0s;
+        }
+        .modal-content {
+            background: var(--color-background);
+            border-radius: var(--border-radius);
+            width: 95%;
+            max-width: 600px; /* Lebar maksimum untuk modal */
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(.9);
+            transition: transform var(--transition-speed) ease;
+            box-shadow: var(--shadow-lg);
+        }
+        .modal-overlay.visible .modal-content { transform: scale(1); }
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--color-surface);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+        .modal-header h2 {
+            font-family: var(--font-heading);
+            color: var(--color-secondary);
+            font-size: 1.75rem;
+            margin: 0;
+        }
+        .modal-close-btn {
+            font-size: 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #aaa;
+            transition: color 0.3s ease;
+            padding: 0 5px;
+            line-height: 1;
+        }
+        .modal-close-btn:hover { color: var(--color-primary); }
+        .modal-body { padding: 2rem; }
+        .modal-body .btn { width: 100%; margin-top: 1rem; }
+
+        /* Toast Notification (reuse from public site) */
+        .toast-notification {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--color-secondary);
+            color: #fff;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transform: translateX(calc(100% + 2rem));
+            transition: transform .5s ease-in-out;
+        }
+        .toast-notification.show { transform: translateX(0); }
+        .toast-notification.error { background-color: var(--color-primary); }
+        .toast-notification.success { background-color: #28a745; }
+        .toast-notification.info { background-color: var(--color-secondary); }
+        .toast-notification i { font-size: 1.5rem; }
+        .toast-notification p { margin: 0; }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 992px) {
+            body { flex-direction: column; }
+            #admin-sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                box-shadow: var(--shadow-sm);
+                padding: 15px 20px;
+            }
+            #admin-sidebar nav ul {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+            #admin-sidebar nav ul li { margin-bottom: 0; }
+            #admin-sidebar nav ul li a,
+            #admin-sidebar #logout-btn {
+                justify-content: center;
+                text-align: center;
+                font-size: 0.9em;
+                padding: 10px 12px;
+            }
+            #admin-sidebar nav ul li a i,
+            #admin-sidebar #logout-btn i { margin-right: 5px; }
+            #admin-sidebar .logo { margin-bottom: 20px; }
+            #admin-header { flex-direction: column; align-items: flex-start; gap: 15px; padding: 15px 20px; margin-bottom: 20px; }
+            #admin-header h1 { font-size: 1.8em; }
+            #admin-content { padding: 20px; }
+            .content-section { padding: 20px; margin-bottom: 20px; }
+            .content-section h2 { font-size: 1.8em; margin-bottom: 20px; }
+            .dashboard-stats { grid-template-columns: 1fr; }
+            th, td { padding: 10px 15px; }
+        }
+
+        @media (max-width: 576px) {
+            #login-form-container { padding: 2rem; }
+            #login-form-container h2 { font-size: 1.8rem; }
+            #admin-sidebar nav ul li a,
+            #admin-sidebar #logout-btn { padding: 8px 10px; font-size: 0.85em; }
+            #admin-sidebar nav ul li a i,
+            #admin-sidebar #logout-btn i { display: none; } /* Hide icons on very small screens if space is tight */
+            .btn { padding: .75rem 1.5rem; font-size: 0.9em; }
+            .modal-content { border-radius: 0; width: 100%; height: 100%; max-height: 100vh; }
+            .modal-header, .modal-body { padding: 1.2rem; }
+        }
     </style>
 </head>
 <body>
-    <div id="admin-sidebar">
-        <img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Lobster Shack Admin" class="logo">
-        <nav>
-            <ul>
-                <li><a href="#dashboard" class="active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
-                <li><a href="#orders"><i class="fas fa-clipboard-list"></i> Pesanan</a></li>
-                <li><a href="#products"><i class="fas fa-fish"></i> Produk</a></li>
-                <li><a href="#categories"><i class="fas fa-tags"></i> Kategori</a></li>
-                <li><a href="#content"><i class="fas fa-pencil-ruler"></i> Konten Website</a></li>
-                <li><a href="#banners"><i class="fas fa-image"></i> Banner Slider</a></li>
-                <li><a href="#gallery-images"><i class="fas fa-camera"></i> Galeri</a></li>
-                <li><a href="#history"><i class="fas fa-history"></i> Riwayat Kami</a></li>
-                <li><a href="#profile"><i class="fas fa-user-circle"></i> Profil Admin</a></li>
-                <li><button id="logout-btn" style="width:100%; text-align:left; background:none; border:none; padding:12px 15px; color:rgba(255,255,255,0.8); cursor:pointer; display:flex; align-items:center; border-radius:8px;"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
-            </ul>
-        </nav>
+
+    <div id="login-page">
+        <div id="login-form-container">
+            <img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo Lobster Shack" class="logo">
+            <h2>Admin Login</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" required placeholder="admin@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required placeholder="Password">
+                </div>
+                <button type="submit" class="btn" id="login-btn">Login</button>
+                <p id="login-error-message" style="color: var(--color-primary); margin-top: 10px;"></p>
+            </form>
+        </div>
     </div>
 
-    <div id="admin-content">
-        <header id="admin-header">
-            <h1 id="current-page-title">Dashboard</h1>
-            <div class="header-actions">
-                <button class="btn btn-secondary"><i class="fas fa-bell"></i> Notifikasi <span class="cart-badge" id="admin-notification-badge" style="position: static; margin-left: 5px;">0</span></button>
-            </div>
-        </header>
+    <div id="admin-panel-container">
+        <div id="admin-sidebar">
+            <img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Lobster Shack Admin" class="logo">
+            <nav>
+                <ul>
+                    <li><a href="#dashboard" class="active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li><a href="#orders"><i class="fas fa-clipboard-list"></i> Pesanan</a></li>
+                    <li><a href="#products"><i class="fas fa-fish"></i> Produk</a></li>
+                    <li><a href="#categories"><i class="fas fa-tags"></i> Kategori</a></li>
+                    <li><a href="#content"><i class="fas fa-pencil-ruler"></i> Konten Website</a></li>
+                    <li><a href="#banners"><i class="fas fa-image"></i> Banner Slider</a></li>
+                    <li><a href="#gallery-images"><i class="fas fa-camera"></i> Galeri</a></li>
+                    <li><a href="#history"><i class="fas fa-history"></i> Riwayat Kami</a></li>
+                    <li><a href="#profile"><i class="fas fa-user-circle"></i> Profil Admin</a></li>
+                    <li><button id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
+                </ul>
+            </nav>
+        </div>
 
-        <main>
-            <section id="dashboard" class="content-section active-section">
-                <h2>Ringkasan Dashboard</h2>
-                <p>Selamat datang di panel admin Lobster Shack Bali. Di sini Anda bisa melihat ringkasan performa restoran Anda.</p>
-                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:20px;">
-                    <div class="content-section" style="padding:15px; text-align:center;">
-                        <h3>Total Pesanan Hari Ini</h3>
-                        <p style="font-size:2.5em; font-weight:bold; color:var(--color-primary);" id="total-orders-today">0</p>
-                    </div>
-                     <div class="content-section" style="padding:15px; text-align:center;">
-                        <h3>Pendapatan Hari Ini</h3>
-                        <p style="font-size:2.5em; font-weight:bold; color:var(--color-primary);" id="revenue-today">Rp 0</p>
-                    </div>
-                     <div class="content-section" style="padding:15px; text-align:center;">
-                        <h3>Produk Paling Populer</h3>
-                        <p style="font-size:1.5em; font-weight:bold; color:var(--color-secondary);" id="top-product-today">-</p>
-                    </div>
+        <div id="admin-content">
+            <header id="admin-header">
+                <h1 id="current-page-title">Dashboard</h1>
+                <div class="header-actions">
+                    <button class="btn btn-secondary"><i class="fas fa-bell"></i> Notifikasi <span class="cart-badge" id="admin-notification-badge" style="display:none;">0</span></button>
                 </div>
-            </section>
+            </header>
 
-            <section id="orders" class="content-section" style="display:none;">
-                <h2>Manajemen Pesanan</h2>
-                <div class="table-responsive">
-                    <table id="orders-table">
-                        <thead>
-                            <tr>
-                                <th>ID Pesanan</th>
-                                <th>Nama Pelanggan</th>
-                                <th>Telepon</th>
-                                <th>Alamat</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                                <th>Waktu Pesan</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            </tbody>
-                    </table>
-                </div>
-            </section>
+            <main>
+                <section id="dashboard" class="content-section">
+                    <h2>Ringkasan Dashboard</h2>
+                    <div class="dashboard-stats">
+                        <div class="dashboard-stat-card">
+                            <h3>Total Pesanan Hari Ini</h3>
+                            <p id="total-orders-today">0</p>
+                        </div>
+                        <div class="dashboard-stat-card">
+                            <h3>Pendapatan Hari Ini</h3>
+                            <p id="revenue-today">Rp 0</p>
+                        </div>
+                        <div class="dashboard-stat-card">
+                            <h3>Produk Paling Populer</h3>
+                            <p class="small" id="top-product-today">-</p>
+                        </div>
+                    </div>
+                </section>
 
-            <section id="products" class="content-section" style="display:none;">
-                <h2>Manajemen Produk</h2>
-                <button class="btn" id="add-product-btn" style="margin-bottom:20px;"><i class="fas fa-plus"></i> Tambah Produk Baru</button>
-                <div class="table-responsive">
-                    <table id="products-table">
-                        <thead>
-                            <tr>
-                                <th>Gambar</th>
-                                <th>Nama (ID)</th>
-                                <th>Nama (EN)</th>
-                                <th>Harga</th>
-                                <th>Kategori</th>
-                                <th>Unggulan</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            </tbody>
-                    </table>
-                </div>
-            </section>
+                <section id="orders" class="content-section" style="display:none;">
+                    <h2>Manajemen Pesanan</h2>
+                    <div class="table-responsive">
+                        <table id="orders-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Pesanan</th>
+                                    <th>Nama</th>
+                                    <th>Telepon</th>
+                                    <th>Alamat</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Waktu Pesan</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                </tbody>
+                        </table>
+                    </div>
+                </section>
 
-            <section id="categories" class="content-section" style="display:none;">
-                <h2>Manajemen Kategori</h2>
-                 <button class="btn" id="add-category-btn" style="margin-bottom:20px;"><i class="fas fa-plus"></i> Tambah Kategori Baru</button>
-                <div class="table-responsive">
-                    <table id="categories-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nama Kategori</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            </tbody>
-                    </table>
-                </div>
-            </section>
+                <section id="products" class="content-section" style="display:none;">
+                    <h2>Manajemen Produk</h2>
+                    <button class="btn" id="add-product-btn" style="margin-bottom:20px;"><i class="fas fa-plus"></i> Tambah Produk Baru</button>
+                    <div class="table-responsive">
+                        <table id="products-table">
+                            <thead>
+                                <tr>
+                                    <th>Gambar</th>
+                                    <th>Nama (ID)</th>
+                                    <th>Nama (EN)</th>
+                                    <th>Harga</th>
+                                    <th>Kategori</th>
+                                    <th>Unggulan</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                </tbody>
+                        </table>
+                    </div>
+                </section>
 
-            <section id="content" class="content-section" style="display:none;">
-                <h2>Manajemen Konten Website</h2>
-                <form id="content-form">
-                    <div class="form-group">
-                        <label for="page_title_id">Judul Halaman (ID)</label>
-                        <input type="text" id="page_title_id">
+                <section id="categories" class="content-section" style="display:none;">
+                    <h2>Manajemen Kategori</h2>
+                    <button class="btn" id="add-category-btn" style="margin-bottom:20px;"><i class="fas fa-plus"></i> Tambah Kategori Baru</button>
+                    <div class="table-responsive">
+                        <table id="categories-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nama Kategori</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                </tbody>
+                        </table>
                     </div>
-                     <div class="form-group">
-                        <label for="page_title_en">Judul Halaman (EN)</label>
-                        <input type="text" id="page_title_en">
-                    </div>
-                    <div class="form-group">
-                        <label for="hero_title_id">Judul Hero (ID)</label>
-                        <input type="text" id="hero_title_id">
-                    </div>
-                    <div class="form-group">
-                        <label for="hero_title_en">Judul Hero (EN)</label>
-                        <input type="text" id="hero_title_en">
-                    </div>
-                    <div class="form-group">
-                        <label for="hero_subtitle_id">Sub Judul Hero (ID)</label>
-                        <textarea id="hero_subtitle_id"></textarea>
-                    </div>
-                     <div class="form-group">
-                        <label for="hero_subtitle_en">Sub Judul Hero (EN)</label>
-                        <textarea id="hero_subtitle_en"></textarea>
-                    </div>
-                    <button type="submit" class="btn"><i class="fas fa-save"></i> Simpan Konten</button>
-                </form>
-            </section>
+                </section>
 
-            <section id="banners" class="content-section" style="display:none;">
-                <h2>Manajemen Banner Slider</h2>
-                <button class="btn" id="add-banner-btn" style="margin-bottom:20px;"><i class="fas fa-plus"></i> Tambah Banner Baru</button>
-                <div id="banner-list">
-                    </div>
-            </section>
+                <section id="content" class="content-section" style="display:none;">
+                    <h2>Manajemen Konten Website</h2>
+                    <form id="content-form">
+                        <p style="margin-bottom: 20px; color: var(--color-text-light);">Ubah teks statis di situs utama Anda. Perhatikan bahwa Anda perlu mengklik tombol "Simpan Konten" setelah semua perubahan dilakukan.</p>
 
-            <section id="gallery-images" class="content-section" style="display:none;">
-                <h2>Manajemen Gambar Galeri</h2>
-                <button class="btn" id="add-gallery-image-btn" style="margin-bottom:20px;"><i class="fas fa-plus"></i> Tambah Gambar Galeri</button>
-                <div id="gallery-image-list" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:15px;">
-                    </div>
-            </section>
+                        <div class="form-group">
+                            <label for="content_page_title_id">Judul Halaman (ID)</label>
+                            <input type="text" id="content_page_title_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_page_title_en">Judul Halaman (EN)</label>
+                            <input type="text" id="content_page_title_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_hero_title_id">Judul Hero (ID)</label>
+                            <input type="text" id="content_hero_title_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_hero_title_en">Judul Hero (EN)</label>
+                            <input type="text" id="content_hero_title_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_hero_subtitle_id">Sub Judul Hero (ID)</label>
+                            <textarea id="content_hero_subtitle_id" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="content_hero_subtitle_en">Sub Judul Hero (EN)</label>
+                            <textarea id="content_hero_subtitle_en" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_description_id">Deskripsi Footer (ID)</label>
+                            <textarea id="content_footer_description_id" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_description_en">Deskripsi Footer (EN)</label>
+                            <textarea id="content_footer_description_en" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="content_history_title_id">Judul Riwayat (ID)</label>
+                            <input type="text" id="content_history_title_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_history_title_en">Judul Riwayat (EN)</label>
+                            <input type="text" id="content_history_title_en">
+                        </div>
+                         <div class="form-group">
+                            <label for="content_menu_section_subtitle_id">Subtitle Bagian Menu (ID)</label>
+                            <input type="text" id="content_menu_section_subtitle_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_menu_section_subtitle_en">Subtitle Bagian Menu (EN)</label>
+                            <input type="text" id="content_menu_section_subtitle_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_menu_title_id">Judul Menu Rekomendasi (ID)</label>
+                            <input type="text" id="content_menu_title_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_menu_title_en">Judul Menu Rekomendasi (EN)</label>
+                            <input type="text" id="content_menu_title_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_full_menu_title_id">Judul Menu Lengkap (ID)</label>
+                            <input type="text" id="content_full_menu_title_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_full_menu_title_en">Judul Menu Lengkap (EN)</label>
+                            <input type="text" id="content_full_menu_title_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_gallery_section_subtitle_id">Subtitle Bagian Galeri (ID)</label>
+                            <input type="text" id="content_gallery_section_subtitle_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_gallery_section_subtitle_en">Subtitle Bagian Galeri (EN)</label>
+                            <input type="text" id="content_gallery_section_subtitle_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_gallery_title_id">Judul Galeri (ID)</label>
+                            <input type="text" id="content_gallery_title_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_gallery_title_en">Judul Galeri (EN)</label>
+                            <input type="text" id="content_gallery_title_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_contact_title_id">Judul Kontak Footer (ID)</label>
+                            <input type="text" id="content_footer_contact_title_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_contact_title_en">Judul Kontak Footer (EN)</label>
+                            <input type="text" id="content_footer_contact_title_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_address_label_id">Label Alamat Footer (ID)</label>
+                            <input type="text" id="content_footer_address_label_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_address_label_en">Label Alamat Footer (EN)</label>
+                            <input type="text" id="content_footer_address_label_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_address_value_id">Nilai Alamat Footer (ID)</label>
+                            <textarea id="content_footer_address_value_id" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_address_value_en">Nilai Alamat Footer (EN)</label>
+                            <textarea id="content_footer_address_value_en" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_phone_label_id">Label Telepon Footer (ID)</label>
+                            <input type="text" id="content_footer_phone_label_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_phone_label_en">Label Telepon Footer (EN)</label>
+                            <input type="text" id="content_footer_phone_label_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_phone_value_id">Nilai Telepon Footer (ID)</label>
+                            <input type="text" id="content_footer_phone_value_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_phone_value_en">Nilai Telepon Footer (EN)</label>
+                            <input type="text" id="content_footer_phone_value_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_email_label_id">Label Email Footer (ID)</label>
+                            <input type="text" id="content_footer_email_label_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_email_label_en">Label Email Footer (EN)</label>
+                            <input type="text" id="content_footer_email_label_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_email_value_id">Nilai Email Footer (ID)</label>
+                            <input type="text" id="content_footer_email_value_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_email_value_en">Nilai Email Footer (EN)</label>
+                            <input type="text" id="content_footer_email_value_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_hours_label_id">Label Jam Buka Footer (ID)</label>
+                            <input type="text" id="content_footer_hours_label_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_hours_label_en">Label Jam Buka Footer (EN)</label>
+                            <input type="text" id="content_footer_hours_label_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_hours_value_id">Nilai Jam Buka Footer (ID)</label>
+                            <input type="text" id="content_footer_hours_value_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_hours_value_en">Nilai Jam Buka Footer (EN)</label>
+                            <input type="text" id="content_footer_hours_value_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_copyright_id">Hak Cipta Footer (ID)</label>
+                            <input type="text" id="content_footer_copyright_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_footer_copyright_en">Hak Cipta Footer (EN)</label>
+                            <input type="text" id="content_footer_copyright_en">
+                        </div>
+                         <div class="form-group">
+                            <label for="content_add_to_cart_btn_id">Teks Tombol 'Add to Cart' (ID)</label>
+                            <input type="text" id="content_add_to_cart_btn_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_add_to_cart_btn_en">Teks Tombol 'Add to Cart' (EN)</label>
+                            <input type="text" id="content_add_to_cart_btn_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_order_now_btn_id">Teks Tombol 'Order Now' (ID)</label>
+                            <input type="text" id="content_order_now_btn_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_order_now_btn_en">Teks Tombol 'Order Now' (EN)</label>
+                            <input type="text" id="content_order_now_btn_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_modal_title_id">Judul Modal Pesanan (ID)</label>
+                            <input type="text" id="content_modal_title_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_modal_title_en">Judul Modal Pesanan (EN)</label>
+                            <input type="text" id="content_modal_title_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_modal_name_label_id">Label Nama Modal (ID)</label>
+                            <input type="text" id="content_modal_name_label_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_modal_name_label_en">Label Nama Modal (EN)</label>
+                            <input type="text" id="content_modal_name_label_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_modal_phone_label_id">Label Telepon Modal (ID)</label>
+                            <input type="text" id="content_modal_phone_label_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_modal_phone_label_en">Label Telepon Modal (EN)</label>
+                            <input type="text" id="content_modal_phone_label_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_modal_detect_location_id">Teks Deteksi Lokasi Modal (ID)</label>
+                            <input type="text" id="content_modal_detect_location_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_modal_detect_location_en">Teks Deteksi Lokasi Modal (EN)</label>
+                            <input type="text" id="content_modal_detect_location_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_modal_submit_button_id">Teks Tombol Submit Modal (ID)</label>
+                            <input type="text" id="content_modal_submit_button_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_modal_submit_button_en">Teks Tombol Submit Modal (EN)</label>
+                            <input type="text" id="content_modal_submit_button_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_cart_title_id">Judul Keranjang (ID)</label>
+                            <input type="text" id="content_cart_title_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_cart_title_en">Judul Keranjang (EN)</label>
+                            <input type="text" id="content_cart_title_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_cart_subtotal_id">Label Subtotal Keranjang (ID)</label>
+                            <input type="text" id="content_cart_subtotal_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_cart_subtotal_en">Label Subtotal Keranjang (EN)</label>
+                            <input type="text" id="content_cart_subtotal_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_cart_delivery_fee_id">Label Ongkir Keranjang (ID)</label>
+                            <input type="text" id="content_cart_delivery_fee_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_cart_delivery_fee_en">Label Ongkir Keranjang (EN)</label>
+                            <input type="text" id="content_cart_delivery_fee_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_cart_total_id">Label Total Keranjang (ID)</label>
+                            <input type="text" id="content_cart_total_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_cart_total_en">Label Total Keranjang (EN)</label>
+                            <input type="text" id="content_cart_total_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_cart_checkout_button_id">Teks Tombol Checkout Keranjang (ID)</label>
+                            <input type="text" id="content_cart_checkout_button_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_cart_checkout_button_en">Teks Tombol Checkout Keranjang (EN)</label>
+                            <input type="text" id="content_cart_checkout_button_en">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_cart_continue_shopping_id">Teks Tombol Lanjut Belanja (ID)</label>
+                            <input type="text" id="content_cart_continue_shopping_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="content_cart_continue_shopping_en">Teks Tombol Lanjut Belanja (EN)</label>
+                            <input type="text" id="content_cart_continue_shopping_en">
+                        </div>
 
-            <section id="history" class="content-section" style="display:none;">
-                <h2>Manajemen Riwayat Kami</h2>
-                <button class="btn" id="add-history-btn" style="margin-bottom:20px;"><i class="fas fa-plus"></i> Tambah Item Riwayat</button>
-                <div id="history-list">
-                    </div>
-            </section>
 
-            <section id="profile" class="content-section" style="display:none;">
-                <h2>Profil Admin</h2>
-                <form id="admin-profile-form">
-                    <div class="form-group">
-                        <label for="admin-name">Nama Admin</label>
-                        <input type="text" id="admin-name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="admin-email">Email</label>
-                        <input type="email" id="admin-email" disabled> </div>
-                    <div class="form-group">
-                        <label for="admin-phone">Telepon</label>
-                        <input type="tel" id="admin-phone">
-                    </div>
-                    <button type="submit" class="btn"><i class="fas fa-save"></i> Perbarui Profil</button>
-                </form>
-            </section>
-        </main>
+                        <button type="submit" class="btn"><i class="fas fa-save"></i> Simpan Konten</button>
+                    </form>
+                </section>
 
-        <footer id="admin-footer">
-            <p>&copy; 2025 Lobster Shack Bali Admin Panel. All Rights Reserved.</p>
-        </footer>
+                <section id="banners" class="content-section" style="display:none;">
+                    <h2>Manajemen Banner Slider</h2>
+                    <button class="btn" id="add-banner-btn" style="margin-bottom:20px;"><i class="fas fa-plus"></i> Tambah Banner Baru</button>
+                    <div id="banner-list" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
+                        </div>
+                </section>
+
+                <section id="gallery-images" class="content-section" style="display:none;">
+                    <h2>Manajemen Gambar Galeri</h2>
+                    <button class="btn" id="add-gallery-image-btn" style="margin-bottom:20px;"><i class="fas fa-plus"></i> Tambah Gambar Galeri</button>
+                    <div id="gallery-image-list" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:20px;">
+                        </div>
+                </section>
+
+                <section id="history" class="content-section" style="display:none;">
+                    <h2>Manajemen Riwayat Kami</h2>
+                    <button class="btn" id="add-history-btn" style="margin-bottom:20px;"><i class="fas fa-plus"></i> Tambah Item Riwayat</button>
+                    <div id="history-list">
+                        </div>
+                </section>
+
+                <section id="profile" class="content-section" style="display:none;">
+                    <h2>Profil Admin</h2>
+                    <form id="admin-profile-form">
+                        <div class="form-group">
+                            <label for="admin-name">Nama Admin</label>
+                            <input type="text" id="admin-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-email">Email</label>
+                            <input type="email" id="admin-email" disabled> </div>
+                        <div class="form-group">
+                            <label for="admin-phone">Telepon</label>
+                            <input type="tel" id="admin-phone">
+                        </div>
+                        <button type="submit" class="btn"><i class="fas fa-save"></i> Perbarui Profil</button>
+                    </form>
+                </section>
+            </main>
+
+            <footer id="admin-footer">
+                <p>&copy; 2025 Lobster Shack Bali Admin Panel. All Rights Reserved.</p>
+            </footer>
+        </div>
     </div>
 
     <div id="product-modal" class="modal-overlay">
@@ -419,16 +1059,19 @@
                         <textarea id="product-description-en" rows="3"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="product-image-url">URL Gambar</label>
-                        <input type="url" id="product-image-url" placeholder="Paste URL gambar atau Upload">
-                        <input type="file" id="product-image-upload" accept="image/*" style="margin-top:10px;">
-                        <img id="product-image-preview" src="" alt="Gambar Produk" style="max-width:100px; max-height:100px; margin-top:10px; display:none;">
+                        <label>Gambar Produk</label>
+                        <input type="url" id="product-image-url" placeholder="Paste URL gambar (opsional)">
+                        <div class="image-upload-group">
+                            <label for="product-image-upload" style="font-weight:normal;">Atau Unggah File:</label>
+                            <input type="file" id="product-image-upload" accept="image/*">
+                        </div>
+                        <img id="product-image-preview" src="" alt="Preview Gambar Produk" class="image-preview">
                     </div>
-                     <div class="form-group">
+                    <div class="form-group">
                         <input type="checkbox" id="product-is-featured">
-                        <label for="product-is-featured">Produk Unggulan</label>
+                        <label for="product-is-featured" style="display:inline; margin-left:5px;">Produk Unggulan</label>
                     </div>
-                    <button type="submit" class="btn" style="width:100%;"><i class="fas fa-save"></i> Simpan Produk</button>
+                    <button type="submit" class="btn"><i class="fas fa-save"></i> Simpan Produk</button>
                 </form>
             </div>
         </div>
@@ -447,7 +1090,7 @@
                         <label for="category-name-field">Nama Kategori</label>
                         <input type="text" id="category-name-field" required>
                     </div>
-                    <button type="submit" class="btn" style="width:100%;"><i class="fas fa-save"></i> Simpan Kategori</button>
+                    <button type="submit" class="btn"><i class="fas fa-save"></i> Simpan Kategori</button>
                 </form>
             </div>
         </div>
@@ -463,16 +1106,19 @@
                 <form id="banner-form">
                     <input type="hidden" id="banner-id">
                     <div class="form-group">
-                        <label for="banner-image-url-field">URL Gambar Banner</label>
-                        <input type="url" id="banner-image-url-field" placeholder="Paste URL gambar atau Upload">
-                        <input type="file" id="banner-image-upload-field" accept="image/*" style="margin-top:10px;">
-                        <img id="banner-image-preview" src="" alt="Gambar Banner" style="max-width:100px; max-height:100px; margin-top:10px; display:none;">
+                        <label>Gambar Banner</label>
+                        <input type="url" id="banner-image-url-field" placeholder="Paste URL gambar (opsional)">
+                        <div class="image-upload-group">
+                            <label for="banner-image-upload-field" style="font-weight:normal;">Atau Unggah File:</label>
+                            <input type="file" id="banner-image-upload-field" accept="image/*">
+                        </div>
+                        <img id="banner-image-preview" src="" alt="Preview Gambar Banner" class="image-preview">
                     </div>
                     <div class="form-group">
                         <label for="banner-sort-order">Urutan Tampilan</label>
                         <input type="number" id="banner-sort-order" min="0" value="0">
                     </div>
-                    <button type="submit" class="btn" style="width:100%;"><i class="fas fa-save"></i> Simpan Banner</button>
+                    <button type="submit" class="btn"><i class="fas fa-save"></i> Simpan Banner</button>
                 </form>
             </div>
         </div>
@@ -488,10 +1134,13 @@
                 <form id="gallery-image-form">
                     <input type="hidden" id="gallery-image-id">
                     <div class="form-group">
-                        <label for="gallery-image-url-field">URL Gambar Galeri</label>
-                        <input type="url" id="gallery-image-url-field" placeholder="Paste URL gambar atau Upload">
-                        <input type="file" id="gallery-image-upload-field" accept="image/*" style="margin-top:10px;">
-                        <img id="gallery-image-preview" src="" alt="Gambar Galeri" style="max-width:100px; max-height:100px; margin-top:10px; display:none;">
+                        <label>Gambar Galeri</label>
+                        <input type="url" id="gallery-image-url-field" placeholder="Paste URL gambar (opsional)">
+                        <div class="image-upload-group">
+                            <label for="gallery-image-upload-field" style="font-weight:normal;">Atau Unggah File:</label>
+                            <input type="file" id="gallery-image-upload-field" accept="image/*">
+                        </div>
+                        <img id="gallery-image-preview" src="" alt="Preview Gambar Galeri" class="image-preview">
                     </div>
                     <div class="form-group">
                         <label for="gallery-image-caption-id">Keterangan (ID)</label>
@@ -505,7 +1154,7 @@
                         <label for="gallery-image-sort-order">Urutan Tampilan</label>
                         <input type="number" id="gallery-image-sort-order" min="0" value="0">
                     </div>
-                    <button type="submit" class="btn" style="width:100%;"><i class="fas fa-save"></i> Simpan Gambar</button>
+                    <button type="submit" class="btn"><i class="fas fa-save"></i> Simpan Gambar</button>
                 </form>
             </div>
         </div>
@@ -544,7 +1193,7 @@
                         <label for="history-sort-order">Urutan Tampilan</label>
                         <input type="number" id="history-sort-order" min="0" value="0">
                     </div>
-                    <button type="submit" class="btn" style="width:100%;"><i class="fas fa-save"></i> Simpan Riwayat</button>
+                    <button type="submit" class="btn"><i class="fas fa-save"></i> Simpan Riwayat</button>
                 </form>
             </div>
         </div>
@@ -568,7 +1217,7 @@
         // KONFIGURASI PROYEK FIREBASE (WAJIB DIISI)
         // =================================================================================
         const firebaseConfig = {
-            apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
+            apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk", // Ganti dengan API Key Anda
             authDomain: "lobster-shack-bali.firebaseapp.com",
             databaseURL: "https://lobster-shack-bali-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "lobster-shack-bali",
@@ -583,12 +1232,16 @@
         const db = firebase.firestore();
         const storage = firebase.storage();
 
-        // --- Variabel Global ---
-        let adminData = {}; // Untuk menyimpan data profil admin yang sedang login
-        let currentActiveSection = 'dashboard';
-        let categoriesData = []; // Cache kategori untuk dropdown produk
-
+        // --- Variabel DOM Admin Panel ---
         const adminDom = {
+            loginPage: document.getElementById('login-page'),
+            loginForm: document.getElementById('login-form'),
+            loginEmail: document.getElementById('login-email'),
+            loginPassword: document.getElementById('login-password'),
+            loginError: document.getElementById('login-error-message'),
+            loginBtn: document.getElementById('login-btn'),
+
+            adminPanelContainer: document.getElementById('admin-panel-container'),
             sidebar: document.getElementById('admin-sidebar'),
             contentArea: document.getElementById('admin-content'),
             currentPageTitle: document.getElementById('current-page-title'),
@@ -668,15 +1321,14 @@
             historyIdField: document.getElementById('history-id'),
             historyYearField: document.getElementById('history-year'),
             historyTitleIdField: document.getElementById('history-title-id'),
-            historyTitleEnField: document: document.getElementById('history-title-en'),
+            historyTitleEnField: document.getElementById('history-title-en'),
             historyTextIdField: document.getElementById('history-text-id'),
             historyTextEnField: document.getElementById('history-text-en'),
             historySortOrderField: document.getElementById('history-sort-order'),
             historyList: document.getElementById('history-list'),
 
-
             contentForm: document.getElementById('content-form'),
-            // Referensi untuk semua input konten akan ditambahkan secara dinamis nanti
+            // Referensi ke semua input konten akan diambil saat renderContent
 
             adminProfileForm: document.getElementById('admin-profile-form'),
             adminNameField: document.getElementById('admin-name'),
@@ -688,12 +1340,18 @@
             revenueToday: document.getElementById('revenue-today'),
             topProductToday: document.getElementById('top-product-today'),
 
-            // Re-use toast from public site
+            // Toast (re-use from public site concept)
             toast: document.getElementById('toast'),
             toastIcon: document.getElementById('toast-icon'),
             toastMessage: document.getElementById('toast-message'),
         };
 
+        // --- Variabel Global Admin ---
+        let adminData = {}; // Menyimpan data profil admin yang login
+        let currentActiveSection = 'dashboard';
+        let categoriesData = []; // Cache kategori untuk dropdown produk
+
+        // --- Fungsi Helper Umum ---
         const showToast = (message, type = 'info') => {
             adminDom.toastMessage.textContent = message;
             adminDom.toast.className = 'toast-notification'; // Reset classes
@@ -705,52 +1363,98 @@
             }, 4000);
         };
 
-        // --- Autentikasi Admin ---
-        const redirectToLogin = () => {
-            // Anda perlu membuat halaman login admin terpisah (misal: login.html)
-            // Di halaman login.html, Anda akan menggunakan Firebase Authentication
-            // untuk proses login. Setelah berhasil login, redirect ke admin.html ini.
-            window.location.href = 'login.html'; // Ganti dengan path ke halaman login Anda
+        const openModal = (modalElement) => {
+            modalElement.classList.add('visible');
+            document.body.style.overflow = 'hidden';
         };
 
+        const closeModal = (modalElement) => {
+            modalElement.classList.remove('visible');
+            document.body.style.overflow = '';
+        };
+
+        // --- Autentikasi Admin ---
+        // Fungsi untuk menampilkan halaman login
+        const showLoginPage = () => {
+            adminDom.loginPage.style.display = 'flex';
+            adminDom.adminPanelContainer.style.visibility = 'hidden';
+            adminDom.adminPanelContainer.style.opacity = '0';
+        };
+
+        // Fungsi untuk menampilkan panel admin
+        const showAdminPanel = () => {
+            adminDom.loginPage.style.display = 'none';
+            adminDom.adminPanelContainer.style.visibility = 'visible';
+            adminDom.adminPanelContainer.style.opacity = '1';
+        };
+
+        // Listener status autentikasi Firebase
         auth.onAuthStateChanged(async (user) => {
             if (user) {
-                // Pengguna login, cek klaim kustom
+                // Pengguna login, cek klaim kustom 'admin'
                 const idTokenResult = await user.getIdTokenResult();
                 if (idTokenResult.claims.admin) {
                     console.log("Admin logged in!");
-                    // Fetch admin profile data
+                    showAdminPanel();
+                    // Fetch atau buat profil admin
                     const adminDoc = await db.collection('admins').doc(user.uid).get();
                     if (adminDoc.exists) {
                         adminData = { id: adminDoc.id, ...adminDoc.data() };
-                        adminDom.adminNameField.value = adminData.name || '';
-                        adminDom.adminEmailField.value = adminData.email || user.email;
-                        adminDom.adminPhoneField.value = adminData.phone || '';
                     } else {
-                        // Create basic admin profile if not exists
                         await db.collection('admins').doc(user.uid).set({
-                            name: user.displayName || 'Admin',
+                            name: user.displayName || 'Admin Default',
                             email: user.email,
                             createdAt: firebase.firestore.FieldValue.serverTimestamp()
                         }, { merge: true });
-                         const newAdminDoc = await db.collection('admins').doc(user.uid).get();
-                         adminData = { id: newAdminDoc.id, ...newAdminDoc.data() };
+                        const newAdminDoc = await db.collection('admins').doc(user.uid).get();
+                        adminData = { id: newAdminDoc.id, ...newAdminDoc.data() };
                     }
                     initializeAdminPanel();
                 } else {
-                    // Bukan admin, arahkan ke halaman utama atau error
-                    console.warn("User is not an admin. Redirecting.");
+                    // Pengguna bukan admin, paksa logout
+                    console.warn("User is not an admin. Logging out.");
                     showToast("Akses Ditolak: Anda bukan admin.", 'error');
-                    auth.signOut().then(() => redirectToLogin());
+                    await auth.signOut();
+                    showLoginPage();
                 }
             } else {
-                // Tidak ada pengguna login, arahkan ke halaman login
-                console.log("No user logged in. Redirecting to login.");
-                redirectToLogin();
+                // Tidak ada pengguna login, tampilkan halaman login
+                console.log("No user logged in. Showing login page.");
+                showLoginPage();
             }
         });
 
-        // --- Fungsi Utama Panel Admin ---
+        // Event listener untuk form login
+        adminDom.loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = adminDom.loginEmail.value;
+            const password = adminDom.loginPassword.value;
+            adminDom.loginBtn.disabled = true;
+            adminDom.loginError.textContent = ''; // Clear previous errors
+
+            try {
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                // AuthStateChanged listener akan menangani redirect setelah login berhasil
+            } catch (error) {
+                console.error("Login error:", error);
+                adminDom.loginError.textContent = 'Login gagal: ' + error.message;
+            } finally {
+                adminDom.loginBtn.disabled = false;
+            }
+        });
+
+        // Event listener untuk logout
+        adminDom.logoutBtn.addEventListener('click', async () => {
+            try {
+                await auth.signOut();
+                showToast("Berhasil logout.", 'success');
+            } catch (error) {
+                console.error("Logout error:", error);
+                showToast("Gagal logout: " + error.message, 'error');
+            }
+        });
+
+        // --- Inisialisasi Panel Admin Setelah Login ---
         const initializeAdminPanel = () => {
             // Setup navigasi sidebar
             adminDom.sidebar.querySelectorAll('nav ul li a').forEach(link => {
@@ -763,22 +1467,13 @@
                 });
             });
 
-            adminDom.logoutBtn.addEventListener('click', async () => {
-                try {
-                    await auth.signOut();
-                    showToast("Berhasil logout.", 'success');
-                    redirectToLogin();
-                } catch (error) {
-                    console.error("Logout error:", error);
-                    showToast("Gagal logout: " + error.message, 'error');
-                }
-            });
-
-            // Initial load
-            showSection(currentActiveSection);
-            loadDashboardStats();
-            setupRealtimeListeners();
+            // Set up event listeners for all modals, forms, and buttons
             setupEventListeners();
+            
+            // Load initial data and set up real-time listeners
+            loadDashboardStats();
+            setupRealtimeListeners(); // Ini akan memanggil renderOrders, dll.
+            showSection(currentActiveSection); // Tampilkan bagian dashboard secara default
         };
 
         const showSection = (sectionId) => {
@@ -790,17 +1485,24 @@
             if (targetSection) {
                 targetSection.style.display = 'block';
                 targetSection.classList.add('active-section');
-                adminDom.currentPageTitle.textContent = targetSection.querySelector('h2').textContent; // Update title
-                currentActiveSection = sectionId; // Update active section state
+                adminDom.currentPageTitle.textContent = targetSection.querySelector('h2').textContent;
+                currentActiveSection = sectionId;
 
-                // Panggil fungsi render yang relevan saat section ditampilkan
-                if (sectionId === 'orders') renderOrders();
-                if (sectionId === 'products') renderProducts();
-                if (sectionId === 'categories') renderCategories();
-                if (sectionId === 'content') renderContent();
-                if (sectionId === 'banners') renderBannersAdmin();
-                if (sectionId === 'gallery-images') renderGalleryImagesAdmin();
-                if (sectionId === 'history') renderHistoryAdmin();
+                // Memastikan data dimuat/dirender saat section ditampilkan
+                switch (sectionId) {
+                    case 'orders': renderOrders(); break;
+                    case 'products': renderProducts(); break;
+                    case 'categories': renderCategories(); break;
+                    case 'content': renderContent(); break;
+                    case 'banners': renderBannersAdmin(); break;
+                    case 'gallery-images': renderGalleryImagesAdmin(); break;
+                    case 'history': renderHistoryAdmin(); break;
+                    case 'profile':
+                        adminDom.adminNameField.value = adminData.name || '';
+                        adminDom.adminEmailField.value = auth.currentUser.email || '';
+                        adminDom.adminPhoneField.value = adminData.phone || '';
+                        break;
+                }
             }
         };
 
@@ -826,7 +1528,7 @@
 
                         if (order.orderDetails) {
                             order.orderDetails.forEach(item => {
-                                const productName = item.name; // Use English or ID based on preference
+                                const productName = item.name;
                                 productSales[productName] = (productSales[productName] || 0) + item.quantity;
                             });
                         }
@@ -845,31 +1547,67 @@
                     }
                     adminDom.topProductToday.textContent = topProduct;
 
-                    // Update notification badge for new orders (simple count for now)
-                    const newOrders = snapshot.docs.filter(doc => doc.data().status === 'new').length;
-                    adminDom.notificationBadge.textContent = newOrders;
-                    adminDom.notificationBadge.style.display = newOrders > 0 ? 'inline-block' : 'none';
+                    const newOrdersCount = snapshot.docs.filter(doc => doc.data().status === 'new').length;
+                    adminDom.notificationBadge.textContent = newOrdersCount;
+                    adminDom.notificationBadge.style.display = newOrdersCount > 0 ? 'inline-block' : 'none';
                 }, error => {
                     console.error("Error loading dashboard stats:", error);
                     showToast("Gagal memuat statistik dashboard.", 'error');
                 });
         };
 
-        // --- Realtime Listeners for Orders ---
+        // --- Realtime Listeners for Orders and Categories ---
         const setupRealtimeListeners = () => {
+            // Realtime listener for Orders
             db.collection('orders').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
-                renderOrders(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+                const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                // Hanya render jika section orders aktif atau di dashboard untuk update badge
+                if (currentActiveSection === 'orders' || currentActiveSection === 'dashboard') {
+                    renderOrders(orders);
+                }
             }, error => {
                 console.error("Error fetching real-time orders:", error);
                 showToast("Gagal memuat pesanan real-time.", 'error');
             });
 
-             // Realtime listener for categories to keep product dropdown updated
+            // Realtime listener for Categories to keep product dropdown updated
             db.collection('categories').orderBy('id').onSnapshot(snapshot => {
                 categoriesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 populateCategoryDropdown();
+                // Re-render categories table if section is active
+                if (currentActiveSection === 'categories') {
+                    renderCategories();
+                }
             }, error => {
                 console.error("Error fetching categories for dropdown:", error);
+                showToast("Gagal memuat kategori.", 'error');
+            });
+
+            // Realtime listener for Products
+            db.collection('products').onSnapshot(snapshot => {
+                if (currentActiveSection === 'products') {
+                    renderProducts(); // Will re-fetch and render
+                }
+            }, error => {
+                console.error("Error fetching real-time products:", error);
+            });
+             // Realtime listener for Banners
+            db.collection('banners').onSnapshot(snapshot => {
+                if (currentActiveSection === 'banners') {
+                    renderBannersAdmin();
+                }
+            });
+            // Realtime listener for Gallery Images
+            db.collection('gallery_images').onSnapshot(snapshot => {
+                if (currentActiveSection === 'gallery-images') {
+                    renderGalleryImagesAdmin();
+                }
+            });
+            // Realtime listener for History
+            db.collection('history').onSnapshot(snapshot => {
+                if (currentActiveSection === 'history') {
+                    renderHistoryAdmin();
+                }
             });
         };
 
@@ -890,7 +1628,7 @@
                 row.insertCell().textContent = order.customerAddress || 'N/A';
                 row.insertCell().textContent = `Rp ${new Intl.NumberFormat('id-ID').format(order.totalAmount || 0)}`;
                 const statusCell = row.insertCell();
-                statusCell.innerHTML = `<span class="status-badge ${order.status}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span>`;
+                statusCell.innerHTML = `<span class="status-badge ${order.status}">${order.status ? (order.status.charAt(0).toUpperCase() + order.status.slice(1)) : 'N/A'}</span>`;
                 row.insertCell().textContent = order.timestamp ? new Date(order.timestamp.toDate()).toLocaleString() : 'N/A';
 
                 const actionsCell = row.insertCell();
@@ -922,7 +1660,7 @@
                     row.insertCell().textContent = p.name_id;
                     row.insertCell().textContent = p.name_en;
                     row.insertCell().textContent = `Rp ${new Intl.NumberFormat('id-ID').format(p.price)}`;
-                    row.insertCell().textContent = p.category_name || 'N/A';
+                    row.insertCell().textContent = p.category_name || 'Uncategorized';
                     row.insertCell().textContent = p.is_featured ? 'Ya' : 'Tidak';
                     const actionsCell = row.insertCell();
                     actionsCell.className = 'action-buttons';
@@ -941,9 +1679,7 @@
         const renderCategories = async () => {
              adminDom.categoriesTableBody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Memuat kategori...</td></tr>';
             try {
-                const snapshot = await db.collection('categories').orderBy('id').get();
-                categoriesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
+                // categoriesData already updated by realtime listener
                 adminDom.categoriesTableBody.innerHTML = '';
                 if (categoriesData.length === 0) {
                     adminDom.categoriesTableBody.innerHTML = `<tr><td colspan="3" style="text-align:center;">Tidak ada kategori.</td></tr>`;
@@ -952,7 +1688,7 @@
 
                 categoriesData.forEach(c => {
                     const row = adminDom.categoriesTableBody.insertRow();
-                    row.insertCell().textContent = c.id;
+                    row.insertCell().textContent = c.id.substring(0, 6);
                     row.insertCell().textContent = c.name;
                     const actionsCell = row.insertCell();
                     actionsCell.className = 'action-buttons';
@@ -971,22 +1707,34 @@
         const renderContent = async () => {
             try {
                 const snapshot = await db.collection('content').get();
-                const contentData = {};
+                const contentMap = {}; // Map doc.id to doc.data()
                 snapshot.docs.forEach(doc => {
-                    contentData[doc.id] = doc.data();
+                    contentMap[doc.id] = doc.data();
                 });
 
-                // Populate content form
-                for (const key in contentData) {
-                    if (contentData[key].text_id) {
-                        const idField = document.getElementById(`${key}_id`);
-                        if (idField) idField.value = contentData[key].text_id;
+                // Populate content form fields dynamically based on their IDs
+                const contentFieldIds = [
+                    'page_title', 'hero_title', 'hero_subtitle', 'footer_description', 'history_title',
+                    'menu_section_subtitle', 'menu_title', 'full_menu_title', 'gallery_section_subtitle', 'gallery_title',
+                    'footer_contact_title', 'footer_address_label', 'footer_address_value', 'footer_phone_label',
+                    'footer_phone_value', 'footer_email_label', 'footer_email_value', 'footer_hours_label',
+                    'footer_hours_value', 'footer_copyright', 'add_to_cart_btn', 'order_now_btn', 'modal_title',
+                    'modal_name_label', 'modal_phone_label', 'modal_detect_location', 'modal_submit_button',
+                    'cart_title', 'cart_subtotal', 'cart_delivery_fee', 'cart_total', 'cart_checkout_button', 'cart_continue_shopping'
+                ];
+
+                for (const fieldId of contentFieldIds) {
+                    const idInput = document.getElementById(`content_${fieldId}_id`);
+                    const enInput = document.getElementById(`content_${fieldId}_en`);
+
+                    if (idInput && contentMap[fieldId]) {
+                        idInput.value = contentMap[fieldId].text_id || '';
                     }
-                    if (contentData[key].text_en) {
-                        const enField = document.getElementById(`${key}_en`);
-                        if (enField) enField.value = contentData[key].text_en;
+                    if (enInput && contentMap[fieldId]) {
+                        enInput.value = contentMap[fieldId].text_en || '';
                     }
                 }
+
             } catch (error) {
                 console.error("Error loading content:", error);
                 showToast("Gagal memuat konten website.", 'error');
@@ -994,31 +1742,26 @@
         };
 
         const renderBannersAdmin = async () => {
-            adminDom.bannerList.innerHTML = 'Memuat banner...';
+            adminDom.bannerList.innerHTML = '<p style="text-align:center;">Memuat banner...</p>';
             try {
                 const snapshot = await db.collection('banners').orderBy('sort_order').get();
                 const banners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
                 adminDom.bannerList.innerHTML = '';
                 if (banners.length === 0) {
-                    adminDom.bannerList.innerHTML = `<p style="text-align:center;">Tidak ada banner.</p>`;
+                    adminDom.bannerList.innerHTML = `<p style="grid-column: 1 / -1; text-align:center;">Tidak ada banner.</p>`;
                     return;
                 }
 
                 banners.forEach(b => {
                     const bannerDiv = document.createElement('div');
-                    bannerDiv.className = 'content-section'; // Re-use content-section style
-                    bannerDiv.style.display = 'flex';
-                    bannerDiv.style.alignItems = 'center';
-                    bannerDiv.style.gap = '20px';
-                    bannerDiv.style.marginBottom = '15px';
+                    bannerDiv.className = 'dashboard-stat-card'; // Reuse style for card-like appearance
+                    bannerDiv.style.textAlign = 'left';
                     bannerDiv.innerHTML = `
-                        <img src="${b.image_url}" alt="Banner" style="width:100px; height:60px; object-fit:cover; border-radius:4px;">
-                        <div>
-                            <p><strong>URL:</strong> ${b.image_url.substring(0, 50)}...</p>
-                            <p><strong>Urutan:</strong> ${b.sort_order}</p>
-                        </div>
-                        <div class="action-buttons" style="margin-left:auto;">
+                        <img src="${b.image_url}" alt="Banner" style="width:100%; height:120px; object-fit:cover; border-radius:8px; margin-bottom:15px;">
+                        <p style="font-size:0.9em; word-break: break-all;"><strong>URL:</strong> ${b.image_url.substring(0, 50)}...</p>
+                        <p style="font-size:0.9em;"><strong>Urutan:</strong> ${b.sort_order}</p>
+                        <div class="action-buttons" style="margin-top:15px; text-align:right;">
                             <button title="Edit Banner" data-id="${b.id}" data-action="edit-banner"><i class="fas fa-edit"></i></button>
                             <button title="Hapus Banner" data-id="${b.id}" data-action="delete-banner"><i class="fas fa-trash-alt"></i></button>
                         </div>
@@ -1028,12 +1771,12 @@
             } catch (error) {
                 console.error("Error rendering banners:", error);
                 showToast("Gagal memuat banner.", 'error');
-                adminDom.bannerList.innerHTML = `<p style="text-align:center;">Gagal memuat banner.</p>`;
+                adminDom.bannerList.innerHTML = `<p style="grid-column: 1 / -1; text-align:center;">Gagal memuat banner.</p>`;
             }
         };
 
         const renderGalleryImagesAdmin = async () => {
-            adminDom.galleryImageList.innerHTML = 'Memuat gambar galeri...';
+            adminDom.galleryImageList.innerHTML = '<p style="grid-column: 1 / -1; text-align:center;">Memuat gambar galeri...</p>';
             try {
                 const snapshot = await db.collection('gallery_images').orderBy('sort_order').get();
                 const galleryImages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -1052,12 +1795,14 @@
                     imgDiv.style.overflow = 'hidden';
                     imgDiv.style.borderRadius = '8px';
                     imgDiv.style.boxShadow = 'var(--shadow-sm)';
+                    imgDiv.style.backgroundColor = 'var(--color-surface)'; /* Ensure background for card effect */
                     imgDiv.innerHTML = `
                         <img src="${img.image_url}" alt="${img.caption_en}" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;">
                         <div class="action-buttons" style="position:absolute; bottom:5px; right:5px; background:rgba(255,255,255,0.8); padding:5px; border-radius:5px;">
                             <button title="Edit Gambar" data-id="${img.id}" data-action="edit-gallery-image" style="color:#2D4C5E;"><i class="fas fa-edit"></i></button>
                             <button title="Hapus Gambar" data-id="${img.id}" data-action="delete-gallery-image" style="color:#D84B42;"><i class="fas fa-trash-alt"></i></button>
                         </div>
+                         <p style="position:absolute; bottom:5px; left:5px; color:#fff; font-size:0.8em; text-shadow:1px 1px 3px rgba(0,0,0,0.7);">${(img.caption_id || img.caption_en || '').substring(0, 20)}...</p>
                     `;
                     adminDom.galleryImageList.appendChild(imgDiv);
                 });
@@ -1069,7 +1814,7 @@
         };
 
         const renderHistoryAdmin = async () => {
-            adminDom.historyList.innerHTML = 'Memuat riwayat...';
+            adminDom.historyList.innerHTML = '<p style="text-align:center;">Memuat riwayat...</p>';
             try {
                 const snapshot = await db.collection('history').orderBy('sort_order').get();
                 const historyItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -1086,9 +1831,9 @@
                     historyDiv.style.marginBottom = '15px';
                     historyDiv.innerHTML = `
                         <h3>${item.year} - ${item.title_id || item.title_en}</h3>
-                        <p>${(item.text_id || item.text_en).substring(0, 150)}...</p>
-                        <p><strong>Urutan:</strong> ${item.sort_order}</p>
-                        <div class="action-buttons" style="margin-top:10px;">
+                        <p>${(item.text_id || item.text_en || '').substring(0, 150)}...</p>
+                        <p style="font-size:0.9em; color:var(--color-text-light);"><strong>Urutan:</strong> ${item.sort_order}</p>
+                        <div class="action-buttons" style="margin-top:10px; text-align:right;">
                             <button title="Edit Riwayat" data-id="${item.id}" data-action="edit-history"><i class="fas fa-edit"></i></button>
                             <button title="Hapus Riwayat" data-id="${item.id}" data-action="delete-history"><i class="fas fa-trash-alt"></i></button>
                         </div>
@@ -1102,29 +1847,18 @@
             }
         };
 
-        // --- Utility for Modals ---
-        const openModal = (modalElement) => {
-            modalElement.classList.add('visible');
-            document.body.style.overflow = 'hidden'; // Prevent scrolling background
-        };
-
-        const closeModal = (modalElement) => {
-            modalElement.classList.remove('visible');
-            document.body.style.overflow = ''; // Restore scrolling
-        };
-
-        // --- Category Dropdown for Products ---
+        // --- Utility for Category Dropdown in Products ---
         const populateCategoryDropdown = () => {
             adminDom.productCategoryField.innerHTML = '<option value="">Pilih Kategori</option>';
             categoriesData.forEach(cat => {
                 const option = document.createElement('option');
-                option.value = cat.name; // Use category name as value
+                option.value = cat.id; // Use category ID as value
                 option.textContent = cat.name;
                 adminDom.productCategoryField.appendChild(option);
             });
         };
 
-        // --- Event Listeners ---
+        // --- Setup All Event Listeners ---
         const setupEventListeners = () => {
             // Close Modals
             document.querySelectorAll('.modal-close-btn').forEach(btn => {
@@ -1160,7 +1894,7 @@
             // Category Actions
             adminDom.addCategoryBtn.addEventListener('click', () => openCategoryModal());
             adminDom.categoriesTableBody.addEventListener('click', (e) => {
-                 const target = e.target.closest('button');
+                const target = e.target.closest('button');
                 if (!target) return;
                 const categoryId = target.dataset.id;
                 const action = target.dataset.action;
@@ -1201,37 +1935,40 @@
                 const btn = e.submitter;
                 btn.disabled = true;
 
-                const updates = {};
-                // Loop through all content fields and gather updates
-                // This approach requires content documents to exist with matching IDs
-                const fields = ['page_title', 'hero_title', 'hero_subtitle', 'footer_description', 'history_title', 'menu_section_subtitle', 'menu_title', 'full_menu_title', 'gallery_section_subtitle', 'gallery_title', 'footer_contact_title', 'footer_address_label', 'footer_address_value', 'footer_phone_label', 'footer_phone_value', 'footer_email_label', 'footer_email_value', 'footer_hours_label', 'footer_hours_value', 'footer_copyright', 'add_to_cart_btn', 'order_now_btn', 'modal_title', 'modal_name_label', 'modal_phone_label', 'modal_detect_location', 'modal_submit_button', 'cart_title', 'cart_subtotal', 'cart_delivery_fee', 'cart_total', 'cart_checkout_button', 'cart_continue_shopping']; // Add all data-lang-key IDs here
-                
-                for (const field of fields) {
-                    const idField = document.getElementById(`${field}_id`);
-                    const enField = document.getElementById(`${field}_en`);
-                    if (idField || enField) {
-                        const docRef = db.collection('content').doc(field);
-                        const docSnap = await docRef.get();
-                        const currentData = docSnap.exists ? docSnap.data() : {};
+                try {
+                    const contentFieldIds = [
+                        'page_title', 'hero_title', 'hero_subtitle', 'footer_description', 'history_title',
+                        'menu_section_subtitle', 'menu_title', 'full_menu_title', 'gallery_section_subtitle', 'gallery_title',
+                        'footer_contact_title', 'footer_address_label', 'footer_address_value', 'footer_phone_label',
+                        'footer_phone_value', 'footer_email_label', 'footer_email_value', 'footer_hours_label',
+                        'footer_hours_value', 'footer_copyright', 'add_to_cart_btn', 'order_now_btn', 'modal_title',
+                        'modal_name_label', 'modal_phone_label', 'modal_detect_location', 'modal_submit_button',
+                        'cart_title', 'cart_subtotal', 'cart_delivery_fee', 'cart_total', 'cart_checkout_button', 'cart_continue_shopping'
+                    ];
+
+                    for (const fieldId of contentFieldIds) {
+                        const idInput = document.getElementById(`content_${fieldId}_id`);
+                        const enInput = document.getElementById(`content_${fieldId}_en`);
 
                         const updateData = {};
-                        if (idField && idField.value !== (currentData.text_id || '')) {
-                            updateData.text_id = idField.value;
+                        if (idInput) {
+                            updateData.text_id = idInput.value;
                         }
-                        if (enField && enField.value !== (currentData.text_en || '')) {
-                            updateData.text_en = enField.value;
+                        if (enInput) {
+                            updateData.text_en = enInput.value;
                         }
 
-                        if (Object.keys(updateData).length > 0) {
-                            await docRef.set(updateData, { merge: true });
-                        }
+                        // Update Firestore document for each content key
+                        await db.collection('content').doc(fieldId).set(updateData, { merge: true });
                     }
+                    showToast("Konten berhasil diperbarui!", 'success');
+                } catch (error) {
+                    console.error("Error saving content:", error);
+                    showToast("Gagal menyimpan konten: " + error.message, 'error');
+                } finally {
+                    btn.disabled = false;
                 }
-
-                showToast("Konten berhasil diperbarui!", 'success');
-                btn.disabled = false;
             });
-
 
             // Product Form Submission
             adminDom.productForm.addEventListener('submit', async (e) => {
@@ -1249,13 +1986,13 @@
                         const storageRef = storage.ref('products/' + Date.now() + '_' + imageFile.name);
                         const snapshot = await storageRef.put(imageFile);
                         imageUrl = await snapshot.ref.getDownloadURL();
-                    } else if (!imageUrl && !productId) { // If adding new product without image URL or upload
+                    } else if (!imageUrl && !productId) {
                          showToast("Mohon masukkan URL gambar atau unggah gambar.", 'error');
                          submitBtn.disabled = false;
                          return;
                     }
 
-                    const selectedCategory = categoriesData.find(c => c.name === adminDom.productCategoryField.value);
+                    const selectedCategory = categoriesData.find(c => c.id === adminDom.productCategoryField.value);
                     if (!selectedCategory) {
                         showToast("Kategori tidak valid.", 'error');
                         submitBtn.disabled = false;
@@ -1267,7 +2004,7 @@
                         name_en: adminDom.productNameEnField.value,
                         price: parseFloat(adminDom.productPriceField.value),
                         category_id: selectedCategory.id,
-                        category_name: selectedCategory.name, // Store name for easier display
+                        category_name: selectedCategory.name,
                         description_id: adminDom.productDescriptionIdField.value,
                         description_en: adminDom.productDescriptionEnField.value,
                         imageUrl: imageUrl,
@@ -1284,7 +2021,6 @@
                         showToast("Produk berhasil ditambahkan!", 'success');
                     }
                     closeModal(adminDom.productModal);
-                    renderProducts(); // Refresh product list
                 } catch (error) {
                     console.error("Error saving product:", error);
                     showToast("Gagal menyimpan produk: " + error.message, 'error');
@@ -1301,6 +2037,7 @@
                     reader.onload = (e) => {
                         adminDom.productImagePreview.src = e.target.result;
                         adminDom.productImagePreview.style.display = 'block';
+                        adminDom.productImageUrlField.value = ''; // Clear URL field if file uploaded
                     };
                     reader.readAsDataURL(file);
                 } else {
@@ -1312,6 +2049,7 @@
                 if (this.value) {
                     adminDom.productImagePreview.src = this.value;
                     adminDom.productImagePreview.style.display = 'block';
+                    adminDom.productImageUploadField.value = ''; // Clear file input if URL entered
                 } else {
                     adminDom.productImagePreview.style.display = 'none';
                     adminDom.productImagePreview.src = '';
@@ -1334,18 +2072,15 @@
                         await db.collection('categories').doc(categoryId).update({ name: categoryName });
                         showToast("Kategori berhasil diperbarui!", 'success');
                     } else {
-                        // For new categories, we might use a unique ID or a generated one.
-                        // For simplicity, let's use the name as ID if it's new and doesn't conflict
-                        const newDocRef = db.collection('categories').doc(); // Firestore will generate an ID
+                        const newDocRef = db.collection('categories').doc();
                         await newDocRef.set({
-                            id: newDocRef.id, // Store the generated ID within the document
+                            id: newDocRef.id,
                             name: categoryName,
                             createdAt: firebase.firestore.FieldValue.serverTimestamp()
                         });
                         showToast("Kategori berhasil ditambahkan!", 'success');
                     }
                     closeModal(adminDom.categoryModal);
-                    renderCategories(); // Refresh category list
                 } catch (error) {
                     console.error("Error saving category:", error);
                     showToast("Gagal menyimpan kategori: " + error.message, 'error');
@@ -1409,7 +2144,6 @@
                         showToast("Banner berhasil ditambahkan!", 'success');
                     }
                     closeModal(adminDom.bannerModal);
-                    renderBannersAdmin();
                 } catch (error) {
                     console.error("Error saving banner:", error);
                     showToast("Gagal menyimpan banner: " + error.message, 'error');
@@ -1426,6 +2160,7 @@
                     reader.onload = (e) => {
                         adminDom.bannerImagePreview.src = e.target.result;
                         adminDom.bannerImagePreview.style.display = 'block';
+                        adminDom.bannerImageUrlField.value = '';
                     };
                     reader.readAsDataURL(file);
                 } else {
@@ -1437,6 +2172,7 @@
                 if (this.value) {
                     adminDom.bannerImagePreview.src = this.value;
                     adminDom.bannerImagePreview.style.display = 'block';
+                    adminDom.bannerImageUploadField.value = '';
                 } else {
                     adminDom.bannerImagePreview.style.display = 'none';
                     adminDom.bannerImagePreview.src = '';
@@ -1503,7 +2239,6 @@
                         showToast("Gambar galeri berhasil ditambahkan!", 'success');
                     }
                     closeModal(adminDom.galleryImageModal);
-                    renderGalleryImagesAdmin();
                 } catch (error) {
                     console.error("Error saving gallery image:", error);
                     showToast("Gagal menyimpan gambar galeri: " + error.message, 'error');
@@ -1520,6 +2255,7 @@
                     reader.onload = (e) => {
                         adminDom.galleryImagePreview.src = e.target.result;
                         adminDom.galleryImagePreview.style.display = 'block';
+                        adminDom.galleryImageUrlField.value = '';
                     };
                     reader.readAsDataURL(file);
                 } else {
@@ -1531,6 +2267,7 @@
                 if (this.value) {
                     adminDom.galleryImagePreview.src = this.value;
                     adminDom.galleryImagePreview.style.display = 'block';
+                    adminDom.galleryImageUploadField.value = '';
                 } else {
                     adminDom.galleryImagePreview.style.display = 'none';
                     adminDom.galleryImagePreview.src = '';
@@ -1590,7 +2327,6 @@
                         showToast("Riwayat berhasil ditambahkan!", 'success');
                     }
                     closeModal(adminDom.historyModal);
-                    renderHistoryAdmin();
                 } catch (error) {
                     console.error("Error saving history item:", error);
                     showToast("Gagal menyimpan riwayat: " + error.message, 'error');
@@ -1613,6 +2349,8 @@
                         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
                     showToast("Profil berhasil diperbarui!", 'success');
+                    adminData.name = adminDom.adminNameField.value; // Update local cache
+                    adminData.phone = adminDom.adminPhoneField.value;
                 } catch (error) {
                     console.error("Error updating profile:", error);
                     showToast("Gagal memperbarui profil: " + error.message, 'error');
@@ -1622,14 +2360,18 @@
             });
         };
 
-        // --- Modals Logic ---
+        // --- Modals Logic Implementation ---
 
         const openProductModal = async (productId = null) => {
             adminDom.productForm.reset();
             adminDom.productIdField.value = '';
             adminDom.productImagePreview.style.display = 'none';
             adminDom.productImagePreview.src = '';
+            adminDom.productImageUrlField.value = ''; // Clear URL field
+            adminDom.productImageUploadField.value = ''; // Clear file input
             adminDom.productModalTitle.textContent = productId ? 'Edit Produk' : 'Tambah Produk Baru';
+
+            populateCategoryDropdown(); // Pastikan dropdown kategori terbaru
 
             if (productId) {
                 try {
@@ -1640,7 +2382,7 @@
                         adminDom.productNameIdField.value = product.name_id || '';
                         adminDom.productNameEnField.value = product.name_en || '';
                         adminDom.productPriceField.value = product.price || 0;
-                        adminDom.productCategoryField.value = product.category_name || ''; // Select based on name
+                        adminDom.productCategoryField.value = product.category_id || ''; // Select based on ID
                         adminDom.productDescriptionIdField.value = product.description_id || '';
                         adminDom.productDescriptionEnField.value = product.description_en || '';
                         adminDom.productImageUrlField.value = product.imageUrl || '';
@@ -1661,7 +2403,7 @@
             try {
                 await db.collection('products').doc(productId).delete();
                 showToast("Produk berhasil dihapus!", 'success');
-                renderProducts(); // Refresh list
+                // Realtime listener akan me-render ulang
             } catch (error) {
                 console.error("Error deleting product:", error);
                 showToast("Gagal menghapus produk: " + error.message, 'error');
@@ -1671,6 +2413,7 @@
         const openCategoryModal = async (categoryId = null) => {
             adminDom.categoryForm.reset();
             adminDom.categoryIdField.value = '';
+            adminDom.categoryNameField.value = '';
             adminDom.categoryModalTitle.textContent = categoryId ? 'Edit Kategori' : 'Tambah Kategori Baru';
 
             if (categoryId) {
@@ -1692,8 +2435,6 @@
         const deleteCategory = async (categoryId) => {
             showToast("Menghapus kategori...", 'info');
             try {
-                // Opsional: Cek apakah ada produk yang masih menggunakan kategori ini
-                // Jika ada, Anda mungkin ingin memberi peringatan atau memaksa update produk
                 const productsUsingCategory = await db.collection('products').where('category_id', '==', categoryId).get();
                 if (!productsUsingCategory.empty) {
                     const confirmation = confirm('Ada produk yang masih menggunakan kategori ini. Apakah Anda yakin ingin menghapus kategori dan menghapus tautan kategori dari produk-produk tersebut?');
@@ -1701,7 +2442,6 @@
                         showToast("Penghapusan kategori dibatalkan.", 'info');
                         return;
                     }
-                    // Update produk yang terpengaruh
                     const batch = db.batch();
                     productsUsingCategory.docs.forEach(doc => {
                         batch.update(doc.ref, { category_id: null, category_name: 'Uncategorized' });
@@ -1712,7 +2452,7 @@
 
                 await db.collection('categories').doc(categoryId).delete();
                 showToast("Kategori berhasil dihapus!", 'success');
-                renderCategories(); // Refresh list
+                // Realtime listener akan me-render ulang
             } catch (error) {
                 console.error("Error deleting category:", error);
                 showToast("Gagal menghapus kategori: " + error.message, 'error');
@@ -1727,11 +2467,11 @@
                     const order = doc.data();
                     let detailsHtml = `
                         <h3>Detail Pesanan #${orderId.substring(0, 6)}</h3>
-                        <p><strong>Nama:</strong> ${order.customerName}</p>
-                        <p><strong>Telepon:</strong> ${order.customerPhone}</p>
-                        <p><strong>Alamat:</strong> ${order.customerAddress}</p>
+                        <p><strong>Nama:</strong> ${order.customerName || 'N/A'}</p>
+                        <p><strong>Telepon:</strong> ${order.customerPhone || 'N/A'}</p>
+                        <p><strong>Alamat:</strong> ${order.customerAddress || 'N/A'}</p>
                         <p><strong>Waktu Pesan:</strong> ${order.timestamp ? new Date(order.timestamp.toDate()).toLocaleString() : 'N/A'}</p>
-                        <p><strong>Status:</strong> <span class="status-badge ${order.status}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></p>
+                        <p><strong>Status:</strong> <span class="status-badge ${order.status}">${order.status ? (order.status.charAt(0).toUpperCase() + order.status.slice(1)) : 'N/A'}</span></p>
                         <hr style="margin: 15px 0; border-top: 1px dashed var(--color-border);">
                         <h4>Item Pesanan:</h4>
                         <ul>
@@ -1742,14 +2482,14 @@
                     detailsHtml += `
                         </ul>
                         <hr style="margin: 15px 0; border-top: 1px dashed var(--color-border);">
-                        <p><strong>Subtotal:</strong> Rp ${new Intl.NumberFormat('id-ID').format(order.subtotal)}</p>
-                        <p><strong>Biaya Pengiriman:</strong> Rp ${new Intl.NumberFormat('id-ID').format(order.deliveryFee)}</p>
-                        <p><strong>Total Pembayaran:</strong> Rp ${new Intl.NumberFormat('id-ID').format(order.totalAmount)}</p>
+                        <p><strong>Subtotal:</strong> Rp ${new Intl.NumberFormat('id-ID').format(order.subtotal || 0)}</p>
+                        <p><strong>Biaya Pengiriman:</strong> Rp ${new Intl.NumberFormat('id-ID').format(order.deliveryFee || 0)}</p>
+                        <p><strong>Total Pembayaran:</strong> Rp ${new Intl.NumberFormat('id-ID').format(order.totalAmount || 0)}</p>
                     `;
 
-                    // You might want a dedicated modal for viewing details,
-                    // or just use an alert for simplicity in this example.
-                    alert(detailsHtml.replace(/<[^>]*>/g, '\n').replace(/\n\s*\n/g, '\n').trim()); // Basic text for alert
+                    // Use a simple prompt/alert for demonstration in this single file.
+                    // In a real app, you'd have a dedicated modal for this.
+                    alert(detailsHtml.replace(/<hr[^>]*>/g, '\n').replace(/<[^>]*>/g, '').replace(/\n\s*\n/g, '\n').trim());
                 } else {
                     showToast("Pesanan tidak ditemukan.", 'error');
                 }
@@ -1760,8 +2500,11 @@
         };
 
         const updateOrderStatus = async (orderId) => {
-            const newStatus = prompt('Masukkan status baru untuk pesanan (e.g., new, processing, completed, cancelled):');
-            if (newStatus) {
+            const currentOrderDoc = await db.collection('orders').doc(orderId).get();
+            const currentStatus = currentOrderDoc.exists ? currentOrderDoc.data().status : 'new';
+            const newStatus = prompt(`Masukkan status baru untuk pesanan #${orderId.substring(0, 6)} (saat ini: ${currentStatus}). Pilihan: new, processing, completed, cancelled:`, currentStatus);
+            
+            if (newStatus && ['new', 'processing', 'completed', 'cancelled'].includes(newStatus.toLowerCase())) {
                 showToast("Memperbarui status pesanan...", 'info');
                 try {
                     await db.collection('orders').doc(orderId).update({
@@ -1769,11 +2512,12 @@
                         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
                     showToast("Status pesanan berhasil diperbarui!", 'success');
-                    // Render orders will automatically refresh due to real-time listener
                 } catch (error) {
                     console.error("Error updating order status:", error);
                     showToast("Gagal memperbarui status: " + error.message, 'error');
                 }
+            } else if (newStatus !== null) { // If user typed something but it's invalid
+                showToast("Status tidak valid. Pilihan: new, processing, completed, cancelled.", 'error');
             }
         };
 
@@ -1782,7 +2526,6 @@
             try {
                 await db.collection('orders').doc(orderId).delete();
                 showToast("Pesanan berhasil dihapus!", 'success');
-                // Render orders will automatically refresh due to real-time listener
             } catch (error) {
                 console.error("Error deleting order:", error);
                 showToast("Gagal menghapus pesanan: " + error.message, 'error');
@@ -1794,18 +2537,18 @@
                 const doc = await db.collection('orders').doc(orderId).get();
                 if (doc.exists) {
                     const order = doc.data();
-                    const phoneNumber = order.customerPhone.replace(/\D/g, ''); // Remove non-digits
-                    let message = `Halo ${order.customerName},\n\n`;
-                    message += `Pesanan Anda di Lobster Shack Bali (ID: #${orderId.substring(0,6)}) telah ${order.status}.\n\n`;
+                    const phoneNumber = order.customerPhone.replace(/\D/g, ''); // Hapus non-digit
+                    
+                    let message = `Halo ${order.customerName || 'pelanggan'},\n\n`;
+                    message += `Kami dari Lobster Shack Bali ingin memberitahukan bahwa status pesanan Anda (ID: #${orderId.substring(0,6)}) saat ini adalah *${(order.status || 'N/A').toUpperCase()}*.\n\n`;
                     message += `Detail Pesanan:\n`;
                     order.orderDetails.forEach(item => {
                         message += `- ${item.quantity}x ${item.name} (Rp ${new Intl.NumberFormat('id-ID').format(item.price * item.quantity)})\n`;
                     });
-                    message += `\nTotal: Rp ${new Intl.NumberFormat('id-ID').format(order.totalAmount)}\n`;
-                    message += `Alamat Pengiriman: ${order.customerAddress}\n\n`;
-                    message += `Terima kasih!`;
+                    message += `\nTotal Pembayaran: Rp ${new Intl.NumberFormat('id-ID').format(order.totalAmount || 0)}\n`;
+                    message += `Alamat Pengiriman: ${order.customerAddress || 'N/A'}\n\n`;
+                    message += `Terima kasih telah berbelanja di Lobster Shack Bali! 🦞`;
 
-                    // Encode message for URL
                     const encodedMessage = encodeURIComponent(message);
                     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
                     window.open(whatsappUrl, '_blank');
@@ -1824,6 +2567,9 @@
             adminDom.bannerIdField.value = '';
             adminDom.bannerImagePreview.style.display = 'none';
             adminDom.bannerImagePreview.src = '';
+            adminDom.bannerImageUrlField.value = '';
+            adminDom.bannerImageUploadField.value = '';
+            adminDom.bannerSortOrderField.value = 0;
             adminDom.bannerModalTitle.textContent = bannerId ? 'Edit Banner' : 'Tambah Banner Baru';
 
             if (bannerId) {
@@ -1850,7 +2596,6 @@
             try {
                 await db.collection('banners').doc(bannerId).delete();
                 showToast("Banner berhasil dihapus!", 'success');
-                renderBannersAdmin();
             } catch (error) {
                 console.error("Error deleting banner:", error);
                 showToast("Gagal menghapus banner: " + error.message, 'error');
@@ -1862,6 +2607,11 @@
             adminDom.galleryImageIdField.value = '';
             adminDom.galleryImagePreview.style.display = 'none';
             adminDom.galleryImagePreview.src = '';
+            adminDom.galleryImageUrlField.value = '';
+            adminDom.galleryImageUploadField.value = '';
+            adminDom.galleryImageCaptionIdField.value = '';
+            adminDom.galleryImageCaptionEnField.value = '';
+            adminDom.galleryImageSortOrderField.value = 0;
             adminDom.galleryImageModalTitle.textContent = imageId ? 'Edit Gambar Galeri' : 'Tambah Gambar Galeri Baru';
 
             if (imageId) {
@@ -1890,7 +2640,6 @@
             try {
                 await db.collection('gallery_images').doc(imageId).delete();
                 showToast("Gambar galeri berhasil dihapus!", 'success');
-                renderGalleryImagesAdmin();
             } catch (error) {
                 console.error("Error deleting gallery image:", error);
                 showToast("Gagal menghapus gambar galeri: " + error.message, 'error');
@@ -1900,6 +2649,12 @@
         const openHistoryModal = async (historyId = null) => {
             adminDom.historyForm.reset();
             adminDom.historyIdField.value = '';
+            adminDom.historyYearField.value = new Date().getFullYear(); // Default to current year
+            adminDom.historyTitleIdField.value = '';
+            adminDom.historyTitleEnField.value = '';
+            adminDom.historyTextIdField.value = '';
+            adminDom.historyTextEnField.value = '';
+            adminDom.historySortOrderField.value = 0;
             adminDom.historyModalTitle.textContent = historyId ? 'Edit Item Riwayat' : 'Tambah Item Riwayat Baru';
 
             if (historyId) {
@@ -1928,16 +2683,16 @@
             try {
                 await db.collection('history').doc(historyId).delete();
                 showToast("Item riwayat berhasil dihapus!", 'success');
-                renderHistoryAdmin();
             } catch (error) {
                 console.error("Error deleting history item:", error);
                 showToast("Gagal menghapus riwayat: " + error.message, 'error');
             }
         };
 
-        // --- Initial Call ---
+        // --- Initial Load ---
         document.addEventListener('DOMContentLoaded', () => {
             // No need to call initializeAdminPanel here, it's called after auth check
+            // The initial state (login page or admin panel) is handled by auth.onAuthStateChanged
         });
     </script>
 </body>
