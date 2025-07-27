@@ -178,28 +178,27 @@
             padding: .5rem;
         }
 
-        /* New: Mobile navigation slides from top */
         .main-nav {
-            display: flex; /* Keeps it flex for desktop */
+            display: flex;
             align-items: center;
-            gap: 2.5rem; /* Increased gap for desktop */
+            gap: 2.5rem;
         }
 
         @media (max-width: 992px) {
             .main-nav {
                 position: fixed;
                 top: 0;
-                left: 0; /* Changed from right:0 to left:0 for full width */
+                left: 0;
                 width: 100%;
                 height: 100vh;
                 background-color: var(--color-background);
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                transform: translateY(-100%); /* Slides from top */
+                transform: translateY(-100%);
                 transition: transform var(--transition-speed) ease-in-out;
                 z-index: 999;
-                padding-top: 5rem; /* Space for header items */
+                padding-top: 5rem;
             }
             .main-nav.active { transform: translateY(0); }
             .nav-links {
@@ -208,7 +207,7 @@
                 gap: 2rem;
             }
             .nav-links a { font-size: 1.5rem; padding: .75rem 0; width: 100%; }
-            .nav-links a:after { width: 50%; } /* Smaller underline for mobile */
+            .nav-links a:after { width: 50%; }
             .header-actions { z-index: 1001; }
             .mobile-menu-toggle { display: block; }
         }
@@ -238,19 +237,26 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden; /* Ken Burns effect requirement */
+        }
+        .hero-slider .slide-background {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
             background-size: cover;
             background-position: center;
+            transform: scale(1.15); /* Start zoomed in */
+        }
+        .hero-slider .swiper-slide-active .slide-background {
+            transform: scale(1); /* Zoom out when active */
+            transition: transform 8s ease-out; /* Long transition for slow zoom */
         }
         .hero-slider .slide-overlay {
-            /* Updated for 'burn' effect and darker overlay */
-            background: linear-gradient(rgba(45, 76, 94, .75), rgba(45, 76, 94, .75)); /* Darker overlay */
+            background: linear-gradient(rgba(45, 76, 94, .65), rgba(45, 76, 94, .65));
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            /* Optional: Add a subtle animation or filter for 'burn' */
-            /* filter: brightness(0.8); /* Example subtle darken */
         }
         .hero-content {
             position: relative;
@@ -270,7 +276,7 @@
             max-width: 600px;
             line-height: 1.6;
         }
-        /* Removed swiper-button-next and swiper-button-prev styles as they are no longer used */
+        .hero-slider .swiper-button-next, .hero-slider .swiper-button-prev { display: none; } /* Hide arrows */
         .hero-slider .swiper-pagination-bullet-active { background-color: var(--color-primary); }
 
         /* ------------------- */
@@ -291,7 +297,7 @@
         .timeline-item.left { left: 0; }
         .timeline-item.right { left: 50%; }
         .timeline-item:after {
-            content: "ðŸ¦ž"; /* Lobster emoji */
+            content: "🦞"; /* Lobster emoji */
             font-family: sans-serif;
             font-size: 1rem;
             display: flex;
@@ -368,21 +374,20 @@
         .menu-card-price { font-weight: 700; color: var(--color-primary); font-size: 1.375rem; margin: 0.5rem 0 1rem; }
         .menu-card .description { flex-grow: 1; margin-bottom: 1rem; color: var(--color-text-light); font-size: 0.95rem; }
 
-        /* New: Product card buttons */
         .menu-card-actions {
             display: flex;
             gap: 0.75rem;
-            margin-top: auto; /* Push to bottom */
+            margin-top: auto;
             justify-content: center;
-            flex-wrap: wrap; /* Allow wrapping on small screens */
+            flex-wrap: wrap;
         }
         .menu-card-actions .btn {
             padding: 0.7rem 1.2rem;
             font-size: 0.9rem;
-            flex-grow: 1; /* Allow buttons to grow */
-            min-width: 120px; /* Ensure minimum width */
+            flex-grow: 1;
+            min-width: 120px;
         }
-        .menu-card-actions .btn:first-child { /* Adjust for "Add to Cart" */
+        .menu-card-actions .btn:first-child {
             background-color: transparent;
             color: var(--color-secondary);
             border-color: var(--color-secondary);
@@ -391,7 +396,6 @@
             background-color: var(--color-secondary);
             color: var(--color-surface);
         }
-
 
         /* ------------------- */
         /* GALLERY SECTION     */
@@ -408,7 +412,7 @@
         .gallery-grid img { width: 100%; display: block; transition: transform var(--transition-speed) ease; }
         .gallery-grid a:hover img { transform: scale(1.05); }
         .gallery-grid a::after {
-            content: '\f00e'; /* Font Awesome search-plus icon */
+            content: '\f00e';
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             position: absolute;
@@ -444,7 +448,7 @@
         .footer-copyright { border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 2rem; margin-top: 2rem; }
         .footer-copyright p { font-size: 0.9rem; margin-bottom: 0; }
 
-        /* Footer Contact Info */
+        /* REFINED Footer Contact Info */
         .footer-contact-info {
             margin-top: 2rem;
             text-align: center;
@@ -454,37 +458,41 @@
             font-family: var(--font-heading);
             color: var(--color-primary);
             font-size: 1.7rem;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.5rem;
         }
         .footer-contact-info ul {
             list-style: none;
             padding: 0;
             margin: 0 auto 1.5rem;
-            max-width: 350px; /* Limit width for better readability */
+            max-width: 450px;
             line-height: 1.6;
         }
         .footer-contact-info li {
             display: flex;
             align-items: flex-start;
-            justify-content: center; /* Center items for single column */
-            gap: .75rem;
-            margin-bottom: .75rem;
-            font-size: 0.95rem;
+            gap: 1rem;
+            margin-bottom: 1rem;
         }
         .footer-contact-info li i {
             color: var(--color-primary);
             font-size: 1.1rem;
-            margin-top: 3px; /* Align icon better with text */
+            margin-top: 4px;
+            flex-shrink: 0;
+            width: 20px;
+            text-align: center;
         }
-        .footer-contact-info li span {
+        .footer-contact-info li span:first-of-type {
+            font-weight: 700;
+            color: #fff;
+            flex-shrink: 0;
+            width: 120px; /* Fixed width for label alignment */
             text-align: left;
         }
-        .footer-contact-info li strong {
-            color: #fff;
-            white-space: nowrap; /* Keep label and colon on one line */
-            margin-right: 5px;
+        .footer-contact-info li span:last-of-type {
+            flex-grow: 1;
+            text-align: left;
         }
-
+        
         /* ------------------- */
         /* MODAL (GLOBAL)      */
         /* ------------------- */
@@ -508,7 +516,6 @@
         }
         .modal-overlay.visible { opacity: 1; visibility: visible; transition-delay: 0s; }
         
-        /* Modal Content (applies to all modals) */
         .modal-content {
             background: var(--color-background);
             border-radius: var(--border-radius);
@@ -551,64 +558,45 @@
             box-shadow: 0 0 0 3px rgba(216, 75, 66, 0.2);
         }
         
-        /* New: Specific Order Modal Styles */
+        /* REFINED Order Modal Styles */
         #order-modal .modal-content {
-            max-width: 650px; /* Slightly wider for map */
+            max-width: 650px;
         }
         #modal-product-details {
             text-align: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
             border-bottom: 1px solid var(--color-border);
         }
         #modal-product-details img {
-            width: 150px;
-            height: 150px;
+            width: 120px;
+            height: 120px;
             object-fit: cover;
             border-radius: 50%;
             margin-bottom: 1rem;
             border: 4px solid var(--color-surface);
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-md);
         }
         #modal-product-details h3 {
             font-family: var(--font-heading);
             color: var(--color-secondary);
-            font-size: 1.8rem;
+            font-size: 1.75rem;
+            margin-bottom: 0.25rem;
         }
         #modal-product-details .menu-card-price {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
+            font-weight: 600;
             color: var(--color-primary);
         }
-        #modal-product-details .order-summary-items {
-            max-height: 150px; /* Limit height for summary list */
-            overflow-y: auto;
-            margin-bottom: 1rem;
-        }
-        #modal-product-details .order-summary-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-            color: var(--color-text);
-        }
-        #modal-product-details .order-summary-item span:first-child {
-            font-weight: 500;
-        }
-        #modal-product-details .order-summary-total {
-            font-weight: bold;
-            font-size: 1.1rem;
-            color: var(--color-secondary);
-            margin-top: 1rem;
-            display: flex;
-            justify-content: space-between;
-        }
+        /* Styles for cart summary in order modal */
+        #modal-product-details > h3.summary-title { font-size: 1.5rem; }
+        #modal-product-details > div.summary-item { font-size: 0.95rem; }
 
 
         .location-input-group {
             display: flex;
             gap: 0.5rem;
-            align-items: flex-end; /* Align button to bottom of input */
+            align-items: flex-end;
         }
         .location-input-group input {
             flex-grow: 1;
@@ -616,10 +604,10 @@
         .location-input-group .btn {
             padding: .8rem 1rem;
             font-size: 0.9rem;
-            white-space: nowrap; /* Prevent button text from wrapping */
+            white-space: nowrap;
         }
         #address-map {
-            height: 250px; /* Increased map height */
+            height: 250px;
             width: 100%;
             margin-top: 15px;
             border-radius: 8px;
@@ -697,8 +685,8 @@
             font-weight: 700;
             color: var(--color-primary);
             font-size: 1.1rem;
-            white-space: nowrap; /* Keep price on one line */
-            margin-left: auto; /* Push price to the right */
+            white-space: nowrap;
+            margin-left: auto;
         }
         .cart-summary {
             margin-top: 2rem;
@@ -772,22 +760,16 @@
             .section { padding: 4rem 0; }
             .section-header { margin-bottom: 2.5rem; }
             .section-header .title { font-size: clamp(2rem, 6vw, 3rem); }
-            .menu-card-actions { flex-direction: column; } /* Stack buttons on small screens */
+            .menu-card-actions { flex-direction: column; }
             .menu-card-actions .btn { width: 100%; }
 
-            /* Footer Responsive */
-            .footer-contact-info ul {
-                max-width: 100%; /* Allow full width on smaller screens */
-                padding: 0 1rem;
-            }
-            .footer-contact-info li {
-                justify-content: flex-start; /* Align left for better mobile experience */
-            }
+            .footer-contact-info ul { max-width: 100%; padding: 0 1rem; }
+            .footer-contact-info li { justify-content: flex-start; }
         }
         
         @media (max-width: 576px) {
             .gallery-grid { columns: 1; }
-            .modal-content { border-radius: 0; } /* Full width on tiny screens */
+            .modal-content { border-radius: 0; }
             .modal-header, .modal-body { padding: 1rem 1.25rem; }
             .location-input-group { flex-direction: column; align-items: stretch; }
             .location-input-group .btn { width: 100%; }
@@ -1007,7 +989,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADCv-AX09lIYq6Gr7Gm56rChp4kS0J08Q&libraries=places&callback=initMaps" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_Maps_API_KEY&libraries=places&callback=initMaps" async defer></script>
     
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
@@ -1056,7 +1038,7 @@ const domElements = {
     orderModal: document.getElementById('order-modal'),
     orderForm: document.getElementById('order-form'),
     modalProductDetails: document.getElementById('modal-product-details'),
-    modalCloseBtns: document.querySelectorAll('.modal-close-btn'), // Select all close buttons
+    modalCloseBtns: document.querySelectorAll('.modal-close-btn'),
     customerAddressInput: document.getElementById('customer-address'),
     detectLocationBtn: document.getElementById('detect-location-btn'),
     addressMap: document.getElementById('address-map'),
@@ -1091,19 +1073,14 @@ window.initMaps = () => {
     });
     geocoder = new google.maps.Geocoder();
 
-    // Update input field when marker is dragged
     marker.addListener('dragend', () => {
         const latLng = marker.getPosition();
         geocodeLatLng(latLng);
     });
 
-    // Update map/marker when address input changes
     domElements.customerAddressInput.addEventListener('change', () => {
         geocodeAddress(domElements.customerAddressInput.value);
     });
-
-    // Initially reverse geocode the default position to populate the address field
-    geocodeLatLng(currentAddressLatLng);
 
     console.log("Google Maps Initialized.");
 };
@@ -1114,13 +1091,13 @@ const geocodeLatLng = (latLng) => {
         if (status === 'OK') {
             if (results[0]) {
                 domElements.customerAddressInput.value = results[0].formatted_address;
-                currentAddressLatLng = latLng;
+                currentAddressLatLng = latLng.toJSON();
             } else {
-                showToast(currentLanguage === 'id' ? "Tidak ada alamat ditemukan untuk lokasi ini." : "No address found for this location.", 'error');
+                showToast("No address found for this location.", 'error');
             }
         } else {
             console.error('Geocoder failed due to: ' + status);
-            showToast(currentLanguage === 'id' ? "Error mendapatkan alamat dari lokasi." : "Error getting address from location.", 'error');
+            showToast("Error getting address from location.", 'error');
         }
     });
 };
@@ -1132,58 +1109,32 @@ const geocodeAddress = (address) => {
             if (results[0]) {
                 map.setCenter(results[0].geometry.location);
                 marker.setPosition(results[0].geometry.location);
-                currentAddressLatLng = results[0].geometry.location;
+                currentAddressLatLng = results[0].geometry.location.toJSON();
             } else {
-                showToast(currentLanguage === 'id' ? "Alamat tidak ditemukan." : "Address not found.", 'error');
+                showToast("Address not found.", 'error');
             }
         } else {
             console.error('Geocode was not successful for the following reason: ' + status);
-            showToast(currentLanguage === 'id' ? "Error menemukan alamat di peta." : "Error finding address on map.", 'error');
+            showToast("Error finding address on map.", 'error');
         }
     });
 };
 
-// Update map with new coordinates
-const updateMap = (lat, lng, address = '') => {
-    currentAddressLatLng = { lat, lng };
-    map.setCenter(currentAddressLatLng);
-    marker.setPosition(currentAddressLatLng);
-    if (address) {
-        domElements.customerAddressInput.value = address;
-    }
-};
-
 // Detect user's current location
 const detectLocation = () => {
-    if (!map || !geocoder) {
-        showToast(currentLanguage === 'id' ? 'Peta belum siap. Silakan coba lagi.' : 'Map is not ready. Please try again.', 'error');
-        return;
-    }
     if (navigator.geolocation) {
         showToast(currentLanguage === 'id' ? 'Mendeteksi lokasi...' : 'Detecting location...', 'info');
         navigator.geolocation.getCurrentPosition(position => {
-            const lat = position.coords.latitude;
-            const lng = position.coords.longitude;
-            geocodeLatLng({ lat, lng }); // Reverse geocode to get address
+            const latLng = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+            map.setCenter(latLng);
+            marker.setPosition(latLng);
+            geocodeLatLng(latLng);
             showToast(currentLanguage === 'id' ? 'Lokasi ditemukan!' : 'Location detected!', 'success');
-        }, (error) => {
-            console.error("Geolocation error:", error);
-            let errorMessage = '';
-            switch(error.code) {
-                case error.PERMISSION_DENIED:
-                    errorMessage = currentLanguage === 'id' ? 'Izin lokasi ditolak. Silakan izinkan akses lokasi di pengaturan browser Anda.' : 'Location permission denied. Please allow location access in your browser settings.';
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    errorMessage = currentLanguage === 'id' ? 'Informasi lokasi tidak tersedia.' : 'Location information is unavailable.';
-                    break;
-                case error.TIMEOUT:
-                    errorMessage = currentLanguage === 'id' ? 'Permintaan untuk mendapatkan lokasi pengguna telah habis waktu.' : 'The request to get user location timed out.';
-                    break;
-                default:
-                    errorMessage = currentLanguage === 'id' ? 'Terjadi kesalahan tidak dikenal saat mendeteksi lokasi.' : 'An unknown error occurred while detecting location.';
-                    break;
-            }
-            showToast(errorMessage, 'error');
+        }, () => {
+            showToast(currentLanguage === 'id' ? 'Gagal mendeteksi lokasi. Pastikan izin lokasi diberikan.' : 'Failed to detect location. Please allow location access.', 'error');
         });
     } else {
         showToast(currentLanguage === 'id' ? 'Geolocation tidak didukung oleh browser Anda.' : 'Geolocation is not supported by your browser.', 'error');
@@ -1212,7 +1163,8 @@ const updateLangButtons = () => {
 // --- RENDER FUNCTIONS ---
 const renderBanners = () => {
     domElements.heroSliderWrapper.innerHTML = siteData.banners.map(banner => `
-        <div class="swiper-slide" style="background-image: url('${banner.image_url}');">
+        <div class="swiper-slide">
+            <div class="slide-background" style="background-image: url('${banner.image_url}');"></div>
             <div class="slide-overlay"></div>
         </div>
     `).join('');
@@ -1220,8 +1172,8 @@ const renderBanners = () => {
         loop: true, 
         effect: 'fade', 
         autoplay: { delay: 5000, disableOnInteraction: false },
-        // Navigation arrows are removed as requested
-        pagination: { el: '.swiper-pagination', clickable: true }
+        pagination: { el: '.swiper-pagination', clickable: true },
+        allowTouchMove: false
     });
 };
 
@@ -1299,6 +1251,20 @@ const saveCart = () => {
     updateCartBadge();
 };
 
+const showToast = (message, type = 'info') => {
+    domElements.toastMessage.textContent = message;
+    domElements.toast.className = 'toast-notification'; // Reset classes
+    domElements.toast.classList.add(type, 'show');
+
+    const iconMap = { 'success': 'fa-check-circle', 'error': 'fa-times-circle', 'info': 'fa-info-circle' };
+    domElements.toastIcon.className = `fas ${iconMap[type] || 'fa-info-circle'}`;
+
+    setTimeout(() => {
+        domElements.toast.classList.remove('show');
+    }, 4000);
+};
+
+
 const addToCart = (productId) => {
     const product = siteData.products.find(p => p.id === productId);
     if (!product) return;
@@ -1319,7 +1285,7 @@ const addToCart = (productId) => {
     }
     saveCart();
     showToast(currentLanguage === 'id' ? `${product[`name_${currentLanguage}`] || product.name_id} ditambahkan ke keranjang!` : `${product.name_en} added to cart!`, 'success');
-    renderCartItems(); // Re-render cart modal if open
+    renderCartItems();
 };
 
 const updateCartItemQuantity = (productId, change) => {
@@ -1327,7 +1293,7 @@ const updateCartItemQuantity = (productId, change) => {
     if (itemIndex > -1) {
         cartItems[itemIndex].quantity += change;
         if (cartItems[itemIndex].quantity <= 0) {
-            cartItems.splice(itemIndex, 1); // Remove if quantity is 0 or less
+            cartItems.splice(itemIndex, 1);
         }
         saveCart();
         renderCartItems();
@@ -1335,11 +1301,8 @@ const updateCartItemQuantity = (productId, change) => {
 };
 
 const calculateCartTotals = () => {
-    let subtotal = 0;
-    cartItems.forEach(item => {
-        subtotal += item.price * item.quantity;
-    });
-    const deliveryFee = 20000; // Fixed delivery fee
+    const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const deliveryFee = subtotal > 0 ? 20000 : 0; // Only add delivery fee if there are items
     const total = subtotal + deliveryFee;
 
     domElements.cartSubtotal.textContent = `Rp ${new Intl.NumberFormat('id-ID').format(subtotal)}`;
@@ -1348,11 +1311,11 @@ const calculateCartTotals = () => {
 };
 
 const renderCartItems = () => {
-    if (cartItems.length === 0) {
-        domElements.cartItemsList.innerHTML = '';
-        domElements.emptyCartMessage.style.display = 'block';
-    } else {
-        domElements.emptyCartMessage.style.display = 'none';
+    const hasItems = cartItems.length > 0;
+    domElements.emptyCartMessage.style.display = hasItems ? 'none' : 'block';
+    domElements.checkoutBtn.disabled = !hasItems;
+
+    if (hasItems) {
         domElements.cartItemsList.innerHTML = cartItems.map(item => `
             <li class="cart-item">
                 <img src="${item.imageUrl}" alt="${item.name_en}" class="cart-item-img">
@@ -1368,6 +1331,8 @@ const renderCartItems = () => {
                 <span class="cart-item-price">Rp ${new Intl.NumberFormat('id-ID').format(item.price * item.quantity)}</span>
             </li>
         `).join('');
+    } else {
+        domElements.cartItemsList.innerHTML = '';
     }
     calculateCartTotals();
 };
@@ -1382,16 +1347,16 @@ const closeCartModal = () => {
 };
 
 // --- ORDER MODAL FUNCTIONS ---
-let currentOrderProduct = null; // Store product for single order
-let currentOrderCartItems = null; // Store cart items for checkout order
+let currentOrderProduct = null;
+let currentOrderCartItems = null;
 
 const openOrderModal = (productId = null, itemsFromCart = null) => {
     domElements.orderForm.reset();
-    domElements.modalProductDetails.innerHTML = ''; // Clear previous content
+    domElements.modalProductDetails.innerHTML = '';
 
     if (productId) {
         currentOrderProduct = siteData.products.find(p => p.id === productId);
-        currentOrderCartItems = null; // Reset cart items if single order
+        currentOrderCartItems = null;
         if (currentOrderProduct) {
             domElements.modalProductDetails.innerHTML = `
                 <img src="${currentOrderProduct.imageUrl}" alt="${currentOrderProduct.name_en}">
@@ -1400,23 +1365,22 @@ const openOrderModal = (productId = null, itemsFromCart = null) => {
             `;
         }
     } else if (itemsFromCart && itemsFromCart.length > 0) {
-        currentOrderProduct = null; // Reset single product if ordering from cart
+        currentOrderProduct = null;
         currentOrderCartItems = itemsFromCart;
+        const subtotal = currentOrderCartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
         let itemsHtml = currentOrderCartItems.map(item => `
-            <div class="order-summary-item">
+            <div class="summary-item" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.5rem;">
                 <span>${item.quantity}x ${item[`name_${currentLanguage}`] || item.name_id}</span>
                 <span>Rp ${new Intl.NumberFormat('id-ID').format(item.price * item.quantity)}</span>
             </div>
         `).join('');
         domElements.modalProductDetails.innerHTML = `
-            <h3>${currentLanguage === 'id' ? 'Ringkasan Pesanan Anda' : 'Your Order Summary'}</h3>
-            <div class="order-summary-items">
-                ${itemsHtml}
-            </div>
+            <h3 class="summary-title">${currentLanguage === 'id' ? 'Ringkasan Pesanan Anda' : 'Your Order Summary'}</h3>
+            ${itemsHtml}
             <hr style="border-top: 1px dashed var(--color-border); margin: 1rem 0;">
-            <p class="order-summary-total">
-                <span>${currentLanguage === 'id' ? 'Subtotal Pesanan:' : 'Order Subtotal:'}</span> 
-                <span>Rp ${new Intl.NumberFormat('id-ID').format(cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0))}</span>
+            <p style="font-weight: bold; font-size: 1.1rem;">
+                ${currentLanguage === 'id' ? 'Subtotal (belum termasuk ongkir):' : 'Subtotal (excl. delivery):'} 
+                Rp ${new Intl.NumberFormat('id-ID').format(subtotal)}
             </p>
         `;
     } else {
@@ -1426,29 +1390,20 @@ const openOrderModal = (productId = null, itemsFromCart = null) => {
     
     domElements.orderModal.classList.add('visible');
     
-    // Ensure map is initialized and centered
     if (map) {
+        setTimeout(() => google.maps.event.trigger(map, 'resize'), 400); // Refresh map on modal open
         map.setCenter(currentAddressLatLng);
         marker.setPosition(currentAddressLatLng);
-        map.setZoom(15); // Reset zoom
-        // Also update the address input field from the current map marker position
-        geocodeLatLng(currentAddressLatLng);
-    } else {
-        // This case should ideally not happen if initMaps is called by the Google Maps script
-        // However, if map is null, it means initMaps hasn't run yet.
-        // The script is loaded async defer, so initMaps is guaranteed to run.
-        // We will just wait for initMaps to handle the map initialization.
+        map.setZoom(15);
     }
 };
 
 const closeOrderModal = () => {
     domElements.orderModal.classList.remove('visible');
     domElements.orderForm.reset();
-    domElements.customerAddressInput.value = ''; // Clear address input
+    domElements.customerAddressInput.value = '';
     currentOrderProduct = null;
     currentOrderCartItems = null;
-    // Reset map to default center if needed, or keep last position
-    // updateMap(-8.749000, 115.166667); 
 };
 
 // --- FULL PAGE RENDER ---
@@ -1458,7 +1413,7 @@ const renderAll = () => {
     renderMenu();
     renderGallery();
     updateTextContent();
-    updateCartBadge(); // Initial cart badge update
+    updateCartBadge();
     AOS.init({ duration: 800, once: true, offset: 50 });
 };
 
@@ -1481,21 +1436,7 @@ async function fetchAllData() {
         
         siteData.content = {};
         contentSnap.docs.forEach(doc => { siteData.content[doc.id] = doc.data(); });
-
-        // Add new language keys for modal/cart if not already in Firestore (for development)
-        const newContentKeys = {
-            "add_to_cart_btn": {"text_id": "Tambah ke Keranjang", "text_en": "Add to Cart"},
-            "order_now_btn": {"text_id": "Pesan Sekarang", "text_en": "Order Now"},
-            "modal_detect_location": {"text_id": "Deteksi Lokasi", "text_en": "Detect Location"},
-            "cart_title": {"text_id": "Keranjang Anda", "text_en": "Your Cart"},
-            "cart_subtotal": {"text_id": "Subtotal:", "text_en": "Subtotal:"},
-            "cart_delivery_fee": {"text_id": "Biaya Pengiriman:", "text_en": "Delivery Fee:"},
-            "cart_total": {"text_id": "Total:", "text_en": "Total:"},
-            "cart_checkout_button": {"text_id": "Lanjut ke Pembayaran", "text_en": "Proceed to Checkout"},
-            "cart_continue_shopping": {"text_id": "Lanjut Belanja", "text_en": "Continue Shopping"}
-        };
-        Object.assign(siteData.content, newContentKeys); // Merge them
-
+        
         renderAll();
     } catch (error) {
         console.error("Error fetching data from Firebase:", error);
@@ -1503,16 +1444,26 @@ async function fetchAllData() {
     }
 }
 
+const handleMenuClick = (e) => {
+    if (e.target.matches('.add-to-cart-btn') || e.target.closest('.add-to-cart-btn')) {
+        const btn = e.target.closest('.add-to-cart-btn');
+        if (btn) addToCart(btn.dataset.productId);
+    } else if (e.target.matches('.order-now-btn') || e.target.closest('.order-now-btn')) {
+        const btn = e.target.closest('.order-now-btn');
+        if (btn) openOrderModal(btn.dataset.productId);
+    }
+};
+
 // --- EVENT LISTENERS ---
 document.addEventListener('DOMContentLoaded', () => {
     domElements.langToggleContainer.addEventListener('click', e => {
         if (!e.target.matches('.lang-btn')) return;
         currentLanguage = e.target.dataset.lang;
         localStorage.setItem('preferredLanguage', currentLanguage);
-        renderHistory(); // Re-render dynamic content
+        renderHistory();
         renderMenu();
         renderGallery();
-        renderCartItems(); // Re-render cart with new language
+        renderCartItems();
         updateTextContent();
     });
 
@@ -1524,38 +1475,27 @@ document.addEventListener('DOMContentLoaded', () => {
         icon.classList.toggle('fa-times');
     });
 
-    domElements.mainNav.addEventListener('click', (e) => { // Close nav on link click
+    domElements.mainNav.addEventListener('click', (e) => {
          if (e.target.matches('a') && domElements.mainNav.classList.contains('active')) {
-            domElements.mobileMenuToggle.click(); // Simulate click to close nav
+            domElements.mobileMenuToggle.click();
          }
     });
 
-    domElements.menuFilters.addEventListener('click', handleMenuFilter);
-
-    // Event delegation for Add to Cart and Order Now buttons on menu grid
-    domElements.menuGrid.addEventListener('click', e => {
-        if (e.target.matches('.add-to-cart-btn') || e.target.closest('.add-to-cart-btn')) {
-            const productId = e.target.dataset.productId || e.target.closest('.add-to-cart-btn').dataset.productId;
-            addToCart(productId);
-        } else if (e.target.matches('.order-now-btn') || e.target.closest('.order-now-btn')) {
-            const productId = e.target.dataset.productId || e.target.closest('.order-now-btn').dataset.productId;
-            openOrderModal(productId);
-        }
+    domElements.menuFilters.addEventListener('click', e => {
+        if (!e.target.matches('.filter-btn')) return;
+        domElements.menuFilters.querySelector('.active').classList.remove('active');
+        e.target.classList.add('active');
+        const filter = e.target.dataset.filter;
+        document.querySelectorAll('.menu-card').forEach(card => {
+            const isVisible = filter === 'all' || card.dataset.category === filter;
+            card.classList.toggle('hidden', !isVisible);
+        });
     });
 
-    // Event delegation for featured slider buttons
-    domElements.featuredMenuWrapper.addEventListener('click', e => {
-        if (e.target.matches('.add-to-cart-btn') || e.target.closest('.add-to-cart-btn')) {
-            const productId = e.target.dataset.productId || e.target.closest('.add-to-cart-btn').dataset.productId;
-            addToCart(productId);
-        } else if (e.target.matches('.order-now-btn') || e.target.closest('.order-now-btn')) {
-            const productId = e.target.dataset.productId || e.target.closest('.order-now-btn').dataset.productId;
-            openOrderModal(productId);
-        }
-    });
+    // Event delegation for both menu grid and featured slider
+    domElements.menuGrid.addEventListener('click', handleMenuClick);
+    domElements.featuredMenuWrapper.addEventListener('click', handleMenuClick);
 
-
-    // Close buttons for all modals
     domElements.modalCloseBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
             const modal = e.target.closest('.modal-overlay');
@@ -1564,52 +1504,56 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Close modal on overlay click
-    domElements.orderModal.addEventListener('click', e => { 
-        if (e.target === domElements.orderModal) closeOrderModal();
-    });
-    domElements.cartModal.addEventListener('click', e => { 
-        if (e.target === domElements.cartModal) closeCartModal();
-    });
+    domElements.orderModal.addEventListener('click', e => { if (e.target === domElements.orderModal) closeOrderModal(); });
+    domElements.cartModal.addEventListener('click', e => { if (e.target === domElements.cartModal) closeCartModal(); });
 
-    // Order Form Submission
     domElements.orderForm.addEventListener('submit', async e => {
         e.preventDefault();
+        const submitBtn = domElements.orderForm.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        
         const customerName = document.getElementById('customer-name').value;
         const customerPhone = document.getElementById('customer-phone').value;
         const customerAddress = domElements.customerAddressInput.value;
 
         let orderDetails = [];
         let orderType = '';
+        let subtotal = 0;
 
         if (currentOrderProduct) {
-            // Single product order
+            subtotal = currentOrderProduct.price;
             orderDetails.push({
                 productId: currentOrderProduct.id,
                 name: currentOrderProduct[`name_${currentLanguage}`] || currentOrderProduct.name_id,
                 price: currentOrderProduct.price,
-                quantity: 1,
-                imageUrl: currentOrderProduct.imageUrl
+                quantity: 1
             });
             orderType = 'single';
         } else if (currentOrderCartItems) {
-            // Cart checkout order
-            orderDetails = [...currentOrderCartItems]; // Copy cart items
+            subtotal = currentOrderCartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            orderDetails = currentOrderCartItems.map(item => ({
+                id: item.id,
+                name: item[`name_${currentLanguage}`] || item.name_id,
+                price: item.price,
+                quantity: item.quantity
+            }));
             orderType = 'cart';
         } else {
             showToast(currentLanguage === 'id' ? 'Tidak ada item dalam pesanan.' : 'No items in order.', 'error');
+            submitBtn.disabled = false;
             return;
         }
 
         const orderData = {
-            customerName: customerName,
-            customerPhone: customerPhone,
-            customerAddress: customerAddress,
+            customerName, customerPhone, customerAddress,
             addressLat: currentAddressLatLng.lat,
             addressLng: currentAddressLatLng.lng,
-            orderDetails: orderDetails,
-            totalAmount: orderDetails.reduce((sum, item) => sum + (item.price * item.quantity), 0) + 20000, // Include delivery fee
-            orderType: orderType,
+            orderDetails,
+            subtotal: subtotal,
+            deliveryFee: 20000,
+            totalAmount: subtotal + 20000,
+            orderType,
+            status: "new",
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         };
 
@@ -1617,7 +1561,6 @@ document.addEventListener('DOMContentLoaded', () => {
             await db.collection('orders').add(orderData);
             showToast(currentLanguage === 'id' ? 'Pesanan berhasil dikirim!' : 'Order submitted successfully!', 'success');
             
-            // Clear cart if ordered from cart
             if (orderType === 'cart') {
                 cartItems = [];
                 saveCart();
@@ -1625,83 +1568,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 closeCartModal();
             }
             closeOrderModal();
-
         } catch (error) {
             console.error("Error submitting order:", error);
             showToast(currentLanguage === 'id' ? 'Gagal mengirim pesanan. Silakan coba lagi.' : 'Failed to submit order. Please try again.', 'error');
+        } finally {
+            submitBtn.disabled = false;
         }
     });
 
-    // Google Maps related events
     domElements.detectLocationBtn.addEventListener('click', detectLocation);
-
-    // Cart icon click
     domElements.cartIcon.addEventListener('click', openCartModal);
 
-    // Cart item quantity update
     domElements.cartItemsList.addEventListener('click', e => {
         const target = e.target;
-        if (target.matches('button[data-action="decrement"]')) {
+        if (target.matches('button[data-action]')) {
             const productId = target.dataset.productId;
-            updateCartItemQuantity(productId, -1);
-        } else if (target.matches('button[data-action="increment"]')) {
-            const productId = target.dataset.productId;
-            updateCartItemQuantity(productId, 1);
+            const action = target.dataset.action;
+            updateCartItemQuantity(productId, action === 'increment' ? 1 : -1);
         }
     });
 
-    // Checkout button in cart modal
     domElements.checkoutBtn.addEventListener('click', () => {
         if (cartItems.length > 0) {
             closeCartModal();
-            openOrderModal(null, cartItems); // Open order modal with cart items
+            openOrderModal(null, cartItems);
         } else {
             showToast(currentLanguage === 'id' ? 'Keranjang Anda kosong!' : 'Your cart is empty!', 'error');
         }
     });
 
-    // Continue Shopping button in cart modal
     domElements.continueShoppingBtn.addEventListener('click', closeCartModal);
 
-    // Initial data fetch and render
     fetchAllData();
 });
 
-// Helper for menu filtering (already existing)
-const handleMenuFilter = (e) => {
-    if (!e.target.matches('.filter-btn')) return;
-
-    domElements.menuFilters.querySelector('.active').classList.remove('active');
-    e.target.classList.add('active');
-
-    const filter = e.target.dataset.filter;
-    document.querySelectorAll('.menu-card').forEach(card => {
-        const isVisible = filter === 'all' || card.dataset.category === filter;
-        card.classList.toggle('hidden', !isVisible);
-    });
-};
-
-// Toast notification function (existing)
-function showToast(message, type = 'info') {
-    domElements.toastMessage.textContent = message;
-    domElements.toastIcon.className = 'fas'; // Reset icon classes
-    if (type === 'success') {
-        domElements.toastIcon.classList.add('fa-check-circle');
-        domElements.toast.classList.add('success');
-    } else if (type === 'error') {
-        domElements.toastIcon.classList.add('fa-times-circle');
-        domElements.toast.classList.add('error');
-    } else { // info
-        domElements.toastIcon.classList.add('fa-info-circle');
-        domElements.toast.classList.add('info');
-    }
-
-    domElements.toast.classList.add('show');
-    setTimeout(() => {
-        domElements.toast.classList.remove('show');
-        domElements.toast.classList.remove('success', 'error', 'info'); // Clean up classes
-    }, 3000);
-}
     </script>
 </body>
 </html>
