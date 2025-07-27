@@ -148,46 +148,26 @@
 
 
 
-<div id="ls-dine-in-modal" class="ls-fab-popup-overlay">
-    <div class="ls-fab-popup-content">
-        <div class="ls-fab-popup-header">
-            <h2>Dine In Reservation</h2>
-            <button id="ls-dine-in-close-btn" class="ls-fab-popup-close">×</button>
-        </div>
-        <div class="ls-fab-popup-body">
-            <div id="dine-in-step-1">
-                <p class="popup-info">Complete the form below to get your reservation code.</p>
-                
-                <div class="popup-form-group">
-                    <label for="customer-name">Your Name</label>
-                    <input type="text" id="customer-name" placeholder="Enter your full name" required>
-                </div>
-
-                <div class="popup-grid">
-                    <div class="popup-form-group">
-                        <label for="reservation-date">Date</label>
-                        <input type="date" id="reservation-date" required>
-                    </div>
-                    <div class="popup-form-group">
-                        <label for="reservation-time">Time</label>
-                        <input type="time" id="reservation-time" required>
-                    </div>
-                </div>
-
-                <button id="generate-code-btn" class="ls-btn">Generate Code</button>
-            </div>
-
-            <div id="dine-in-step-2" style="display: none;">
-                <p class="popup-info">Your code has been generated successfully!</p>
-                <div class="reservation-code-display">
-                    <strong id="reservation-code"></strong>
-                </div>
-                <p class="popup-instruction">Please show this code to our staff. The code is saved in your browser.</p>
-                <button id="cancel-code-btn" class="ls-btn btn-outline">Cancel & Make New</button>
-            </div>
-        </div>
+<div class="ls-fab-container">
+    <div class="ls-fab-menu">
+        <a href="#" id="fab-whatsapp" class="ls-fab-item" target="_blank" rel="noopener noreferrer">
+            <span>Chat Admin</span>
+            <i class="fab fa-whatsapp"></i>
+        </a>
+        <a href="#" id="fab-direction" class="ls-fab-item" target="_blank" rel="noopener noreferrer">
+            <span>Get Direction</span>
+            <i class="fas fa-directions"></i>
+        </a>
+        <a href="#" id="fab-dine-in" class="ls-fab-item">
+            <span>Dine In</span>
+            <i class="fas fa-utensils"></i>
+        </a>
     </div>
+    <button class="ls-fab-main" aria-label="Open Menu">
+        <i class="fas fa-concierge-bell"></i>
+    </button>
 </div>
+
 
 
 
