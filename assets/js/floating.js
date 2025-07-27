@@ -138,8 +138,8 @@ function setupFloatingButton() {
     });
 
     // --- GET DIRECTION LOGIC ---
-    const latitude = -8.7222;
-    const longitude = 115.1682;
+    const latitude = –8.6716371;
+    const longitude = 115.16241;
     directionBtn.href = `http://googleusercontent.com/maps.google.com/5{latitude},${longitude}`;
 
     // --- WHATSAPP CHAT LOGIC ---
