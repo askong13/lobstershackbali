@@ -102,53 +102,25 @@
         }
         .ls-nav-links a.active:after, .ls-nav-links a:hover:after { width: 100%; }
         
-        /* ======== HERO SECTION (RESTYLED) ======== */
+        /* ======== HERO SECTION (CORRECTED) ======== */
         .ls-hero-section {
+            position: relative;
             padding: 0;
+            height: 95vh;
+            min-height: 700px;
             display: flex;
             align-items: center;
-            min-height: 95vh;
-            background: var(--ls-color-background);
+            justify-content: center;
             overflow: hidden;
         }
-        .ls-hero-section .ls-container {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            align-items: center;
-            gap: 2rem;
-            width: 100%;
-        }
-        .ls-hero-content {
-            grid-column: 1 / span 6;
-            padding-right: 2rem;
-            z-index: 2;
-        }
-        .ls-hero-content h1 {
-            font-family: var(--ls-font-heading);
-            font-size: clamp(3.5rem, 6vw, 5.5rem);
-            color: var(--ls-color-secondary);
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-        }
-        .ls-hero-content p {
-            font-size: 1.2rem;
-            margin-bottom: 2.5rem;
-            max-width: 550px;
-            color: var(--ls-color-text-light);
-            line-height: 1.8;
-        }
-        .ls-hero-slider-wrapper {
-            grid-column: 7 / -1;
-            width: 100%;
-            height: 75vh;
-            min-height: 600px;
-            border-radius: var(--ls-border-radius);
-            overflow: hidden;
-            box-shadow: var(--ls-shadow-lg);
+        .ls-hero-slider {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
         }
         .ls-hero-slider .swiper-slide {
-            height: 100%;
-            width: 100%;
+            height: 100%; width: 100%;
+            overflow: hidden;
         }
         .ls-hero-slider .ls-slide-background {
             width: 100%; height: 100%;
@@ -159,7 +131,33 @@
             transform: scale(1);
             transition: transform 9s ease-out;
         }
-        .ls-hero-slider .swiper-pagination { bottom: 20px !important; }
+        .ls-hero-slider .ls-slide-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(45, 76, 94, .65);
+        }
+        .ls-hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: var(--ls-color-surface);
+            padding: 0 1.5rem;
+        }
+        .ls-hero-content h1 {
+            font-family: var(--ls-font-heading);
+            font-size: clamp(3.5rem, 8vw, 6rem);
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+            margin-bottom: 1.5rem;
+        }
+        .ls-hero-content p {
+            font-size: 1.3rem;
+            margin: 1.5rem auto 2.5rem;
+            max-width: 700px;
+            line-height: 1.7;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.95);
+        }
+        .ls-hero-slider .swiper-pagination { bottom: 30px !important; }
         .ls-hero-slider .swiper-pagination-bullet { background: rgba(255,255,255,0.7); width: 10px; height: 10px; opacity: 1; }
         .ls-hero-slider .swiper-pagination-bullet-active { background-color: var(--ls-color-primary); }
         
@@ -327,12 +325,6 @@
             .ls-nav-links a:after { width: 60%; }
             .ls-header-actions { z-index: 1001; }
             .ls-mobile-menu-toggle { display: block; }
-
-            .ls-hero-section { min-height: auto; padding: 5rem 0; }
-            .ls-hero-section .ls-container { grid-template-columns: 1fr; gap: 3rem; }
-            .ls-hero-content { grid-column: 1 / -1; text-align: center; padding-right: 0; }
-            .ls-hero-content p { margin-left: auto; margin-right: auto; }
-            .ls-hero-slider-wrapper { grid-column: 1 / -1; height: 60vh; }
         }
         @media (max-width: 768px) {
             .ls-section { padding: 5rem 0; }
@@ -384,19 +376,15 @@
 
     <main>
         <section id="home" class="ls-hero-section">
-            <div class="ls-container">
-                <div class="ls-hero-content" data-aos="fade-right">
-                    <h1 data-lang-key="hero_title">Savor the Freshness</h1>
-                    <p data-lang-key="hero_subtitle">The best lobster and seafood experience in the heart of Bali.</p>
-                    <a href="#menu" class="ls-btn"><i class="fas fa-utensils"></i> <span data-lang-key="hero_button">Explore Our Menu</span></a>
-                </div>
-                <div class="ls-hero-slider-wrapper" data-aos="fade-left">
-                    <div class="swiper ls-hero-slider">
-                        <div class="swiper-wrapper" id="ls-hero-slider-wrapper">
-                            </div>
-                        <div class="swiper-pagination"></div>
+            <div class="swiper ls-hero-slider">
+                <div class="swiper-wrapper" id="ls-hero-slider-wrapper">
                     </div>
-                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+            <div class="ls-hero-content" data-aos="fade-up">
+                <h1 data-lang-key="hero_title">Savor the Freshness</h1>
+                <p data-lang-key="hero_subtitle">The best lobster and seafood experience in the heart of Bali.</p>
+                <a href="#menu" class="ls-btn"><i class="fas fa-utensils"></i> <span data-lang-key="hero_button">Explore Our Menu</span></a>
             </div>
         </section>
 
@@ -553,12 +541,13 @@
         });
     };
     
-    // --- RENDER FUNCTIONS (UNCHANGED CORE LOGIC) ---
+    // --- RENDER FUNCTIONS (BANNER FUNCTION CORRECTED) ---
     const renderBanners = () => {
         if (!siteData.banners || siteData.banners.length === 0) return;
         domElements.heroSliderWrapper.innerHTML = siteData.banners.map(banner => `
             <div class="swiper-slide">
                 <div class="ls-slide-background" style="background-image: url('${banner.image_url}');"></div>
+                <div class="ls-slide-overlay"></div>
             </div>
         `).join('');
         new Swiper('.ls-hero-slider', { 
