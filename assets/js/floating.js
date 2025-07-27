@@ -4,6 +4,8 @@
 function setupFloatingButton() {
     // --- DOM Elements ---
     const fabContainer = document.querySelector('.ls-fab-container');
+    if (!fabContainer) return; // Hentikan jika tombol utama tidak ada di HTML
+
     const fabMainBtn = document.querySelector('.ls-fab-main');
     const dineInBtn = document.getElementById('fab-dine-in');
     const directionBtn = document.getElementById('fab-direction');
@@ -21,8 +23,8 @@ function setupFloatingButton() {
     const dineInStep2 = document.getElementById('dine-in-step-2');
     const reservationCodeEl = document.getElementById('reservation-code');
 
-    if (!fabContainer || !siteData.content || !db) {
-        console.error("FAB dependencies not found (container, siteData, or db). Cannot initialize.");
+    if (!siteData.content || !db) {
+        console.error("FAB dependencies not found (siteData or db). Cannot initialize.");
         return;
     }
 
@@ -37,7 +39,7 @@ function setupFloatingButton() {
         const yyyy = today.getFullYear();
         const mm = String(today.getMonth() + 1).padStart(2, '0');
         const dd = String(today.getDate()).padStart(2, '0');
-        reservationDateInput.min = `${yyyy}-${mm}-${dd}`;
+        if(reservationDateInput) reservationDateInput.min = `${yyyy}-${mm}-${dd}`;
     };
 
     const openDineInModal = () => {
@@ -84,7 +86,7 @@ function setupFloatingButton() {
         } catch (error) {
             console.error("Error saving reservation to Firebase: ", error);
             alert("Failed to save reservation to our system. Please check console for details.");
-            throw error; // Lempar error agar bisa ditangkap
+            throw error;
         }
     };
 
@@ -105,7 +107,7 @@ function setupFloatingButton() {
             name: customerName,
             reservationDate: reservationDate,
             reservationTime: reservationTime,
-            status: 'pending', // Status awal reservasi
+            status: 'pending',
             createdAt: new Date()
         };
         
@@ -133,10 +135,11 @@ function setupFloatingButton() {
     });
 
     // --- GET DIRECTION LOGIC (FIXED) ---
-    const latitude = -8.6716371;  // FIX: Menggunakan tanda minus (-) yang benar
+    const latitude = -8.6716371;
     const longitude = 115.16241;
-    // FIX: Menggunakan format URL Google Maps yang valid
-    directionBtn.href = `https://maps.google.com/?q=${latitude},${longitude}`;
+    // FIX: URL ini akan membuka Google Maps, mendeteksi lokasi pengguna,
+    // dan langsung memulai navigasi mode motor ke tujuan.
+    directionBtn.href = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
 
     // --- WHATSAPP CHAT LOGIC ---
     const rawPhoneNumber = siteData.content?.footer_phone_value?.text_id || '6281234567890';
