@@ -1,5 +1,2 @@
-[build]
-  # Direktori di mana file statis (index.html) berada.
-  publish = "." 
-  # Direktori di mana Netlify Functions Anda berada.
-  functions = "netlify/functions"
+[functions]
+  directory = "netlify/functions"
