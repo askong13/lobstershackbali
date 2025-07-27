@@ -1,497 +1,572 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lobster Shack Admin Panel</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Lobster Shack Bali - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
-        /* CSS untuk admin.html */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background-color: #f4f4f4;
-            color: #333;
-            display: flex;
-            min-height: 100vh;
-        }
-
-        .login-container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            width: 350px;
-            text-align: center;
-            margin: auto; /* Center login form */
-        }
-
-        .login-container h2 {
-            color: #4CAF50;
-            margin-bottom: 20px;
-        }
-
-        .login-container input[type="email"],
-        .login-container input[type="password"] {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .login-container button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            width: 100%;
-        }
-
-        .error-message {
-            color: #e74c3c;
-            margin-top: 10px;
-            font-size: 0.9em;
-        }
-
-        /* Admin Dashboard Layout */
-        .admin-dashboard {
-            display: flex;
-            width: 100%;
-            min-height: 100vh;
-        }
-
-        .admin-dashboard header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 1rem 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            position: fixed; /* Fix header */
-            top: 0;
-            z-index: 1000;
-        }
-
-        .admin-dashboard header h1 {
-            margin: 0;
-            font-size: 1.5rem;
-        }
-
-        .admin-dashboard header button {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .sidebar {
+        /* CSS dasar untuk layout sidebar & content */
+        body { font-family: 'Poppins', sans-serif; display: flex; min-height: 100vh; margin: 0; background-color: #f8f6f0; }
+        #admin-sidebar {
             width: 250px;
-            background-color: #34495e;
-            color: white;
-            padding-top: 80px; /* Offset for fixed header */
-            position: fixed;
-            height: 100%;
-            overflow-y: auto;
+            background-color: #2D4C5E; /* Warna sekunder dari tema Anda */
+            color: #fff;
+            padding: 20px;
             box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
         }
-
-        .sidebar ul {
+        #admin-sidebar .logo {
+            height: 60px;
+            filter: brightness(0) invert(1); /* Untuk logo putih di latar belakang gelap */
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        #admin-sidebar nav ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
-
-        .sidebar ul li a {
-            display: block;
-            padding: 15px 20px;
-            color: white;
-            text-decoration: none;
+        #admin-sidebar nav ul li {
+            margin-bottom: 10px;
+        }
+        #admin-sidebar nav ul li a {
             display: flex;
             align-items: center;
-            gap: 10px;
-            transition: background-color 0.3s ease;
-        }
-
-        .sidebar ul li a:hover,
-        .sidebar ul li a.active {
-            background-color: #4CAF50;
-        }
-
-        .content {
-            margin-left: 250px; /* Offset for sidebar */
-            padding: 80px 20px 20px 20px; /* Offset for fixed header */
-            flex-grow: 1;
-            background-color: #f4f4f4;
-        }
-
-        .content section {
-            background-color: #fff;
-            padding: 20px;
+            padding: 12px 15px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
-
-        .content h2 {
-            color: #4CAF50;
-            margin-top: 0;
-            margin-bottom: 20px;
+        #admin-sidebar nav ul li a i {
+            margin-right: 10px;
+            font-size: 1.1em;
         }
-
-        .summary-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+        #admin-sidebar nav ul li a:hover,
+        #admin-sidebar nav ul li a.active {
+            background-color: #D84B42; /* Warna primer dari tema Anda */
+            color: #fff;
+        }
+        #admin-content {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        #admin-header {
+            background-color: #FFFFFF;
+            padding: 20px 30px;
+            border-bottom: 1px solid #E0DACE;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+        #admin-header h1 {
+            margin: 0;
+            font-family: var(--font-heading);
+            color: var(--color-secondary);
+            font-size: 2em;
+        }
+        #admin-footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--color-text-light);
+            font-size: 0.9em;
+            border-top: 1px solid #E0DACE;
+            margin-top: 40px;
+        }
+        .content-section {
+            background-color: #FFFFFF;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
             margin-bottom: 30px;
         }
-
-        .card {
-            background-color: #e8f5e9;
-            border: 1px solid #4CAF50;
+        .content-section h2 {
+            font-family: var(--font-heading);
+            color: var(--color-secondary);
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 1px dashed var(--color-border);
+            padding-bottom: 15px;
+        }
+        /* Tambahkan gaya untuk form, tabel, dll. */
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: .5rem; color: var(--color-secondary); }
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="url"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: .8rem 1rem;
             border-radius: 8px;
-            padding: 20px;
+            border: 1px solid var(--color-border);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(216, 75, 66, 0.2);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .75rem;
+            font-family: var(--font-body);
+            font-weight: 600;
+            padding: .875rem 2rem;
+            border-radius: 50px;
+            border: 2px solid var(--color-primary);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all var(--transition-speed) ease;
+            background-color: var(--color-primary);
+            color: var(--color-surface);
             text-align: center;
         }
-
-        .card h3 {
-            margin-top: 0;
-            color: #388e3c;
+        .btn:hover {
+            background-color: #b93e36;
+            border-color: #b93e36;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-md);
         }
-
-        .card p {
-            font-size: 2em;
-            font-weight: bold;
-            color: #2e7d32;
+        .btn-secondary {
+            background-color: var(--color-surface);
+            color: var(--color-secondary);
+            border-color: var(--color-secondary);
         }
-
-        .error-detail {
-            color: #e74c3c;
-            background-color: #ffe0e0;
-            border: 1px solid #e74c3c;
-            padding: 10px;
-            border-radius: 4px;
-            margin-top: 20px;
+        .btn-secondary:hover {
+            background-color: var(--color-secondary);
+            color: var(--color-surface);
         }
-
-        /* Table Styles */
+        .table-responsive { overflow-x: auto; }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-        }
-
-        table th, table td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-        }
-
-        table th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-
-        table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        /* Form Styles */
-        .form-container {
-            background-color: #f9f9f9;
-            padding: 20px;
+            background-color: var(--color-surface);
             border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
         }
-
-        .form-container input[type="text"],
-        .form-container input[type="email"],
-        .form-container input[type="number"],
-        .form-container input[type="url"],
-        .form-container textarea,
-        .form-container select {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box; /* Include padding in width */
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
         }
-
-        .form-container textarea {
-            min-height: 80px;
-            resize: vertical;
+        th {
+            background-color: var(--color-secondary);
+            color: #fff;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
         }
-
-        .form-container button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
+        tr:last-child td { border-bottom: none; }
+        .status-badge {
+            display: inline-block;
+            padding: .3em .7em;
+            border-radius: 50px;
+            font-size: 0.8em;
+            font-weight: 600;
+            color: #fff;
+        }
+        .status-badge.new { background-color: #007bff; }
+        .status-badge.processing { background-color: #ffc107; color: #333; }
+        .status-badge.completed { background-color: #28a745; }
+        .status-badge.cancelled { background-color: #dc3545; }
+        .action-buttons button {
+            background: none;
             border: none;
-            border-radius: 4px;
+            font-size: 1.1em;
             cursor: pointer;
-            margin-right: 10px;
+            margin-right: 8px;
+            color: var(--color-secondary);
+            transition: color 0.3s ease;
         }
-
-        .form-container button#cancel-product-btn,
-        .form-container button#cancel-category-btn,
-        .form-container button#cancel-site-content-btn {
-            background-color: #95a5a6;
-        }
-
-        .add-btn {
-            background-color: #3498db;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-
-        /* Image preview in forms */
-        .form-container img {
-            margin-top: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
+        .action-buttons button:hover { color: var(--color-primary); }
     </style>
 </head>
 <body>
-    <div class="login-container" id="login-container">
-        <h2>Admin Login</h2>
-        <form id="login-form">
-            <input type="email" id="login-email" placeholder="Email" required>
-            <input type="password" id="login-password" placeholder="Password" required>
-            <button type="submit">Login</button>
-            <p id="login-error-message" class="error-message"></p>
-        </form>
-    </div>
-
-    <div class="admin-dashboard" id="admin-dashboard" style="display: none;">
-        <header>
-            <h1>Admin Dashboard</h1>
-            <button id="logout-btn">Logout</button>
-        </header>
-
-        <nav class="sidebar">
+    <div id="admin-sidebar">
+        <img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Lobster Shack Admin" class="logo">
+        <nav>
             <ul>
-                <li><a href="#" data-section="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li><a href="#" data-section="orders"><i class="fas fa-receipt"></i> Orders</a></li>
-                <li><a href="#" data-section="products"><i class="fas fa-utensils"></i> Products</a></li>
-                <li><a href="#" data-section="categories"><i class="fas fa-list"></i> Categories</a></li>
-                <li><a href="#" data-section="site-content"><i class="fas fa-pager"></i> Site Content</a></li>
-                <li><a href="#" data-section="users"><i class="fas fa-users"></i> Users</a></li>
-                <li><a href="#" data-section="customers"><i class="fas fa-user-friends"></i> Customers</a></li>
+                <li><a href="#dashboard" class="active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="#orders"><i class="fas fa-clipboard-list"></i> Pesanan</a></li>
+                <li><a href="#products"><i class="fas fa-fish"></i> Produk</a></li>
+                <li><a href="#categories"><i class="fas fa-tags"></i> Kategori</a></li>
+                <li><a href="#content"><i class="fas fa-pencil-ruler"></i> Konten Website</a></li>
+                <li><a href="#banners"><i class="fas fa-image"></i> Banner Slider</a></li>
+                <li><a href="#gallery-images"><i class="fas fa-camera"></i> Galeri</a></li>
+                <li><a href="#history"><i class="fas fa-history"></i> Riwayat Kami</a></li>
+                <li><a href="#profile"><i class="fas fa-user-circle"></i> Profil Admin</a></li>
+                <li><button id="logout-btn" style="width:100%; text-align:left; background:none; border:none; padding:12px 15px; color:rgba(255,255,255,0.8); cursor:pointer; display:flex; align-items:center; border-radius:8px;"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
             </ul>
         </nav>
-
-        <main class="content">
-            <section id="dashboard-section" class="active-section">
-                <h2>Dashboard Overview</h2>
-                <div class="summary-cards">
-                    <div class="card">
-                        <h3>Orders Today</h3>
-                        <p id="orders-today-count">0</p>
-                    </div>
-                    <div class="card">
-                        <h3>Total Products</h3>
-                        <p id="total-products-count">0</p>
-                    </div>
-                    <div class="card">
-                        <h3>Total Customers</h3>
-                        <p id="total-customers-count">0</p>
-                    </div>
-                </div>
-                <div class="error-detail" id="dashboard-error-detail"></div>
-            </section>
-
-            <section id="orders-section" style="display: none;">
-                <h2>Manage Orders</h2>
-                <div class="filter-controls">
-                    <label for="order-status-filter">Filter by Status:</label>
-                    <select id="order-status-filter">
-                        <option value="all">All</option>
-                        <option value="pending">Pending</option>
-                        <option value="completed">Completed</option>
-                        <option value="cancelled">Cancelled</option>
-                    </select>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Customer Name</th>
-                            <th>Total Amount</th>
-                            <th>Status</th>
-                            <th>Order Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="orders-table-body">
-                        <tr><td colspan="6">Loading orders...</td></tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <section id="products-section" style="display: none;">
-                <h2>Manage Products</h2>
-                <button id="add-product-btn" class="add-btn">Add New Product</button>
-                <div class="form-container" id="product-form-container" style="display: none;">
-                    <h3>Add/Edit Product</h3>
-                    <form id="product-form">
-                        <input type="hidden" id="product-id">
-                        <input type="text" id="product-name" placeholder="Product Name" required>
-                        <textarea id="product-description" placeholder="Description"></textarea>
-                        <input type="number" id="product-price" placeholder="Price" step="1000" required>
-                        <select id="product-category" required>
-                            <option value="">Select Category</option>
-                            </select>
-                        <input type="file" id="product-image">
-                        <img id="current-product-image" src="" alt="Current Product Image" style="max-width: 100px; display: none;">
-                        <label>
-                            <input type="checkbox" id="product-available"> Available
-                        </label>
-                        <input type="number" id="product-order" placeholder="Display Order" min="0">
-                        <button type="submit" id="save-product-btn">Save Product</button>
-                        <button type="button" id="cancel-product-btn">Cancel</button>
-                    </form>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Name</th>
-                            <th>Category</th>
-                            <th>Price</th>
-                            <th>Available</th>
-                            <th>Order</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="products-table-body">
-                        <tr><td colspan="7">Loading products...</td></tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <section id="categories-section" style="display: none;">
-                <h2>Manage Categories</h2>
-                <button id="add-category-btn" class="add-btn">Add New Category</button>
-                <div class="form-container" id="category-form-container" style="display: none;">
-                    <h3>Add/Edit Category</h3>
-                    <form id="category-form">
-                        <input type="hidden" id="category-id">
-                        <input type="text" id="category-name" placeholder="Category Name" required>
-                        <input type="number" id="category-order" placeholder="Display Order" min="0">
-                        <button type="submit" id="save-category-btn">Save Category</button>
-                        <button type="button" id="cancel-category-btn">Cancel</button>
-                    </form>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Order</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="categories-table-body">
-                        <tr><td colspan="3">Loading categories...</td></tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <section id="site-content-section" style="display: none;">
-                <h2>Manage Site Content</h2>
-                <button id="add-site-content-btn" class="add-btn">Add New Content</button>
-                <div class="form-container" id="site-content-form-container" style="display: none;">
-                    <h3>Add/Edit Site Content</h3>
-                    <form id="site-content-form">
-                        <input type="hidden" id="content-id">
-                        <input type="text" id="content-name" placeholder="Content Identifier (e.g., main_banner, about_us)" required>
-                        <input type="text" id="content-title" placeholder="Title">
-                        <textarea id="content-text" placeholder="Content Text"></textarea>
-                        <input type="url" id="content-image-url" placeholder="Image URL (if not uploading)">
-                        <input type="file" id="content-image-upload">
-                        <img id="current-content-image" src="" alt="Current Content Image" style="max-width: 100px; display: none;">
-                        <label>
-                            <input type="checkbox" id="content-active"> Is Active
-                        </label>
-                        <input type="number" id="content-order" placeholder="Display Order" min="0">
-                        <button type="submit" id="save-content-btn">Save Content</button>
-                        <button type="button" id="cancel-content-btn">Cancel</button>
-                    </form>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>Image</th>
-                            <th>Active</th>
-                            <th>Order</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="site-content-table-body">
-                        <tr><td colspan="6">Loading site content...</td></tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <section id="users-section" style="display: none;">
-                <h2>Manage Users (Admin)</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="users-table-body">
-                        <tr><td colspan="3">Loading users...</td></tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <section id="customers-section" style="display: none;">
-                <h2>Manage Customers</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Registered At</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="customers-table-body">
-                        <tr><td colspan="5">Loading customers...</td></tr>
-                    </tbody>
-                </table>
-            </section>
-        </main>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import {
-            getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, setDoc,
-            query, orderBy, limit, onSnapshot, where, serverTimestamp
-        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+    <div id="admin-content">
+        <header id="admin-header">
+            <h1 id="current-page-title">Dashboard</h1>
+            <div class="header-actions">
+                <button class="btn btn-secondary"><i class="fas fa-bell"></i> Notifikasi <span class="cart-badge" id="admin-notification-badge" style="position: static; margin-left: 5px;">0</span></button>
+            </div>
+        </header>
 
+        <main>
+            <section id="dashboard" class="content-section active-section">
+                <h2>Ringkasan Dashboard</h2>
+                <p>Selamat datang di panel admin Lobster Shack Bali. Di sini Anda bisa melihat ringkasan performa restoran Anda.</p>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:20px;">
+                    <div class="content-section" style="padding:15px; text-align:center;">
+                        <h3>Total Pesanan Hari Ini</h3>
+                        <p style="font-size:2.5em; font-weight:bold; color:var(--color-primary);" id="total-orders-today">0</p>
+                    </div>
+                     <div class="content-section" style="padding:15px; text-align:center;">
+                        <h3>Pendapatan Hari Ini</h3>
+                        <p style="font-size:2.5em; font-weight:bold; color:var(--color-primary);" id="revenue-today">Rp 0</p>
+                    </div>
+                     <div class="content-section" style="padding:15px; text-align:center;">
+                        <h3>Produk Paling Populer</h3>
+                        <p style="font-size:1.5em; font-weight:bold; color:var(--color-secondary);" id="top-product-today">-</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="orders" class="content-section" style="display:none;">
+                <h2>Manajemen Pesanan</h2>
+                <div class="table-responsive">
+                    <table id="orders-table">
+                        <thead>
+                            <tr>
+                                <th>ID Pesanan</th>
+                                <th>Nama Pelanggan</th>
+                                <th>Telepon</th>
+                                <th>Alamat</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Waktu Pesan</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="products" class="content-section" style="display:none;">
+                <h2>Manajemen Produk</h2>
+                <button class="btn" id="add-product-btn" style="margin-bottom:20px;"><i class="fas fa-plus"></i> Tambah Produk Baru</button>
+                <div class="table-responsive">
+                    <table id="products-table">
+                        <thead>
+                            <tr>
+                                <th>Gambar</th>
+                                <th>Nama (ID)</th>
+                                <th>Nama (EN)</th>
+                                <th>Harga</th>
+                                <th>Kategori</th>
+                                <th>Unggulan</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="categories" class="content-section" style="display:none;">
+                <h2>Manajemen Kategori</h2>
+                 <button class="btn" id="add-category-btn" style="margin-bottom:20px;"><i class="fas fa-plus"></i> Tambah Kategori Baru</button>
+                <div class="table-responsive">
+                    <table id="categories-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nama Kategori</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="content" class="content-section" style="display:none;">
+                <h2>Manajemen Konten Website</h2>
+                <form id="content-form">
+                    <div class="form-group">
+                        <label for="page_title_id">Judul Halaman (ID)</label>
+                        <input type="text" id="page_title_id">
+                    </div>
+                     <div class="form-group">
+                        <label for="page_title_en">Judul Halaman (EN)</label>
+                        <input type="text" id="page_title_en">
+                    </div>
+                    <div class="form-group">
+                        <label for="hero_title_id">Judul Hero (ID)</label>
+                        <input type="text" id="hero_title_id">
+                    </div>
+                    <div class="form-group">
+                        <label for="hero_title_en">Judul Hero (EN)</label>
+                        <input type="text" id="hero_title_en">
+                    </div>
+                    <div class="form-group">
+                        <label for="hero_subtitle_id">Sub Judul Hero (ID)</label>
+                        <textarea id="hero_subtitle_id"></textarea>
+                    </div>
+                     <div class="form-group">
+                        <label for="hero_subtitle_en">Sub Judul Hero (EN)</label>
+                        <textarea id="hero_subtitle_en"></textarea>
+                    </div>
+                    <button type="submit" class="btn"><i class="fas fa-save"></i> Simpan Konten</button>
+                </form>
+            </section>
+
+            <section id="banners" class="content-section" style="display:none;">
+                <h2>Manajemen Banner Slider</h2>
+                <button class="btn" id="add-banner-btn" style="margin-bottom:20px;"><i class="fas fa-plus"></i> Tambah Banner Baru</button>
+                <div id="banner-list">
+                    </div>
+            </section>
+
+            <section id="gallery-images" class="content-section" style="display:none;">
+                <h2>Manajemen Gambar Galeri</h2>
+                <button class="btn" id="add-gallery-image-btn" style="margin-bottom:20px;"><i class="fas fa-plus"></i> Tambah Gambar Galeri</button>
+                <div id="gallery-image-list" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:15px;">
+                    </div>
+            </section>
+
+            <section id="history" class="content-section" style="display:none;">
+                <h2>Manajemen Riwayat Kami</h2>
+                <button class="btn" id="add-history-btn" style="margin-bottom:20px;"><i class="fas fa-plus"></i> Tambah Item Riwayat</button>
+                <div id="history-list">
+                    </div>
+            </section>
+
+            <section id="profile" class="content-section" style="display:none;">
+                <h2>Profil Admin</h2>
+                <form id="admin-profile-form">
+                    <div class="form-group">
+                        <label for="admin-name">Nama Admin</label>
+                        <input type="text" id="admin-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-email">Email</label>
+                        <input type="email" id="admin-email" disabled> </div>
+                    <div class="form-group">
+                        <label for="admin-phone">Telepon</label>
+                        <input type="tel" id="admin-phone">
+                    </div>
+                    <button type="submit" class="btn"><i class="fas fa-save"></i> Perbarui Profil</button>
+                </form>
+            </section>
+        </main>
+
+        <footer id="admin-footer">
+            <p>&copy; 2025 Lobster Shack Bali Admin Panel. All Rights Reserved.</p>
+        </footer>
+    </div>
+
+    <div id="product-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="product-modal-title">Tambah Produk</h2>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="product-form">
+                    <input type="hidden" id="product-id">
+                    <div class="form-group">
+                        <label for="product-name-id">Nama Produk (ID)</label>
+                        <input type="text" id="product-name-id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-name-en">Nama Produk (EN)</label>
+                        <input type="text" id="product-name-en" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-price">Harga</label>
+                        <input type="number" id="product-price" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-category">Kategori</label>
+                        <select id="product-category" required>
+                            </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-description-id">Deskripsi (ID)</label>
+                        <textarea id="product-description-id" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-description-en">Deskripsi (EN)</label>
+                        <textarea id="product-description-en" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-image-url">URL Gambar</label>
+                        <input type="url" id="product-image-url" placeholder="Paste URL gambar atau Upload">
+                        <input type="file" id="product-image-upload" accept="image/*" style="margin-top:10px;">
+                        <img id="product-image-preview" src="" alt="Gambar Produk" style="max-width:100px; max-height:100px; margin-top:10px; display:none;">
+                    </div>
+                     <div class="form-group">
+                        <input type="checkbox" id="product-is-featured">
+                        <label for="product-is-featured">Produk Unggulan</label>
+                    </div>
+                    <button type="submit" class="btn" style="width:100%;"><i class="fas fa-save"></i> Simpan Produk</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="category-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="category-modal-title">Tambah Kategori</h2>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="category-form">
+                    <input type="hidden" id="category-id-field">
+                    <div class="form-group">
+                        <label for="category-name-field">Nama Kategori</label>
+                        <input type="text" id="category-name-field" required>
+                    </div>
+                    <button type="submit" class="btn" style="width:100%;"><i class="fas fa-save"></i> Simpan Kategori</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="banner-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="banner-modal-title">Tambah Banner</h2>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="banner-form">
+                    <input type="hidden" id="banner-id">
+                    <div class="form-group">
+                        <label for="banner-image-url-field">URL Gambar Banner</label>
+                        <input type="url" id="banner-image-url-field" placeholder="Paste URL gambar atau Upload">
+                        <input type="file" id="banner-image-upload-field" accept="image/*" style="margin-top:10px;">
+                        <img id="banner-image-preview" src="" alt="Gambar Banner" style="max-width:100px; max-height:100px; margin-top:10px; display:none;">
+                    </div>
+                    <div class="form-group">
+                        <label for="banner-sort-order">Urutan Tampilan</label>
+                        <input type="number" id="banner-sort-order" min="0" value="0">
+                    </div>
+                    <button type="submit" class="btn" style="width:100%;"><i class="fas fa-save"></i> Simpan Banner</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="gallery-image-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="gallery-image-modal-title">Tambah Gambar Galeri</h2>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="gallery-image-form">
+                    <input type="hidden" id="gallery-image-id">
+                    <div class="form-group">
+                        <label for="gallery-image-url-field">URL Gambar Galeri</label>
+                        <input type="url" id="gallery-image-url-field" placeholder="Paste URL gambar atau Upload">
+                        <input type="file" id="gallery-image-upload-field" accept="image/*" style="margin-top:10px;">
+                        <img id="gallery-image-preview" src="" alt="Gambar Galeri" style="max-width:100px; max-height:100px; margin-top:10px; display:none;">
+                    </div>
+                    <div class="form-group">
+                        <label for="gallery-image-caption-id">Keterangan (ID)</label>
+                        <textarea id="gallery-image-caption-id" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="gallery-image-caption-en">Keterangan (EN)</label>
+                        <textarea id="gallery-image-caption-en" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="gallery-image-sort-order">Urutan Tampilan</label>
+                        <input type="number" id="gallery-image-sort-order" min="0" value="0">
+                    </div>
+                    <button type="submit" class="btn" style="width:100%;"><i class="fas fa-save"></i> Simpan Gambar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="history-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="history-modal-title">Tambah Item Riwayat</h2>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="history-form">
+                    <input type="hidden" id="history-id">
+                    <div class="form-group">
+                        <label for="history-year">Tahun</label>
+                        <input type="number" id="history-year" min="1900" max="2100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="history-title-id">Judul (ID)</label>
+                        <input type="text" id="history-title-id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="history-title-en">Judul (EN)</label>
+                        <input type="text" id="history-title-en" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="history-text-id">Deskripsi (ID)</label>
+                        <textarea id="history-text-id" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="history-text-en">Deskripsi (EN)</label>
+                        <textarea id="history-text-en" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="history-sort-order">Urutan Tampilan</label>
+                        <input type="number" id="history-sort-order" min="0" value="0">
+                    </div>
+                    <button type="submit" class="btn" style="width:100%;"><i class="fas fa-save"></i> Simpan Riwayat</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="toast" class="toast-notification">
+        <i id="toast-icon" class="fas fa-check-circle"></i>
+        <p id="toast-message">Notification</p>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+
+    <script>
+        'use strict';
+
+        // =================================================================================
+        // KONFIGURASI PROYEK FIREBASE (WAJIB DIISI)
+        // =================================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
             authDomain: "lobster-shack-bali.firebaseapp.com",
@@ -501,870 +576,1369 @@
             messagingSenderId: "42452974733",
             appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
         };
+        // =================================================================================
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const storage = getStorage(app);
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
 
-        // --- Elemen Login ---
-        const loginForm = document.getElementById('login-form');
-        const loginEmailInput = document.getElementById('login-email');
-        const loginPasswordInput = document.getElementById('login-password');
-        const loginErrorMessage = document.getElementById('login-error-message');
-        const logoutBtn = document.getElementById('logout-btn');
-        const loginContainer = document.getElementById('login-container');
-        const adminDashboard = document.getElementById('admin-dashboard');
+        // --- Variabel Global ---
+        let adminData = {}; // Untuk menyimpan data profil admin yang sedang login
+        let currentActiveSection = 'dashboard';
+        let categoriesData = []; // Cache kategori untuk dropdown produk
 
-        // --- Elemen Umum Dashboard ---
-        const dashboardSection = document.getElementById('dashboard-section');
-        const ordersSection = document.getElementById('orders-section');
-        const productsSection = document.getElementById('products-section');
-        const categoriesSection = document.getElementById('categories-section');
-        const siteContentSection = document.getElementById('site-content-section');
-        const usersSection = document.getElementById('users-section');
-        const customersSection = document.getElementById('customers-section');
+        const adminDom = {
+            sidebar: document.getElementById('admin-sidebar'),
+            contentArea: document.getElementById('admin-content'),
+            currentPageTitle: document.getElementById('current-page-title'),
+            notificationBadge: document.getElementById('admin-notification-badge'),
+            logoutBtn: document.getElementById('logout-btn'),
 
-        const sections = {
-            'dashboard': dashboardSection,
-            'orders': ordersSection,
-            'products': productsSection,
-            'categories': categoriesSection,
-            'site-content': siteContentSection,
-            'users': usersSection,
-            'customers': customersSection
+            // Sections
+            dashboardSection: document.getElementById('dashboard'),
+            ordersSection: document.getElementById('orders'),
+            productsSection: document.getElementById('products'),
+            categoriesSection: document.getElementById('categories'),
+            contentSection: document.getElementById('content'),
+            bannersSection: document.getElementById('banners'),
+            galleryImagesSection: document.getElementById('gallery-images'),
+            historySection: document.getElementById('history'),
+            profileSection: document.getElementById('profile'),
+
+            // Tables
+            ordersTableBody: document.querySelector('#orders-table tbody'),
+            productsTableBody: document.querySelector('#products-table tbody'),
+            categoriesTableBody: document.querySelector('#categories-table tbody'),
+
+            // Buttons
+            addProductBtn: document.getElementById('add-product-btn'),
+            addCategoryBtn: document.getElementById('add-category-btn'),
+            addBannerBtn: document.getElementById('add-banner-btn'),
+            addGalleryImageBtn: document.getElementById('add-gallery-image-btn'),
+            addHistoryBtn: document.getElementById('add-history-btn'),
+
+            // Forms & Modals
+            productModal: document.getElementById('product-modal'),
+            productModalTitle: document.getElementById('product-modal-title'),
+            productForm: document.getElementById('product-form'),
+            productIdField: document.getElementById('product-id'),
+            productNameIdField: document.getElementById('product-name-id'),
+            productNameEnField: document.getElementById('product-name-en'),
+            productPriceField: document.getElementById('product-price'),
+            productCategoryField: document.getElementById('product-category'),
+            productDescriptionIdField: document.getElementById('product-description-id'),
+            productDescriptionEnField: document.getElementById('product-description-en'),
+            productImageUrlField: document.getElementById('product-image-url'),
+            productImageUploadField: document.getElementById('product-image-upload'),
+            productImagePreview: document.getElementById('product-image-preview'),
+            productIsFeaturedField: document.getElementById('product-is-featured'),
+
+            categoryModal: document.getElementById('category-modal'),
+            categoryModalTitle: document.getElementById('category-modal-title'),
+            categoryForm: document.getElementById('category-form'),
+            categoryIdField: document.getElementById('category-id-field'),
+            categoryNameField: document.getElementById('category-name-field'),
+
+            bannerModal: document.getElementById('banner-modal'),
+            bannerModalTitle: document.getElementById('banner-modal-title'),
+            bannerForm: document.getElementById('banner-form'),
+            bannerIdField: document.getElementById('banner-id'),
+            bannerImageUrlField: document.getElementById('banner-image-url-field'),
+            bannerImageUploadField: document.getElementById('banner-image-upload-field'),
+            bannerImagePreview: document.getElementById('banner-image-preview'),
+            bannerSortOrderField: document.getElementById('banner-sort-order'),
+            bannerList: document.getElementById('banner-list'),
+
+            galleryImageModal: document.getElementById('gallery-image-modal'),
+            galleryImageModalTitle: document.getElementById('gallery-image-modal-title'),
+            galleryImageForm: document.getElementById('gallery-image-form'),
+            galleryImageIdField: document.getElementById('gallery-image-id'),
+            galleryImageUrlField: document.getElementById('gallery-image-url-field'),
+            galleryImageUploadField: document.getElementById('gallery-image-upload-field'),
+            galleryImagePreview: document.getElementById('gallery-image-preview'),
+            galleryImageCaptionIdField: document.getElementById('gallery-image-caption-id'),
+            galleryImageCaptionEnField: document.getElementById('gallery-image-caption-en'),
+            galleryImageSortOrderField: document.getElementById('gallery-image-sort-order'),
+            galleryImageList: document.getElementById('gallery-image-list'),
+
+            historyModal: document.getElementById('history-modal'),
+            historyModalTitle: document.getElementById('history-modal-title'),
+            historyForm: document.getElementById('history-form'),
+            historyIdField: document.getElementById('history-id'),
+            historyYearField: document.getElementById('history-year'),
+            historyTitleIdField: document.getElementById('history-title-id'),
+            historyTitleEnField: document: document.getElementById('history-title-en'),
+            historyTextIdField: document.getElementById('history-text-id'),
+            historyTextEnField: document.getElementById('history-text-en'),
+            historySortOrderField: document.getElementById('history-sort-order'),
+            historyList: document.getElementById('history-list'),
+
+
+            contentForm: document.getElementById('content-form'),
+            // Referensi untuk semua input konten akan ditambahkan secara dinamis nanti
+
+            adminProfileForm: document.getElementById('admin-profile-form'),
+            adminNameField: document.getElementById('admin-name'),
+            adminEmailField: document.getElementById('admin-email'),
+            adminPhoneField: document.getElementById('admin-phone'),
+
+            // Dashboard Stats
+            totalOrdersToday: document.getElementById('total-orders-today'),
+            revenueToday: document.getElementById('revenue-today'),
+            topProductToday: document.getElementById('top-product-today'),
+
+            // Re-use toast from public site
+            toast: document.getElementById('toast'),
+            toastIcon: document.getElementById('toast-icon'),
+            toastMessage: document.getElementById('toast-message'),
         };
 
-        const sidebarLinks = document.querySelectorAll('.sidebar ul li a');
-        const dashboardErrorDetail = document.getElementById('dashboard-error-detail');
+        const showToast = (message, type = 'info') => {
+            adminDom.toastMessage.textContent = message;
+            adminDom.toast.className = 'toast-notification'; // Reset classes
+            adminDom.toast.classList.add(type, 'show');
+            const iconMap = { 'success': 'fa-check-circle', 'error': 'fa-times-circle', 'info': 'fa-info-circle' };
+            adminDom.toastIcon.className = `fas ${iconMap[type] || 'fa-info-circle'}`;
+            setTimeout(() => {
+                adminDom.toast.classList.remove('show');
+            }, 4000);
+        };
 
-        // --- Autentikasi Login ---
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = loginEmailInput.value;
-            const password = loginPasswordInput.value;
-            loginErrorMessage.textContent = ''; // Clear previous error
+        // --- Autentikasi Admin ---
+        const redirectToLogin = () => {
+            // Anda perlu membuat halaman login admin terpisah (misal: login.html)
+            // Di halaman login.html, Anda akan menggunakan Firebase Authentication
+            // untuk proses login. Setelah berhasil login, redirect ke admin.html ini.
+            window.location.href = 'login.html'; // Ganti dengan path ke halaman login Anda
+        };
 
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-                // Autentikasi berhasil, onAuthStateChanged akan menangani tampilan dashboard
-            } catch (error) {
-                console.error("Login failed:", error);
-                loginErrorMessage.textContent = `Login failed: ${error.message}`;
-            }
-        });
-
-        // --- Logout ---
-        logoutBtn.addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-                console.log("User logged out.");
-                // onAuthStateChanged akan menangani kembali ke tampilan login
-            } catch (error) {
-                console.error("Logout failed:", error);
-                alert(`Logout failed: ${error.message}`);
-            }
-        });
-
-        // --- Mengelola tampilan berdasarkan status autentikasi ---
-        onAuthStateChanged(auth, (user) => {
+        auth.onAuthStateChanged(async (user) => {
             if (user) {
-                loginContainer.style.display = 'none';
-                adminDashboard.style.display = 'flex';
-                console.log("User is logged in:", user.email);
-
-                // Initialize dashboard views
-                sidebarLinks[0].classList.add('active'); // Set dashboard as active
-                sections['dashboard'].style.display = 'block';
-
-                loadDashboardSummary();
-                loadOrders();
-                loadProductsAdmin();
-                loadCategoriesAdmin();
-                loadSiteContentAdmin();
-                loadUsersAdmin();
-                loadCustomersAdmin();
-            } else {
-                loginContainer.style.display = 'block';
-                adminDashboard.style.display = 'none';
-                console.log("User is logged out.");
-            }
-        });
-
-        // --- Navigasi Sidebar ---
-        sidebarLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetSectionId = link.dataset.section;
-
-                // Hide all sections
-                for (const key in sections) {
-                    sections[key].style.display = 'none';
+                // Pengguna login, cek klaim kustom
+                const idTokenResult = await user.getIdTokenResult();
+                if (idTokenResult.claims.admin) {
+                    console.log("Admin logged in!");
+                    // Fetch admin profile data
+                    const adminDoc = await db.collection('admins').doc(user.uid).get();
+                    if (adminDoc.exists) {
+                        adminData = { id: adminDoc.id, ...adminDoc.data() };
+                        adminDom.adminNameField.value = adminData.name || '';
+                        adminDom.adminEmailField.value = adminData.email || user.email;
+                        adminDom.adminPhoneField.value = adminData.phone || '';
+                    } else {
+                        // Create basic admin profile if not exists
+                        await db.collection('admins').doc(user.uid).set({
+                            name: user.displayName || 'Admin',
+                            email: user.email,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        }, { merge: true });
+                         const newAdminDoc = await db.collection('admins').doc(user.uid).get();
+                         adminData = { id: newAdminDoc.id, ...newAdminDoc.data() };
+                    }
+                    initializeAdminPanel();
+                } else {
+                    // Bukan admin, arahkan ke halaman utama atau error
+                    console.warn("User is not an admin. Redirecting.");
+                    showToast("Akses Ditolak: Anda bukan admin.", 'error');
+                    auth.signOut().then(() => redirectToLogin());
                 }
-                // Show target section
-                sections[targetSectionId].style.display = 'block';
-
-                // Update active class
-                sidebarLinks.forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
-            });
+            } else {
+                // Tidak ada pengguna login, arahkan ke halaman login
+                console.log("No user logged in. Redirecting to login.");
+                redirectToLogin();
+            }
         });
 
-        // --- FUNGSI UMUM UNTUK LOAD DATA ---
-        async function fetchData(collectionName, orderByField = null, orderDirection = 'asc', filter = null) {
-            let q = collection(db, collectionName);
-            if (filter && filter.field && filter.operator && filter.value) {
-                q = query(q, where(filter.field, filter.operator, filter.value));
+        // --- Fungsi Utama Panel Admin ---
+        const initializeAdminPanel = () => {
+            // Setup navigasi sidebar
+            adminDom.sidebar.querySelectorAll('nav ul li a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    adminDom.sidebar.querySelectorAll('nav ul li a').forEach(l => l.classList.remove('active'));
+                    e.currentTarget.classList.add('active');
+                    const targetSectionId = e.currentTarget.getAttribute('href').substring(1);
+                    showSection(targetSectionId);
+                });
+            });
+
+            adminDom.logoutBtn.addEventListener('click', async () => {
+                try {
+                    await auth.signOut();
+                    showToast("Berhasil logout.", 'success');
+                    redirectToLogin();
+                } catch (error) {
+                    console.error("Logout error:", error);
+                    showToast("Gagal logout: " + error.message, 'error');
+                }
+            });
+
+            // Initial load
+            showSection(currentActiveSection);
+            loadDashboardStats();
+            setupRealtimeListeners();
+            setupEventListeners();
+        };
+
+        const showSection = (sectionId) => {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.style.display = 'none';
+                section.classList.remove('active-section');
+            });
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                targetSection.classList.add('active-section');
+                adminDom.currentPageTitle.textContent = targetSection.querySelector('h2').textContent; // Update title
+                currentActiveSection = sectionId; // Update active section state
+
+                // Panggil fungsi render yang relevan saat section ditampilkan
+                if (sectionId === 'orders') renderOrders();
+                if (sectionId === 'products') renderProducts();
+                if (sectionId === 'categories') renderCategories();
+                if (sectionId === 'content') renderContent();
+                if (sectionId === 'banners') renderBannersAdmin();
+                if (sectionId === 'gallery-images') renderGalleryImagesAdmin();
+                if (sectionId === 'history') renderHistoryAdmin();
             }
-            if (orderByField) {
-                q = query(q, orderBy(orderByField, orderDirection));
-            }
+        };
 
-            try {
-                const snapshot = await getDocs(q);
-                return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            } catch (error) {
-                console.error(`Error fetching data from ${collectionName}: `, error);
-                dashboardErrorDetail.textContent = `Error loading ${collectionName}: ${error.message}`;
-                return [];
-            }
-        }
+        // --- Dashboard Stats (Realtime) ---
+        const loadDashboardStats = () => {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + 1);
 
-        // --- DASHBOARD SUMMARY ---
-        async function loadDashboardSummary() {
-            const ordersTodayCount = document.getElementById('orders-today-count');
-            const totalProductsCount = document.getElementById('total-products-count');
-            const totalCustomersCount = document.getElementById('total-customers-count');
+            db.collection('orders')
+                .where('timestamp', '>=', today)
+                .where('timestamp', '<', tomorrow)
+                .onSnapshot(snapshot => {
+                    let totalOrders = 0;
+                    let totalRevenue = 0;
+                    const productSales = {};
 
-            ordersTodayCount.textContent = '...';
-            totalProductsCount.textContent = '...';
-            totalCustomersCount.textContent = '...';
-            dashboardErrorDetail.textContent = '';
+                    snapshot.forEach(doc => {
+                        const order = doc.data();
+                        totalOrders++;
+                        totalRevenue += order.totalAmount || 0;
 
-            try {
-                // Orders Today
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                const orders = await fetchData('orders', 'order_date', 'desc');
-                let countToday = 0;
-                orders.forEach(order => {
-                    if (order.order_date && order.order_date.toDate) {
-                        const orderDate = order.order_date.toDate();
-                        if (orderDate.getFullYear() === today.getFullYear() &&
-                            orderDate.getMonth() === today.getMonth() &&
-                            orderDate.getDate() === today.getDate()) {
-                            countToday++;
+                        if (order.orderDetails) {
+                            order.orderDetails.forEach(item => {
+                                const productName = item.name; // Use English or ID based on preference
+                                productSales[productName] = (productSales[productName] || 0) + item.quantity;
+                            });
+                        }
+                    });
+
+                    adminDom.totalOrdersToday.textContent = totalOrders;
+                    adminDom.revenueToday.textContent = `Rp ${new Intl.NumberFormat('id-ID').format(totalRevenue)}`;
+
+                    let topProduct = 'N/A';
+                    let maxSales = 0;
+                    for (const product in productSales) {
+                        if (productSales[product] > maxSales) {
+                            maxSales = productSales[product];
+                            topProduct = product;
                         }
                     }
+                    adminDom.topProductToday.textContent = topProduct;
+
+                    // Update notification badge for new orders (simple count for now)
+                    const newOrders = snapshot.docs.filter(doc => doc.data().status === 'new').length;
+                    adminDom.notificationBadge.textContent = newOrders;
+                    adminDom.notificationBadge.style.display = newOrders > 0 ? 'inline-block' : 'none';
+                }, error => {
+                    console.error("Error loading dashboard stats:", error);
+                    showToast("Gagal memuat statistik dashboard.", 'error');
                 });
-                ordersTodayCount.textContent = countToday;
+        };
 
-                // Total Products
-                const products = await fetchData('products');
-                totalProductsCount.textContent = products.length;
-
-                // Total Customers
-                const customers = await fetchData('customers');
-                totalCustomersCount.textContent = customers.length;
-
-            } catch (error) {
-                console.error("Error loading dashboard summary:", error);
-                dashboardErrorDetail.textContent = `Failed to load dashboard summary: ${error.message}`;
-                ordersTodayCount.textContent = 'Error';
-                totalProductsCount.textContent = 'Error';
-                totalCustomersCount.textContent = 'Error';
-            }
-        }
-
-
-        // --- MANAGE ORDERS ---
-        const ordersTableBody = document.getElementById('orders-table-body');
-        const orderStatusFilter = document.getElementById('order-status-filter');
-
-        orderStatusFilter.addEventListener('change', () => loadOrders());
-
-        function loadOrders() {
-            const selectedStatus = orderStatusFilter.value;
-            const ordersQuery = selectedStatus === 'all'
-                ? query(collection(db, "orders"), orderBy("order_date", "desc"))
-                : query(collection(db, "orders"), where("status", "==", selectedStatus), orderBy("order_date", "desc"));
-
-            onSnapshot(ordersQuery, (snapshot) => {
-                ordersTableBody.innerHTML = '';
-                if (snapshot.empty) {
-                    ordersTableBody.innerHTML = '<tr><td colspan="6">No orders found.</td></tr>';
-                    return;
-                }
-
-                snapshot.forEach((doc) => {
-                    const order = doc.data();
-                    const orderDate = order.order_date ? order.order_date.toDate().toLocaleString() : 'N/A';
-                    const row = ordersTableBody.insertRow();
-                    row.innerHTML = `
-                        <td>${doc.id}</td>
-                        <td>${order.customer_name || 'N/A'}</td>
-                        <td>Rp ${order.total_amount ? order.total_amount.toLocaleString('id-ID') : '0'}</td>
-                        <td>${order.status || 'N/A'}</td>
-                        <td>${orderDate}</td>
-                        <td>
-                            <button class="action-btn view-order-btn" data-id="${doc.id}"><i class="fas fa-eye"></i></button>
-                            <button class="action-btn delete-order-btn" data-id="${doc.id}"><i class="fas fa-trash-alt"></i></button>
-                        </td>
-                    `;
-                    row.querySelector('.view-order-btn').addEventListener('click', () => viewOrderDetails(doc.id));
-                    row.querySelector('.delete-order-btn').addEventListener('click', () => deleteOrder(doc.id));
-                });
-            }, (error) => {
-                console.error("Error loading orders: ", error);
-                ordersTableBody.innerHTML = `<tr><td colspan="6">Error loading orders: ${error.message}</td></tr>`;
-            });
-        }
-
-        async function viewOrderDetails(orderId) {
-            try {
-                const docRef = doc(db, "orders", orderId);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    const order = docSnap.data();
-                    let itemsHtml = '<ul>';
-                    order.items.forEach(item => {
-                        itemsHtml += `<li>${item.name} (x${item.qty}) - Rp ${item.price.toLocaleString('id-ID')}</li>`;
-                    });
-                    itemsHtml += '</ul>';
-
-                    alert(`Order ID: ${orderId}\nCustomer: ${order.customer_name}\nEmail: ${order.customer_email}\nTotal: Rp ${order.total_amount.toLocaleString('id-ID')}\nStatus: ${order.status}\nOrder Date: ${order.order_date.toDate().toLocaleString()}\nItems:\n${itemsHtml}`);
-                } else {
-                    alert("Order not found.");
-                }
-            } catch (error) {
-                console.error("Error viewing order:", error);
-                alert(`Error viewing order: ${error.message}`);
-            }
-        }
-
-        async function deleteOrder(orderId) {
-            if (!confirm('Are you sure you want to delete this order?')) return;
-            try {
-                await deleteDoc(doc(db, "orders", orderId));
-                console.log("Order deleted successfully.");
-            } catch (error) {
-                console.error("Error deleting order:", error);
-                alert(`Error deleting order: ${error.message}`);
-            }
-        }
-
-
-        // --- MANAGE PRODUCTS ---
-        const productsTableBody = document.getElementById('products-table-body');
-        const addProductBtn = document.getElementById('add-product-btn');
-        const productFormContainer = document.getElementById('product-form-container');
-        const productForm = document.getElementById('product-form');
-        const productIdInput = document.getElementById('product-id');
-        const productNameInput = document.getElementById('product-name');
-        const productDescriptionInput = document.getElementById('product-description');
-        const productPriceInput = document.getElementById('product-price');
-        const productCategorySelect = document.getElementById('product-category');
-        const productImageInput = document.getElementById('product-image');
-        const currentProductImage = document.getElementById('current-product-image');
-        const productAvailableCheckbox = document.getElementById('product-available');
-        const productOrderInput = document.getElementById('product-order');
-        const saveProductBtn = document.getElementById('save-product-btn');
-        const cancelProductBtn = document.getElementById('cancel-product-btn');
-
-        let currentEditingProductId = null; // Track which product is being edited
-
-        addProductBtn.addEventListener('click', () => {
-            resetProductForm();
-            productFormContainer.style.display = 'block';
-        });
-
-        cancelProductBtn.addEventListener('click', () => {
-            productFormContainer.style.display = 'none';
-            resetProductForm();
-        });
-
-        productForm.addEventListener('submit', handleProductFormSubmit);
-
-        async function loadProductsAdmin() {
-            // Populate category dropdown
-            const categories = await fetchData('categories', 'name'); // Fetch all categories
-            productCategorySelect.innerHTML = '<option value="">Select Category</option>';
-            categories.forEach(cat => {
-                const option = document.createElement('option');
-                option.value = cat.id;
-                option.textContent = cat.name;
-                productCategorySelect.appendChild(option);
+        // --- Realtime Listeners for Orders ---
+        const setupRealtimeListeners = () => {
+            db.collection('orders').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+                renderOrders(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+            }, error => {
+                console.error("Error fetching real-time orders:", error);
+                showToast("Gagal memuat pesanan real-time.", 'error');
             });
 
-            // Load products into table
-            onSnapshot(query(collection(db, "products"), orderBy("order", "asc")), (snapshot) => {
-                productsTableBody.innerHTML = '';
-                if (snapshot.empty) {
-                    productsTableBody.innerHTML = '<tr><td colspan="7">No products found.</td></tr>';
-                    return;
-                }
-                snapshot.forEach((doc) => {
-                    const product = doc.data();
-                    const row = productsTableBody.insertRow();
-                    row.innerHTML = `
-                        <td><img src="${product.image_url || 'https://via.placeholder.com/50/CCCCCC/FFFFFF?text=No'}" alt="${product.name}" width="50"></td>
-                        <td>${product.name}</td>
-                        <td>${categories.find(c => c.id === product.category)?.name || 'N/A'}</td>
-                        <td>Rp ${product.price ? product.price.toLocaleString('id-ID') : '0'}</td>
-                        <td>${product.is_available ? '<i class="fas fa-check-circle" style="color:green;"></i>' : '<i class="fas fa-times-circle" style="color:red;"></i>'}</td>
-                        <td>${product.order || 0}</td>
-                        <td>
-                            <button class="action-btn edit-btn" data-id="${doc.id}"><i class="fas fa-edit"></i></button>
-                            <button class="action-btn delete-btn" data-id="${doc.id}"><i class="fas fa-trash-alt"></i></button>
-                        </td>
-                    `;
-                    row.querySelector('.edit-btn').addEventListener('click', () => editProduct(doc.id));
-                    row.querySelector('.delete-btn').addEventListener('click', () => deleteProduct(doc.id, product.image_url));
-                });
-                totalProductsCount.textContent = snapshot.size; // Update dashboard summary
-            }, (error) => {
-                console.error("Error loading products for admin: ", error);
-                productsTableBody.innerHTML = `<tr><td colspan="7">Error loading products: ${error.message}</td></tr>`;
+             // Realtime listener for categories to keep product dropdown updated
+            db.collection('categories').orderBy('id').onSnapshot(snapshot => {
+                categoriesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                populateCategoryDropdown();
+            }, error => {
+                console.error("Error fetching categories for dropdown:", error);
             });
-        }
+        };
 
-        function resetProductForm() {
-            productForm.reset();
-            productIdInput.value = '';
-            currentEditingProductId = null;
-            currentProductImage.style.display = 'none';
-            currentProductImage.src = '';
-            delete currentProductImage.dataset.originalUrl;
-            saveProductBtn.textContent = 'Save Product';
-        }
+        // --- Rendering Functions ---
 
-        async function handleProductFormSubmit(e) {
-            e.preventDefault();
-            const id = productIdInput.value;
-            const name = productNameInput.value;
-            const description = productDescriptionInput.value;
-            const price = parseFloat(productPriceInput.value);
-            const category = productCategorySelect.value;
-            const imageFile = productImageInput.files[0];
-            const isAvailable = productAvailableCheckbox.checked;
-            const order = parseInt(productOrderInput.value) || 0;
-
-            if (!name || isNaN(price) || !category) {
-                alert('Name, Price (must be a number), and Category are required!');
+        const renderOrders = (orders) => {
+            adminDom.ordersTableBody.innerHTML = '';
+            if (orders.length === 0) {
+                adminDom.ordersTableBody.innerHTML = `<tr><td colspan="8" style="text-align:center;">Tidak ada pesanan.</td></tr>`;
                 return;
             }
 
-            let imageUrl = currentProductImage.dataset.originalUrl || ''; // Keep existing image if no new file uploaded
+            orders.forEach(order => {
+                const row = adminDom.ordersTableBody.insertRow();
+                row.insertCell().textContent = order.id.substring(0, 6); // Short ID
+                row.insertCell().textContent = order.customerName || 'N/A';
+                row.insertCell().textContent = order.customerPhone || 'N/A';
+                row.insertCell().textContent = order.customerAddress || 'N/A';
+                row.insertCell().textContent = `Rp ${new Intl.NumberFormat('id-ID').format(order.totalAmount || 0)}`;
+                const statusCell = row.insertCell();
+                statusCell.innerHTML = `<span class="status-badge ${order.status}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span>`;
+                row.insertCell().textContent = order.timestamp ? new Date(order.timestamp.toDate()).toLocaleString() : 'N/A';
 
+                const actionsCell = row.insertCell();
+                actionsCell.className = 'action-buttons';
+                actionsCell.innerHTML = `
+                    <button title="Lihat Detail" data-id="${order.id}" data-action="view"><i class="fas fa-eye"></i></button>
+                    <button title="Ubah Status" data-id="${order.id}" data-action="status"><i class="fas fa-edit"></i></button>
+                    <button title="Hapus Pesanan" data-id="${order.id}" data-action="delete"><i class="fas fa-trash-alt"></i></button>
+                    <button title="Follow Up Customer (WhatsApp)" data-id="${order.id}" data-action="whatsapp"><i class="fab fa-whatsapp"></i></button>
+                `;
+            });
+        };
+
+        const renderProducts = async () => {
+            adminDom.productsTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Memuat produk...</td></tr>';
             try {
-                if (imageFile) {
-                    // Upload new image
-                    const imageRef = ref(storage, `product_images/${Date.now()}_${imageFile.name}`);
-                    const uploadResult = await uploadBytes(imageRef, imageFile);
-                    imageUrl = await getDownloadURL(uploadResult.ref);
+                const snapshot = await db.collection('products').get();
+                const products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-                    // If updating and old image existed and was from storage, delete it
-                    if (id && currentProductImage.dataset.originalUrl && currentProductImage.dataset.originalUrl.includes('firebasestorage.googleapis.com') && currentProductImage.dataset.originalUrl !== imageUrl) {
-                        try {
-                            const oldImageRef = ref(storage, currentProductImage.dataset.originalUrl);
-                            await deleteObject(oldImageRef);
-                            console.log("Old image deleted from storage.");
-                        } catch (deleteError) {
-                            console.warn("Could not delete old image (might not be from storage or already deleted):", deleteError.message);
+                adminDom.productsTableBody.innerHTML = '';
+                if (products.length === 0) {
+                    adminDom.productsTableBody.innerHTML = `<tr><td colspan="7" style="text-align:center;">Tidak ada produk.</td></tr>`;
+                    return;
+                }
+
+                products.forEach(p => {
+                    const row = adminDom.productsTableBody.insertRow();
+                    row.insertCell().innerHTML = `<img src="${p.imageUrl}" alt="${p.name_en}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;">`;
+                    row.insertCell().textContent = p.name_id;
+                    row.insertCell().textContent = p.name_en;
+                    row.insertCell().textContent = `Rp ${new Intl.NumberFormat('id-ID').format(p.price)}`;
+                    row.insertCell().textContent = p.category_name || 'N/A';
+                    row.insertCell().textContent = p.is_featured ? 'Ya' : 'Tidak';
+                    const actionsCell = row.insertCell();
+                    actionsCell.className = 'action-buttons';
+                    actionsCell.innerHTML = `
+                        <button title="Edit Produk" data-id="${p.id}" data-action="edit-product"><i class="fas fa-edit"></i></button>
+                        <button title="Hapus Produk" data-id="${p.id}" data-action="delete-product"><i class="fas fa-trash-alt"></i></button>
+                    `;
+                });
+            } catch (error) {
+                console.error("Error rendering products:", error);
+                showToast("Gagal memuat produk.", 'error');
+                adminDom.productsTableBody.innerHTML = `<tr><td colspan="7" style="text-align:center;">Gagal memuat produk.</td></tr>`;
+            }
+        };
+
+        const renderCategories = async () => {
+             adminDom.categoriesTableBody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Memuat kategori...</td></tr>';
+            try {
+                const snapshot = await db.collection('categories').orderBy('id').get();
+                categoriesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                adminDom.categoriesTableBody.innerHTML = '';
+                if (categoriesData.length === 0) {
+                    adminDom.categoriesTableBody.innerHTML = `<tr><td colspan="3" style="text-align:center;">Tidak ada kategori.</td></tr>`;
+                    return;
+                }
+
+                categoriesData.forEach(c => {
+                    const row = adminDom.categoriesTableBody.insertRow();
+                    row.insertCell().textContent = c.id;
+                    row.insertCell().textContent = c.name;
+                    const actionsCell = row.insertCell();
+                    actionsCell.className = 'action-buttons';
+                    actionsCell.innerHTML = `
+                        <button title="Edit Kategori" data-id="${c.id}" data-action="edit-category"><i class="fas fa-edit"></i></button>
+                        <button title="Hapus Kategori" data-id="${c.id}" data-action="delete-category"><i class="fas fa-trash-alt"></i></button>
+                    `;
+                });
+            } catch (error) {
+                console.error("Error rendering categories:", error);
+                showToast("Gagal memuat kategori.", 'error');
+                adminDom.categoriesTableBody.innerHTML = `<tr><td colspan="3" style="text-align:center;">Gagal memuat kategori.</td></tr>`;
+            }
+        };
+
+        const renderContent = async () => {
+            try {
+                const snapshot = await db.collection('content').get();
+                const contentData = {};
+                snapshot.docs.forEach(doc => {
+                    contentData[doc.id] = doc.data();
+                });
+
+                // Populate content form
+                for (const key in contentData) {
+                    if (contentData[key].text_id) {
+                        const idField = document.getElementById(`${key}_id`);
+                        if (idField) idField.value = contentData[key].text_id;
+                    }
+                    if (contentData[key].text_en) {
+                        const enField = document.getElementById(`${key}_en`);
+                        if (enField) enField.value = contentData[key].text_en;
+                    }
+                }
+            } catch (error) {
+                console.error("Error loading content:", error);
+                showToast("Gagal memuat konten website.", 'error');
+            }
+        };
+
+        const renderBannersAdmin = async () => {
+            adminDom.bannerList.innerHTML = 'Memuat banner...';
+            try {
+                const snapshot = await db.collection('banners').orderBy('sort_order').get();
+                const banners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                adminDom.bannerList.innerHTML = '';
+                if (banners.length === 0) {
+                    adminDom.bannerList.innerHTML = `<p style="text-align:center;">Tidak ada banner.</p>`;
+                    return;
+                }
+
+                banners.forEach(b => {
+                    const bannerDiv = document.createElement('div');
+                    bannerDiv.className = 'content-section'; // Re-use content-section style
+                    bannerDiv.style.display = 'flex';
+                    bannerDiv.style.alignItems = 'center';
+                    bannerDiv.style.gap = '20px';
+                    bannerDiv.style.marginBottom = '15px';
+                    bannerDiv.innerHTML = `
+                        <img src="${b.image_url}" alt="Banner" style="width:100px; height:60px; object-fit:cover; border-radius:4px;">
+                        <div>
+                            <p><strong>URL:</strong> ${b.image_url.substring(0, 50)}...</p>
+                            <p><strong>Urutan:</strong> ${b.sort_order}</p>
+                        </div>
+                        <div class="action-buttons" style="margin-left:auto;">
+                            <button title="Edit Banner" data-id="${b.id}" data-action="edit-banner"><i class="fas fa-edit"></i></button>
+                            <button title="Hapus Banner" data-id="${b.id}" data-action="delete-banner"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    `;
+                    adminDom.bannerList.appendChild(bannerDiv);
+                });
+            } catch (error) {
+                console.error("Error rendering banners:", error);
+                showToast("Gagal memuat banner.", 'error');
+                adminDom.bannerList.innerHTML = `<p style="text-align:center;">Gagal memuat banner.</p>`;
+            }
+        };
+
+        const renderGalleryImagesAdmin = async () => {
+            adminDom.galleryImageList.innerHTML = 'Memuat gambar galeri...';
+            try {
+                const snapshot = await db.collection('gallery_images').orderBy('sort_order').get();
+                const galleryImages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                adminDom.galleryImageList.innerHTML = '';
+                if (galleryImages.length === 0) {
+                    adminDom.galleryImageList.innerHTML = `<p style="grid-column: 1 / -1; text-align:center;">Tidak ada gambar galeri.</p>`;
+                    return;
+                }
+
+                galleryImages.forEach(img => {
+                    const imgDiv = document.createElement('div');
+                    imgDiv.style.position = 'relative';
+                    imgDiv.style.width = '100%';
+                    imgDiv.style.paddingTop = '75%'; /* 4:3 Aspect Ratio */
+                    imgDiv.style.overflow = 'hidden';
+                    imgDiv.style.borderRadius = '8px';
+                    imgDiv.style.boxShadow = 'var(--shadow-sm)';
+                    imgDiv.innerHTML = `
+                        <img src="${img.image_url}" alt="${img.caption_en}" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;">
+                        <div class="action-buttons" style="position:absolute; bottom:5px; right:5px; background:rgba(255,255,255,0.8); padding:5px; border-radius:5px;">
+                            <button title="Edit Gambar" data-id="${img.id}" data-action="edit-gallery-image" style="color:#2D4C5E;"><i class="fas fa-edit"></i></button>
+                            <button title="Hapus Gambar" data-id="${img.id}" data-action="delete-gallery-image" style="color:#D84B42;"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    `;
+                    adminDom.galleryImageList.appendChild(imgDiv);
+                });
+            } catch (error) {
+                console.error("Error rendering gallery images:", error);
+                showToast("Gagal memuat gambar galeri.", 'error');
+                adminDom.galleryImageList.innerHTML = `<p style="grid-column: 1 / -1; text-align:center;">Gagal memuat gambar galeri.</p>`;
+            }
+        };
+
+        const renderHistoryAdmin = async () => {
+            adminDom.historyList.innerHTML = 'Memuat riwayat...';
+            try {
+                const snapshot = await db.collection('history').orderBy('sort_order').get();
+                const historyItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                adminDom.historyList.innerHTML = '';
+                if (historyItems.length === 0) {
+                    adminDom.historyList.innerHTML = `<p style="text-align:center;">Tidak ada item riwayat.</p>`;
+                    return;
+                }
+
+                historyItems.forEach(item => {
+                    const historyDiv = document.createElement('div');
+                    historyDiv.className = 'content-section';
+                    historyDiv.style.marginBottom = '15px';
+                    historyDiv.innerHTML = `
+                        <h3>${item.year} - ${item.title_id || item.title_en}</h3>
+                        <p>${(item.text_id || item.text_en).substring(0, 150)}...</p>
+                        <p><strong>Urutan:</strong> ${item.sort_order}</p>
+                        <div class="action-buttons" style="margin-top:10px;">
+                            <button title="Edit Riwayat" data-id="${item.id}" data-action="edit-history"><i class="fas fa-edit"></i></button>
+                            <button title="Hapus Riwayat" data-id="${item.id}" data-action="delete-history"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    `;
+                    adminDom.historyList.appendChild(historyDiv);
+                });
+            } catch (error) {
+                console.error("Error rendering history:", error);
+                showToast("Gagal memuat riwayat.", 'error');
+                adminDom.historyList.innerHTML = `<p style="text-align:center;">Gagal memuat riwayat.</p>`;
+            }
+        };
+
+        // --- Utility for Modals ---
+        const openModal = (modalElement) => {
+            modalElement.classList.add('visible');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling background
+        };
+
+        const closeModal = (modalElement) => {
+            modalElement.classList.remove('visible');
+            document.body.style.overflow = ''; // Restore scrolling
+        };
+
+        // --- Category Dropdown for Products ---
+        const populateCategoryDropdown = () => {
+            adminDom.productCategoryField.innerHTML = '<option value="">Pilih Kategori</option>';
+            categoriesData.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat.name; // Use category name as value
+                option.textContent = cat.name;
+                adminDom.productCategoryField.appendChild(option);
+            });
+        };
+
+        // --- Event Listeners ---
+        const setupEventListeners = () => {
+            // Close Modals
+            document.querySelectorAll('.modal-close-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    closeModal(e.target.closest('.modal-overlay'));
+                });
+            });
+            document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) {
+                        closeModal(overlay);
+                    }
+                });
+            });
+
+            // Product Actions
+            adminDom.addProductBtn.addEventListener('click', () => openProductModal());
+            adminDom.productsTableBody.addEventListener('click', (e) => {
+                const target = e.target.closest('button');
+                if (!target) return;
+                const productId = target.dataset.id;
+                const action = target.dataset.action;
+
+                if (action === 'edit-product') {
+                    openProductModal(productId);
+                } else if (action === 'delete-product') {
+                    if (confirm('Anda yakin ingin menghapus produk ini?')) {
+                        deleteProduct(productId);
+                    }
+                }
+            });
+
+            // Category Actions
+            adminDom.addCategoryBtn.addEventListener('click', () => openCategoryModal());
+            adminDom.categoriesTableBody.addEventListener('click', (e) => {
+                 const target = e.target.closest('button');
+                if (!target) return;
+                const categoryId = target.dataset.id;
+                const action = target.dataset.action;
+
+                if (action === 'edit-category') {
+                    openCategoryModal(categoryId);
+                } else if (action === 'delete-category') {
+                    if (confirm('Anda yakin ingin menghapus kategori ini? Ini akan memengaruhi produk terkait!')) {
+                        deleteCategory(categoryId);
+                    }
+                }
+            });
+
+            // Order Actions
+            adminDom.ordersTableBody.addEventListener('click', (e) => {
+                const target = e.target.closest('button');
+                if (!target) return;
+                const orderId = target.dataset.id;
+                const action = target.dataset.action;
+
+                if (action === 'view') {
+                    viewOrderDetails(orderId);
+                } else if (action === 'status') {
+                    updateOrderStatus(orderId);
+                } else if (action === 'delete') {
+                    if (confirm('Anda yakin ingin menghapus pesanan ini?')) {
+                        deleteOrder(orderId);
+                    }
+                } else if (action === 'whatsapp') {
+                    sendWhatsAppFollowUp(orderId);
+                }
+            });
+
+            // Content Form Submission
+            adminDom.contentForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                showToast("Menyimpan konten...", 'info');
+                const btn = e.submitter;
+                btn.disabled = true;
+
+                const updates = {};
+                // Loop through all content fields and gather updates
+                // This approach requires content documents to exist with matching IDs
+                const fields = ['page_title', 'hero_title', 'hero_subtitle', 'footer_description', 'history_title', 'menu_section_subtitle', 'menu_title', 'full_menu_title', 'gallery_section_subtitle', 'gallery_title', 'footer_contact_title', 'footer_address_label', 'footer_address_value', 'footer_phone_label', 'footer_phone_value', 'footer_email_label', 'footer_email_value', 'footer_hours_label', 'footer_hours_value', 'footer_copyright', 'add_to_cart_btn', 'order_now_btn', 'modal_title', 'modal_name_label', 'modal_phone_label', 'modal_detect_location', 'modal_submit_button', 'cart_title', 'cart_subtotal', 'cart_delivery_fee', 'cart_total', 'cart_checkout_button', 'cart_continue_shopping']; // Add all data-lang-key IDs here
+                
+                for (const field of fields) {
+                    const idField = document.getElementById(`${field}_id`);
+                    const enField = document.getElementById(`${field}_en`);
+                    if (idField || enField) {
+                        const docRef = db.collection('content').doc(field);
+                        const docSnap = await docRef.get();
+                        const currentData = docSnap.exists ? docSnap.data() : {};
+
+                        const updateData = {};
+                        if (idField && idField.value !== (currentData.text_id || '')) {
+                            updateData.text_id = idField.value;
+                        }
+                        if (enField && enField.value !== (currentData.text_en || '')) {
+                            updateData.text_en = enField.value;
+                        }
+
+                        if (Object.keys(updateData).length > 0) {
+                            await docRef.set(updateData, { merge: true });
                         }
                     }
-                } else if (id && !currentProductImage.src && currentProductImage.dataset.originalUrl && currentProductImage.dataset.originalUrl.includes('firebasestorage.googleapis.com')) {
-                    // If image was cleared and it was from storage, delete it
-                     try {
-                        const oldImageRef = ref(storage, currentProductImage.dataset.originalUrl);
-                        await deleteObject(oldImageRef);
-                        console.log("Product image cleared and deleted from storage.");
-                    } catch (deleteError) {
-                        console.warn("Could not delete cleared product image (might not be from storage or already deleted):", deleteError.message);
+                }
+
+                showToast("Konten berhasil diperbarui!", 'success');
+                btn.disabled = false;
+            });
+
+
+            // Product Form Submission
+            adminDom.productForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submitBtn = e.submitter;
+                submitBtn.disabled = true;
+                showToast("Menyimpan produk...", 'info');
+
+                const productId = adminDom.productIdField.value;
+                let imageUrl = adminDom.productImageUrlField.value;
+                const imageFile = adminDom.productImageUploadField.files[0];
+
+                try {
+                    if (imageFile) {
+                        const storageRef = storage.ref('products/' + Date.now() + '_' + imageFile.name);
+                        const snapshot = await storageRef.put(imageFile);
+                        imageUrl = await snapshot.ref.getDownloadURL();
+                    } else if (!imageUrl && !productId) { // If adding new product without image URL or upload
+                         showToast("Mohon masukkan URL gambar atau unggah gambar.", 'error');
+                         submitBtn.disabled = false;
+                         return;
                     }
-                    imageUrl = ''; // Clear the URL in Firestore
-                }
 
+                    const selectedCategory = categoriesData.find(c => c.name === adminDom.productCategoryField.value);
+                    if (!selectedCategory) {
+                        showToast("Kategori tidak valid.", 'error');
+                        submitBtn.disabled = false;
+                        return;
+                    }
 
-                const productData = {
-                    name,
-                    description,
-                    price,
-                    category,
-                    image_url: imageUrl,
-                    is_available: isAvailable,
-                    order,
-                    updated_at: serverTimestamp()
-                };
+                    const productData = {
+                        name_id: adminDom.productNameIdField.value,
+                        name_en: adminDom.productNameEnField.value,
+                        price: parseFloat(adminDom.productPriceField.value),
+                        category_id: selectedCategory.id,
+                        category_name: selectedCategory.name, // Store name for easier display
+                        description_id: adminDom.productDescriptionIdField.value,
+                        description_en: adminDom.productDescriptionEnField.value,
+                        imageUrl: imageUrl,
+                        is_featured: adminDom.productIsFeaturedField.checked,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    };
 
-                if (id) {
-                    // Update existing product
-                    await updateDoc(doc(db, "products", id), productData);
-                    console.log("Product updated successfully.");
-                } else {
-                    // Add new product
-                    productData.created_at = serverTimestamp();
-                    await addDoc(collection(db, "products"), productData);
-                    console.log("Product added successfully.");
-                }
-                productFormContainer.style.display = 'none';
-                resetProductForm();
-            } catch (error) {
-                console.error("Error saving product:", error);
-                alert(`Error saving product: ${error.message}`);
-            }
-        }
-
-        async function editProduct(productId) {
-            currentEditingProductId = productId;
-            try {
-                const docSnap = await getDoc(doc(db, "products", productId));
-                if (docSnap.exists()) {
-                    const product = docSnap.data();
-                    productIdInput.value = productId;
-                    productNameInput.value = product.name;
-                    productDescriptionInput.value = product.description;
-                    productPriceInput.value = product.price;
-                    productCategorySelect.value = product.category;
-                    productAvailableCheckbox.checked = product.is_available;
-                    productOrderInput.value = product.order || 0;
-                    if (product.image_url) {
-                        currentProductImage.src = product.image_url;
-                        currentProductImage.dataset.originalUrl = product.image_url; // Store original URL for deletion
-                        currentProductImage.style.display = 'block';
+                    if (productId) {
+                        await db.collection('products').doc(productId).update(productData);
+                        showToast("Produk berhasil diperbarui!", 'success');
                     } else {
-                        currentProductImage.style.display = 'none';
-                        currentProductImage.src = '';
-                        delete currentProductImage.dataset.originalUrl;
+                        productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                        await db.collection('products').add(productData);
+                        showToast("Produk berhasil ditambahkan!", 'success');
                     }
-                    saveProductBtn.textContent = 'Update Product';
-                    productFormContainer.style.display = 'block';
-                } else {
-                    alert("Product not found.");
+                    closeModal(adminDom.productModal);
+                    renderProducts(); // Refresh product list
+                } catch (error) {
+                    console.error("Error saving product:", error);
+                    showToast("Gagal menyimpan produk: " + error.message, 'error');
+                } finally {
+                    submitBtn.disabled = false;
                 }
-            } catch (error) {
-                console.error("Error editing product:", error);
-                alert(`Error editing product: ${error.message}`);
-            }
-        }
+            });
 
-        async function deleteProduct(productId, imageUrl) {
-            if (!confirm('Are you sure you want to delete this product?')) return;
-            try {
-                await deleteDoc(doc(db, "products", productId));
-                // Also delete image from Storage if it exists
-                if (imageUrl && imageUrl.includes('firebasestorage.googleapis.com')) {
-                    const imageRef = ref(storage, imageUrl);
-                    await deleteObject(imageRef).catch(e => console.warn("Could not delete image from storage:", e.message));
+            // Product Image Preview
+            adminDom.productImageUploadField.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        adminDom.productImagePreview.src = e.target.result;
+                        adminDom.productImagePreview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    adminDom.productImagePreview.style.display = 'none';
+                    adminDom.productImagePreview.src = '';
                 }
-                console.log("Product deleted successfully.");
+            });
+            adminDom.productImageUrlField.addEventListener('input', function() {
+                if (this.value) {
+                    adminDom.productImagePreview.src = this.value;
+                    adminDom.productImagePreview.style.display = 'block';
+                } else {
+                    adminDom.productImagePreview.style.display = 'none';
+                    adminDom.productImagePreview.src = '';
+                }
+            });
+
+
+            // Category Form Submission
+            adminDom.categoryForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submitBtn = e.submitter;
+                submitBtn.disabled = true;
+                showToast("Menyimpan kategori...", 'info');
+
+                const categoryId = adminDom.categoryIdField.value;
+                const categoryName = adminDom.categoryNameField.value;
+
+                try {
+                    if (categoryId) {
+                        await db.collection('categories').doc(categoryId).update({ name: categoryName });
+                        showToast("Kategori berhasil diperbarui!", 'success');
+                    } else {
+                        // For new categories, we might use a unique ID or a generated one.
+                        // For simplicity, let's use the name as ID if it's new and doesn't conflict
+                        const newDocRef = db.collection('categories').doc(); // Firestore will generate an ID
+                        await newDocRef.set({
+                            id: newDocRef.id, // Store the generated ID within the document
+                            name: categoryName,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                        showToast("Kategori berhasil ditambahkan!", 'success');
+                    }
+                    closeModal(adminDom.categoryModal);
+                    renderCategories(); // Refresh category list
+                } catch (error) {
+                    console.error("Error saving category:", error);
+                    showToast("Gagal menyimpan kategori: " + error.message, 'error');
+                } finally {
+                    submitBtn.disabled = false;
+                }
+            });
+
+            // Banner Actions
+            adminDom.addBannerBtn.addEventListener('click', () => openBannerModal());
+            adminDom.bannerList.addEventListener('click', (e) => {
+                const target = e.target.closest('button');
+                if (!target) return;
+                const bannerId = target.dataset.id;
+                const action = target.dataset.action;
+
+                if (action === 'edit-banner') {
+                    openBannerModal(bannerId);
+                } else if (action === 'delete-banner') {
+                    if (confirm('Anda yakin ingin menghapus banner ini?')) {
+                        deleteBanner(bannerId);
+                    }
+                }
+            });
+
+            // Banner Form Submission
+            adminDom.bannerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submitBtn = e.submitter;
+                submitBtn.disabled = true;
+                showToast("Menyimpan banner...", 'info');
+
+                const bannerId = adminDom.bannerIdField.value;
+                let imageUrl = adminDom.bannerImageUrlField.value;
+                const imageFile = adminDom.bannerImageUploadField.files[0];
+                const sortOrder = parseInt(adminDom.bannerSortOrderField.value);
+
+                try {
+                    if (imageFile) {
+                        const storageRef = storage.ref('banners/' + Date.now() + '_' + imageFile.name);
+                        const snapshot = await storageRef.put(imageFile);
+                        imageUrl = await snapshot.ref.getDownloadURL();
+                    } else if (!imageUrl && !bannerId) {
+                         showToast("Mohon masukkan URL gambar atau unggah gambar.", 'error');
+                         submitBtn.disabled = false;
+                         return;
+                    }
+
+                    const bannerData = {
+                        image_url: imageUrl,
+                        sort_order: sortOrder,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+
+                    if (bannerId) {
+                        await db.collection('banners').doc(bannerId).update(bannerData);
+                        showToast("Banner berhasil diperbarui!", 'success');
+                    } else {
+                        bannerData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                        await db.collection('banners').add(bannerData);
+                        showToast("Banner berhasil ditambahkan!", 'success');
+                    }
+                    closeModal(adminDom.bannerModal);
+                    renderBannersAdmin();
+                } catch (error) {
+                    console.error("Error saving banner:", error);
+                    showToast("Gagal menyimpan banner: " + error.message, 'error');
+                } finally {
+                    submitBtn.disabled = false;
+                }
+            });
+
+            // Banner Image Preview
+            adminDom.bannerImageUploadField.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        adminDom.bannerImagePreview.src = e.target.result;
+                        adminDom.bannerImagePreview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    adminDom.bannerImagePreview.style.display = 'none';
+                    adminDom.bannerImagePreview.src = '';
+                }
+            });
+            adminDom.bannerImageUrlField.addEventListener('input', function() {
+                if (this.value) {
+                    adminDom.bannerImagePreview.src = this.value;
+                    adminDom.bannerImagePreview.style.display = 'block';
+                } else {
+                    adminDom.bannerImagePreview.style.display = 'none';
+                    adminDom.bannerImagePreview.src = '';
+                }
+            });
+
+
+            // Gallery Image Actions
+            adminDom.addGalleryImageBtn.addEventListener('click', () => openGalleryImageModal());
+            adminDom.galleryImageList.addEventListener('click', (e) => {
+                const target = e.target.closest('button');
+                if (!target) return;
+                const imageId = target.dataset.id;
+                const action = target.dataset.action;
+
+                if (action === 'edit-gallery-image') {
+                    openGalleryImageModal(imageId);
+                } else if (action === 'delete-gallery-image') {
+                    if (confirm('Anda yakin ingin menghapus gambar galeri ini?')) {
+                        deleteGalleryImage(imageId);
+                    }
+                }
+            });
+
+            // Gallery Image Form Submission
+            adminDom.galleryImageForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submitBtn = e.submitter;
+                submitBtn.disabled = true;
+                showToast("Menyimpan gambar galeri...", 'info');
+
+                const imageId = adminDom.galleryImageIdField.value;
+                let imageUrl = adminDom.galleryImageUrlField.value;
+                const imageFile = adminDom.galleryImageUploadField.files[0];
+                const captionId = adminDom.galleryImageCaptionIdField.value;
+                const captionEn = adminDom.galleryImageCaptionEnField.value;
+                const sortOrder = parseInt(adminDom.galleryImageSortOrderField.value);
+
+                try {
+                    if (imageFile) {
+                        const storageRef = storage.ref('gallery/' + Date.now() + '_' + imageFile.name);
+                        const snapshot = await storageRef.put(imageFile);
+                        imageUrl = await snapshot.ref.getDownloadURL();
+                    } else if (!imageUrl && !imageId) {
+                         showToast("Mohon masukkan URL gambar atau unggah gambar.", 'error');
+                         submitBtn.disabled = false;
+                         return;
+                    }
+
+                    const imageData = {
+                        image_url: imageUrl,
+                        caption_id: captionId,
+                        caption_en: captionEn,
+                        sort_order: sortOrder,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+
+                    if (imageId) {
+                        await db.collection('gallery_images').doc(imageId).update(imageData);
+                        showToast("Gambar galeri berhasil diperbarui!", 'success');
+                    } else {
+                        imageData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                        await db.collection('gallery_images').add(imageData);
+                        showToast("Gambar galeri berhasil ditambahkan!", 'success');
+                    }
+                    closeModal(adminDom.galleryImageModal);
+                    renderGalleryImagesAdmin();
+                } catch (error) {
+                    console.error("Error saving gallery image:", error);
+                    showToast("Gagal menyimpan gambar galeri: " + error.message, 'error');
+                } finally {
+                    submitBtn.disabled = false;
+                }
+            });
+
+            // Gallery Image Preview
+            adminDom.galleryImageUploadField.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        adminDom.galleryImagePreview.src = e.target.result;
+                        adminDom.galleryImagePreview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    adminDom.galleryImagePreview.style.display = 'none';
+                    adminDom.galleryImagePreview.src = '';
+                }
+            });
+            adminDom.galleryImageUrlField.addEventListener('input', function() {
+                if (this.value) {
+                    adminDom.galleryImagePreview.src = this.value;
+                    adminDom.galleryImagePreview.style.display = 'block';
+                } else {
+                    adminDom.galleryImagePreview.style.display = 'none';
+                    adminDom.galleryImagePreview.src = '';
+                }
+            });
+
+
+            // History Actions
+            adminDom.addHistoryBtn.addEventListener('click', () => openHistoryModal());
+            adminDom.historyList.addEventListener('click', (e) => {
+                const target = e.target.closest('button');
+                if (!target) return;
+                const historyId = target.dataset.id;
+                const action = target.dataset.action;
+
+                if (action === 'edit-history') {
+                    openHistoryModal(historyId);
+                } else if (action === 'delete-history') {
+                    if (confirm('Anda yakin ingin menghapus item riwayat ini?')) {
+                        deleteHistory(historyId);
+                    }
+                }
+            });
+
+            // History Form Submission
+            adminDom.historyForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submitBtn = e.submitter;
+                submitBtn.disabled = true;
+                showToast("Menyimpan riwayat...", 'info');
+
+                const historyId = adminDom.historyIdField.value;
+                const year = parseInt(adminDom.historyYearField.value);
+                const titleId = adminDom.historyTitleIdField.value;
+                const titleEn = adminDom.historyTitleEnField.value;
+                const textId = adminDom.historyTextIdField.value;
+                const textEn = adminDom.historyTextEnField.value;
+                const sortOrder = parseInt(adminDom.historySortOrderField.value);
+
+                try {
+                    const historyData = {
+                        year: year,
+                        title_id: titleId,
+                        title_en: titleEn,
+                        text_id: textId,
+                        text_en: textEn,
+                        sort_order: sortOrder,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+
+                    if (historyId) {
+                        await db.collection('history').doc(historyId).update(historyData);
+                        showToast("Riwayat berhasil diperbarui!", 'success');
+                    } else {
+                        historyData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                        await db.collection('history').add(historyData);
+                        showToast("Riwayat berhasil ditambahkan!", 'success');
+                    }
+                    closeModal(adminDom.historyModal);
+                    renderHistoryAdmin();
+                } catch (error) {
+                    console.error("Error saving history item:", error);
+                    showToast("Gagal menyimpan riwayat: " + error.message, 'error');
+                } finally {
+                    submitBtn.disabled = false;
+                }
+            });
+
+            // Admin Profile Form Submission
+            adminDom.adminProfileForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submitBtn = e.submitter;
+                submitBtn.disabled = true;
+                showToast("Memperbarui profil...", 'info');
+
+                try {
+                    await db.collection('admins').doc(auth.currentUser.uid).update({
+                        name: adminDom.adminNameField.value,
+                        phone: adminDom.adminPhoneField.value,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    showToast("Profil berhasil diperbarui!", 'success');
+                } catch (error) {
+                    console.error("Error updating profile:", error);
+                    showToast("Gagal memperbarui profil: " + error.message, 'error');
+                } finally {
+                    submitBtn.disabled = false;
+                }
+            });
+        };
+
+        // --- Modals Logic ---
+
+        const openProductModal = async (productId = null) => {
+            adminDom.productForm.reset();
+            adminDom.productIdField.value = '';
+            adminDom.productImagePreview.style.display = 'none';
+            adminDom.productImagePreview.src = '';
+            adminDom.productModalTitle.textContent = productId ? 'Edit Produk' : 'Tambah Produk Baru';
+
+            if (productId) {
+                try {
+                    const doc = await db.collection('products').doc(productId).get();
+                    if (doc.exists) {
+                        const product = doc.data();
+                        adminDom.productIdField.value = doc.id;
+                        adminDom.productNameIdField.value = product.name_id || '';
+                        adminDom.productNameEnField.value = product.name_en || '';
+                        adminDom.productPriceField.value = product.price || 0;
+                        adminDom.productCategoryField.value = product.category_name || ''; // Select based on name
+                        adminDom.productDescriptionIdField.value = product.description_id || '';
+                        adminDom.productDescriptionEnField.value = product.description_en || '';
+                        adminDom.productImageUrlField.value = product.imageUrl || '';
+                        adminDom.productImagePreview.src = product.imageUrl || '';
+                        adminDom.productImagePreview.style.display = product.imageUrl ? 'block' : 'none';
+                        adminDom.productIsFeaturedField.checked = product.is_featured || false;
+                    }
+                } catch (error) {
+                    console.error("Error loading product for edit:", error);
+                    showToast("Gagal memuat detail produk.", 'error');
+                }
+            }
+            openModal(adminDom.productModal);
+        };
+
+        const deleteProduct = async (productId) => {
+            showToast("Menghapus produk...", 'info');
+            try {
+                await db.collection('products').doc(productId).delete();
+                showToast("Produk berhasil dihapus!", 'success');
+                renderProducts(); // Refresh list
             } catch (error) {
                 console.error("Error deleting product:", error);
-                alert(`Error deleting product: ${error.message}`);
+                showToast("Gagal menghapus produk: " + error.message, 'error');
             }
-        }
+        };
 
+        const openCategoryModal = async (categoryId = null) => {
+            adminDom.categoryForm.reset();
+            adminDom.categoryIdField.value = '';
+            adminDom.categoryModalTitle.textContent = categoryId ? 'Edit Kategori' : 'Tambah Kategori Baru';
 
-        // --- MANAGE CATEGORIES ---
-        const categoriesTableBody = document.getElementById('categories-table-body');
-        const addCategoryBtn = document.getElementById('add-category-btn');
-        const categoryFormContainer = document.getElementById('category-form-container');
-        const categoryForm = document.getElementById('category-form');
-        const categoryIdInput = document.getElementById('category-id');
-        const categoryNameInput = document.getElementById('category-name');
-        const categoryOrderInput = document.getElementById('category-order');
-        const saveCategoryBtn = document.getElementById('save-category-btn');
-        const cancelCategoryBtn = document.getElementById('cancel-category-btn');
-
-        let currentEditingCategoryId = null;
-
-        addCategoryBtn.addEventListener('click', () => {
-            resetCategoryForm();
-            categoryFormContainer.style.display = 'block';
-        });
-
-        cancelCategoryBtn.addEventListener('click', () => {
-            categoryFormContainer.style.display = 'none';
-            resetCategoryForm();
-        });
-
-        categoryForm.addEventListener('submit', handleCategoryFormSubmit);
-
-        function loadCategoriesAdmin() {
-            onSnapshot(query(collection(db, "categories"), orderBy("order", "asc")), (snapshot) => {
-                categoriesTableBody.innerHTML = '';
-                if (snapshot.empty) {
-                    categoriesTableBody.innerHTML = '<tr><td colspan="3">No categories found.</td></tr>';
-                    return;
+            if (categoryId) {
+                try {
+                    const doc = await db.collection('categories').doc(categoryId).get();
+                    if (doc.exists) {
+                        const category = doc.data();
+                        adminDom.categoryIdField.value = doc.id;
+                        adminDom.categoryNameField.value = category.name || '';
+                    }
+                } catch (error) {
+                    console.error("Error loading category for edit:", error);
+                    showToast("Gagal memuat detail kategori.", 'error');
                 }
-                snapshot.forEach((doc) => {
-                    const category = doc.data();
-                    const row = categoriesTableBody.insertRow();
-                    row.innerHTML = `
-                        <td>${category.name}</td>
-                        <td>${category.order || 0}</td>
-                        <td>
-                            <button class="action-btn edit-btn" data-id="${doc.id}"><i class="fas fa-edit"></i></button>
-                            <button class="action-btn delete-btn" data-id="${doc.id}"><i class="fas fa-trash-alt"></i></button>
-                        </td>
-                    `;
-                    row.querySelector('.edit-btn').addEventListener('click', () => editCategory(doc.id));
-                    row.querySelector('.delete-btn').addEventListener('click', () => deleteCategory(doc.id));
-                });
-            }, (error) => {
-                console.error("Error loading categories for admin: ", error);
-                categoriesTableBody.innerHTML = `<tr><td colspan="3">Error loading categories: ${error.message}</td></tr>`;
-            });
-        }
-
-        function resetCategoryForm() {
-            categoryForm.reset();
-            categoryIdInput.value = '';
-            currentEditingCategoryId = null;
-            saveCategoryBtn.textContent = 'Save Category';
-        }
-
-        async function handleCategoryFormSubmit(e) {
-            e.preventDefault();
-            const id = categoryIdInput.value;
-            const name = categoryNameInput.value;
-            const order = parseInt(categoryOrderInput.value) || 0;
-
-            if (!name) {
-                alert('Category Name is required!');
-                return;
             }
+            openModal(adminDom.categoryModal);
+        };
 
-            const categoryData = { name, order, updated_at: serverTimestamp() };
-
+        const deleteCategory = async (categoryId) => {
+            showToast("Menghapus kategori...", 'info');
             try {
-                if (id) {
-                    await updateDoc(doc(db, "categories", id), categoryData);
-                    console.log("Category updated successfully.");
-                } else {
-                    categoryData.created_at = serverTimestamp();
-                    await addDoc(collection(db, "categories"), categoryData);
-                    console.log("Category added successfully.");
+                // Opsional: Cek apakah ada produk yang masih menggunakan kategori ini
+                // Jika ada, Anda mungkin ingin memberi peringatan atau memaksa update produk
+                const productsUsingCategory = await db.collection('products').where('category_id', '==', categoryId).get();
+                if (!productsUsingCategory.empty) {
+                    const confirmation = confirm('Ada produk yang masih menggunakan kategori ini. Apakah Anda yakin ingin menghapus kategori dan menghapus tautan kategori dari produk-produk tersebut?');
+                    if (!confirmation) {
+                        showToast("Penghapusan kategori dibatalkan.", 'info');
+                        return;
+                    }
+                    // Update produk yang terpengaruh
+                    const batch = db.batch();
+                    productsUsingCategory.docs.forEach(doc => {
+                        batch.update(doc.ref, { category_id: null, category_name: 'Uncategorized' });
+                    });
+                    await batch.commit();
+                    showToast("Produk terkait diperbarui.", 'info');
                 }
-                categoryFormContainer.style.display = 'none';
-                resetCategoryForm();
-            } catch (error) {
-                console.error("Error saving category:", error);
-                alert(`Error saving category: ${error.message}`);
-            }
-        }
 
-        async function editCategory(categoryId) {
-            currentEditingCategoryId = categoryId;
-            try {
-                const docSnap = await getDoc(doc(db, "categories", categoryId));
-                if (docSnap.exists()) {
-                    const category = docSnap.data();
-                    categoryIdInput.value = categoryId;
-                    categoryNameInput.value = category.name;
-                    categoryOrderInput.value = category.order || 0;
-                    saveCategoryBtn.textContent = 'Update Category';
-                    categoryFormContainer.style.display = 'block';
-                } else {
-                    alert("Category not found.");
-                }
-            } catch (error) {
-                console.error("Error editing category:", error);
-                alert(`Error editing category: ${error.message}`);
-            }
-        }
-
-        async function deleteCategory(categoryId) {
-            if (!confirm('Are you sure you want to delete this category? Products in this category might be affected.')) return;
-            try {
-                await deleteDoc(doc(db, "categories", categoryId));
-                console.log("Category deleted successfully.");
+                await db.collection('categories').doc(categoryId).delete();
+                showToast("Kategori berhasil dihapus!", 'success');
+                renderCategories(); // Refresh list
             } catch (error) {
                 console.error("Error deleting category:", error);
-                alert(`Error deleting category: ${error.message}`);
+                showToast("Gagal menghapus kategori: " + error.message, 'error');
             }
-        }
+        };
 
 
-        // --- MANAGE SITE CONTENT ---
-        const siteContentTableBody = document.getElementById('site-content-table-body');
-        const addSiteContentBtn = document.getElementById('add-site-content-btn');
-        const siteContentFormContainer = document.getElementById('site-content-form-container');
-        const siteContentForm = document.getElementById('site-content-form');
-        const contentIdInput = document.getElementById('content-id');
-        const contentNameInput = document.getElementById('content-name');
-        const contentTitleInput = document.getElementById('content-title');
-        const contentTextInput = document.getElementById('content-text');
-        const contentImageUrlInput = document.getElementById('content-image-url');
-        const contentImageUploadInput = document.getElementById('content-image-upload');
-        const currentContentImage = document.getElementById('current-content-image');
-        const contentActiveCheckbox = document.getElementById('content-active');
-        const contentOrderInput = document.getElementById('content-order');
-        const saveContentBtn = document.getElementById('save-content-btn');
-        const cancelContentBtn = document.getElementById('cancel-content-btn');
-
-        let currentEditingContentId = null;
-
-        addSiteContentBtn.addEventListener('click', () => {
-            resetSiteContentForm();
-            siteContentFormContainer.style.display = 'block';
-        });
-
-        cancelContentBtn.addEventListener('click', () => {
-            siteContentFormContainer.style.display = 'none';
-            resetSiteContentForm();
-        });
-
-        siteContentForm.addEventListener('submit', handleSiteContentFormSubmit);
-
-        function loadSiteContentAdmin() {
-            onSnapshot(query(collection(db, "siteContent"), orderBy("order", "asc")), (snapshot) => {
-                siteContentTableBody.innerHTML = '';
-                if (snapshot.empty) {
-                    siteContentTableBody.innerHTML = '<tr><td colspan="6">No site content found.</td></tr>';
-                    return;
-                }
-                snapshot.forEach((docSnap) => {
-                    const content = docSnap.data();
-                    const row = siteContentTableBody.insertRow();
-                    row.innerHTML = `
-                        <td>${docSnap.id}</td>
-                        <td>${content.title || 'N/A'}</td>
-                        <td><img src="${content.image_url || 'https://via.placeholder.com/50/CCCCCC/FFFFFF?text=No'}" alt="${content.title}" width="50"></td>
-                        <td>${content.is_active ? '<i class="fas fa-check-circle" style="color:green;"></i>' : '<i class="fas fa-times-circle" style="color:red;"></i>'}</td>
-                        <td>${content.order || 0}</td>
-                        <td>
-                            <button class="action-btn edit-btn" data-id="${docSnap.id}"><i class="fas fa-edit"></i></button>
-                            <button class="action-btn delete-btn" data-id="${docSnap.id}"><i class="fas fa-trash-alt"></i></button>
-                        </td>
+        const viewOrderDetails = async (orderId) => {
+            try {
+                const doc = await db.collection('orders').doc(orderId).get();
+                if (doc.exists) {
+                    const order = doc.data();
+                    let detailsHtml = `
+                        <h3>Detail Pesanan #${orderId.substring(0, 6)}</h3>
+                        <p><strong>Nama:</strong> ${order.customerName}</p>
+                        <p><strong>Telepon:</strong> ${order.customerPhone}</p>
+                        <p><strong>Alamat:</strong> ${order.customerAddress}</p>
+                        <p><strong>Waktu Pesan:</strong> ${order.timestamp ? new Date(order.timestamp.toDate()).toLocaleString() : 'N/A'}</p>
+                        <p><strong>Status:</strong> <span class="status-badge ${order.status}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></p>
+                        <hr style="margin: 15px 0; border-top: 1px dashed var(--color-border);">
+                        <h4>Item Pesanan:</h4>
+                        <ul>
                     `;
-                    row.querySelector('.edit-btn').addEventListener('click', () => editSiteContent(docSnap.id));
-                    row.querySelector('.delete-btn').addEventListener('click', () => deleteSiteContent(docSnap.id, content.image_url));
-                });
-            }, (error) => {
-                console.error("Error loading site content for admin: ", error);
-                siteContentTableBody.innerHTML = `<tr><td colspan="6">Error loading site content: ${error.message}</td></tr>`;
-            });
-        }
+                    order.orderDetails.forEach(item => {
+                        detailsHtml += `<li>${item.quantity}x ${item.name} - Rp ${new Intl.NumberFormat('id-ID').format(item.price * item.quantity)}</li>`;
+                    });
+                    detailsHtml += `
+                        </ul>
+                        <hr style="margin: 15px 0; border-top: 1px dashed var(--color-border);">
+                        <p><strong>Subtotal:</strong> Rp ${new Intl.NumberFormat('id-ID').format(order.subtotal)}</p>
+                        <p><strong>Biaya Pengiriman:</strong> Rp ${new Intl.NumberFormat('id-ID').format(order.deliveryFee)}</p>
+                        <p><strong>Total Pembayaran:</strong> Rp ${new Intl.NumberFormat('id-ID').format(order.totalAmount)}</p>
+                    `;
 
-        function resetSiteContentForm() {
-            siteContentForm.reset();
-            contentIdInput.value = '';
-            contentNameInput.readOnly = false; // Enable name input for new content
-            currentEditingContentId = null;
-            currentContentImage.style.display = 'none';
-            currentContentImage.src = '';
-            delete currentContentImage.dataset.originalUrl;
-            saveContentBtn.textContent = 'Save Content';
-        }
-
-        async function handleSiteContentFormSubmit(e) {
-            e.preventDefault();
-            const id = contentIdInput.value; // ID dokumen jika mengedit
-            const name = contentNameInput.value; // ID dokumen jika menambahkan
-            const title = contentTitleInput.value;
-            const text = contentTextInput.value;
-            const imageUrl = contentImageUrlInput.value;
-            const imageFile = contentImageUploadInput.files[0];
-            const isActive = contentActiveCheckbox.checked;
-            const order = parseInt(contentOrderInput.value) || 0;
-
-            if (!name && !id) {
-                alert('Content Identifier is required!');
-                return;
-            }
-
-            let finalImageUrl = imageUrl; // Default to URL from input field
-            if (imageFile) {
-                // Upload new image
-                const imageRef = ref(storage, `site_content_images/${Date.now()}_${imageFile.name}`);
-                const uploadResult = await uploadBytes(imageRef, imageFile);
-                finalImageUrl = await getDownloadURL(uploadResult.ref);
-
-                // If updating and old image existed and was from storage, delete it
-                if (id && currentContentImage.dataset.originalUrl && currentContentImage.dataset.originalUrl.includes('firebasestorage.googleapis.com') && currentContentImage.dataset.originalUrl !== finalImageUrl) {
-                    try {
-                        const oldImageRef = ref(storage, currentContentImage.dataset.originalUrl);
-                        await deleteObject(oldImageRef);
-                        console.log("Old site content image deleted from storage.");
-                    } catch (deleteError) {
-                        console.warn("Could not delete old site content image:", deleteError.message);
-                    }
-                }
-            } else if (id && !imageUrl && currentContentImage.dataset.originalUrl && currentContentImage.dataset.originalUrl.includes('firebasestorage.googleapis.com')) {
-                // If image was cleared (input field empty) and it was from storage, delete it
-                 try {
-                    const oldImageRef = ref(storage, currentContentImage.dataset.originalUrl);
-                    await deleteObject(oldImageRef);
-                    console.log("Site content image cleared and deleted from storage.");
-                } catch (deleteError) {
-                    console.warn("Could not delete cleared site content image:", deleteError.message);
-                }
-                finalImageUrl = ''; // Clear the URL in Firestore
-            }
-
-
-            const contentData = {
-                title,
-                content: text,
-                image_url: finalImageUrl,
-                is_active: isActive,
-                order,
-                updated_at: serverTimestamp()
-            };
-
-            try {
-                if (id) { // If editing, use the existing ID (name) as document ID
-                    await updateDoc(doc(db, "siteContent", id), contentData);
-                    console.log("Site content updated successfully.");
-                } else { // If adding, use the given name as document ID
-                    contentData.created_at = serverTimestamp();
-                    await setDoc(doc(db, "siteContent", name), contentData); // Use setDoc for specific ID
-                    console.log("Site content added successfully.");
-                }
-                siteContentFormContainer.style.display = 'none';
-                resetSiteContentForm();
-            } catch (error) {
-                console.error("Error saving site content:", error);
-                alert(`Error saving site content: ${error.message}`);
-            }
-        }
-
-        async function editSiteContent(contentId) {
-            currentEditingContentId = contentId;
-            try {
-                const docSnap = await getDoc(doc(db, "siteContent", contentId));
-                if (docSnap.exists()) {
-                    const content = docSnap.data();
-                    contentIdInput.value = contentId; // Set the document ID
-                    contentNameInput.value = contentId; // Use ID as name identifier
-                    contentNameInput.readOnly = true; // Disable name input when editing existing content
-                    contentTitleInput.value = content.title;
-                    contentTextInput.value = content.content;
-                    contentImageUrlInput.value = content.image_url || '';
-                    contentActiveCheckbox.checked = content.is_active;
-                    contentOrderInput.value = content.order || 0;
-
-                    if (content.image_url) {
-                        currentContentImage.src = content.image_url;
-                        currentContentImage.dataset.originalUrl = content.image_url;
-                        currentContentImage.style.display = 'block';
-                    } else {
-                        currentContentImage.style.display = 'none';
-                        currentContentImage.src = '';
-                        delete currentContentImage.dataset.originalUrl;
-                    }
-
-                    saveContentBtn.textContent = 'Update Content';
-                    siteContentFormContainer.style.display = 'block';
+                    // You might want a dedicated modal for viewing details,
+                    // or just use an alert for simplicity in this example.
+                    alert(detailsHtml.replace(/<[^>]*>/g, '\n').replace(/\n\s*\n/g, '\n').trim()); // Basic text for alert
                 } else {
-                    alert("Site content not found.");
+                    showToast("Pesanan tidak ditemukan.", 'error');
                 }
             } catch (error) {
-                console.error("Error editing site content:", error);
-                alert(`Error editing site content: ${error.message}`);
+                console.error("Error viewing order details:", error);
+                showToast("Gagal memuat detail pesanan.", 'error');
             }
-        }
+        };
 
-        async function deleteSiteContent(contentId, imageUrl) {
-            if (!confirm('Are you sure you want to delete this site content?')) return;
+        const updateOrderStatus = async (orderId) => {
+            const newStatus = prompt('Masukkan status baru untuk pesanan (e.g., new, processing, completed, cancelled):');
+            if (newStatus) {
+                showToast("Memperbarui status pesanan...", 'info');
+                try {
+                    await db.collection('orders').doc(orderId).update({
+                        status: newStatus.toLowerCase(),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    showToast("Status pesanan berhasil diperbarui!", 'success');
+                    // Render orders will automatically refresh due to real-time listener
+                } catch (error) {
+                    console.error("Error updating order status:", error);
+                    showToast("Gagal memperbarui status: " + error.message, 'error');
+                }
+            }
+        };
+
+        const deleteOrder = async (orderId) => {
+            showToast("Menghapus pesanan...", 'info');
             try {
-                await deleteDoc(doc(db, "siteContent", contentId));
-                // Delete image from Storage if it exists
-                if (imageUrl && imageUrl.includes('firebasestorage.googleapis.com')) {
-                    const imageRef = ref(storage, imageUrl);
-                    await deleteObject(imageRef).catch(e => console.warn("Could not delete image from storage:", e.message));
-                }
-                console.log("Site content deleted successfully.");
+                await db.collection('orders').doc(orderId).delete();
+                showToast("Pesanan berhasil dihapus!", 'success');
+                // Render orders will automatically refresh due to real-time listener
             } catch (error) {
-                console.error("Error deleting site content:", error);
-                alert(`Error deleting site content: ${error.message}`);
+                console.error("Error deleting order:", error);
+                showToast("Gagal menghapus pesanan: " + error.message, 'error');
             }
-        }
+        };
 
-        // --- MANAGE USERS (ADMIN) ---
-        const usersTableBody = document.getElementById('users-table-body');
-
-        function loadUsersAdmin() {
-            onSnapshot(collection(db, "users"), (snapshot) => {
-                usersTableBody.innerHTML = '';
-                if (snapshot.empty) {
-                    usersTableBody.innerHTML = '<tr><td colspan="3">No admin users found in Firestore.</td></tr>';
-                    return;
-                }
-                snapshot.forEach((docSnap) => {
-                    const user = docSnap.data();
-                    const row = usersTableBody.insertRow();
-                    row.innerHTML = `
-                        <td>${user.email || 'N/A'}</td>
-                        <td>${user.role || 'N/A'}</td>
-                        <td>
-                            <button class="action-btn delete-btn" data-id="${docSnap.id}"><i class="fas fa-trash-alt"></i></button>
-                        </td>
-                    `;
-                    // Edit/Delete for Firestore user profile (not Firebase Auth user)
-                    row.querySelector('.delete-btn').addEventListener('click', () => deleteUserFromFirestore(docSnap.id));
-                });
-            }, (error) => {
-                console.error("Error loading users for admin: ", error);
-                usersTableBody.innerHTML = `<tr><td colspan="3">Error loading users: ${error.message}</td></tr>`;
-            });
-        }
-
-        async function deleteUserFromFirestore(userId) {
-            if (!confirm('Are you sure you want to delete this user profile from Firestore? This does NOT delete the user from Firebase Authentication.')) return;
+        const sendWhatsAppFollowUp = async (orderId) => {
             try {
-                await deleteDoc(doc(db, "users", userId));
-                console.log("User profile deleted from Firestore successfully.");
-            } catch (error) {
-                console.error("Error deleting user profile from Firestore:", error);
-                alert(`Error deleting user profile from Firestore: ${error.message}`);
-            }
-        }
+                const doc = await db.collection('orders').doc(orderId).get();
+                if (doc.exists) {
+                    const order = doc.data();
+                    const phoneNumber = order.customerPhone.replace(/\D/g, ''); // Remove non-digits
+                    let message = `Halo ${order.customerName},\n\n`;
+                    message += `Pesanan Anda di Lobster Shack Bali (ID: #${orderId.substring(0,6)}) telah ${order.status}.\n\n`;
+                    message += `Detail Pesanan:\n`;
+                    order.orderDetails.forEach(item => {
+                        message += `- ${item.quantity}x ${item.name} (Rp ${new Intl.NumberFormat('id-ID').format(item.price * item.quantity)})\n`;
+                    });
+                    message += `\nTotal: Rp ${new Intl.NumberFormat('id-ID').format(order.totalAmount)}\n`;
+                    message += `Alamat Pengiriman: ${order.customerAddress}\n\n`;
+                    message += `Terima kasih!`;
 
-
-        // --- MANAGE CUSTOMERS ---
-        const customersTableBody = document.getElementById('customers-table-body');
-
-        function loadCustomersAdmin() {
-            onSnapshot(collection(db, "customers"), (snapshot) => {
-                customersTableBody.innerHTML = '';
-                if (snapshot.empty) {
-                    customersTableBody.innerHTML = '<tr><td colspan="5">No customers found.</td></tr>';
-                    return;
+                    // Encode message for URL
+                    const encodedMessage = encodeURIComponent(message);
+                    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+                    window.open(whatsappUrl, '_blank');
+                    showToast("Membuka WhatsApp untuk follow up.", 'info');
+                } else {
+                    showToast("Pesanan tidak ditemukan untuk follow up.", 'error');
                 }
-                snapshot.forEach((docSnap) => {
-                    const customer = docSnap.data();
-                    const registeredAt = customer.registered_at ? customer.registered_at.toDate().toLocaleString() : 'N/A';
-                    const row = customersTableBody.insertRow();
-                    row.innerHTML = `
-                        <td>${customer.name || 'N/A'}</td>
-                        <td>${customer.email || 'N/A'}</td>
-                        <td>${customer.phone || 'N/A'}</td>
-                        <td>${registeredAt}</td>
-                        <td>
-                            <button class="action-btn delete-btn" data-id="${docSnap.id}"><i class="fas fa-trash-alt"></i></button>
-                        </td>
-                    `;
-                    row.querySelector('.delete-btn').addEventListener('click', () => deleteCustomer(docSnap.id));
-                });
-                totalCustomersCount.textContent = snapshot.size;
-            }, (error) => {
-                console.error("Error loading customers for admin: ", error);
-                customersTableBody.innerHTML = `<tr><td colspan="5">Error loading customers: ${error.message}</td></tr>`;
-            });
-        }
-
-        async function deleteCustomer(customerId) {
-            if (!confirm('Are you sure you want to delete this customer?')) return;
-            try {
-                await deleteDoc(doc(db, "customers", customerId));
-                console.log("Customer deleted successfully.");
             } catch (error) {
-                console.error("Error deleting customer:", error);
-                alert(`Error deleting customer: ${error.message}`);
+                console.error("Error sending WhatsApp follow-up:", error);
+                showToast("Gagal mengirim follow up WhatsApp.", 'error');
             }
-        }
+        };
+
+        const openBannerModal = async (bannerId = null) => {
+            adminDom.bannerForm.reset();
+            adminDom.bannerIdField.value = '';
+            adminDom.bannerImagePreview.style.display = 'none';
+            adminDom.bannerImagePreview.src = '';
+            adminDom.bannerModalTitle.textContent = bannerId ? 'Edit Banner' : 'Tambah Banner Baru';
+
+            if (bannerId) {
+                try {
+                    const doc = await db.collection('banners').doc(bannerId).get();
+                    if (doc.exists) {
+                        const banner = doc.data();
+                        adminDom.bannerIdField.value = doc.id;
+                        adminDom.bannerImageUrlField.value = banner.image_url || '';
+                        adminDom.bannerImagePreview.src = banner.image_url || '';
+                        adminDom.bannerImagePreview.style.display = banner.image_url ? 'block' : 'none';
+                        adminDom.bannerSortOrderField.value = banner.sort_order || 0;
+                    }
+                } catch (error) {
+                    console.error("Error loading banner for edit:", error);
+                    showToast("Gagal memuat detail banner.", 'error');
+                }
+            }
+            openModal(adminDom.bannerModal);
+        };
+
+        const deleteBanner = async (bannerId) => {
+            showToast("Menghapus banner...", 'info');
+            try {
+                await db.collection('banners').doc(bannerId).delete();
+                showToast("Banner berhasil dihapus!", 'success');
+                renderBannersAdmin();
+            } catch (error) {
+                console.error("Error deleting banner:", error);
+                showToast("Gagal menghapus banner: " + error.message, 'error');
+            }
+        };
+
+        const openGalleryImageModal = async (imageId = null) => {
+            adminDom.galleryImageForm.reset();
+            adminDom.galleryImageIdField.value = '';
+            adminDom.galleryImagePreview.style.display = 'none';
+            adminDom.galleryImagePreview.src = '';
+            adminDom.galleryImageModalTitle.textContent = imageId ? 'Edit Gambar Galeri' : 'Tambah Gambar Galeri Baru';
+
+            if (imageId) {
+                try {
+                    const doc = await db.collection('gallery_images').doc(imageId).get();
+                    if (doc.exists) {
+                        const image = doc.data();
+                        adminDom.galleryImageIdField.value = doc.id;
+                        adminDom.galleryImageUrlField.value = image.image_url || '';
+                        adminDom.galleryImagePreview.src = image.image_url || '';
+                        adminDom.galleryImagePreview.style.display = image.image_url ? 'block' : 'none';
+                        adminDom.galleryImageCaptionIdField.value = image.caption_id || '';
+                        adminDom.galleryImageCaptionEnField.value = image.caption_en || '';
+                        adminDom.galleryImageSortOrderField.value = image.sort_order || 0;
+                    }
+                } catch (error) {
+                    console.error("Error loading gallery image for edit:", error);
+                    showToast("Gagal memuat detail gambar galeri.", 'error');
+                }
+            }
+            openModal(adminDom.galleryImageModal);
+        };
+
+        const deleteGalleryImage = async (imageId) => {
+            showToast("Menghapus gambar galeri...", 'info');
+            try {
+                await db.collection('gallery_images').doc(imageId).delete();
+                showToast("Gambar galeri berhasil dihapus!", 'success');
+                renderGalleryImagesAdmin();
+            } catch (error) {
+                console.error("Error deleting gallery image:", error);
+                showToast("Gagal menghapus gambar galeri: " + error.message, 'error');
+            }
+        };
+
+        const openHistoryModal = async (historyId = null) => {
+            adminDom.historyForm.reset();
+            adminDom.historyIdField.value = '';
+            adminDom.historyModalTitle.textContent = historyId ? 'Edit Item Riwayat' : 'Tambah Item Riwayat Baru';
+
+            if (historyId) {
+                try {
+                    const doc = await db.collection('history').doc(historyId).get();
+                    if (doc.exists) {
+                        const item = doc.data();
+                        adminDom.historyIdField.value = doc.id;
+                        adminDom.historyYearField.value = item.year || '';
+                        adminDom.historyTitleIdField.value = item.title_id || '';
+                        adminDom.historyTitleEnField.value = item.title_en || '';
+                        adminDom.historyTextIdField.value = item.text_id || '';
+                        adminDom.historyTextEnField.value = item.text_en || '';
+                        adminDom.historySortOrderField.value = item.sort_order || 0;
+                    }
+                } catch (error) {
+                    console.error("Error loading history item for edit:", error);
+                    showToast("Gagal memuat detail riwayat.", 'error');
+                }
+            }
+            openModal(adminDom.historyModal);
+        };
+
+        const deleteHistory = async (historyId) => {
+            showToast("Menghapus item riwayat...", 'info');
+            try {
+                await db.collection('history').doc(historyId).delete();
+                showToast("Item riwayat berhasil dihapus!", 'success');
+                renderHistoryAdmin();
+            } catch (error) {
+                console.error("Error deleting history item:", error);
+                showToast("Gagal menghapus riwayat: " + error.message, 'error');
+            }
+        };
+
+        // --- Initial Call ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // No need to call initializeAdminPanel here, it's called after auth check
+        });
     </script>
 </body>
 </html>
