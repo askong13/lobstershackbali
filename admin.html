@@ -205,7 +205,7 @@
         }
         td .action-btns { display: flex; gap: .5rem; }
         td .action-btns .btn { padding: .4rem .8rem; border-radius: 6px; }
-        .product-img-thumb, .content-img-thumb { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; }
+        .thumb-image { width: 100px; height: 60px; object-fit: cover; border-radius: 8px; }
 
         /* --- MODAL --- */
         .modal-overlay {
@@ -265,7 +265,7 @@
         .form-check { display: flex; align-items: center; gap: .75rem; }
         .form-check input { width: auto; }
         .form-check label { margin: 0; }
-        #image-preview, #content-image-preview { max-width: 150px; margin-top: 1rem; border-radius: 8px; }
+        .image-preview { max-width: 200px; margin-top: 1rem; border-radius: 8px; display: none; }
 
         /* --- Coming Soon & Specific Pages --- */
         .coming-soon-card { text-align: center; padding: 5rem 2rem; }
@@ -347,6 +347,9 @@
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="#dashboard" class="nav-link active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="#banners" class="nav-link"><i class="fas fa-images"></i> Banners</a></li>
+                    <li><a href="#history" class="nav-link"><i class="fas fa-landmark"></i> History</a></li>
+                    <li><a href="#gallery" class="nav-link"><i class="fas fa-photo-video"></i> Gallery</a></li>
                     <li><a href="#products" class="nav-link"><i class="fas fa-utensils"></i> Products</a></li>
                     <li><a href="#categories" class="nav-link"><i class="fas fa-tags"></i> Categories</a></li>
                     <li><a href="#content" class="nav-link"><i class="fas fa-file-alt"></i> Content</a></li>
@@ -372,6 +375,71 @@
                     </div>
                 </div>
             </section>
+            
+            <section id="page-banners" class="page">
+                <div class="page-header">
+                    <h1>Manage Banners</h1>
+                    <button class="btn" id="add-new-banner-btn"><i class="fas fa-plus"></i> Add New Banner</button>
+                </div>
+                <div class="card">
+                    <div class="table-wrapper">
+                        <table id="banners-table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Sort Order</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-history" class="page">
+                <div class="page-header">
+                    <h1>Manage History Timeline</h1>
+                    <button class="btn" id="add-new-history-btn"><i class="fas fa-plus"></i> Add New History Item</button>
+                </div>
+                <div class="card">
+                    <div class="table-wrapper">
+                        <table id="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Sort Order</th>
+                                    <th>Year</th>
+                                    <th>Title (ID/EN)</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-gallery" class="page">
+                <div class="page-header">
+                    <h1>Manage Gallery</h1>
+                    <button class="btn" id="add-new-gallery-btn"><i class="fas fa-plus"></i> Add New Gallery Image</button>
+                </div>
+                <div class="card">
+                    <div class="table-wrapper">
+                        <table id="gallery-table">
+                             <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Sort Order</th>
+                                    <th>Caption (ID/EN)</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
 
             <section id="page-products" class="page">
                 <div class="page-header">
@@ -391,8 +459,7 @@
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                </tbody>
+                            <tbody></tbody>
                         </table>
                     </div>
                 </div>
@@ -408,13 +475,12 @@
                         <table id="categories-table">
                             <thead>
                                 <tr>
-                                    <th>Sort Order (ID)</th>
+                                    <th>Sort Order</th>
                                     <th>Name</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                </tbody>
+                            <tbody></tbody>
                         </table>
                     </div>
                 </div>
@@ -435,8 +501,7 @@
                                     <th>Image</th> <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                </tbody>
+                            <tbody></tbody>
                         </table>
                     </div>
                 </div>
@@ -464,6 +529,116 @@
                 </div>
             </section>
         </main>
+    </div>
+    
+    <div id="banner-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 id="banner-modal-title">Add New Banner</h2>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="banner-form">
+                    <input type="hidden" id="banner-id">
+                    <div class="form-group">
+                        <label for="banner-sort-order">Sort Order</label>
+                        <input type="number" id="banner-sort-order" required>
+                        <small>Lower number appears first.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="banner-image">Banner Image</label>
+                        <input type="file" id="banner-image" accept="image/*">
+                        <img id="banner-image-preview" src="#" alt="Image Preview" class="image-preview">
+                    </div>
+                    <div style="text-align: right;">
+                        <button type="submit" class="btn btn-secondary"><i class="fas fa-save"></i> Save Banner</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="gallery-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="gallery-modal-title">Add New Gallery Image</h2>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="gallery-form">
+                    <input type="hidden" id="gallery-id">
+                    <div class="form-group">
+                        <label for="gallery-sort-order">Sort Order</label>
+                        <input type="number" id="gallery-sort-order" required>
+                        <small>Lower number appears first.</small>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="gallery-caption-id">Caption (ID)</label>
+                            <input type="text" id="gallery-caption-id" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gallery-caption-en">Caption (EN)</label>
+                            <input type="text" id="gallery-caption-en" required>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label for="gallery-image">Gallery Image</label>
+                        <input type="file" id="gallery-image" accept="image/*">
+                        <img id="gallery-image-preview" src="#" alt="Image Preview" class="image-preview">
+                    </div>
+                    <div style="text-align: right;">
+                         <button type="submit" class="btn btn-secondary"><i class="fas fa-save"></i> Save Gallery Image</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="history-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="history-modal-title">Add New History Item</h2>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="history-form">
+                    <input type="hidden" id="history-id">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="history-year">Year</label>
+                            <input type="number" id="history-year" required placeholder="e.g. 2024">
+                        </div>
+                        <div class="form-group">
+                            <label for="history-sort-order">Sort Order</label>
+                            <input type="number" id="history-sort-order" required>
+                            <small>Higher number appears first.</small>
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="history-title-id">Title (ID)</label>
+                            <input type="text" id="history-title-id" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="history-title-en">Title (EN)</label>
+                            <input type="text" id="history-title-en" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="history-text-id">Text/Description (ID)</label>
+                        <textarea id="history-text-id" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="history-text-en">Text/Description (EN)</label>
+                        <textarea id="history-text-en" required></textarea>
+                    </div>
+                    <div style="text-align: right;">
+                         <button type="submit" class="btn btn-secondary"><i class="fas fa-save"></i> Save History Item</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <div id="product-modal" class="modal-overlay">
@@ -506,7 +681,7 @@
                     <div class="form-group">
                         <label for="product-image">Product Image</label>
                         <input type="file" id="product-image" accept="image/*">
-                        <img id="image-preview" src="#" alt="Image Preview" style="display: none;">
+                        <img id="product-image-preview" src="#" alt="Image Preview" class="image-preview">
                     </div>
                      <div class="form-group">
                         <div class="form-check">
@@ -569,7 +744,7 @@
                     <div class="form-group">
                         <label for="content-image">Content Image (Optional)</label>
                         <input type="file" id="content-image" accept="image/*">
-                        <img id="content-image-preview" src="#" alt="Image Preview" style="display: none;">
+                        <img id="content-image-preview" src="#" alt="Image Preview" class="image-preview">
                     </div>
                     <div style="text-align: right;">
                         <button type="submit" class="btn btn-secondary"><i class="fas fa-save"></i> Save Content</button>
@@ -578,8 +753,6 @@
             </div>
         </div>
     </div>
-
-
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -588,12 +761,12 @@
     <script>
     'use strict';
 
-    // ======== FIREBASE CONFIGURATION (FROM YOUR FILE) ========
+    // ======== FIREBASE CONFIGURATION ========
     const firebaseConfig = {
       apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
       authDomain: "lobster-shack-bali.firebaseapp.com",
       projectId: "lobster-shack-bali",
-      storageBucket: "lobster-shack-bali.firebasestorage.app",
+      storageBucket: "lobster-shack-bali.appspot.com",
       messagingSenderId: "42452974733",
       appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
     };
@@ -648,22 +821,33 @@
             loadAllData();
             setupModals();
             setupForms();
+            setupImagePreviews();
         }
-
-        let productsData = [];
-        let categoriesData = [];
-        let contentData = [];
+        
+        // --- Global Data Arrays ---
+        let productsData = [], categoriesData = [], contentData = [], bannersData = [], galleryData = [], historyData = [];
         
         async function loadAllData() {
-            await Promise.all([
-                loadCategories(),
-                loadProducts(),
-                loadContent(),
-            ]);
-            renderProducts();
-            renderCategories();
-            renderContent();
-            populateCategoryDropdown();
+            try {
+                await Promise.all([
+                    loadBanners(),
+                    loadGallery(),
+                    loadHistory(),
+                    loadCategories(),
+                    loadProducts(),
+                    loadContent(),
+                ]);
+                renderBanners();
+                renderGallery();
+                renderHistory();
+                renderProducts();
+                renderCategories();
+                renderContent();
+                populateCategoryDropdown();
+            } catch (err) {
+                console.error("Failed to load initial data:", err);
+                alert("Could not load data. Please check the console and refresh.");
+            }
         }
         
         // --- Navigation ---
@@ -730,108 +914,242 @@
 
         function openModal(modalId) { document.getElementById(modalId).classList.add('visible'); }
         function closeModal(modalId) { document.getElementById(modalId).classList.remove('visible'); }
+        
+        // --- Image Preview Handling ---
+        function setupImagePreviews() {
+            const handleFileChange = (inputId, previewId) => {
+                document.getElementById(inputId).addEventListener('change', (e) => {
+                    const preview = document.getElementById(previewId);
+                    const file = e.target.files[0];
+                    if (file) {
+                        preview.src = URL.createObjectURL(file);
+                        preview.style.display = 'block';
+                    } else {
+                        preview.style.display = 'none';
+                        preview.src = '#';
+                    }
+                });
+            };
+            handleFileChange('product-image', 'product-image-preview');
+            handleFileChange('content-image', 'content-image-preview');
+            handleFileChange('banner-image', 'banner-image-preview');
+            handleFileChange('gallery-image', 'gallery-image-preview');
+        }
 
         // --- Data Fetching ---
-        async function loadProducts() {
-            const snapshot = await db.collection('products').get();
-            productsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        async function loadCollection(name, orderByField) {
+            let query = db.collection(name);
+            if (orderByField) {
+                query = query.orderBy(orderByField);
+            }
+            const snapshot = await query.get();
+            return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         }
 
-        async function loadCategories() {
-            const snapshot = await db.collection('categories').orderBy('id').get();
-            categoriesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        }
-
-        async function loadContent() {
-            const snapshot = await db.collection('content').get();
-            contentData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        }
+        async function loadProducts() { productsData = await loadCollection('products', 'name_en'); }
+        async function loadCategories() { categoriesData = await loadCollection('categories', 'id'); }
+        async function loadContent() { contentData = await loadCollection('content'); }
+        async function loadBanners() { bannersData = await loadCollection('banners', 'sort_order'); }
+        async function loadGallery() { galleryData = await loadCollection('gallery_images', 'sort_order'); }
+        async function loadHistory() { historyData = await loadCollection('history', 'sort_order'); }
         
         // --- Rendering ---
-        function renderProducts() {
-            const tbody = document.querySelector('#products-table tbody');
-            tbody.innerHTML = '';
-            productsData.forEach(p => {
-                const row = `
-                    <tr>
-                        <td><img src="${p.imageUrl || 'https://via.placeholder.com/60'}" alt="${p.name_en}" class="product-img-thumb"></td>
-                        <td>${p.name_id}<br><small class="text-muted">${p.name_en}</small></td>
-                        <td>${p.category_name}</td>
-                        <td>${new Intl.NumberFormat('id-ID').format(p.price)}</td>
-                        <td><i class="fas ${p.is_featured ? 'fa-check-circle' : 'fa-times-circle'}"></i></td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="btn btn-sm btn-outline" onclick="editProduct('${p.id}')"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-sm btn-danger" onclick="deleteProduct('${p.id}', '${p.name_en}')"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
-        }
+        const renderTable = (tableId, data, rowRenderer) => {
+            const tbody = document.querySelector(`#${tableId} tbody`);
+            tbody.innerHTML = data.map(rowRenderer).join('');
+        };
+
+        const getImageUrl = (url) => url || 'https://via.placeholder.com/100x60';
+
+        renderBanners = () => renderTable('banners-table', bannersData, b => `
+            <tr>
+                <td><img src="${getImageUrl(b.image_url)}" alt="Banner" class="thumb-image"></td>
+                <td>${b.sort_order}</td>
+                <td>
+                    <div class="action-btns">
+                        <button class="btn btn-sm btn-outline" onclick="editBanner('${b.id}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteItem('banners', '${b.id}', 'Banner', '${b.image_url}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>`);
+
+        renderGallery = () => renderTable('gallery-table', galleryData, g => `
+            <tr>
+                <td><img src="${getImageUrl(g.image_url)}" alt="Gallery" class="thumb-image"></td>
+                <td>${g.sort_order}</td>
+                <td>${g.caption_id}<br><small class="text-muted">${g.caption_en}</small></td>
+                <td>
+                    <div class="action-btns">
+                        <button class="btn btn-sm btn-outline" onclick="editGallery('${g.id}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteItem('gallery_images', '${g.id}', 'Gallery Image: ${g.caption_en}', '${g.image_url}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>`);
+
+        renderHistory = () => renderTable('history-table', historyData, h => `
+            <tr>
+                <td>${h.sort_order}</td>
+                <td>${h.year}</td>
+                <td>${h.title_id}<br><small class="text-muted">${h.title_en}</small></td>
+                <td>
+                    <div class="action-btns">
+                        <button class="btn btn-sm btn-outline" onclick="editHistory('${h.id}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteItem('history', '${h.id}', 'History: ${h.year} - ${h.title_en}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>`);
         
-        function renderCategories() {
-            const tbody = document.querySelector('#categories-table tbody');
-            tbody.innerHTML = '';
-            categoriesData.forEach(c => {
-                const row = `
-                    <tr>
-                        <td>${c.id}</td>
-                        <td>${c.name}</td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="btn btn-sm btn-outline" onclick="editCategory('${c.id}')"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-sm btn-danger" onclick="deleteCategory('${c.id}', '${c.name}')"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
-        }
+        renderProducts = () => renderTable('products-table', productsData, p => `
+            <tr>
+                <td><img src="${getImageUrl(p.imageUrl)}" alt="${p.name_en}" class="thumb-image"></td>
+                <td>${p.name_id}<br><small class="text-muted">${p.name_en}</small></td>
+                <td>${p.category_name}</td>
+                <td>${new Intl.NumberFormat('id-ID').format(p.price)}</td>
+                <td><i class="fas ${p.is_featured ? 'fa-check-circle' : 'fa-times-circle'}"></i></td>
+                <td>
+                    <div class="action-btns">
+                        <button class="btn btn-sm btn-outline" onclick="editProduct('${p.id}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteItem('products', '${p.id}', '${p.name_en}', '${p.imageUrl}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>`);
         
-        function renderContent() {
-            const tbody = document.querySelector('#content-table tbody');
-            tbody.innerHTML = '';
-            contentData.sort((a,b) => a.id.localeCompare(b.id)).forEach(c => {
-                const row = `
-                    <tr>
-                        <td><strong>${c.id}</strong></td>
-                        <td>${(c.text_id || '').substring(0, 50)}${(c.text_id || '').length > 50 ? '...' : ''}</td>
-                        <td>${(c.text_en || '').substring(0, 50)}${(c.text_en || '').length > 50 ? '...' : ''}</td>
-                        <td>
-                            ${c.imageUrl ? `<img src="${c.imageUrl}" alt="Content Image" class="content-img-thumb">` : 'N/A'}
-                        </td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="btn btn-sm btn-outline" onclick="editContent('${c.id}')"><i class="fas fa-edit"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
-        }
+        renderCategories = () => renderTable('categories-table', categoriesData, c => `
+            <tr>
+                <td>${c.id}</td>
+                <td>${c.name}</td>
+                <td>
+                    <div class="action-btns">
+                        <button class="btn btn-sm btn-outline" onclick="editCategory('${c.id}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteItem('categories', '${c.id}', 'Category: ${c.name}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>`);
+        
+        renderContent = () => renderTable('content-table', contentData.sort((a,b) => a.id.localeCompare(b.id)), c => `
+            <tr>
+                <td><strong>${c.id}</strong></td>
+                <td>${(c.text_id || '').substring(0, 50)}${(c.text_id || '').length > 50 ? '...' : ''}</td>
+                <td>${(c.text_en || '').substring(0, 50)}${(c.text_en || '').length > 50 ? '...' : ''}</td>
+                <td>${c.imageUrl ? `<img src="${c.imageUrl}" alt="Content" class="thumb-image">` : 'N/A'}</td>
+                <td>
+                    <div class="action-btns">
+                        <button class="btn btn-sm btn-outline" onclick="editContent('${c.id}')"><i class="fas fa-edit"></i></button>
+                    </div>
+                </td>
+            </tr>`);
         
         function populateCategoryDropdown() {
             const select = document.getElementById('product-category');
             select.innerHTML = '<option value="">Select a category</option>';
-            categoriesData.forEach(c => {
-                select.innerHTML += `<option value="${c.name}">${c.name}</option>`;
-            });
+            categoriesData.forEach(c => { select.innerHTML += `<option value="${c.name}">${c.name}</option>`; });
         }
+
+        // --- Utility Functions ---
+        const resetForm = (formId, modalTitleId, titleText) => {
+            document.getElementById(formId).reset();
+            document.querySelectorAll(`#${formId} input[type=hidden]`).forEach(input => input.value = '');
+            document.getElementById(modalTitleId).textContent = titleText;
+            document.querySelectorAll('.image-preview').forEach(img => { img.style.display = 'none'; img.src = '#'; });
+        };
+
+        const uploadImage = async (file, path) => {
+            if (!file) return null;
+            const filePath = `${path}/${Date.now()}_${file.name}`;
+            const fileSnapshot = await storage.ref(filePath).put(file);
+            return fileSnapshot.ref.getDownloadURL();
+        };
+
+        const saveToDb = async (collectionName, id, data) => {
+            if (id) {
+                await db.collection(collectionName).doc(id).update(data);
+            } else {
+                await db.collection(collectionName).add(data);
+            }
+        };
 
         // --- Forms & Actions ---
         function setupForms() {
-            // Product form
+            // New Item Buttons
+            document.getElementById('add-new-banner-btn').addEventListener('click', () => {
+                resetForm('banner-form', 'banner-modal-title', 'Add New Banner');
+                openModal('banner-modal');
+            });
+            document.getElementById('add-new-gallery-btn').addEventListener('click', () => {
+                resetForm('gallery-form', 'gallery-modal-title', 'Add New Gallery Image');
+                openModal('gallery-modal');
+            });
+            document.getElementById('add-new-history-btn').addEventListener('click', () => {
+                resetForm('history-form', 'history-modal-title', 'Add New History Item');
+                openModal('history-modal');
+            });
             document.getElementById('add-new-product-btn').addEventListener('click', () => {
-                document.getElementById('product-form').reset();
-                document.getElementById('product-id').value = '';
-                document.getElementById('product-modal-title').textContent = 'Add New Product';
-                document.getElementById('image-preview').style.display = 'none'; // Ensure preview is hidden for new product
-                document.getElementById('image-preview').src = '#'; // Clear existing image
+                resetForm('product-form', 'product-modal-title', 'Add New Product');
                 openModal('product-modal');
+            });
+            document.getElementById('add-new-category-btn').addEventListener('click', () => {
+                resetForm('category-form', 'category-modal-title', 'Add New Category');
+                openModal('category-modal');
+            });
+
+            // Form Submissions
+            document.getElementById('banner-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const id = document.getElementById('banner-id').value;
+                const imageFile = document.getElementById('banner-image').files[0];
+                const data = { sort_order: Number(document.getElementById('banner-sort-order').value) };
+                
+                try {
+                    const imageUrl = await uploadImage(imageFile, 'banners');
+                    if (imageUrl) data.image_url = imageUrl;
+                    else if (!id) { alert("An image is required for a new banner."); return; }
+
+                    await saveToDb('banners', id, data);
+                    closeModal('banner-modal');
+                    await loadBanners();
+                    renderBanners();
+                } catch(err) { alert("Error saving banner: " + err.message); }
+            });
+
+            document.getElementById('gallery-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const id = document.getElementById('gallery-id').value;
+                const imageFile = document.getElementById('gallery-image').files[0];
+                const data = {
+                    sort_order: Number(document.getElementById('gallery-sort-order').value),
+                    caption_id: document.getElementById('gallery-caption-id').value,
+                    caption_en: document.getElementById('gallery-caption-en').value,
+                };
+
+                try {
+                    const imageUrl = await uploadImage(imageFile, 'gallery');
+                    if (imageUrl) data.image_url = imageUrl;
+                    else if (!id) { alert("An image is required for a new gallery item."); return; }
+
+                    await saveToDb('gallery_images', id, data);
+                    closeModal('gallery-modal');
+                    await loadGallery();
+                    renderGallery();
+                } catch(err) { alert("Error saving gallery item: " + err.message); }
+            });
+
+            document.getElementById('history-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const id = document.getElementById('history-id').value;
+                const data = {
+                    year: document.getElementById('history-year').value,
+                    sort_order: Number(document.getElementById('history-sort-order').value),
+                    title_id: document.getElementById('history-title-id').value,
+                    title_en: document.getElementById('history-title-en').value,
+                    text_id: document.getElementById('history-text-id').value,
+                    text_en: document.getElementById('history-text-en').value,
+                };
+                try {
+                    await saveToDb('history', id, data);
+                    closeModal('history-modal');
+                    await loadHistory();
+                    renderHistory();
+                } catch(err) { alert("Error saving history item: " + err.message); }
             });
 
             document.getElementById('product-form').addEventListener('submit', async (e) => {
@@ -849,92 +1167,38 @@
                 };
                 
                 try {
-                    if (imageFile) {
-                        const filePath = `products/${Date.now()}_${imageFile.name}`;
-                        console.log("Attempting to upload product image to:", filePath);
-                        const fileSnapshot = await storage.ref(filePath).put(imageFile);
-                        data.imageUrl = await fileSnapshot.ref.getDownloadURL();
-                        console.log("Product image uploaded successfully:", data.imageUrl);
-                    } else if (id) {
-                         // If no new file is selected, keep the old image URL if editing
-                        const existingProduct = productsData.find(p => p.id === id);
-                        if (existingProduct && existingProduct.imageUrl) {
-                            data.imageUrl = existingProduct.imageUrl;
-                        } else {
-                            data.imageUrl = ''; // Clear if no old image and no new image
-                        }
-                    } else {
-                        data.imageUrl = ''; // For new product with no image
-                    }
+                    const imageUrl = await uploadImage(imageFile, 'products');
+                    if (imageUrl) data.imageUrl = imageUrl;
                     
-                    if (id) {
-                        console.log("Updating product with ID:", id, "Data:", data);
-                        await db.collection('products').doc(id).update(data);
-                        console.log("Product updated successfully!");
-                    } else {
-                        console.log("Adding new product. Data:", data);
-                        const docRef = await db.collection('products').add(data);
-                        console.log("Product added successfully with ID:", docRef.id);
-                    }
-                    
+                    await saveToDb('products', id, data);
                     closeModal('product-modal');
                     await loadProducts();
                     renderProducts();
-                } catch(err) {
-                    console.error("Error saving product:", err);
-                    alert("Error saving product. Please check console for details: " + err.message);
-                }
-            });
-
-            document.getElementById('product-image').addEventListener('change', (e) => {
-                const preview = document.getElementById('image-preview');
-                const file = e.target.files[0];
-                if (file) {
-                    preview.src = URL.createObjectURL(file);
-                    preview.style.display = 'block';
-                } else {
-                    preview.style.display = 'none';
-                    preview.src = '#'; // Clear image if no file selected
-                }
-            });
-
-            // Category form
-            document.getElementById('add-new-category-btn').addEventListener('click', () => {
-                document.getElementById('category-form').reset();
-                document.getElementById('category-id').value = '';
-                document.getElementById('category-modal-title').textContent = 'Add New Category';
-                openModal('category-modal');
+                } catch(err) { alert("Error saving product: " + err.message); }
             });
 
             document.getElementById('category-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const id = document.getElementById('category-id').value;
+                const docId = document.getElementById('category-id').value;
                 const data = {
                     name: document.getElementById('category-name').value,
-                    id: Number(document.getElementById('category-sort-id').value)
+                    id: Number(document.getElementById('category-sort-id').value) // This is the sort order, but the field name is 'id'
                 };
 
                 try {
-                    if (id) {
-                        console.log("Updating category with ID:", id, "Data:", data);
-                        await db.collection('categories').doc(id).update(data);
-                        console.log("Category updated successfully!");
-                    } else {
-                        console.log("Adding new category. Data:", data);
-                        const docRef = await db.collection('categories').add(data);
-                        console.log("Category added successfully with ID:", docRef.id);
+                    // Category uses 'add' with custom doc ID, or 'set' for update.
+                    if (docId) { // Editing existing
+                        await db.collection('categories').doc(docId).update(data);
+                    } else { // Adding new
+                        await db.collection('categories').add(data);
                     }
                     closeModal('category-modal');
                     await loadCategories();
                     renderCategories();
                     populateCategoryDropdown();
-                } catch(err) {
-                    console.error("Error saving category:", err);
-                    alert("Error saving category. Please check console for details: " + err.message);
-                }
+                } catch(err) { alert("Error saving category: " + err.message); }
             });
 
-            // Content form
             document.getElementById('content-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const key = document.getElementById('content-key').value;
@@ -944,144 +1208,130 @@
                     text_en: document.getElementById('content-text-en').value,
                 };
                  try {
-                    if (imageFile) {
-                        const filePath = `content/${key}_${Date.now()}_${imageFile.name}`;
-                        console.log("Attempting to upload content image to:", filePath);
-                        const fileSnapshot = await storage.ref(filePath).put(imageFile);
-                        data.imageUrl = await fileSnapshot.ref.getDownloadURL();
-                        console.log("Content image uploaded successfully:", data.imageUrl);
-                    } else {
-                        // If no new file, keep the existing image URL or clear it
-                        const existingContent = contentData.find(c => c.id === key);
-                        if (existingContent && existingContent.imageUrl) {
-                            data.imageUrl = existingContent.imageUrl;
-                        } else {
-                            data.imageUrl = ''; // Clear if no old image and no new image
-                        }
-                    }
+                    const imageUrl = await uploadImage(imageFile, 'content');
+                    if (imageUrl) data.imageUrl = imageUrl;
 
-                    console.log("Updating content with key:", key, "Data:", data);
                     await db.collection('content').doc(key).update(data);
-                    console.log("Content updated successfully!");
-                    
                     closeModal('content-modal');
                     await loadContent();
                     renderContent();
-                } catch(err) {
-                    console.error("Error saving content:", err);
-                    alert("Error saving content. Please check console for details: " + err.message);
-                }
-            });
-
-            document.getElementById('content-image').addEventListener('change', (e) => {
-                const preview = document.getElementById('content-image-preview');
-                const file = e.target.files[0];
-                if (file) {
-                    preview.src = URL.createObjectURL(file);
-                    preview.style.display = 'block';
-                } else {
-                    preview.style.display = 'none';
-                    preview.src = '#'; // Clear image if no file selected
-                }
+                } catch(err) { alert("Error saving content: " + err.message); }
             });
         }
         
         // Expose functions to global scope for onclick attributes
-        window.editProduct = (id) => {
-            const product = productsData.find(p => p.id === id);
-            if (!product) return;
-            document.getElementById('product-form').reset();
-            document.getElementById('product-id').value = id;
-            document.getElementById('product-name-id').value = product.name_id;
-            document.getElementById('product-name-en').value = product.name_en;
-            document.getElementById('product-description-id').value = product.description_id;
-            document.getElementById('product-description-en').value = product.description_en;
-            document.getElementById('product-price').value = product.price;
-            document.getElementById('product-category').value = product.category_name;
-            document.getElementById('product-featured').checked = product.is_featured;
-            
-            const preview = document.getElementById('image-preview');
-            if (product.imageUrl) {
-                preview.src = product.imageUrl;
+        const populateForm = (data, fields) => {
+            fields.forEach(field => {
+                const element = document.getElementById(field.id);
+                if (element.type === 'checkbox') {
+                    element.checked = data[field.key] || false;
+                } else {
+                    element.value = data[field.key] || '';
+                }
+            });
+        };
+
+        const showImagePreview = (previewId, imageUrl) => {
+            const preview = document.getElementById(previewId);
+            if (imageUrl) {
+                preview.src = imageUrl;
                 preview.style.display = 'block';
             } else {
                 preview.style.display = 'none';
-                preview.src = '#'; // Clear existing image if product has none
+                preview.src = '#';
             }
-            
-            document.getElementById('product-modal-title').textContent = 'Edit Product';
+        };
+        
+        window.editBanner = (id) => {
+            const item = bannersData.find(i => i.id === id); if (!item) return;
+            resetForm('banner-form', 'banner-modal-title', 'Edit Banner');
+            populateForm(item, [{id: 'banner-id', key: 'id'}, {id: 'banner-sort-order', key: 'sort_order'}]);
+            showImagePreview('banner-image-preview', item.image_url);
+            openModal('banner-modal');
+        };
+
+        window.editGallery = (id) => {
+            const item = galleryData.find(i => i.id === id); if (!item) return;
+            resetForm('gallery-form', 'gallery-modal-title', 'Edit Gallery Image');
+            populateForm(item, [
+                {id: 'gallery-id', key: 'id'}, 
+                {id: 'gallery-sort-order', key: 'sort_order'}, 
+                {id: 'gallery-caption-id', key: 'caption_id'}, 
+                {id: 'gallery-caption-en', key: 'caption_en'}
+            ]);
+            showImagePreview('gallery-image-preview', item.image_url);
+            openModal('gallery-modal');
+        };
+
+        window.editHistory = (id) => {
+            const item = historyData.find(i => i.id === id); if (!item) return;
+            resetForm('history-form', 'history-modal-title', 'Edit History Item');
+            populateForm(item, [
+                {id: 'history-id', key: 'id'}, 
+                {id: 'history-year', key: 'year'}, 
+                {id: 'history-sort-order', key: 'sort_order'}, 
+                {id: 'history-title-id', key: 'title_id'}, 
+                {id: 'history-title-en', key: 'title_en'}, 
+                {id: 'history-text-id', key: 'text_id'}, 
+                {id: 'history-text-en', key: 'text_en'}
+            ]);
+            openModal('history-modal');
+        };
+
+        window.editProduct = (id) => {
+            const item = productsData.find(i => i.id === id); if (!item) return;
+            resetForm('product-form', 'product-modal-title', 'Edit Product');
+            populateForm(item, [
+                {id: 'product-id', key: 'id'}, {id: 'product-name-id', key: 'name_id'},
+                {id: 'product-name-en', key: 'name_en'}, {id: 'product-description-id', key: 'description_id'},
+                {id: 'product-description-en', key: 'description_en'}, {id: 'product-price', key: 'price'},
+                {id: 'product-category', key: 'category_name'}, {id: 'product-featured', key: 'is_featured'}
+            ]);
+            showImagePreview('product-image-preview', item.imageUrl);
             openModal('product-modal');
         };
 
-        window.deleteProduct = async (id, name) => {
-            if (confirm(`Are you sure you want to delete "${name}"? This cannot be undone.`)) {
-                try {
-                    // Optionally, delete the image from storage first
-                    const productToDelete = productsData.find(p => p.id === id);
-                    if (productToDelete && productToDelete.imageUrl) {
-                        const imageRef = storage.refFromURL(productToDelete.imageUrl);
-                        await imageRef.delete().catch(error => {
-                            console.warn("Could not delete old product image (might not exist or permissions issue):", error);
-                        });
-                    }
-
-                    await db.collection('products').doc(id).delete();
-                    console.log(`Product "${name}" deleted successfully.`);
-                    await loadProducts();
-                    renderProducts();
-                } catch(err) {
-                    console.error("Error deleting product: ", err);
-                    alert("Error deleting product. Please check console for details.");
-                }
-            }
-        };
-
         window.editCategory = (id) => {
-            const category = categoriesData.find(c => c.id === id);
-            if (!category) return;
-            document.getElementById('category-form').reset();
-            document.getElementById('category-id').value = id;
-            document.getElementById('category-name').value = category.name;
-            document.getElementById('category-sort-id').value = category.id;
-            document.getElementById('category-modal-title').textContent = 'Edit Category';
+            const item = categoriesData.find(c => c.id === id); if (!item) return;
+            resetForm('category-form', 'category-modal-title', 'Edit Category');
+            populateForm(item, [{id: 'category-id', key: 'id'}, {id: 'category-name', key: 'name'}, {id: 'category-sort-id', key: 'id'}]);
             openModal('category-modal');
         };
 
-        window.deleteCategory = async (id, name) => {
-             if (confirm(`Are you sure you want to delete category "${name}"?`)) {
-                 try {
-                    await db.collection('categories').doc(id).delete();
-                    console.log(`Category "${name}" deleted successfully.`);
-                    await loadCategories();
-                    renderCategories();
-                    populateCategoryDropdown();
-                } catch(err) {
-                    console.error("Error deleting category: ", err);
-                    alert("Error deleting category. Please check console for details.");
-                }
-            }
+        window.editContent = (key) => {
+            const item = contentData.find(c => c.id === key); if (!item) return;
+            resetForm('content-form', 'content-modal-title', `Edit Content: ${key}`);
+            document.getElementById('content-key-display').textContent = key;
+            populateForm(item, [
+                {id: 'content-key', key: 'id'}, {id: 'content-text-id', key: 'text_id'},
+                {id: 'content-text-en', key: 'text_en'}
+            ]);
+            showImagePreview('content-image-preview', item.imageUrl);
+            openModal('content-modal');
         };
 
-        window.editContent = (key) => {
-            const content = contentData.find(c => c.id === key);
-            if (!content) return;
-            document.getElementById('content-form').reset();
-            document.getElementById('content-key').value = key;
-            document.getElementById('content-key-display').textContent = key;
-            document.getElementById('content-text-id').value = content.text_id || '';
-            document.getElementById('content-text-en').value = content.text_en || '';
-            
-            const preview = document.getElementById('content-image-preview');
-            if (content.imageUrl) {
-                preview.src = content.imageUrl;
-                preview.style.display = 'block';
-            } else {
-                preview.style.display = 'none';
-                preview.src = '#'; // Clear existing image if content has none
+        window.deleteItem = async (collection, id, name, imageUrl) => {
+            if (confirm(`Are you sure you want to delete "${name}"? This cannot be undone.`)) {
+                try {
+                    if (imageUrl) {
+                        await storage.refFromURL(imageUrl).delete().catch(error => console.warn("Could not delete image:", error.message));
+                    }
+                    await db.collection(collection).doc(id).delete();
+                    
+                    // Reload appropriate data and re-render
+                    switch (collection) {
+                        case 'banners': await loadBanners(); renderBanners(); break;
+                        case 'gallery_images': await loadGallery(); renderGallery(); break;
+                        case 'history': await loadHistory(); renderHistory(); break;
+                        case 'products': await loadProducts(); renderProducts(); break;
+                        case 'categories': await loadCategories(); renderCategories(); populateCategoryDropdown(); break;
+                    }
+                    console.log(`"${name}" deleted successfully.`);
+                } catch(err) {
+                    alert("Error deleting item. Please check console for details.");
+                    console.error("Error deleting item: ", err);
+                }
             }
-
-            document.getElementById('content-modal-title').textContent = `Edit Content: ${key}`;
-            openModal('content-modal');
         };
 
     }); // End DOMContentLoaded
