@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-lang-key="page_title">Lobster Shack Bali - Fresh Seafood</title>
+    <title data-lang-key="ls_page_title">Lobster Shack Bali - Fresh Seafood</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,370 +14,392 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
     <style>
         :root {
-            --font-heading: 'Playfair Display', serif;
-            --font-body: 'Poppins', sans-serif;
-            --color-primary: #D84B42; /* Merah Lobster */
-            --color-secondary: #2D4C5E; /* Biru Gelap / Abu-abu Kebiruan */
-            --color-background: #F8F6F0; /* Krem Muda */
-            --color-surface: #FFFFFF; /* Putih Bersih */
-            --color-text: #333333; /* Hitam Pekat */
-            --color-text-light: #6c757d; /* Abu-abu Teks */
-            --color-border: #E0DACE; /* Garis Krem */
-            --shadow-sm: 0 2px 8px rgba(45, 76, 94, .07);
-            --shadow-md: 0 4px 15px rgba(45, 76, 94, .12);
-            --shadow-lg: 0 8px 30px rgba(45, 76, 94, .2);
-            --border-radius: 12px;
-            --transition-speed: .4s;
-            --container-width: 1240px;
+            --ls-font-heading: 'Playfair Display', serif;
+            --ls-font-body: 'Poppins', sans-serif;
+            --ls-color-primary: #D84B42; /* Merah Lobster */
+            --ls-color-secondary: #2D4C5E; /* Biru Gelap / Abu-abu Kebiruan */
+            --ls-color-background: #F8F6F0; /* Krem Muda */
+            --ls-color-surface: #FFFFFF; /* Putih Bersih */
+            --ls-color-text: #333333; /* Hitam Pekat */
+            --ls-color-text-light: #6c757d; /* Abu-abu Teks */
+            --ls-color-border: #E0DACE; /* Garis Krem */
+            --ls-shadow-sm: 0 4px 12px rgba(45, 76, 94, .1); /* Increased shadow */
+            --ls-shadow-md: 0 8px 25px rgba(45, 76, 94, .15); /* Increased shadow */
+            --ls-shadow-lg: 0 12px 40px rgba(45, 76, 94, .25); /* Increased shadow */
+            --ls-border-radius: 12px;
+            --ls-transition-speed: .4s;
+            --ls-container-width: 1240px;
         }
         *, ::after, ::before { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; font-size: 16px; }
         body {
-            font-family: var(--font-body);
-            background-color: var(--color-background);
-            color: var(--color-text);
+            font-family: var(--ls-font-body);
+            background-color: var(--ls-color-background);
+            color: var(--ls-color-text);
             line-height: 1.8;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
         }
-        body.nav-open { overflow: hidden; }
-        .container { width: 100%; max-width: var(--container-width); margin: 0 auto; padding: 0 24px; }
-        .section { padding: 6rem 0; }
-        .section-header { text-align: center; margin-bottom: 4rem; }
-        .section-header .subtitle {
-            color: var(--color-primary);
-            font-weight: 600;
+        body.ls-nav-open { overflow: hidden; }
+        .ls-container { width: 100%; max-width: var(--ls-container-width); margin: 0 auto; padding: 0 24px; }
+        .ls-section { padding: 8rem 0; } /* Increased padding */
+        .ls-section-header { text-align: center; margin-bottom: 5rem; } /* Increased margin */
+        .ls-section-header .ls-subtitle {
+            color: var(--ls-color-primary);
+            font-weight: 700; /* Bolder */
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: .5rem;
+            letter-spacing: 2px; /* More spacing */
+            margin-bottom: .75rem;
             display: block;
+            font-size: 1.1rem; /* Slightly larger */
         }
-        .section-header .title {
-            font-family: var(--font-heading);
-            font-size: clamp(2.5rem, 5vw, 3.5rem);
+        .ls-section-header .ls-title {
+            font-family: var(--ls-font-heading);
+            font-size: clamp(3rem, 6vw, 4rem); /* Slightly larger */
             font-weight: 700;
-            color: var(--color-secondary);
-            line-height: 1.2;
-            margin-bottom: 1rem;
+            color: var(--ls-color-secondary);
+            line-height: 1.15; /* Tighter line height */
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.5px; /* Tighter for assertiveness */
         }
-        .btn {
+        .ls-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: .75rem;
-            font-family: var(--font-body);
-            font-weight: 600;
-            padding: .875rem 2rem;
+            gap: .85rem; /* Slightly larger gap */
+            font-family: var(--ls-font-body);
+            font-weight: 700; /* Bolder */
+            padding: 1rem 2.25rem; /* Increased padding */
             border-radius: 50px;
-            border: 2px solid var(--color-primary);
+            border: 2px solid var(--ls-color-primary);
             cursor: pointer;
             text-decoration: none;
-            transition: all var(--transition-speed) ease;
-            background-color: var(--color-primary);
-            color: var(--color-surface);
+            transition: all var(--ls-transition-speed) ease;
+            background-color: var(--ls-color-primary);
+            color: var(--ls-color-surface);
             text-align: center;
+            font-size: 1.05rem; /* Slightly larger text */
+            box-shadow: var(--ls-shadow-sm); /* Add initial shadow */
         }
-        .btn:hover {
+        .ls-btn:hover {
             background-color: #b93e36;
             border-color: #b93e36;
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: var(--shadow-md);
+            transform: translateY(-5px) scale(1.02); /* More pronounced lift */
+            box-shadow: var(--ls-shadow-md); /* Stronger shadow on hover */
         }
-        .btn-secondary {
-            background-color: var(--color-surface);
-            color: var(--color-secondary);
-            border-color: var(--color-secondary);
+        .ls-btn-secondary {
+            background-color: var(--ls-color-surface);
+            color: var(--ls-color-secondary);
+            border-color: var(--ls-color-secondary);
+            box-shadow: var(--ls-shadow-sm);
         }
-        .btn-secondary:hover {
-            background-color: var(--color-secondary);
-            color: var(--color-surface);
+        .ls-btn-secondary:hover {
+            background-color: var(--ls-color-secondary);
+            color: var(--ls-color-surface);
+            box-shadow: var(--ls-shadow-md);
         }
-        .main-header {
-            background-color: rgba(255, 255, 255, .85);
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-            padding: 1rem 0;
-            box-shadow: var(--shadow-sm);
+        .ls-main-header {
+            background-color: rgba(255, 255, 255, .9); /* Slightly less transparent */
+            -webkit-backdrop-filter: blur(12px); /* Stronger blur */
+            backdrop-filter: blur(12px);
+            padding: 1.25rem 0; /* Increased padding */
+            box-shadow: var(--ls-shadow-md); /* Stronger header shadow */
             position: sticky;
             top: 0;
             z-index: 1000;
             transition: top 0.3s ease-in-out;
         }
-        .main-header .container { display: flex; justify-content: space-between; align-items: center; }
-        .main-header .logo { height: 55px; z-index: 1001; }
-        .header-actions { display: flex; align-items: center; gap: 1rem; }
-        .language-toggle {
+        .ls-main-header .ls-container { display: flex; justify-content: space-between; align-items: center; }
+        .ls-main-header .ls-logo { height: 65px; z-index: 1001; } /* Larger logo */
+        .ls-header-actions { display: flex; align-items: center; gap: 1.25rem; } /* Increased gap */
+        .ls-language-toggle {
             display: flex;
             background-color: #e9e5d9;
             border-radius: 50px;
-            padding: 4px;
-            border: 1px solid var(--color-border);
+            padding: 5px; /* Slightly larger */
+            border: 1px solid var(--ls-color-border);
+            box-shadow: var(--ls-shadow-sm); /* Added shadow */
         }
-        .lang-btn {
+        .ls-lang-btn {
             background: 0 0;
             border: none;
-            padding: .5rem .75rem;
+            padding: .6rem .85rem; /* Increased padding */
             cursor: pointer;
-            font-weight: 600;
-            color: var(--color-text-light);
+            font-weight: 700; /* Bolder */
+            color: var(--ls-color-text-light);
             border-radius: 50px;
-            transition: all var(--transition-speed) ease;
+            transition: all var(--ls-transition-speed) ease;
         }
-        .lang-btn.active { background: var(--color-primary); color: #fff; }
-        .cart-icon {
+        .ls-lang-btn.active { background: var(--ls-color-primary); color: #fff; box-shadow: var(--ls-shadow-sm); }
+        .ls-cart-icon {
             position: relative;
             cursor: pointer;
-            font-size: 1.5rem;
-            color: var(--color-secondary);
-            margin-right: 1rem;
+            font-size: 1.75rem; /* Larger icon */
+            color: var(--ls-color-secondary);
+            margin-right: 1.25rem;
             transition: color 0.3s ease;
         }
-        .cart-icon:hover {
-            color: var(--color-primary);
+        .ls-cart-icon:hover {
+            color: var(--ls-color-primary);
+            transform: scale(1.05);
         }
-        .cart-badge {
+        .ls-cart-badge {
             position: absolute;
-            top: -8px;
-            right: -8px;
-            background-color: var(--color-primary);
+            top: -10px; /* Adjusted position */
+            right: -10px; /* Adjusted position */
+            background-color: var(--ls-color-primary);
             color: #fff;
-            font-size: .75rem;
-            font-weight: 600;
+            font-size: .8rem; /* Slightly larger */
+            font-weight: 700; /* Bolder */
             border-radius: 50%;
-            padding: 3px 7px;
+            padding: 4px 8px; /* Larger padding */
             line-height: 1;
             transform: scale(0);
             transform-origin: top right;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Springy effect */
         }
-        .cart-badge.has-items {
+        .ls-cart-badge.has-items {
             transform: scale(1);
         }
-        .mobile-menu-toggle {
+        .ls-mobile-menu-toggle {
             display: none;
-            font-size: 1.5rem;
-            color: var(--color-secondary);
+            font-size: 1.8rem; /* Larger icon */
+            color: var(--ls-color-secondary);
             background: transparent;
             border: none;
             cursor: pointer;
             z-index: 1001;
-            padding: .5rem;
+            padding: .75rem;
         }
-        .main-nav {
+        .ls-main-nav {
             display: flex;
             align-items: center;
-            gap: 2.5rem;
+            gap: 3rem; /* Increased gap */
         }
         @media (max-width: 992px) {
-            .main-nav {
+            .ls-main-nav {
                 position: fixed;
                 top: 0;
                 left: 0;
                 width: 100%;
                 height: 100vh;
-                background-color: var(--color-background);
+                background-color: var(--ls-color-background);
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
                 transform: translateY(-100%);
-                transition: transform var(--transition-speed) ease-in-out;
+                transition: transform var(--ls-transition-speed) ease-in-out;
                 z-index: 999;
                 padding-top: 5rem;
             }
-            .main-nav.active { transform: translateY(0); }
-            .nav-links {
+            .ls-main-nav.active { transform: translateY(0); }
+            .ls-nav-links {
                 flex-direction: column;
                 text-align: center;
-                gap: 2rem;
+                gap: 2.5rem; /* Increased gap */
             }
-            .nav-links a { font-size: 1.5rem; padding: .75rem 0; width: 100%; }
-            .nav-links a:after { width: 50%; }
-            .header-actions { z-index: 1001; }
-            .mobile-menu-toggle { display: block; }
+            .ls-nav-links a { font-size: 1.8rem; padding: .85rem 0; width: 100%; } /* Larger font */
+            .ls-nav-links a:after { width: 60%; } /* Wider underline */
+            .ls-header-actions { z-index: 1001; }
+            .ls-mobile-menu-toggle { display: block; }
         }
-        .nav-links { list-style: none; display: flex; gap: 2.5rem; }
-        .nav-links a { text-decoration: none; font-weight: 600; color: var(--color-secondary); position: relative; padding-bottom: .5rem; }
-        .nav-links a:after {
+        .ls-nav-links { list-style: none; display: flex; gap: 3rem; } /* Increased gap */
+        .ls-nav-links a { text-decoration: none; font-weight: 700; /* Bolder */ color: var(--ls-color-secondary); position: relative; padding-bottom: .6rem; font-size: 1.05rem; /* Slightly larger */ }
+        .ls-nav-links a:after {
             content: "";
             position: absolute;
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
-            height: 2px;
-            background-color: var(--color-primary);
-            transition: width var(--transition-speed) ease;
+            height: 3px; /* Thicker underline */
+            background-color: var(--ls-color-primary);
+            transition: width var(--ls-transition-speed) ease;
         }
-        .nav-links a.active:after, .nav-links a:hover:after { width: 100%; }
-        .hero-section { position: relative; }
-        .hero-slider .swiper-slide {
-            height: 90vh;
-            min-height: 700px;
+        .ls-nav-links a.active:after, .ls-nav-links a:hover:after { width: 100%; }
+        .ls-hero-section { position: relative; }
+        .ls-hero-slider .swiper-slide {
+            height: 95vh; /* Slightly taller */
+            min-height: 750px; /* Increased min-height */
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
         }
-        .hero-slider .slide-background {
+        .ls-hero-slider .ls-slide-background {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background-size: cover;
             background-position: center;
-            transform: scale(1.15);
+            transform: scale(1.18); /* Slightly more zoomed in */
         }
-        .hero-slider .swiper-slide-active .slide-background {
+        .ls-hero-slider .swiper-slide-active .ls-slide-background {
             transform: scale(1);
-            transition: transform 8s ease-out;
+            transition: transform 9s ease-out; /* Slower transition */
         }
-        .hero-slider .slide-overlay {
-            background: linear-gradient(rgba(45, 76, 94, .65), rgba(45, 76, 94, .65));
+        .ls-hero-slider .ls-slide-overlay {
+            background: linear-gradient(rgba(45, 76, 94, .75), rgba(45, 76, 94, .75)); /* Darker overlay */
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
         }
-        .hero-content {
+        .ls-hero-content {
             position: relative;
             z-index: 2;
             text-align: center;
             color: #fff;
-            padding: 0 1rem;
+            padding: 0 1.5rem; /* More padding */
         }
-        .hero-content h1 {
-            font-family: var(--font-heading);
-            font-size: clamp(3rem, 7vw, 5.5rem);
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, .5);
+        .ls-hero-content h1 {
+            font-family: var(--ls-font-heading);
+            font-size: clamp(4rem, 8vw, 6rem); /* Larger font */
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, .6); /* Stronger shadow */
+            margin-bottom: 1rem;
         }
-        .hero-content p {
-            font-size: 1.25rem;
-            margin: 1.5rem auto 2.5rem;
-            max-width: 600px;
-            line-height: 1.6;
+        .ls-hero-content p {
+            font-size: 1.35rem; /* Larger font */
+            margin: 1.75rem auto 3rem; /* More margin */
+            max-width: 700px; /* Wider max-width */
+            line-height: 1.7;
+            font-weight: 500;
         }
-        .hero-slider .swiper-button-next, .hero-slider .swiper-button-prev { display: none; }
-        .hero-slider .swiper-pagination-bullet-active { background-color: var(--color-primary); }
-        .timeline { position: relative; max-width: 900px; margin: 4rem auto 0; }
-        .timeline:after {
+        .ls-hero-slider .swiper-button-next, .ls-hero-slider .swiper-button-prev { display: none; }
+        .ls-hero-slider .swiper-pagination-bullet-active { background-color: var(--ls-color-primary); }
+
+        /* About Section - Timeline */
+        .ls-timeline { position: relative; max-width: 1000px; margin: 4rem auto 0; }
+        .ls-timeline:after {
             content: "";
             position: absolute;
-            width: 3px;
-            background-color: var(--color-border);
+            width: 4px; /* Thicker line */
+            background-color: var(--ls-color-border);
             top: 0;
             bottom: 0;
             left: 50%;
-            margin-left: -1.5px;
+            margin-left: -2px; /* Adjusted for thickness */
         }
-        .timeline-item { padding: 10px 40px; position: relative; width: 50%; }
-        .timeline-item.left { left: 0; }
-        .timeline-item.right { left: 50%; }
-        .timeline-item:after {
-            content: "🦞";
+        .ls-timeline-item { padding: 15px 50px; position: relative; width: 50%; } /* Increased padding */
+        .ls-timeline-item.left { left: 0; }
+        .ls-timeline-item.right { left: 50%; }
+        .ls-timeline-item:after {
+            content: "🦞"; /* Keep emoji */
             font-family: sans-serif;
-            font-size: 1rem;
+            font-size: 1.1rem; /* Slightly larger */
             display: flex;
             align-items: center;
             justify-content: center;
             position: absolute;
-            width: 32px;
-            height: 32px;
-            background-color: var(--color-primary);
+            width: 38px; /* Larger circle */
+            height: 38px; /* Larger circle */
+            background-color: var(--ls-color-primary);
             color: #fff;
-            top: 30px;
+            top: 35px; /* Adjusted position */
             border-radius: 50%;
             z-index: 1;
-            box-shadow: 0 0 0 4px var(--color-background);
+            box-shadow: 0 0 0 6px var(--ls-color-background); /* Thicker outline */
         }
-        .timeline-item.left:after { right: -17.5px; }
-        .timeline-item.right:after { left: -17.5px; }
-        .timeline-content {
-            padding: 1.5rem 2rem;
-            background-color: var(--color-surface);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-sm);
-            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        .ls-timeline-item.left:after { right: -21px; } /* Adjusted position */
+        .ls-timeline-item.right:after { left: -21px; } /* Adjusted position */
+        .ls-timeline-content {
+            padding: 1.75rem 2.5rem; /* Increased padding */
+            background-color: var(--ls-color-surface);
+            border-radius: var(--ls-border-radius);
+            box-shadow: var(--ls-shadow-md); /* Stronger initial shadow */
+            transition: transform var(--ls-transition-speed), box-shadow var(--ls-transition-speed);
+            border: 1px solid var(--ls-color-border); /* Added border */
         }
-        .timeline-content:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-md);
+        .ls-timeline-content:hover {
+            transform: translateY(-8px); /* More pronounced lift */
+            box-shadow: var(--ls-shadow-lg); /* Stronger shadow on hover */
         }
-        .timeline-content .year { font-family: var(--font-heading); color: var(--color-primary); font-size: 2rem; }
-        .timeline-content h3 { font-size: 1.3rem; color: var(--color-secondary); margin-top: .5rem; }
-        .featured-slider .swiper-slide { width: 340px; }
-        .featured-slider { padding-bottom: 3rem; }
-        .featured-slider .swiper-pagination-bullets { bottom: 0; }
-        .menu-filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 3rem; }
-        .filter-btn {
+        .ls-timeline-content .ls-year { font-family: var(--ls-font-heading); color: var(--ls-color-primary); font-size: 2.2rem; } /* Larger font */
+        .ls-timeline-content h3 { font-size: 1.45rem; /* Larger font */ color: var(--ls-color-secondary); margin-top: .75rem; line-height: 1.3; }
+        .ls-timeline-content p { font-size: 1.05rem; }
+
+        /* Menu Section */
+        .ls-featured-slider .swiper-slide { width: 360px; } /* Slightly wider */
+        .ls-featured-slider { padding-bottom: 4rem; } /* More padding */
+        .ls-featured-slider .swiper-pagination-bullets { bottom: 0; }
+        .ls-menu-filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.25rem; margin-bottom: 4rem; } /* Increased gap and margin */
+        .ls-filter-btn {
             background: 0 0;
-            border: 2px solid var(--color-border);
-            color: var(--color-text-light);
-            font-weight: 600;
-            padding: .6rem 1.5rem;
+            border: 2px solid var(--ls-color-border);
+            color: var(--ls-color-text-light);
+            font-weight: 700; /* Bolder */
+            padding: .75rem 1.75rem; /* Increased padding */
             border-radius: 50px;
             cursor: pointer;
-            transition: all var(--transition-speed) ease;
+            transition: all var(--ls-transition-speed) ease;
+            font-size: 1rem;
         }
-        .filter-btn.active, .filter-btn:hover {
-            background-color: var(--color-secondary);
+        .ls-filter-btn.active, .ls-filter-btn:hover {
+            background-color: var(--ls-color-secondary);
             color: #fff;
-            border-color: var(--color-secondary);
+            border-color: var(--ls-color-secondary);
+            box-shadow: var(--ls-shadow-sm); /* Added shadow */
         }
-        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
-        .menu-card {
-            background: var(--color-surface);
-            border-radius: var(--border-radius);
+        .ls-menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; } /* Increased gap and min-width */
+        .ls-menu-card {
+            background: var(--ls-color-surface);
+            border-radius: var(--ls-border-radius);
             overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            transition: all var(--transition-speed) ease;
+            box-shadow: var(--ls-shadow-md); /* Stronger initial shadow */
+            transition: all var(--ls-transition-speed) ease;
             display: flex;
             flex-direction: column;
             opacity: 1;
             transform: scale(1);
-            transition: transform 0.4s ease, opacity 0.4s ease;
+            transition: transform 0.4s ease, opacity 0.4s ease, box-shadow 0.4s ease;
+            border: 1px solid var(--ls-color-border); /* Added border */
         }
-        .menu-card.hidden { transform: scale(0.9); opacity: 0; height: 0; padding: 0; margin: 0; border: 0; overflow: hidden; }
-        .menu-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-md); }
-        .menu-card-image { width: 100%; height: 240px; overflow: hidden; }
-        .menu-card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition-speed) ease; }
-        .menu-card:hover .menu-card-image img { transform: scale(1.1); }
-        .menu-card-content { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; text-align: center; }
-        .menu-card h3 { font-family: var(--font-heading); color: var(--color-secondary); font-size: 1.5rem; }
-        .menu-card-price { font-weight: 700; color: var(--color-primary); font-size: 1.375rem; margin: 0.5rem 0 1rem; }
-        .menu-card .description { flex-grow: 1; margin-bottom: 1rem; color: var(--color-text-light); font-size: 0.95rem; }
-        .menu-card-actions {
+        .ls-menu-card.hidden { transform: scale(0.9); opacity: 0; height: 0; padding: 0; margin: 0; border: 0; overflow: hidden; }
+        .ls-menu-card:hover { transform: translateY(-12px); box-shadow: var(--ls-shadow-lg); } /* More pronounced lift and stronger shadow */
+        .ls-menu-card-image { width: 100%; height: 260px; /* Taller image */ overflow: hidden; }
+        .ls-menu-card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--ls-transition-speed) ease; }
+        .ls-menu-card:hover .ls-menu-card-image img { transform: scale(1.15); /* More pronounced zoom */ }
+        .ls-menu-card-content { padding: 1.75rem; flex-grow: 1; display: flex; flex-direction: column; text-align: center; } /* Increased padding */
+        .ls-menu-card h3 { font-family: var(--ls-font-heading); color: var(--ls-color-secondary); font-size: 1.75rem; } /* Larger font */
+        .ls-menu-card-price { font-weight: 700; color: var(--ls-color-primary); font-size: 1.5rem; margin: 0.75rem 0 1.25rem; } /* Larger font and more margin */
+        .ls-menu-card .ls-description { flex-grow: 1; margin-bottom: 1.25rem; color: var(--ls-color-text-light); font-size: 1rem; } /* Slightly larger font */
+        .ls-menu-card-actions {
             display: flex;
-            gap: 0.75rem;
+            gap: 1rem; /* Increased gap */
             margin-top: auto;
             justify-content: center;
             flex-wrap: wrap;
         }
-        .menu-card-actions .btn {
-            padding: 0.7rem 1.2rem;
-            font-size: 0.9rem;
+        .ls-menu-card-actions .ls-btn {
+            padding: 0.85rem 1.5rem; /* Adjusted padding */
+            font-size: 0.95rem; /* Slightly larger */
             flex-grow: 1;
-            min-width: 120px;
+            min-width: 140px; /* Wider min-width */
         }
-        .menu-card-actions .btn:first-child {
+        .ls-menu-card-actions .ls-btn:first-child {
             background-color: transparent;
-            color: var(--color-secondary);
-            border-color: var(--color-secondary);
+            color: var(--ls-color-secondary);
+            border-color: var(--ls-color-secondary);
         }
-        .menu-card-actions .btn:first-child:hover {
-            background-color: var(--color-secondary);
-            color: var(--color-surface);
+        .ls-menu-card-actions .ls-btn:first-child:hover {
+            background-color: var(--ls-color-secondary);
+            color: var(--ls-color-surface);
         }
-        .gallery-section { background: var(--color-surface); }
-        .gallery-grid { columns: 4 250px; column-gap: 1rem; }
-        .gallery-grid a {
+
+        /* Gallery Section */
+        .ls-gallery-section { background: var(--ls-color-surface); }
+        .ls-gallery-grid { columns: 4 280px; column-gap: 1.5rem; } /* Increased column-gap and min-width */
+        .ls-gallery-grid a {
             display: block;
             overflow: hidden;
-            border-radius: 8px;
-            margin-bottom: 1rem;
+            border-radius: 10px; /* Slightly larger radius */
+            margin-bottom: 1.5rem; /* More margin */
             position: relative;
+            box-shadow: var(--ls-shadow-sm); /* Added shadow */
         }
-        .gallery-grid img { width: 100%; display: block; transition: transform var(--transition-speed) ease; }
-        .gallery-grid a:hover img { transform: scale(1.05); }
-        .gallery-grid a::after {
+        .ls-gallery-grid img { width: 100%; display: block; transition: transform var(--ls-transition-speed) ease; }
+        .ls-gallery-grid a:hover img { transform: scale(1.1); /* More pronounced zoom */ }
+        .ls-gallery-grid a::after {
             content: '\f00e';
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
@@ -389,357 +411,386 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: rgba(45, 76, 94, 0.6);
+            background: rgba(45, 76, 94, 0.75); /* Darker overlay */
             color: #fff;
-            font-size: 2rem;
+            font-size: 2.2rem; /* Larger icon */
             opacity: 0;
-            transition: opacity var(--transition-speed) ease;
+            transition: opacity var(--ls-transition-speed) ease;
         }
-        .gallery-grid a:hover::after { opacity: 1; }
-        .main-footer {
-            background-color: var(--color-secondary);
-            color: rgba(255, 255, 255, .8);
-            padding: 4rem 0 2rem;
+        .ls-gallery-grid a:hover::after { opacity: 1; }
+
+        /* Footer */
+        .ls-main-footer {
+            background-color: var(--ls-color-secondary);
+            color: rgba(255, 255, 255, .9); /* Brighter text */
+            padding: 5rem 0 2.5rem; /* Increased padding */
             text-align: center;
         }
-        .main-footer .logo { height: 70px; margin-bottom: 1.5rem; filter: brightness(0) invert(1); }
-        .main-footer p { max-width: 500px; margin: 0 auto 1.5rem; }
-        .footer-socials { display: flex; justify-content: center; gap: 1.5rem; list-style: none; margin-bottom: 2rem; }
-        .footer-socials a { color: #fff; font-size: 1.5rem; transition: color 0.3s ease, transform 0.3s ease; }
-        .footer-socials a:hover { color: var(--color-primary); transform: scale(1.2); }
-        .footer-copyright { border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 2rem; margin-top: 2rem; }
-        .footer-copyright p { font-size: 0.9rem; margin-bottom: 0; }
-        .footer-contact-info {
-            margin-top: 2rem;
+        .ls-main-footer .ls-logo { height: 80px; margin-bottom: 2rem; filter: brightness(0) invert(1); } /* Larger logo */
+        .ls-main-footer p { max-width: 600px; margin: 0 auto 2rem; font-size: 1.05rem; } /* Wider max-width and larger font */
+        .ls-footer-socials { display: flex; justify-content: center; gap: 1.75rem; list-style: none; margin-bottom: 2.5rem; } /* Increased gap and margin */
+        .ls-footer-socials a { color: #fff; font-size: 1.75rem; transition: color 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); } /* Larger icon and springy effect */
+        .ls-footer-socials a:hover { color: var(--ls-color-primary); transform: scale(1.3); } /* More pronounced scale */
+        .ls-footer-copyright { border-top: 1px solid rgba(255, 255, 255, 0.3); padding-top: 2.5rem; margin-top: 2.5rem; } /* Thicker border and more padding */
+        .ls-footer-copyright p { font-size: 0.95rem; margin-bottom: 0; }
+        .ls-footer-contact-info {
+            margin-top: 2.5rem;
             text-align: center;
-            color: rgba(255, 255, 255, .9);
+            color: rgba(255, 255, 255, .95); /* Brighter text */
         }
-        .footer-contact-info h3 {
-            font-family: var(--font-heading);
-            color: var(--color-primary);
-            font-size: 1.7rem;
-            margin-bottom: 1.5rem;
+        .ls-footer-contact-info h3 {
+            font-family: var(--ls-font-heading);
+            color: var(--ls-color-primary);
+            font-size: 2rem; /* Larger font */
+            margin-bottom: 1.75rem; /* More margin */
         }
-        .footer-contact-info ul {
+        .ls-footer-contact-info ul {
             list-style: none;
             padding: 0;
-            margin: 0 auto 1.5rem;
-            max-width: 450px;
-            line-height: 1.6;
+            margin: 0 auto 1.75rem; /* More margin */
+            max-width: 500px; /* Wider max-width */
+            line-height: 1.7;
         }
-        .footer-contact-info li {
+        .ls-footer-contact-info li {
             display: flex;
             align-items: flex-start;
-            gap: 1rem;
-            margin-bottom: 1rem;
+            gap: 1.25rem; /* Increased gap */
+            margin-bottom: 1.25rem; /* Increased margin */
+            font-size: 1.05rem;
         }
-        .footer-contact-info li i {
-            color: var(--color-primary);
-            font-size: 1.1rem;
-            margin-top: 4px;
+        .ls-footer-contact-info li i {
+            color: var(--ls-color-primary);
+            font-size: 1.25rem; /* Larger icon */
+            margin-top: 5px;
             flex-shrink: 0;
-            width: 20px;
+            width: 25px; /* Wider width for icon */
             text-align: center;
         }
-        .footer-contact-info li span:first-of-type {
-            font-weight: 700;
+        .ls-footer-contact-info li span:first-of-type {
+            font-weight: 700; /* Bolder */
             color: #fff;
             flex-shrink: 0;
-            width: 120px;
+            width: 140px; /* Wider label */
             text-align: left;
         }
-        .footer-contact-info li span:last-of-type {
+        .ls-footer-contact-info li span:last-of-type {
             flex-grow: 1;
             text-align: left;
-            word-break: break-word; /* FIX: Prevents text overflow */
+            word-break: break-word;
         }
-        .modal-overlay {
+
+        /* Modals */
+        .ls-modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, .6);
-            -webkit-backdrop-filter: blur(8px);
-            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, .7); /* Darker overlay */
+            -webkit-backdrop-filter: blur(10px); /* Stronger blur */
+            backdrop-filter: blur(10px);
             z-index: 2000;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 1rem;
+            padding: 1.5rem; /* More padding */
             opacity: 0;
             visibility: hidden;
-            transition: opacity var(--transition-speed) ease, visibility 0s var(--transition-speed);
+            transition: opacity var(--ls-transition-speed) ease, visibility 0s var(--ls-transition-speed);
         }
-        .modal-overlay.visible { opacity: 1; visibility: visible; transition-delay: 0s; }
-        .modal-content {
-            background: var(--color-background);
-            border-radius: var(--border-radius);
+        .ls-modal-overlay.visible { opacity: 1; visibility: visible; transition-delay: 0s; }
+        .ls-modal-content {
+            background: var(--ls-color-background);
+            border-radius: var(--ls-border-radius);
             width: 100%;
-            max-width: 550px;
+            max-width: 600px; /* Wider max-width */
             max-height: 90vh;
             overflow-y: auto;
             position: relative;
-            transform: scale(.9);
-            transition: transform var(--transition-speed) ease;
+            transform: scale(.95); /* Less initial scale */
+            transition: transform var(--ls-transition-speed) cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Springy effect */
+            box-shadow: var(--ls-shadow-lg); /* Stronger shadow */
+            border: 1px solid var(--ls-color-border); /* Added border */
         }
-        .modal-overlay.visible .modal-content { transform: scale(1); }
-        .modal-header {
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid var(--color-border);
+        .ls-modal-overlay.visible .ls-modal-content { transform: scale(1); }
+        .ls-modal-header {
+            padding: 1.75rem 2.25rem; /* Increased padding */
+            border-bottom: 1px solid var(--ls-color-border);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: var(--color-surface);
-            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            background-color: var(--ls-color-surface);
+            border-radius: var(--ls-border-radius) var(--ls-border-radius) 0 0;
         }
-        .modal-header h2 { font-family: var(--font-heading); color: var(--color-secondary); font-size: 1.5rem; }
-        .modal-close-btn { font-size: 1.75rem; background: 0 0; border: none; cursor: pointer; color: #aaa; transition: color 0.3s ease; }
-        .modal-close-btn:hover { color: var(--color-primary); }
-        .modal-body { padding: 1.5rem 2rem; }
-        .form-group { margin-bottom: 1.25rem; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: .5rem; color: var(--color-secondary); }
-        .form-group input, .form-group textarea {
+        .ls-modal-header h2 { font-family: var(--ls-font-heading); color: var(--ls-color-secondary); font-size: 1.8rem; } /* Larger font */
+        .ls-modal-close-btn { font-size: 2rem; /* Larger icon */ background: 0 0; border: none; cursor: pointer; color: #888; transition: color 0.3s ease; }
+        .ls-modal-close-btn:hover { color: var(--ls-color-primary); transform: rotate(90deg); }
+        .ls-modal-body { padding: 1.75rem 2.25rem; } /* Increased padding */
+        .ls-form-group { margin-bottom: 1.5rem; } /* Increased margin */
+        .ls-form-group label { display: block; font-weight: 700; /* Bolder */ margin-bottom: .6rem; color: var(--ls-color-secondary); font-size: 1.05rem; }
+        .ls-form-group input, .ls-form-group textarea {
             width: 100%;
-            padding: .8rem 1rem;
+            padding: .9rem 1.1rem; /* Increased padding */
             border-radius: 8px;
-            border: 1px solid var(--color-border);
-            font-family: var(--font-body);
-            font-size: 1rem;
+            border: 1px solid var(--ls-color-border);
+            font-family: var(--ls-font-body);
+            font-size: 1.05rem; /* Slightly larger */
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,.05); /* subtle inset shadow */
         }
-        .form-group input:focus, .form-group textarea:focus {
+        .ls-form-group input:focus, .ls-form-group textarea:focus {
             outline: none;
-            border-color: var(--color-primary);
-            box-shadow: 0 0 0 3px rgba(216, 75, 66, 0.2);
+            border-color: var(--ls-color-primary);
+            box-shadow: 0 0 0 4px rgba(216, 75, 66, 0.25); /* Stronger focus shadow */
         }
-        #order-modal .modal-content {
-            max-width: 650px;
+        #ls-order-modal .ls-modal-content {
+            max-width: 700px; /* Wider for order details */
         }
-        #modal-product-details {
+        #ls-modal-product-details {
             text-align: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid var(--color-border);
+            margin-bottom: 2rem; /* More margin */
+            padding-bottom: 2rem; /* More padding */
+            border-bottom: 1px solid var(--ls-color-border);
         }
-        #modal-product-details img {
-            width: 120px;
-            height: 120px;
+        #ls-modal-product-details img {
+            width: 140px; /* Larger image */
+            height: 140px; /* Larger image */
             object-fit: cover;
             border-radius: 50%;
-            margin-bottom: 1rem;
-            border: 4px solid var(--color-surface);
-            box-shadow: var(--shadow-md);
+            margin-bottom: 1.25rem; /* More margin */
+            border: 5px solid var(--ls-color-surface); /* Thicker border */
+            box-shadow: var(--ls-shadow-md); /* Stronger shadow */
         }
-        #modal-product-details h3 {
-            font-family: var(--font-heading);
-            color: var(--color-secondary);
-            font-size: 1.75rem;
-            margin-bottom: 0.25rem;
+        #ls-modal-product-details h3 {
+            font-family: var(--ls-font-heading);
+            color: var(--ls-color-secondary);
+            font-size: 2rem; /* Larger font */
+            margin-bottom: 0.5rem;
         }
-        #modal-product-details .menu-card-price {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: var(--color-primary);
+        #ls-modal-product-details .ls-menu-card-price {
+            font-size: 1.6rem; /* Larger font */
+            font-weight: 700; /* Bolder */
+            color: var(--ls-color-primary);
         }
-        #modal-product-details > h3.summary-title { font-size: 1.5rem; }
-        #modal-product-details > div.summary-item { font-size: 0.95rem; }
-        .location-input-group {
+        #ls-modal-product-details > h3.ls-summary-title { font-size: 1.7rem; margin-bottom: 1.5rem;}
+        #ls-modal-product-details > div.ls-summary-item { font-size: 1.05rem; margin-bottom: 0.75rem; }
+        .ls-location-input-group {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.75rem; /* Increased gap */
             align-items: flex-end;
         }
-        .location-input-group input {
+        .ls-location-input-group input {
             flex-grow: 1;
         }
-        .location-input-group .btn {
-            padding: .8rem 1rem;
-            font-size: 0.9rem;
+        .ls-location-input-group .ls-btn {
+            padding: .9rem 1.2rem; /* Adjusted padding */
+            font-size: 0.95rem; /* Slightly larger */
             white-space: nowrap;
         }
-        #address-map {
-            height: 250px;
+        #ls-address-map {
+            height: 300px; /* Taller map */
             width: 100%;
-            margin-top: 15px;
+            margin-top: 20px; /* More margin */
             border-radius: 8px;
             background-color: #eee;
-            border: 1px solid var(--color-border);
+            border: 1px solid var(--ls-color-border);
+            box-shadow: var(--ls-shadow-sm);
         }
-        #cart-modal .modal-content {
-            max-width: 700px;
+
+        /* Cart Modal */
+        #ls-cart-modal .ls-modal-content {
+            max-width: 750px; /* Wider */
         }
-        .cart-items-list {
+        .ls-cart-items-list {
             list-style: none;
             padding: 0;
             margin: 0;
         }
-        .cart-item {
+        .ls-cart-item {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--color-border);
+            gap: 1.75rem; /* Increased gap */
+            padding: 1.25rem 0; /* Increased padding */
+            border-bottom: 1px solid var(--ls-color-border);
         }
-        .cart-item:last-child {
+        .ls-cart-item:last-child {
             border-bottom: none;
         }
-        .cart-item-img {
-            width: 80px;
-            height: 80px;
+        .ls-cart-item-img {
+            width: 90px; /* Larger image */
+            height: 90px; /* Larger image */
             object-fit: cover;
             border-radius: 8px;
-            border: 1px solid var(--color-border);
+            border: 1px solid var(--ls-color-border);
+            box-shadow: var(--ls-shadow-sm);
         }
-        .cart-item-details {
+        .ls-cart-item-details {
             flex-grow: 1;
         }
-        .cart-item-details h4 {
-            font-family: var(--font-heading);
-            color: var(--color-secondary);
-            font-size: 1.2rem;
-            margin-bottom: .25rem;
+        .ls-cart-item-details h4 {
+            font-family: var(--ls-font-heading);
+            color: var(--ls-color-secondary);
+            font-size: 1.35rem; /* Larger font */
+            margin-bottom: .35rem;
         }
-        .cart-item-details p {
-            font-size: 0.9rem;
-            color: var(--color-text-light);
-            margin-bottom: .5rem;
+        .ls-cart-item-details p {
+            font-size: 1rem; /* Slightly larger font */
+            color: var(--ls-color-text-light);
+            margin-bottom: .6rem;
         }
-        .cart-item-quantity {
+        .ls-cart-item-quantity {
             display: flex;
             align-items: center;
-            gap: .5rem;
+            gap: .75rem; /* Increased gap */
+            margin-top: 0.5rem;
         }
-        .cart-item-quantity button {
-            background-color: var(--color-primary);
+        .ls-cart-item-quantity button {
+            background-color: var(--ls-color-primary);
             color: #fff;
             border: none;
             border-radius: 4px;
-            width: 30px;
-            height: 30px;
-            font-size: 1rem;
+            width: 35px; /* Larger buttons */
+            height: 35px; /* Larger buttons */
+            font-size: 1.1rem; /* Larger font */
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
-        .cart-item-quantity button:hover {
+        .ls-cart-item-quantity button:hover {
             background-color: #b93e36;
+            transform: scale(1.05);
         }
-        .cart-item-quantity span {
-            font-weight: 600;
-            width: 25px;
+        .ls-cart-item-quantity span {
+            font-weight: 700; /* Bolder */
+            width: 30px; /* Wider span */
             text-align: center;
-        }
-        .cart-item-price {
-            font-weight: 700;
-            color: var(--color-primary);
             font-size: 1.1rem;
+        }
+        .ls-cart-item-price {
+            font-weight: 700;
+            color: var(--ls-color-primary);
+            font-size: 1.25rem; /* Larger font */
             white-space: nowrap;
             margin-left: auto;
         }
-        .cart-summary {
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--color-border);
-            font-size: 1.1rem;
+        .ls-cart-summary {
+            margin-top: 2.5rem; /* More margin */
+            padding-top: 2rem; /* More padding */
+            border-top: 1px solid var(--ls-color-border);
+            font-size: 1.15rem; /* Slightly larger font */
         }
-        .cart-summary div {
+        .ls-cart-summary div {
             display: flex;
             justify-content: space-between;
-            margin-bottom: .5rem;
+            margin-bottom: .75rem; /* More margin */
         }
-        .cart-summary .total {
+        .ls-cart-summary .ls-total {
             font-weight: 700;
-            font-size: 1.3rem;
-            color: var(--color-secondary);
+            font-size: 1.45rem; /* Larger font */
+            color: var(--ls-color-secondary);
         }
-        .cart-actions {
+        .ls-cart-actions {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
-            margin-top: 2rem;
+            gap: 1.25rem; /* Increased gap */
+            margin-top: 2.5rem; /* More margin */
         }
-        .cart-actions .btn {
+        .ls-cart-actions .ls-btn {
             width: 100%;
         }
-        .empty-cart-message {
+        .ls-empty-cart-message {
             text-align: center;
-            padding: 2rem;
-            color: var(--color-text-light);
+            padding: 3rem; /* More padding */
+            color: var(--ls-color-text-light);
             font-style: italic;
+            font-size: 1.1rem;
         }
-        .toast-notification {
+
+        /* Toast Notification */
+        .ls-toast-notification {
             position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background-color: var(--color-secondary);
+            bottom: 2.5rem; /* More margin */
+            right: 2.5rem; /* More margin */
+            background-color: var(--ls-color-secondary);
             color: #fff;
-            padding: 1rem 1.5rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-lg);
+            padding: 1.25rem 1.75rem; /* Increased padding */
+            border-radius: var(--ls-border-radius);
+            box-shadow: var(--ls-shadow-lg); /* Stronger shadow */
             z-index: 3000;
             display: flex;
             align-items: center;
-            gap: 1rem;
-            transform: translateX(calc(100% + 2rem));
-            transition: transform .5s ease-in-out;
+            gap: 1.25rem; /* Increased gap */
+            transform: translateX(calc(100% + 2.5rem));
+            transition: transform .6s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Springy effect */
+            border: 1px solid rgba(255,255,255,.2);
         }
-        .toast-notification.show { transform: translateX(0); }
-        .toast-notification.error { background-color: var(--color-primary); }
-        .toast-notification.success { background-color: #28a745; }
-        .toast-notification.info { background-color: var(--color-secondary); }
-        .toast-notification i { font-size: 1.5rem; }
-        .toast-notification p { margin: 0; }
+        .ls-toast-notification.show { transform: translateX(0); }
+        .ls-toast-notification.error { background-color: var(--ls-color-primary); }
+        .ls-toast-notification.success { background-color: #28a745; }
+        .ls-toast-notification.info { background-color: var(--ls-color-secondary); }
+        .ls-toast-notification i { font-size: 1.8rem; } /* Larger icon */
+        .ls-toast-notification p { margin: 0; font-size: 1.05rem; }
+
+        /* Responsive Adjustments */
         @media (max-width: 768px) {
-            .timeline:after { left: 31px; }
-            .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; }
-            .timeline-item.left, .timeline-item.right { left: 0%; }
-            .timeline-item.left:after, .timeline-item.right:after { left: 15px; }
-            .gallery-grid { columns: 2 200px; }
-            .hero-slider .swiper-slide { min-height: 600px; }
-            .hero-content h1 { font-size: clamp(2.5rem, 8vw, 4rem); }
-            .hero-content p { font-size: 1rem; margin: 1rem auto 2rem; }
-            .section { padding: 4rem 0; }
-            .section-header { margin-bottom: 2.5rem; }
-            .section-header .title { font-size: clamp(2rem, 6vw, 3rem); }
-            .menu-card-actions { flex-direction: column; }
-            .menu-card-actions .btn { width: 100%; }
-            .footer-contact-info ul { max-width: 100%; padding: 0 1rem; }
-            .footer-contact-info li { justify-content: flex-start; }
+            .ls-section { padding: 5rem 0; }
+            .ls-section-header { margin-bottom: 3.5rem; }
+            .ls-section-header .ls-title { font-size: clamp(2.5rem, 7vw, 3.5rem); }
+            .ls-timeline:after { left: 35px; } /* Adjusted position */
+            .ls-timeline-item { width: 100%; padding-left: 80px; padding-right: 30px; } /* Increased padding */
+            .ls-timeline-item.left, .ls-timeline-item.right { left: 0%; }
+            .ls-timeline-item.left:after, .ls-timeline-item.right:after { left: 20px; } /* Adjusted position */
+            .ls-gallery-grid { columns: 2 250px; }
+            .ls-hero-slider .swiper-slide { min-height: 650px; }
+            .ls-hero-content h1 { font-size: clamp(3.5rem, 9vw, 5rem); }
+            .ls-hero-content p { font-size: 1.15rem; margin: 1.25rem auto 2.5rem; }
+            .ls-menu-card-actions { flex-direction: column; }
+            .ls-menu-card-actions .ls-btn { width: 100%; }
+            .ls-footer-contact-info ul { max-width: 100%; padding: 0 1.5rem; }
+            .ls-footer-contact-info li { justify-content: flex-start; }
+            .ls-main-header .ls-logo { height: 55px; }
+            .ls-cart-item { flex-wrap: wrap; justify-content: space-between; gap: 1rem; }
+            .ls-cart-item-img { order: -1; margin-right: 0; }
+            .ls-cart-item-details { flex-basis: 100%; text-align: center; }
+            .ls-cart-item-quantity { width: 100%; justify-content: center; margin-top: .75rem; }
+            .ls-cart-item-price { margin-left: 0; width: 100%; text-align: center; margin-top: .75rem;}
         }
         @media (max-width: 576px) {
-            .gallery-grid { columns: 1; }
-            .modal-content { border-radius: 0; }
-            .modal-header, .modal-body { padding: 1rem 1.25rem; }
-            .location-input-group { flex-direction: column; align-items: stretch; }
-            .location-input-group .btn { width: 100%; }
-            .cart-item { flex-wrap: wrap; justify-content: space-between; gap: .75rem; }
-            .cart-item-img { order: -1; margin-right: 0; }
-            .cart-item-details { flex-basis: 100%; text-align: center; }
-            .cart-item-quantity { width: 100%; justify-content: center; margin-top: .5rem; }
-            .cart-item-price { margin-left: 0; width: 100%; text-align: center; margin-top: .5rem;}
+            .ls-gallery-grid { columns: 1; }
+            .ls-modal-content { border-radius: 0; }
+            .ls-modal-header, .ls-modal-body { padding: 1.25rem 1.5rem; }
+            .ls-location-input-group { flex-direction: column; align-items: stretch; }
+            .ls-location-input-group .ls-btn { width: 100%; }
+            .ls-toast-notification {
+                bottom: 1.5rem;
+                right: 1.5rem;
+                left: 1.5rem;
+                transform: translateX(calc(100% + 1.5rem));
+            }
+            .ls-toast-notification.show { transform: translateX(0); }
         }
     </style>
 </head>
 <body>
-    <header class="main-header">
-        <div class="container">
-            <a href="#home"><img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo Lobster Shack" class="logo"></a>
+    <header class="ls-main-header">
+        <div class="ls-container">
+            <a href="#home"><img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo Lobster Shack" class="ls-logo"></a>
             
-            <div class="header-actions">
-                <div class="language-toggle">
-                    <button class="lang-btn active" data-lang="id">ID</button>
-                    <button class="lang-btn" data-lang="en">EN</button>
+            <div class="ls-header-actions">
+                <div class="ls-language-toggle">
+                    <button class="ls-lang-btn active" data-lang="id">ID</button>
+                    <button class="ls-lang-btn" data-lang="en">EN</button>
                 </div>
-                <div class="cart-icon" id="cart-icon" aria-label="Shopping Cart">
+                <div class="ls-cart-icon" id="ls-cart-icon" aria-label="Shopping Cart">
                     <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-badge" id="cart-badge">0</span>
+                    <span class="ls-cart-badge" id="ls-cart-badge">0</span>
                 </div>
-                <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle Menu">
+                <button class="ls-mobile-menu-toggle" id="ls-mobile-menu-toggle" aria-label="Toggle Menu">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
             
-            <nav class="main-nav" id="main-nav">
-                <ul class="nav-links">
+            <nav class="ls-main-nav" id="ls-main-nav">
+                <ul class="ls-nav-links">
                     <li><a href="#home" class="active" data-lang-key="nav_home">Home</a></li>
                     <li><a href="#about" data-lang-key="nav_about">About Us</a></li>
                     <li><a href="#menu" data-lang-key="nav_menu">Menu</a></li>
@@ -750,72 +801,72 @@
     </header>
 
     <main>
-        <section id="home" class="hero-section">
-            <div class="swiper hero-slider">
-                <div class="swiper-wrapper" id="hero-slider-wrapper">
+        <section id="home" class="ls-hero-section">
+            <div class="swiper ls-hero-slider">
+                <div class="swiper-wrapper" id="ls-hero-slider-wrapper">
                 </div>
                 <div class="swiper-pagination"></div>
 
-                <div class="hero-content" data-aos="fade-up">
+                <div class="ls-hero-content" data-aos="fade-up">
                     <h1 data-lang-key="hero_title">Savor the Freshness</h1>
                     <p data-lang-key="hero_subtitle">The best lobster and seafood experience in the heart of Bali.</p>
-                    <a href="#menu" class="btn"><i class="fas fa-utensils"></i> <span data-lang-key="hero_button">Explore Our Menu</span></a>
+                    <a href="#menu" class="ls-btn"><i class="fas fa-utensils"></i> <span data-lang-key="hero_button">Explore Our Menu</span></a>
                 </div>
             </div>
         </section>
 
-        <section id="about" class="section">
-            <div class="container">
-                <div class="section-header" data-aos="fade-up">
-                    <h2 class="title" data-lang-key="history_title">Our Journey</h2>
+        <section id="about" class="ls-section">
+            <div class="ls-container">
+                <div class="ls-section-header" data-aos="fade-up">
+                    <h2 class="ls-title" data-lang-key="history_title">Our Journey</h2>
                 </div>
-                <div class="timeline" id="history-timeline">
+                <div class="ls-timeline" id="ls-history-timeline">
                 </div>
             </div>
         </section>
 
-        <section id="menu" class="section">
-            <div class="container">
-                <div class="section-header" data-aos="fade-up">
-                    <span class="subtitle" data-lang-key="menu_section_subtitle">Featured Dishes</span>
-                    <h2 class="title" data-lang-key="menu_title">Chef's Recommendations</h2>
+        <section id="menu" class="ls-section">
+            <div class="ls-container">
+                <div class="ls-section-header" data-aos="fade-up">
+                    <span class="ls-subtitle" data-lang-key="menu_section_subtitle">Featured Dishes</span>
+                    <h2 class="ls-title" data-lang-key="menu_title">Chef's Recommendations</h2>
                 </div>
                 <div data-aos="fade-up">
-                     <div class="swiper featured-slider">
-                        <div class="swiper-wrapper" id="featured-menu-wrapper">
+                     <div class="swiper ls-featured-slider">
+                        <div class="swiper-wrapper" id="ls-featured-menu-wrapper">
                         </div>
                         <div class="swiper-pagination"></div>
                      </div>
                 </div>
 
-                <div class="section-header" data-aos="fade-up" style="margin-top: 5rem;">
-                     <h2 class="title" data-lang-key="full_menu_title">Our Full Menu</h2>
+                <div class="ls-section-header" data-aos="fade-up" style="margin-top: 5rem;">
+                     <h2 class="ls-title" data-lang-key="full_menu_title">Our Full Menu</h2>
                 </div>
-                <div class="menu-filters" id="menu-filters" data-aos="fade-up">
+                <div class="ls-menu-filters" id="ls-menu-filters" data-aos="fade-up">
                 </div>
-                <div class="menu-grid" id="menu-grid" data-aos="fade-up">
+                <div class="ls-menu-grid" id="ls-menu-grid" data-aos="fade-up">
                 </div>
             </div>
         </section>
 
-        <section id="gallery" class="gallery-section section">
-            <div class="container">
-                 <div class="section-header" data-aos="fade-up">
-                    <span class="subtitle" data-lang-key="gallery_section_subtitle">Our Moments</span>
-                    <h2 class="title" data-lang-key="gallery_title">Tasteful Memories</h2>
+        <section id="gallery" class="ls-gallery-section ls-section">
+            <div class="ls-container">
+                 <div class="ls-section-header" data-aos="fade-up">
+                    <span class="ls-subtitle" data-lang-key="gallery_section_subtitle">Our Moments</span>
+                    <h2 class="ls-title" data-lang-key="gallery_title">Tasteful Memories</h2>
                 </div>
-                <div class="gallery-grid" id="gallery-grid" data-aos="fade-up">
+                <div class="ls-gallery-grid" id="ls-gallery-grid" data-aos="fade-up">
                 </div>
             </div>
         </section>
     </main>
     
-    <footer class="main-footer">
-        <div class="container">
-            <img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo Lobster Shack" class="logo">
+    <footer class="ls-main-footer">
+        <div class="ls-container">
+            <img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo Lobster Shack" class="ls-logo">
             <p data-lang-key="footer_description">Experience the finest catch of the day, grilled to perfection, in a cozy and inviting atmosphere. We look forward to welcoming you.</p>
             
-            <div class="footer-contact-info">
+            <div class="ls-footer-contact-info">
                 <h3 data-lang-key="footer_contact_title">Contact Us</h3>
                 <ul>
                     <li>
@@ -840,44 +891,44 @@
                     </li>
                 </ul>
             </div>
-            <ul class="footer-socials">
+            <ul class="ls-footer-socials">
                 <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
                 <li><a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a></li>
                 <li><a href="#" aria-label="TripAdvisor"><i class="fab fa-tripadvisor"></i></a></li>
             </ul>
-            <div class="footer-copyright">
+            <div class="ls-footer-copyright">
                 <p data-lang-key="footer_copyright">© 2025 Lobster Shack Bali. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
 
-    <div id="order-modal" class="modal-overlay">
-      <div class="modal-content">
-        <div class="modal-header">
+    <div id="ls-order-modal" class="ls-modal-overlay">
+      <div class="ls-modal-content">
+        <div class="ls-modal-header">
             <h2 data-lang-key="modal_title">Place Your Order</h2>
-            <button class="modal-close-btn" aria-label="Close modal">&times;</button>
+            <button class="ls-modal-close-btn" aria-label="Close modal">&times;</button>
         </div>
-        <div class="modal-body">
-            <form id="order-form">
-                <div id="modal-product-details">
+        <div class="ls-modal-body">
+            <form id="ls-order-form">
+                <div id="ls-modal-product-details">
                 </div>
-                <div class="form-group">
+                <div class="ls-form-group">
                     <label for="customer-name" data-lang-key="modal_name_label">Name</label>
                     <input type="text" id="customer-name" required>
                 </div>
-                <div class="form-group">
+                <div class="ls-form-group">
                     <label for="customer-phone" data-lang-key="modal_phone_label">Phone Number</label>
                     <input type="tel" id="customer-phone" required>
                 </div>
-                <div class="form-group">
+                <div class="ls-form-group">
                     <label for="customer-address" data-lang-key="footer_address_label">Address</label>
-                    <div class="location-input-group">
+                    <div class="ls-location-input-group">
                         <input type="text" id="customer-address" placeholder="Ketik untuk mencari alamat..." required>
-                        <button type="button" class="btn" id="detect-location-btn"><i class="fas fa-location-dot"></i> <span data-lang-key="modal_detect_location">Detect Location</span></button>
+                        <button type="button" class="ls-btn" id="ls-detect-location-btn"><i class="fas fa-location-dot"></i> <span data-lang-key="modal_detect_location">Detect Location</span></button>
                     </div>
-                    <div id="address-map"></div>
+                    <div id="ls-address-map"></div>
                 </div>
-                <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                <button type="submit" class="ls-btn" style="width: 100%; margin-top: 1.5rem;">
                     <i class="fas fa-paper-plane"></i> <span data-lang-key="modal_submit_button">Submit Order</span>
                 </button>
             </form>
@@ -885,41 +936,41 @@
       </div>
     </div>
     
-    <div id="cart-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
+    <div id="ls-cart-modal" class="ls-modal-overlay">
+        <div class="ls-modal-content">
+            <div class="ls-modal-header">
                 <h2 data-lang-key="cart_title">Your Cart</h2>
-                <button class="modal-close-btn" aria-label="Close cart modal">&times;</button>
+                <button class="ls-modal-close-btn" aria-label="Close cart modal">&times;</button>
             </div>
-            <div class="modal-body">
-                <ul class="cart-items-list" id="cart-items-list">
+            <div class="ls-modal-body">
+                <ul class="ls-cart-items-list" id="ls-cart-items-list">
                 </ul>
-                <div class="empty-cart-message" id="empty-cart-message" style="display:none;">Your cart is empty.</div>
-                <div class="cart-summary">
+                <div class="ls-empty-cart-message" id="ls-empty-cart-message" style="display:none;">Your cart is empty.</div>
+                <div class="ls-cart-summary">
                     <div>
                         <span data-lang-key="cart_subtotal">Subtotal:</span>
-                        <span id="cart-subtotal">Rp 0</span>
+                        <span id="ls-cart-subtotal">Rp 0</span>
                     </div>
                     <div>
                         <span data-lang-key="cart_delivery_fee">Delivery Fee:</span>
-                        <span id="cart-delivery-fee">Rp 20.000</span>
+                        <span id="ls-cart-delivery-fee">Rp 20.000</span>
                     </div>
-                    <div class="total">
+                    <div class="ls-total">
                         <span data-lang-key="cart_total">Total:</span>
-                        <span id="cart-total">Rp 0</span>
+                        <span id="ls-cart-total">Rp 0</span>
                     </div>
                 </div>
-                <div class="cart-actions">
-                    <button class="btn" id="checkout-btn" data-lang-key="cart_checkout_button">Proceed to Checkout</button>
-                    <button class="btn btn-secondary" id="continue-shopping-btn" data-lang-key="cart_continue_shopping">Continue Shopping</button>
+                <div class="ls-cart-actions">
+                    <button class="ls-btn" id="ls-checkout-btn" data-lang-key="cart_checkout_button">Proceed to Checkout</button>
+                    <button class="ls-btn ls-btn-secondary" id="ls-continue-shopping-btn" data-lang-key="cart_continue_shopping">Continue Shopping</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="toast" class="toast-notification">
-        <i id="toast-icon" class="fas fa-check-circle"></i>
-        <p id="toast-message">Notification</p>
+    <div id="ls-toast" class="ls-toast-notification">
+        <i id="ls-toast-icon" class="fas fa-check-circle"></i>
+        <p id="ls-toast-message">Notification</p>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
@@ -966,35 +1017,35 @@ const firebaseConfig = {
 
     const domElements = {
         body: document.body,
-        mainNav: document.getElementById('main-nav'),
-        mobileMenuToggle: document.getElementById('mobile-menu-toggle'),
-        langToggleContainer: document.querySelector('.language-toggle'),
-        heroSliderWrapper: document.getElementById('hero-slider-wrapper'),
-        historyTimeline: document.getElementById('history-timeline'),
-        featuredMenuWrapper: document.getElementById('featured-menu-wrapper'),
-        menuGrid: document.getElementById('menu-grid'),
-        menuFilters: document.getElementById('menu-filters'),
-        galleryGrid: document.getElementById('gallery-grid'),
-        orderModal: document.getElementById('order-modal'),
-        orderForm: document.getElementById('order-form'),
-        modalProductDetails: document.getElementById('modal-product-details'),
-        modalCloseBtns: document.querySelectorAll('.modal-close-btn'),
+        mainNav: document.getElementById('ls-main-nav'),
+        mobileMenuToggle: document.getElementById('ls-mobile-menu-toggle'),
+        langToggleContainer: document.querySelector('.ls-language-toggle'),
+        heroSliderWrapper: document.getElementById('ls-hero-slider-wrapper'),
+        historyTimeline: document.getElementById('ls-history-timeline'),
+        featuredMenuWrapper: document.getElementById('ls-featured-menu-wrapper'),
+        menuGrid: document.getElementById('ls-menu-grid'),
+        menuFilters: document.getElementById('ls-menu-filters'),
+        galleryGrid: document.getElementById('ls-gallery-grid'),
+        orderModal: document.getElementById('ls-order-modal'),
+        orderForm: document.getElementById('ls-order-form'),
+        modalProductDetails: document.getElementById('ls-modal-product-details'),
+        modalCloseBtns: document.querySelectorAll('.ls-modal-close-btn'),
         customerAddressInput: document.getElementById('customer-address'),
-        detectLocationBtn: document.getElementById('detect-location-btn'),
-        addressMap: document.getElementById('address-map'),
-        toast: document.getElementById('toast'),
-        toastIcon: document.getElementById('toast-icon'),
-        toastMessage: document.getElementById('toast-message'),
-        cartIcon: document.getElementById('cart-icon'),
-        cartBadge: document.getElementById('cart-badge'),
-        cartModal: document.getElementById('cart-modal'),
-        cartItemsList: document.getElementById('cart-items-list'),
-        emptyCartMessage: document.getElementById('empty-cart-message'),
-        cartSubtotal: document.getElementById('cart-subtotal'),
-        cartDeliveryFee: document.getElementById('cart-delivery-fee'),
-        cartTotal: document.getElementById('cart-total'),
-        checkoutBtn: document.getElementById('checkout-btn'),
-        continueShoppingBtn: document.getElementById('continue-shopping-btn')
+        detectLocationBtn: document.getElementById('ls-detect-location-btn'),
+        addressMap: document.getElementById('ls-address-map'),
+        toast: document.getElementById('ls-toast'),
+        toastIcon: document.getElementById('ls-toast-icon'),
+        toastMessage: document.getElementById('ls-toast-message'),
+        cartIcon: document.getElementById('ls-cart-icon'),
+        cartBadge: document.getElementById('ls-cart-badge'),
+        cartModal: document.getElementById('ls-cart-modal'),
+        cartItemsList: document.getElementById('ls-cart-items-list'),
+        emptyCartMessage: document.getElementById('ls-empty-cart-message'),
+        cartSubtotal: document.getElementById('ls-cart-subtotal'),
+        cartDeliveryFee: document.getElementById('ls-cart-delivery-fee'),
+        cartTotal: document.getElementById('ls-cart-total'),
+        checkoutBtn: document.getElementById('ls-checkout-btn'),
+        continueShoppingBtn: document.getElementById('ls-continue-shopping-btn')
     };
 
     window.initMaps = () => {
@@ -1003,7 +1054,7 @@ const firebaseConfig = {
             zoom: 15,
             mapTypeControl: false,
             streetViewControl: false,
-            fullscreenControl: true // FIX: Mengaktifkan tombol fullscreen
+            fullscreenControl: true
         });
         marker = new google.maps.Marker({
             position: currentAddressLatLng,
@@ -1070,11 +1121,11 @@ const firebaseConfig = {
     const renderBanners = () => {
         domElements.heroSliderWrapper.innerHTML = siteData.banners.map(banner => `
             <div class="swiper-slide">
-                <div class="slide-background" style="background-image: url('${banner.image_url}');"></div>
-                <div class="slide-overlay"></div>
+                <div class="ls-slide-background" style="background-image: url('${banner.image_url}');"></div>
+                <div class="ls-slide-overlay"></div>
             </div>
         `).join('');
-        new Swiper('.hero-slider', { 
+        new Swiper('.ls-hero-slider', { 
             loop: true, 
             effect: 'fade', 
             autoplay: { delay: 5000, disableOnInteraction: false },
@@ -1089,9 +1140,9 @@ const firebaseConfig = {
             .slice(0, 4);
 
         domElements.historyTimeline.innerHTML = recentHistory.map((item, index) => `
-            <div class="timeline-item ${index % 2 === 0 ? 'left' : 'right'}" data-aos="fade-up">
-                <div class="timeline-content">
-                    <div class="year">${item.year}</div>
+            <div class="ls-timeline-item ${index % 2 === 0 ? 'left' : 'right'}" data-aos="fade-up">
+                <div class="ls-timeline-content">
+                    <div class="ls-year">${item.year}</div>
                     <h3>${item[`title_${currentLanguage}`] || item.title_id}</h3>
                     <p>${item[`text_${currentLanguage}`] || item.text_id}</p>
                 </div>
@@ -1099,42 +1150,387 @@ const firebaseConfig = {
         `).join('');
     };
 
-    const updateTextContent = () => { document.querySelectorAll('[data-lang-key]').forEach(el => { const key = el.dataset.langKey; const content = siteData.content[key]; if (content) { el.innerHTML = content[`text_${currentLanguage}`] || content.text_id || el.innerHTML; } }); document.title = siteData.content?.page_title?.[`text_${currentLanguage}`] || 'Lobster Shack Bali'; updateLangButtons(); };
-    const updateLangButtons = () => { document.querySelectorAll('.lang-btn').forEach(btn => { btn.classList.toggle('active', btn.dataset.lang === currentLanguage); }); };
-    const renderMenu = () => { let featuredHTML = ''; let gridHTML = ''; siteData.products.forEach(p => { const cardHTML = ` <div class="menu-card" data-category="${p.category_name}" data-product-id="${p.id}"> <div class="menu-card-image"><img src="${p.imageUrl}" alt="${p.name_en}"></div> <div class="menu-card-content"> <h3>${p[`name_${currentLanguage}`] || p.name_id}</h3> <p class="menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(p.price)}</p> <p class="description">${(p[`description_${currentLanguage}`] || p.description_id).substring(0, 100)}...</p> <div class="menu-card-actions"> <button class="btn btn-secondary add-to-cart-btn" data-product-id="${p.id}"><i class="fas fa-cart-plus"></i> <span data-lang-key="add_to_cart_btn">Add to Cart</span></button> <button class="btn order-now-btn" data-product-id="${p.id}"><i class="fas fa-utensils"></i> <span data-lang-key="order_now_btn">Order Now</span></button> </div> </div> </div>`; gridHTML += cardHTML; if (p.is_featured) { featuredHTML += `<div class="swiper-slide">${cardHTML}</div>`; } }); domElements.featuredMenuWrapper.innerHTML = featuredHTML; domElements.menuGrid.innerHTML = gridHTML; const allText = currentLanguage === 'id' ? 'Semua' : 'All'; domElements.menuFilters.innerHTML = `<button class="filter-btn active" data-filter="all">${allText}</button>` + siteData.categories.map(c => `<button class="filter-btn" data-filter="${c.name}">${c.name}</button>`).join(''); new Swiper('.featured-slider', { slidesPerView: 'auto', spaceBetween: 30, grabCursor: true, pagination: { el: '.swiper-pagination', clickable: true } }); };
-    const renderGallery = () => { domElements.galleryGrid.innerHTML = siteData.gallery_images.map(img => ` <a href="${img.image_url}" class="glightbox" data-gallery="our-gallery" data-title="${img[`caption_${currentLanguage}`] || img.caption_id}"> <img src="${img.image_url}" alt="${img.caption_en}"> </a>`).join(''); if (lightbox) lightbox.reload(); else lightbox = GLightbox({ selector: '.glightbox' }); };
-    const updateCartBadge = () => { const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0); domElements.cartBadge.textContent = totalItems; domElements.cartBadge.classList.toggle('has-items', totalItems > 0); };
-    const saveCart = () => { localStorage.setItem('cartItems', JSON.stringify(cartItems)); updateCartBadge(); };
-    const showToast = (message, type = 'info') => { domElements.toastMessage.textContent = message; domElements.toast.className = 'toast-notification'; domElements.toast.classList.add(type, 'show'); const iconMap = { 'success': 'fa-check-circle', 'error': 'fa-times-circle', 'info': 'fa-info-circle' }; domElements.toastIcon.className = `fas ${iconMap[type] || 'fa-info-circle'}`; setTimeout(() => { domElements.toast.classList.remove('show'); }, 4000); };
-    const addToCart = (productId) => { const product = siteData.products.find(p => p.id === productId); if (!product) return; const existingItem = cartItems.find(item => item.id === productId); if (existingItem) { existingItem.quantity++; } else { cartItems.push({ id: product.id, name_id: product.name_id, name_en: product.name_en, price: product.price, imageUrl: product.imageUrl, quantity: 1 }); } saveCart(); showToast(currentLanguage === 'id' ? `${product[`name_${currentLanguage}`] || product.name_id} ditambahkan ke keranjang!` : `${product.name_en} added to cart!`, 'success'); renderCartItems(); };
-    const updateCartItemQuantity = (productId, change) => { const itemIndex = cartItems.findIndex(item => item.id === productId); if (itemIndex > -1) { cartItems[itemIndex].quantity += change; if (cartItems[itemIndex].quantity <= 0) { cartItems.splice(itemIndex, 1); } saveCart(); renderCartItems(); } };
-    const calculateCartTotals = () => { const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0); const deliveryFee = subtotal > 0 ? 20000 : 0; const total = subtotal + deliveryFee; domElements.cartSubtotal.textContent = `Rp ${new Intl.NumberFormat('id-ID').format(subtotal)}`; domElements.cartDeliveryFee.textContent = `Rp ${new Intl.NumberFormat('id-ID').format(deliveryFee)}`; domElements.cartTotal.textContent = `Rp ${new Intl.NumberFormat('id-ID').format(total)}`; };
-    const renderCartItems = () => { const hasItems = cartItems.length > 0; domElements.emptyCartMessage.style.display = hasItems ? 'none' : 'block'; domElements.checkoutBtn.disabled = !hasItems; if (hasItems) { domElements.cartItemsList.innerHTML = cartItems.map(item => ` <li class="cart-item"> <img src="${item.imageUrl}" alt="${item.name_en}" class="cart-item-img"> <div class="cart-item-details"> <h4>${item[`name_${currentLanguage}`] || item.name_id}</h4> <p>Rp ${new Intl.NumberFormat('id-ID').format(item.price)} / pc</p> <div class="cart-item-quantity"> <button data-product-id="${item.id}" data-action="decrement">-</button> <span>${item.quantity}</span> <button data-product-id="${item.id}" data-action="increment">+</button> </div> </div> <span class="cart-item-price">Rp ${new Intl.NumberFormat('id-ID').format(item.price * item.quantity)}</span> </li>`).join(''); } else { domElements.cartItemsList.innerHTML = ''; } calculateCartTotals(); };
-    const openCartModal = () => { renderCartItems(); domElements.cartModal.classList.add('visible'); };
-    const closeCartModal = () => { domElements.cartModal.classList.remove('visible'); };
-    let currentOrderProduct = null; let currentOrderCartItems = null;
-    const openOrderModal = (productId = null, itemsFromCart = null) => { domElements.orderForm.reset(); domElements.modalProductDetails.innerHTML = ''; if (productId) { currentOrderProduct = siteData.products.find(p => p.id === productId); currentOrderCartItems = null; if (currentOrderProduct) { domElements.modalProductDetails.innerHTML = ` <img src="${currentOrderProduct.imageUrl}" alt="${currentOrderProduct.name_en}"> <h3>${currentOrderProduct[`name_${currentLanguage}`] || currentOrderProduct.name_id}</h3> <p class="menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(currentOrderProduct.price)}</p> `; } } else if (itemsFromCart && itemsFromCart.length > 0) { currentOrderProduct = null; currentOrderCartItems = itemsFromCart; const subtotal = currentOrderCartItems.reduce((sum, item) => sum + item.price * item.quantity, 0); let itemsHtml = currentOrderCartItems.map(item => ` <div class="summary-item" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.5rem;"> <span>${item.quantity}x ${item[`name_${currentLanguage}`] || item.name_id}</span> <span>Rp ${new Intl.NumberFormat('id-ID').format(item.price * item.quantity)}</span> </div>`).join(''); domElements.modalProductDetails.innerHTML = ` <h3 class="summary-title">${currentLanguage === 'id' ? 'Ringkasan Pesanan' : 'Your Order Summary'}</h3> ${itemsHtml} <hr style="border-top: 1px dashed var(--color-border); margin: 1rem 0;"> <p style="font-weight: bold; font-size: 1.1rem;"> ${currentLanguage === 'id' ? 'Subtotal (belum ongkir):' : 'Subtotal (excl. delivery):'} Rp ${new Intl.NumberFormat('id-ID').format(subtotal)} </p> `; } else { showToast(currentLanguage === 'id' ? 'Tidak ada item.' : 'No items to order.', 'error'); return; } domElements.orderModal.classList.add('visible'); if (map) { setTimeout(() => { if (google && map) google.maps.event.trigger(map, 'resize'); }, 400); map.setCenter(currentAddressLatLng); marker.setPosition(currentAddressLatLng); map.setZoom(15); } };
-    const closeOrderModal = () => { domElements.orderModal.classList.remove('visible'); domElements.orderForm.reset(); domElements.customerAddressInput.value = ''; currentOrderProduct = null; currentOrderCartItems = null; };
-    const renderAll = () => { renderBanners(); renderHistory(); renderMenu(); renderGallery(); updateTextContent(); updateCartBadge(); AOS.init({ duration: 800, once: true, offset: 50 }); };
-    async function fetchAllData() { try { const collections = ['products', 'categories', 'content', 'banners', 'gallery_images', 'history']; const promises = collections.map(col => db.collection(col).get()); const [ productsSnap, categoriesSnap, contentSnap, bannersSnap, gallerySnap, historySnap ] = await Promise.all(promises); siteData.products = productsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })); siteData.categories = categoriesSnap.docs.map(doc => doc.data()).sort((a,b) => a.id - b.id); siteData.banners = bannersSnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order); siteData.gallery_images = gallerySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order); siteData.history = historySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order); siteData.content = {}; contentSnap.docs.forEach(doc => { siteData.content[doc.id] = doc.data(); }); renderAll(); } catch (error) { console.error("Error fetching data from Firebase:", error); showToast("Failed to load website data.", 'error'); } }
-    const handleMenuClick = (e) => { const addBtn = e.target.closest('.add-to-cart-btn'); const orderBtn = e.target.closest('.order-now-btn'); if (addBtn) { addToCart(addBtn.dataset.productId); } else if (orderBtn) { openOrderModal(orderBtn.dataset.productId); }};
+    const updateTextContent = () => { 
+        document.querySelectorAll('[data-lang-key]').forEach(el => { 
+            const key = el.dataset.langKey; 
+            const content = siteData.content[key]; 
+            if (content) { 
+                el.innerHTML = content[`text_${currentLanguage}`] || content.text_id || el.innerHTML; 
+            } 
+        }); 
+        document.title = siteData.content?.ls_page_title?.[`text_${currentLanguage}`] || 'Lobster Shack Bali'; 
+        updateLangButtons(); 
+    };
+    
+    const updateLangButtons = () => { 
+        document.querySelectorAll('.ls-lang-btn').forEach(btn => { 
+            btn.classList.toggle('active', btn.dataset.lang === currentLanguage); 
+        }); 
+    };
+
+    const renderMenu = () => { 
+        let featuredHTML = ''; 
+        let gridHTML = ''; 
+        siteData.products.forEach(p => { 
+            const cardHTML = ` 
+                <div class="ls-menu-card" data-category="${p.category_name}" data-product-id="${p.id}"> 
+                    <div class="ls-menu-card-image"><img src="${p.imageUrl}" alt="${p.name_en}"></div> 
+                    <div class="ls-menu-card-content"> 
+                        <h3>${p[`name_${currentLanguage}`] || p.name_id}</h3> 
+                        <p class="ls-menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(p.price)}</p> 
+                        <p class="ls-description">${(p[`description_${currentLanguage}`] || p.description_id).substring(0, 100)}...</p> 
+                        <div class="ls-menu-card-actions"> 
+                            <button class="ls-btn ls-btn-secondary ls-add-to-cart-btn" data-product-id="${p.id}"><i class="fas fa-cart-plus"></i> <span data-lang-key="add_to_cart_btn">Pilih Hidangan Ini</span></button> 
+                            <button class="ls-btn ls-order-now-btn" data-product-id="${p.id}"><i class="fas fa-utensils"></i> <span data-lang-key="order_now_btn">Order Now</span></button> 
+                        </div> 
+                    </div> 
+                </div>`; 
+            gridHTML += cardHTML; 
+            if (p.is_featured) { featuredHTML += `<div class="swiper-slide">${cardHTML}</div>`; } 
+        }); 
+        domElements.featuredMenuWrapper.innerHTML = featuredHTML; 
+        domElements.menuGrid.innerHTML = gridHTML; 
+        const allText = currentLanguage === 'id' ? 'Semua' : 'All'; 
+        domElements.menuFilters.innerHTML = `<button class="ls-filter-btn active" data-filter="all">${allText}</button>` + siteData.categories.map(c => `<button class="ls-filter-btn" data-filter="${c.name}">${c.name}</button>`).join(''); 
+        new Swiper('.ls-featured-slider', { slidesPerView: 'auto', spaceBetween: 30, grabCursor: true, pagination: { el: '.swiper-pagination', clickable: true } }); 
+    };
+
+    const renderGallery = () => { 
+        domElements.galleryGrid.innerHTML = siteData.gallery_images.map(img => ` 
+            <a href="${img.image_url}" class="glightbox" data-gallery="our-gallery" data-title="${img[`caption_${currentLanguage}`] || img.caption_id}"> 
+                <img src="${img.image_url}" alt="${img.caption_en}"> 
+            </a>`).join(''); 
+        if (lightbox) lightbox.reload(); else lightbox = GLightbox({ selector: '.glightbox' }); 
+    };
+    
+    const updateCartBadge = () => { 
+        const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0); 
+        domElements.cartBadge.textContent = totalItems; 
+        domElements.cartBadge.classList.toggle('has-items', totalItems > 0); 
+    };
+    
+    const saveCart = () => { 
+        localStorage.setItem('cartItems', JSON.stringify(cartItems)); 
+        updateCartBadge(); 
+    };
+    
+    const showToast = (message, type = 'info') => { 
+        domElements.toastMessage.textContent = message; 
+        domElements.toast.className = 'ls-toast-notification'; // Changed class
+        domElements.toast.classList.add(type, 'show'); 
+        const iconMap = { 'success': 'fa-check-circle', 'error': 'fa-times-circle', 'info': 'fa-info-circle' }; 
+        domElements.toastIcon.className = `fas ${iconMap[type] || 'fa-info-circle'}`; 
+        setTimeout(() => { domElements.toast.classList.remove('show'); }, 4000); 
+    };
+    
+    const addToCart = (productId) => { 
+        const product = siteData.products.find(p => p.id === productId); 
+        if (!product) return; 
+        const existingItem = cartItems.find(item => item.id === productId); 
+        if (existingItem) { 
+            existingItem.quantity++; 
+        } else { 
+            cartItems.push({ id: product.id, name_id: product.name_id, name_en: product.name_en, price: product.price, imageUrl: product.imageUrl, quantity: 1 }); 
+        } 
+        saveCart(); 
+        showToast(currentLanguage === 'id' ? `${product[`name_${currentLanguage}`] || product.name_id} ditambahkan ke pilihan Anda!` : `${product.name_en} added to your selection!`, 'success'); 
+        renderCartItems(); 
+    };
+    
+    const updateCartItemQuantity = (productId, change) => { 
+        const itemIndex = cartItems.findIndex(item => item.id === productId); 
+        if (itemIndex > -1) { 
+            cartItems[itemIndex].quantity += change; 
+            if (cartItems[itemIndex].quantity <= 0) { 
+                cartItems.splice(itemIndex, 1); 
+            } 
+            saveCart(); 
+            renderCartItems(); 
+        } 
+    };
+    
+    const calculateCartTotals = () => { 
+        const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0); 
+        const deliveryFee = subtotal > 0 ? 20000 : 0; 
+        const total = subtotal + deliveryFee; 
+        domElements.cartSubtotal.textContent = `Rp ${new Intl.NumberFormat('id-ID').format(subtotal)}`; 
+        domElements.cartDeliveryFee.textContent = `Rp ${new Intl.NumberFormat('id-ID').format(deliveryFee)}`; 
+        domElements.cartTotal.textContent = `Rp ${new Intl.NumberFormat('id-ID').format(total)}`; 
+    };
+    
+    const renderCartItems = () => { 
+        const hasItems = cartItems.length > 0; 
+        domElements.emptyCartMessage.style.display = hasItems ? 'none' : 'block'; 
+        domElements.checkoutBtn.disabled = !hasItems; 
+        if (hasItems) { 
+            domElements.cartItemsList.innerHTML = cartItems.map(item => ` 
+                <li class="ls-cart-item"> 
+                    <img src="${item.imageUrl}" alt="${item.name_en}" class="ls-cart-item-img"> 
+                    <div class="ls-cart-item-details"> 
+                        <h4>${item[`name_${currentLanguage}`] || item.name_id}</h4> 
+                        <p>Rp ${new Intl.NumberFormat('id-ID').format(item.price)} / pc</p> 
+                        <div class="ls-cart-item-quantity"> 
+                            <button data-product-id="${item.id}" data-action="decrement">-</button> 
+                            <span>${item.quantity}</span> 
+                            <button data-product-id="${item.id}" data-action="increment">+</button> 
+                        </div> 
+                    </div> 
+                    <span class="ls-cart-item-price">Rp ${new Intl.NumberFormat('id-ID').format(item.price * item.quantity)}</span> 
+                </li>`).join(''); 
+        } else { 
+            domElements.cartItemsList.innerHTML = ''; 
+        } 
+        calculateCartTotals(); 
+    };
+    
+    const openCartModal = () => { 
+        renderCartItems(); 
+        domElements.cartModal.classList.add('visible'); 
+    };
+    
+    const closeCartModal = () => { 
+        domElements.cartModal.classList.remove('visible'); 
+    };
+
+    let currentOrderProduct = null; 
+    let currentOrderCartItems = null;
+
+    const openOrderModal = (productId = null, itemsFromCart = null) => { 
+        domElements.orderForm.reset(); 
+        domElements.modalProductDetails.innerHTML = ''; 
+        
+        if (productId) { 
+            currentOrderProduct = siteData.products.find(p => p.id === productId); 
+            currentOrderCartItems = null; 
+            if (currentOrderProduct) { 
+                domElements.modalProductDetails.innerHTML = ` 
+                    <img src="${currentOrderProduct.imageUrl}" alt="${currentOrderProduct.name_en}"> 
+                    <h3>${currentOrderProduct[`name_${currentLanguage}`] || currentOrderProduct.name_id}</h3> 
+                    <p class="ls-menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(currentOrderProduct.price)}</p> 
+                `; 
+            } 
+        } else if (itemsFromCart && itemsFromCart.length > 0) { 
+            currentOrderProduct = null; 
+            currentOrderCartItems = itemsFromCart; 
+            const subtotal = currentOrderCartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0); 
+            let itemsHtml = currentOrderCartItems.map(item => ` 
+                <div class="ls-summary-item" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.5rem;"> 
+                    <span>${item.quantity}x ${item[`name_${currentLanguage}`] || item.name_id}</span> 
+                    <span>Rp ${new Intl.NumberFormat('id-ID').format(item.price * item.quantity)}</span> 
+                </div>`).join(''); 
+            domElements.modalProductDetails.innerHTML = ` 
+                <h3 class="ls-summary-title">${currentLanguage === 'id' ? 'Ringkasan Pesanan Anda' : 'Your Order Summary'}</h3> 
+                ${itemsHtml} 
+                <hr style="border-top: 1px dashed var(--ls-color-border); margin: 1.5rem 0;"> 
+                <p style="font-weight: bold; font-size: 1.2rem; color: var(--ls-color-secondary);"> 
+                    ${currentLanguage === 'id' ? 'Subtotal Hidangan:' : 'Dish Subtotal:'} Rp ${new Intl.NumberFormat('id-ID').format(subtotal)} 
+                </p> 
+            `; 
+        } else { 
+            showToast(currentLanguage === 'id' ? 'Tidak ada item untuk dipesan.' : 'No items to order.', 'error'); 
+            return; 
+        } 
+        
+        domElements.orderModal.classList.add('visible'); 
+        if (map) { 
+            setTimeout(() => { 
+                if (google && map) google.maps.event.trigger(map, 'resize'); 
+            }, 400); 
+            map.setCenter(currentAddressLatLng); 
+            marker.setPosition(currentAddressLatLng); 
+            map.setZoom(15); 
+        } 
+    };
+    
+    const closeOrderModal = () => { 
+        domElements.orderModal.classList.remove('visible'); 
+        domElements.orderForm.reset(); 
+        domElements.customerAddressInput.value = ''; 
+        currentOrderProduct = null; 
+        currentOrderCartItems = null; 
+    };
+    
+    const renderAll = () => { 
+        renderBanners(); 
+        renderHistory(); 
+        renderMenu(); 
+        renderGallery(); 
+        updateTextContent(); 
+        updateCartBadge(); 
+        AOS.init({ duration: 800, once: true, offset: 50 }); 
+    };
+    
+    async function fetchAllData() { 
+        try { 
+            const collections = ['products', 'categories', 'content', 'banners', 'gallery_images', 'history']; 
+            const promises = collections.map(col => db.collection(col).get()); 
+            const [ productsSnap, categoriesSnap, contentSnap, bannersSnap, gallerySnap, historySnap ] = await Promise.all(promises); 
+            
+            siteData.products = productsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })); 
+            siteData.categories = categoriesSnap.docs.map(doc => doc.data()).sort((a,b) => a.id - b.id); 
+            siteData.banners = bannersSnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order); 
+            siteData.gallery_images = gallerySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order); 
+            siteData.history = historySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order); 
+            
+            siteData.content = {}; 
+            contentSnap.docs.forEach(doc => { siteData.content[doc.id] = doc.data(); }); 
+            
+            renderAll(); 
+        } catch (error) { 
+            console.error("Error fetching data from Firebase:", error); 
+            showToast("Failed to load website data.", 'error'); 
+        } 
+    }
+    
+    const handleMenuClick = (e) => { 
+        const addBtn = e.target.closest('.ls-add-to-cart-btn'); // Changed class
+        const orderBtn = e.target.closest('.ls-order-now-btn'); // Changed class
+        if (addBtn) { 
+            addToCart(addBtn.dataset.productId); 
+        } else if (orderBtn) { 
+            openOrderModal(orderBtn.dataset.productId); 
+        }
+    };
     
     document.addEventListener('DOMContentLoaded', () => { 
-        domElements.langToggleContainer.addEventListener('click', e => { if (!e.target.matches('.lang-btn')) return; currentLanguage = e.target.dataset.lang; localStorage.setItem('preferredLanguage', currentLanguage); renderHistory(); renderMenu(); renderGallery(); renderCartItems(); updateTextContent(); }); 
-        domElements.mobileMenuToggle.addEventListener('click', () => { domElements.mainNav.classList.toggle('active'); domElements.body.classList.toggle('nav-open'); const icon = domElements.mobileMenuToggle.querySelector('i'); icon.classList.toggle('fa-bars'); icon.classList.toggle('fa-times'); }); 
-        domElements.mainNav.addEventListener('click', (e) => { if (e.target.matches('a') && domElements.mainNav.classList.contains('active')) { domElements.mobileMenuToggle.click(); } }); 
-        domElements.menuFilters.addEventListener('click', e => { if (!e.target.matches('.filter-btn')) return; domElements.menuFilters.querySelector('.active').classList.remove('active'); e.target.classList.add('active'); const filter = e.target.dataset.filter; document.querySelectorAll('.menu-card').forEach(card => { const isVisible = filter === 'all' || card.dataset.category === filter; card.classList.toggle('hidden', !isVisible); }); }); 
+        domElements.langToggleContainer.addEventListener('click', e => { 
+            if (!e.target.matches('.ls-lang-btn')) return; // Changed class
+            currentLanguage = e.target.dataset.lang; 
+            localStorage.setItem('preferredLanguage', currentLanguage); 
+            renderHistory(); 
+            renderMenu(); 
+            renderGallery(); 
+            renderCartItems(); 
+            updateTextContent(); 
+        }); 
+        
+        domElements.mobileMenuToggle.addEventListener('click', () => { 
+            domElements.mainNav.classList.toggle('active'); 
+            domElements.body.classList.toggle('ls-nav-open'); // Changed class
+            const icon = domElements.mobileMenuToggle.querySelector('i'); 
+            icon.classList.toggle('fa-bars'); 
+            icon.classList.toggle('fa-times'); 
+        }); 
+        
+        domElements.mainNav.addEventListener('click', (e) => { 
+            if (e.target.matches('a') && domElements.mainNav.classList.contains('active')) { 
+                domElements.mobileMenuToggle.click(); 
+            } 
+        }); 
+        
+        domElements.menuFilters.addEventListener('click', e => { 
+            if (!e.target.matches('.ls-filter-btn')) return; // Changed class
+            domElements.menuFilters.querySelector('.active').classList.remove('active'); 
+            e.target.classList.add('active'); 
+            const filter = e.target.dataset.filter; 
+            document.querySelectorAll('.ls-menu-card').forEach(card => { // Changed class
+                const isVisible = filter === 'all' || card.dataset.category === filter; 
+                card.classList.toggle('hidden', !isVisible); 
+            }); 
+        }); 
+        
         domElements.menuGrid.addEventListener('click', handleMenuClick); 
         domElements.featuredMenuWrapper.addEventListener('click', handleMenuClick); 
-        domElements.modalCloseBtns.forEach(btn => { btn.addEventListener('click', (e) => { const modal = e.target.closest('.modal-overlay'); if (modal.id === 'order-modal') closeOrderModal(); if (modal.id === 'cart-modal') closeCartModal(); }); }); 
-        domElements.orderModal.addEventListener('click', e => { if (e.target === domElements.orderModal) closeOrderModal(); }); 
-        domElements.cartModal.addEventListener('click', e => { if (e.target === domElements.cartModal) closeCartModal(); }); 
-        domElements.orderForm.addEventListener('submit', async e => { e.preventDefault(); const submitBtn = domElements.orderForm.querySelector('button[type="submit"]'); submitBtn.disabled = true; const customerName = document.getElementById('customer-name').value; const customerPhone = document.getElementById('customer-phone').value; const customerAddress = domElements.customerAddressInput.value; let orderDetails = []; let orderType = ''; let subtotal = 0; if (currentOrderProduct) { subtotal = currentOrderProduct.price; orderDetails.push({ productId: currentOrderProduct.id, name: currentOrderProduct[`name_${currentLanguage}`] || currentOrderProduct.name_id, price: currentOrderProduct.price, quantity: 1 }); orderType = 'single'; } else if (currentOrderCartItems) { subtotal = currentOrderCartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0); orderDetails = currentOrderCartItems.map(item => ({ id: item.id, name: item[`name_${currentLanguage}`] || item.name_id, price: item.price, quantity: item.quantity })); orderType = 'cart'; } else { showToast(currentLanguage === 'id' ? 'Tidak ada item dalam pesanan.' : 'No items in order.', 'error'); submitBtn.disabled = false; return; } const orderData = { customerName, customerPhone, customerAddress, addressLat: currentAddressLatLng.lat, addressLng: currentAddressLatLng.lng, orderDetails, subtotal, deliveryFee: 20000, totalAmount: subtotal + 20000, orderType, status: "new", timestamp: firebase.firestore.FieldValue.serverTimestamp() }; try { await db.collection('orders').add(orderData); showToast(currentLanguage === 'id' ? 'Pesanan berhasil dikirim!' : 'Order submitted successfully!', 'success'); if (orderType === 'cart') { cartItems = []; saveCart(); renderCartItems(); closeCartModal(); } closeOrderModal(); } catch (error) { console.error("Error submitting order:", error); showToast(currentLanguage === 'id' ? 'Gagal mengirim pesanan. Periksa koneksi & coba lagi.' : 'Failed to submit order. Check connection & try again.', 'error'); } finally { submitBtn.disabled = false; } }); 
+        
+        domElements.modalCloseBtns.forEach(btn => { 
+            btn.addEventListener('click', (e) => { 
+                const modal = e.target.closest('.ls-modal-overlay'); // Changed class
+                if (modal.id === 'ls-order-modal') closeOrderModal(); // Changed id
+                if (modal.id === 'ls-cart-modal') closeCartModal(); // Changed id
+            }); 
+        }); 
+        
+        domElements.orderModal.addEventListener('click', e => { 
+            if (e.target === domElements.orderModal) closeOrderModal(); 
+        }); 
+        
+        domElements.cartModal.addEventListener('click', e => { 
+            if (e.target === domElements.cartModal) closeCartModal(); 
+        }); 
+        
+        domElements.orderForm.addEventListener('submit', async e => { 
+            e.preventDefault(); 
+            const submitBtn = domElements.orderForm.querySelector('button[type="submit"]'); 
+            submitBtn.disabled = true; 
+            
+            const customerName = document.getElementById('customer-name').value; 
+            const customerPhone = document.getElementById('customer-phone').value; 
+            const customerAddress = domElements.customerAddressInput.value; 
+            
+            let orderDetails = []; 
+            let orderType = ''; 
+            let subtotal = 0; 
+            
+            if (currentOrderProduct) { 
+                subtotal = currentOrderProduct.price; 
+                orderDetails.push({ productId: currentOrderProduct.id, name: currentOrderProduct[`name_${currentLanguage}`] || currentOrderProduct.name_id, price: currentOrderProduct.price, quantity: 1 }); 
+                orderType = 'single'; 
+            } else if (currentOrderCartItems) { 
+                subtotal = currentOrderCartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0); 
+                orderDetails = currentOrderCartItems.map(item => ({ id: item.id, name: item[`name_${currentLanguage}`] || item.name_id, price: item.price, quantity: item.quantity })); 
+                orderType = 'cart'; 
+            } else { 
+                showToast(currentLanguage === 'id' ? 'Tidak ada item dalam pesanan.' : 'No items in order.', 'error'); 
+                submitBtn.disabled = false; 
+                return; 
+            } 
+            
+            const orderData = { 
+                customerName, 
+                customerPhone, 
+                customerAddress, 
+                addressLat: currentAddressLatLng.lat, 
+                addressLng: currentAddressLatLng.lng, 
+                orderDetails, 
+                subtotal, 
+                deliveryFee: 20000, 
+                totalAmount: subtotal + 20000, 
+                orderType, 
+                status: "new", 
+                timestamp: firebase.firestore.FieldValue.serverTimestamp() 
+            }; 
+            
+            try { 
+                await db.collection('orders').add(orderData); 
+                showToast(currentLanguage === 'id' ? 'Pesanan berhasil dikirim!' : 'Order submitted successfully!', 'success'); 
+                if (orderType === 'cart') { 
+                    cartItems = []; 
+                    saveCart(); 
+                    renderCartItems(); 
+                    closeCartModal(); 
+                } 
+                closeOrderModal(); 
+            } catch (error) { 
+                console.error("Error submitting order:", error); 
+                showToast(currentLanguage === 'id' ? 'Gagal mengirim pesanan. Periksa koneksi & coba lagi.' : 'Failed to submit order. Check connection & try again.', 'error'); 
+            } finally { 
+                submitBtn.disabled = false; 
+            } 
+        }); 
+        
         domElements.detectLocationBtn.addEventListener('click', detectLocation); 
         domElements.cartIcon.addEventListener('click', openCartModal); 
-        domElements.cartItemsList.addEventListener('click', e => { const target = e.target; if (target.matches('button[data-action]')) { const productId = target.dataset.productId; const action = target.dataset.action; updateCartItemQuantity(productId, action === 'increment' ? 1 : -1); } }); 
-        domElements.checkoutBtn.addEventListener('click', () => { if (cartItems.length > 0) { closeCartModal(); openOrderModal(null, cartItems); } else { showToast(currentLanguage === 'id' ? 'Keranjang Anda kosong!' : 'Your cart is empty!', 'error'); } }); 
+        
+        domElements.cartItemsList.addEventListener('click', e => { 
+            const target = e.target; 
+            if (target.matches('button[data-action]')) { 
+                const productId = target.dataset.productId; 
+                const action = target.dataset.action; 
+                updateCartItemQuantity(productId, action === 'increment' ? 1 : -1); 
+            } 
+        }); 
+        
+        domElements.checkoutBtn.addEventListener('click', () => { 
+            if (cartItems.length > 0) { 
+                closeCartModal(); 
+                openOrderModal(null, cartItems); 
+            } else { 
+                showToast(currentLanguage === 'id' ? 'Pilihan hidangan Anda kosong!' : 'Your selection is empty!', 'error'); 
+            } 
+        }); 
+        
         domElements.continueShoppingBtn.addEventListener('click', closeCartModal); 
+        
         fetchAllData(); 
     });
     </script>
