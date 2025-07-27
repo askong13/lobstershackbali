@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lobster Shack Bali</title>
+    <title data-lang-key="page_title">Lobster Shack Bali - Fresh Seafood</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,13 +19,13 @@
         :root {
             --font-heading: 'Playfair Display', serif;
             --font-body: 'Poppins', sans-serif;
-            --color-primary: #D84B42;
-            --color-secondary: #2D4C5E;
-            --color-background: #F8F6F0;
-            --color-surface: #FFFFFF;
-            --color-text: #333333;
-            --color-text-light: #6c757d;
-            --color-border: #E0DACE;
+            --color-primary: #D84B42; /* Merah Lobster */
+            --color-secondary: #2D4C5E; /* Biru Gelap / Abu-abu Kebiruan */
+            --color-background: #F8F6F0; /* Krem Muda */
+            --color-surface: #FFFFFF; /* Putih Bersih */
+            --color-text: #333333; /* Hitam Pekat */
+            --color-text-light: #6c757d; /* Abu-abu Teks */
+            --color-border: #E0DACE; /* Garis Krem */
             --shadow-sm: 0 2px 8px rgba(45, 76, 94, .07);
             --shadow-md: 0 4px 15px rgba(45, 76, 94, .12);
             --shadow-lg: 0 8px 30px rgba(45, 76, 94, .2);
@@ -116,21 +116,7 @@
         }
         .main-header .container { display: flex; justify-content: space-between; align-items: center; }
         .main-header .logo { height: 55px; z-index: 1001; }
-        .main-nav { display: flex; align-items: center; gap: 2rem; }
-        .nav-links { list-style: none; display: flex; gap: 2.5rem; }
-        .nav-links a { text-decoration: none; font-weight: 600; color: var(--color-secondary); position: relative; padding-bottom: .5rem; }
-        .nav-links a:after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 2px;
-            background-color: var(--color-primary);
-            transition: width var(--transition-speed) ease;
-        }
-        .nav-links a.active:after, .nav-links a:hover:after { width: 100%; }
+        
         .header-actions { display: flex; align-items: center; gap: 1rem; }
         .language-toggle {
             display: flex;
@@ -150,6 +136,37 @@
             transition: all var(--transition-speed) ease;
         }
         .lang-btn.active { background: var(--color-primary); color: #fff; }
+        
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--color-secondary);
+            margin-right: 1rem;
+            transition: color 0.3s ease;
+        }
+        .cart-icon:hover {
+            color: var(--color-primary);
+        }
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--color-primary);
+            color: #fff;
+            font-size: .75rem;
+            font-weight: 600;
+            border-radius: 50%;
+            padding: 3px 7px;
+            line-height: 1;
+            transform: scale(0);
+            transform-origin: top right;
+            transition: transform 0.3s ease;
+        }
+        .cart-badge.has-items {
+            transform: scale(1);
+        }
+
         .mobile-menu-toggle {
             display: none;
             font-size: 1.5rem;
@@ -158,7 +175,58 @@
             border: none;
             cursor: pointer;
             z-index: 1001;
+            padding: .5rem;
         }
+
+        /* New: Mobile navigation slides from top */
+        .main-nav {
+            display: flex; /* Keeps it flex for desktop */
+            align-items: center;
+            gap: 2.5rem; /* Increased gap for desktop */
+        }
+
+        @media (max-width: 992px) {
+            .main-nav {
+                position: fixed;
+                top: 0;
+                left: 0; /* Changed from right:0 to left:0 for full width */
+                width: 100%;
+                height: 100vh;
+                background-color: var(--color-background);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transform: translateY(-100%); /* Slides from top */
+                transition: transform var(--transition-speed) ease-in-out;
+                z-index: 999;
+                padding-top: 5rem; /* Space for header items */
+            }
+            .main-nav.active { transform: translateY(0); }
+            .nav-links {
+                flex-direction: column;
+                text-align: center;
+                gap: 2rem;
+            }
+            .nav-links a { font-size: 1.5rem; padding: .75rem 0; width: 100%; }
+            .nav-links a:after { width: 50%; } /* Smaller underline for mobile */
+            .header-actions { z-index: 1001; }
+            .mobile-menu-toggle { display: block; }
+        }
+
+        .nav-links { list-style: none; display: flex; gap: 2.5rem; }
+        .nav-links a { text-decoration: none; font-weight: 600; color: var(--color-secondary); position: relative; padding-bottom: .5rem; }
+        .nav-links a:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: var(--color-primary);
+            transition: width var(--transition-speed) ease;
+        }
+        .nav-links a.active:after, .nav-links a:hover:after { width: 100%; }
 
         /* ------------------- */
         /* HERO SECTION        */
@@ -220,7 +288,7 @@
         .timeline-item.left { left: 0; }
         .timeline-item.right { left: 50%; }
         .timeline-item:after {
-            content: "ðŸ¦ž";
+            content: "ðŸ¦ž"; /* Lobster emoji */
             font-family: sans-serif;
             font-size: 1rem;
             display: flex;
@@ -295,7 +363,32 @@
         .menu-card-content { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; text-align: center; }
         .menu-card h3 { font-family: var(--font-heading); color: var(--color-secondary); font-size: 1.5rem; }
         .menu-card-price { font-weight: 700; color: var(--color-primary); font-size: 1.375rem; margin: 0.5rem 0 1rem; }
-        .menu-card .description { flex-grow: 1; margin-bottom: 1.5rem; color: var(--color-text-light); font-size: 0.95rem; }
+        .menu-card .description { flex-grow: 1; margin-bottom: 1rem; color: var(--color-text-light); font-size: 0.95rem; }
+
+        /* New: Product card buttons */
+        .menu-card-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: auto; /* Push to bottom */
+            justify-content: center;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+        }
+        .menu-card-actions .btn {
+            padding: 0.7rem 1.2rem;
+            font-size: 0.9rem;
+            flex-grow: 1; /* Allow buttons to grow */
+            min-width: 120px; /* Ensure minimum width */
+        }
+        .menu-card-actions .btn:first-child { /* Adjust for "Add to Cart" */
+            background-color: transparent;
+            color: var(--color-secondary);
+            border-color: var(--color-secondary);
+        }
+        .menu-card-actions .btn:first-child:hover {
+            background-color: var(--color-secondary);
+            color: var(--color-surface);
+        }
+
 
         /* ------------------- */
         /* GALLERY SECTION     */
@@ -348,8 +441,49 @@
         .footer-copyright { border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 2rem; margin-top: 2rem; }
         .footer-copyright p { font-size: 0.9rem; margin-bottom: 0; }
 
+        /* Footer Contact Info */
+        .footer-contact-info {
+            margin-top: 2rem;
+            text-align: center;
+            color: rgba(255, 255, 255, .9);
+        }
+        .footer-contact-info h3 {
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            font-size: 1.7rem;
+            margin-bottom: 1.25rem;
+        }
+        .footer-contact-info ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 auto 1.5rem;
+            max-width: 350px; /* Limit width for better readability */
+            line-height: 1.6;
+        }
+        .footer-contact-info li {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center; /* Center items for single column */
+            gap: .75rem;
+            margin-bottom: .75rem;
+            font-size: 0.95rem;
+        }
+        .footer-contact-info li i {
+            color: var(--color-primary);
+            font-size: 1.1rem;
+            margin-top: 3px; /* Align icon better with text */
+        }
+        .footer-contact-info li span {
+            text-align: left;
+        }
+        .footer-contact-info li strong {
+            color: #fff;
+            white-space: nowrap; /* Keep label and colon on one line */
+            margin-right: 5px;
+        }
+
         /* ------------------- */
-        /* MODAL               */
+        /* MODAL (GLOBAL)      */
         /* ------------------- */
         .modal-overlay {
             position: fixed;
@@ -370,6 +504,8 @@
             transition: opacity var(--transition-speed) ease, visibility 0s var(--transition-speed);
         }
         .modal-overlay.visible { opacity: 1; visibility: visible; transition-delay: 0s; }
+        
+        /* Modal Content (applies to all modals) */
         .modal-content {
             background: var(--color-background);
             border-radius: var(--border-radius);
@@ -411,7 +547,162 @@
             border-color: var(--color-primary);
             box-shadow: 0 0 0 3px rgba(216, 75, 66, 0.2);
         }
-        #address-map { height: 200px; width: 100%; margin-top: 10px; border-radius: 8px; background-color: #eee; }
+        
+        /* New: Specific Order Modal Styles */
+        #order-modal .modal-content {
+            max-width: 650px; /* Slightly wider for map */
+        }
+        #modal-product-details {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+        #modal-product-details img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            border: 4px solid var(--color-surface);
+            box-shadow: var(--shadow-sm);
+        }
+        #modal-product-details h3 {
+            font-family: var(--font-heading);
+            color: var(--color-secondary);
+            font-size: 1.8rem;
+        }
+        #modal-product-details .menu-card-price {
+            font-size: 1.5rem;
+            color: var(--color-primary);
+        }
+
+        .location-input-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: flex-end; /* Align button to bottom of input */
+        }
+        .location-input-group input {
+            flex-grow: 1;
+        }
+        .location-input-group .btn {
+            padding: .8rem 1rem;
+            font-size: 0.9rem;
+            white-space: nowrap; /* Prevent button text from wrapping */
+        }
+        #address-map {
+            height: 250px; /* Increased map height */
+            width: 100%;
+            margin-top: 15px;
+            border-radius: 8px;
+            background-color: #eee;
+            border: 1px solid var(--color-border);
+        }
+
+        /* ------------------- */
+        /* CART MODAL          */
+        /* ------------------- */
+        #cart-modal .modal-content {
+            max-width: 700px;
+        }
+        .cart-items-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        .cart-item-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+        }
+        .cart-item-details {
+            flex-grow: 1;
+        }
+        .cart-item-details h4 {
+            font-family: var(--font-heading);
+            color: var(--color-secondary);
+            font-size: 1.2rem;
+            margin-bottom: .25rem;
+        }
+        .cart-item-details p {
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+            margin-bottom: .5rem;
+        }
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+        .cart-item-quantity button {
+            background-color: var(--color-primary);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            width: 30px;
+            height: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .cart-item-quantity button:hover {
+            background-color: #b93e36;
+        }
+        .cart-item-quantity span {
+            font-weight: 600;
+            width: 25px;
+            text-align: center;
+        }
+        .cart-item-price {
+            font-weight: 700;
+            color: var(--color-primary);
+            font-size: 1.1rem;
+            white-space: nowrap; /* Keep price on one line */
+            margin-left: auto; /* Push price to the right */
+        }
+        .cart-summary {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--color-border);
+            font-size: 1.1rem;
+        }
+        .cart-summary div {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: .5rem;
+        }
+        .cart-summary .total {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--color-secondary);
+        }
+        .cart-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .cart-actions .btn {
+            width: 100%;
+        }
+        .empty-cart-message {
+            text-align: center;
+            padding: 2rem;
+            color: var(--color-text-light);
+            font-style: italic;
+        }
 
         /* ------------------- */
         /* TOAST NOTIFICATION  */
@@ -441,98 +732,43 @@
         /* ------------------- */
         /* RESPONSIVE STYLES   */
         /* ------------------- */
-        @media (max-width: 992px) {
-            .main-nav {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100vh;
-                background-color: var(--color-background);
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                transform: translateX(100%);
-                transition: transform var(--transition-speed) ease-in-out;
-                z-index: 999;
-            }
-            .main-nav.active { transform: translateX(0); }
-            .nav-links {
-                flex-direction: column;
-                text-align: center;
-                gap: 2rem;
-            }
-            .nav-links a { font-size: 1.5rem; }
-            .header-actions { z-index: 1001; }
-            .mobile-menu-toggle { display: block; }
-            .gallery-grid { columns: 3 200px; }
-        }
-
         @media (max-width: 768px) {
             .timeline:after { left: 31px; }
             .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; }
             .timeline-item.left, .timeline-item.right { left: 0%; }
             .timeline-item.left:after, .timeline-item.right:after { left: 15px; }
             .gallery-grid { columns: 2 200px; }
+            .hero-slider .swiper-slide { min-height: 600px; }
+            .hero-content h1 { font-size: clamp(2.5rem, 8vw, 4rem); }
+            .hero-content p { font-size: 1rem; margin: 1rem auto 2rem; }
+            .section { padding: 4rem 0; }
+            .section-header { margin-bottom: 2.5rem; }
+            .section-header .title { font-size: clamp(2rem, 6vw, 3rem); }
+            .menu-card-actions { flex-direction: column; } /* Stack buttons on small screens */
+            .menu-card-actions .btn { width: 100%; }
+
+            /* Footer Responsive */
+            .footer-contact-info ul {
+                max-width: 100%; /* Allow full width on smaller screens */
+                padding: 0 1rem;
+            }
+            .footer-contact-info li {
+                justify-content: flex-start; /* Align left for better mobile experience */
+            }
         }
         
         @media (max-width: 576px) {
             .gallery-grid { columns: 1; }
+            .modal-content { border-radius: 0; } /* Full width on tiny screens */
+            .modal-header, .modal-body { padding: 1rem 1.25rem; }
+            .location-input-group { flex-direction: column; align-items: stretch; }
+            .location-input-group .btn { width: 100%; }
+            .cart-item { flex-wrap: wrap; justify-content: space-between; gap: .75rem; }
+            .cart-item-img { order: -1; margin-right: 0; }
+            .cart-item-details { flex-basis: 100%; text-align: center; }
+            .cart-item-quantity { width: 100%; justify-content: center; margin-top: .5rem; }
+            .cart-item-price { margin-left: 0; width: 100%; text-align: center; margin-top: .5rem;}
         }
-
-/* ------------------- */
-/* FOOTER - CONTACT    */
-/* ------------------- */
-.footer-contact-info {
-    margin-top: 2rem;
-    text-align: center;
-    color: rgba(255, 255, 255, .9);
-}
-.footer-contact-info h3 {
-    font-family: var(--font-heading);
-    color: var(--color-primary);
-    font-size: 1.7rem;
-    margin-bottom: 1.25rem;
-}
-.footer-contact-info ul {
-    list-style: none;
-    padding: 0;
-    margin: 0 auto 1.5rem;
-    max-width: 350px; /* Limit width for better readability */
-    line-height: 1.6;
-}
-.footer-contact-info li {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center; /* Center items for single column */
-    gap: .75rem;
-    margin-bottom: .75rem;
-    font-size: 0.95rem;
-}
-.footer-contact-info li i {
-    color: var(--color-primary);
-    font-size: 1.1rem;
-    margin-top: 3px; /* Align icon better with text */
-}
-.footer-contact-info li span {
-    text-align: left;
-}
-.footer-contact-info li strong {
-    color: #fff;
-    white-space: nowrap; /* Keep label and colon on one line */
-    margin-right: 5px;
-}
-
-/* Responsive adjustments for footer contact info */
-@media (max-width: 768px) {
-    .footer-contact-info ul {
-        max-width: 100%; /* Allow full width on smaller screens */
-        padding: 0 1rem;
-    }
-    .footer-contact-info li {
-        justify-content: flex-start; /* Align left for better mobile experience */
-    }
-}
 
     </style>
 </head>
@@ -546,6 +782,10 @@
                 <div class="language-toggle">
                     <button class="lang-btn active" data-lang="id">ID</button>
                     <button class="lang-btn" data-lang="en">EN</button>
+                </div>
+                <div class="cart-icon" id="cart-icon" aria-label="Shopping Cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge" id="cart-badge">0</span>
                 </div>
                 <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle Menu">
                     <i class="fas fa-bars"></i>
@@ -621,52 +861,51 @@
                     <h2 class="title" data-lang-key="gallery_title">Tasteful Memories</h2>
                 </div>
                 <div class="gallery-grid" id="gallery-grid" data-aos="fade-up">
-                     </div>
+                    </div>
             </div>
         </section>
     </main>
     
     <footer class="main-footer">
-    <div class="container">
-        <img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo Lobster Shack" class="logo">
-        <p data-lang-key="footer_description">Experience the finest catch of the day, grilled to perfection, in a cozy and inviting atmosphere. We look forward to welcoming you.</p>
-        
-        <div class="footer-contact-info">
-            <h3 data-lang-key="footer_contact_title">Contact Us</h3>
-            <ul>
-                <li>
-                    <i class="fas fa-map-marker-alt"></i> 
-                    <span data-lang-key="footer_address_label">Address:</span> 
-                    <span data-lang-key="footer_address_value">Jl. Raya Pantai Kuta No. 123, Kuta, Bali</span>
-                </li>
-                <li>
-                    <i class="fas fa-phone"></i> 
-                    <span data-lang-key="footer_phone_label">Phone:</span> 
-                    <span data-lang-key="footer_phone_value">+62 812-3456-7890</span>
-                </li>
-                <li>
-                    <i class="fas fa-envelope"></i> 
-                    <span data-lang-key="footer_email_label">Email:</span> 
-                    <span data-lang-key="footer_email_value">info@lobstershackbali.com</span>
-                </li>
-                <li>
-                    <i class="fas fa-clock"></i> 
-                    <span data-lang-key="footer_hours_label">Opening Hours:</span> 
-                    <span data-lang-key="footer_hours_value">Daily: 11:00 AM - 10:00 PM WITA</span>
-                </li>
+        <div class="container">
+            <img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo Lobster Shack" class="logo">
+            <p data-lang-key="footer_description">Experience the finest catch of the day, grilled to perfection, in a cozy and inviting atmosphere. We look forward to welcoming you.</p>
+            
+            <div class="footer-contact-info">
+                <h3 data-lang-key="footer_contact_title">Contact Us</h3>
+                <ul>
+                    <li>
+                        <i class="fas fa-map-marker-alt"></i> 
+                        <span data-lang-key="footer_address_label">Address:</span> 
+                        <span data-lang-key="footer_address_value">Jl. Raya Pantai Kuta No. 123, Kuta, Bali</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-phone"></i> 
+                        <span data-lang-key="footer_phone_label">Phone:</span> 
+                        <span data-lang-key="footer_phone_value">+62 812-3456-7890</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-envelope"></i> 
+                        <span data-lang-key="footer_email_label">Email:</span> 
+                        <span data-lang-key="footer_email_value">info@lobstershackbali.com</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-clock"></i> 
+                        <span data-lang-key="footer_hours_label">Opening Hours:</span> 
+                        <span data-lang-key="footer_hours_value">Daily: 11:00 AM - 10:00 PM WITA</span>
+                    </li>
+                </ul>
+            </div>
+            <ul class="footer-socials">
+                <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+                <li><a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a></li>
+                <li><a href="#" aria-label="TripAdvisor"><i class="fab fa-tripadvisor"></i></a></li>
             </ul>
+            <div class="footer-copyright">
+                <p data-lang-key="footer_copyright">© 2025 Lobster Shack Bali. All Rights Reserved.</p>
+            </div>
         </div>
-        <ul class="footer-socials">
-            <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
-            <li><a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a></li>
-            <li><a href="#" aria-label="TripAdvisor"><i class="fab fa-tripadvisor"></i></a></li>
-        </ul>
-        <div class="footer-copyright">
-            <p data-lang-key="footer_copyright">Â© 2025 Lobster Shack Bali. All Rights Reserved.</p>
-        </div>
-    </div>
-</footer>
-
+    </footer>
 
     <div id="order-modal" class="modal-overlay">
       <div class="modal-content">
@@ -677,7 +916,7 @@
         <div class="modal-body">
             <form id="order-form">
                 <div id="modal-product-details" style="text-align:center; margin-bottom: 2rem;">
-                  </div>
+                    </div>
                 <div class="form-group">
                     <label for="customer-name" data-lang-key="modal_name_label">Name</label>
                     <input type="text" id="customer-name" required>
@@ -685,6 +924,14 @@
                 <div class="form-group">
                     <label for="customer-phone" data-lang-key="modal_phone_label">Phone Number</label>
                     <input type="tel" id="customer-phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="customer-address" data-lang-key="footer_address_label">Address</label>
+                    <div class="location-input-group">
+                        <input type="text" id="customer-address" placeholder="e.g. Jl. Raya Kuta No. 123" required>
+                        <button type="button" class="btn" id="detect-location-btn"><i class="fas fa-location-dot"></i> <span data-lang-key="modal_detect_location">Detect Location</span></button>
+                    </div>
+                    <div id="address-map"></div>
                 </div>
                 <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
                     <i class="fas fa-paper-plane"></i> <span data-lang-key="modal_submit_button">Submit Order</span>
@@ -694,289 +941,679 @@
       </div>
     </div>
     
+    <div id="cart-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-lang-key="cart_title">Your Cart</h2>
+                <button class="modal-close-btn" aria-label="Close cart modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <ul class="cart-items-list" id="cart-items-list">
+                    </ul>
+                <div class="empty-cart-message" id="empty-cart-message" style="display:none;">Your cart is empty.</div>
+                <div class="cart-summary">
+                    <div>
+                        <span data-lang-key="cart_subtotal">Subtotal:</span>
+                        <span id="cart-subtotal">Rp 0</span>
+                    </div>
+                    <div>
+                        <span data-lang-key="cart_delivery_fee">Delivery Fee:</span>
+                        <span id="cart-delivery-fee">Rp 20.000</span>
+                    </div>
+                    <div class="total">
+                        <span data-lang-key="cart_total">Total:</span>
+                        <span id="cart-total">Rp 0</span>
+                    </div>
+                </div>
+                <div class="cart-actions">
+                    <button class="btn" id="checkout-btn" data-lang-key="cart_checkout_button">Proceed to Checkout</button>
+                    <button class="btn btn-secondary" id="continue-shopping-btn" data-lang-key="cart_continue_shopping">Continue Shopping</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="toast" class="toast-notification">
         <i id="toast-icon" class="fas fa-check-circle"></i>
         <p id="toast-message">Notification</p>
     </div>
 
-
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initMaps" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADCv-AX09lIYq6Gr7Gm56rChp4kS0J08Q&libraries=places&callback=initMaps" async defer></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
 
     <script>
-        'use strict';
+  'use strict';
 
-        // Konfigurasi Firebase Anda
-        const firebaseConfig = {
-            apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
-            authDomain: "lobster-shack-bali.firebaseapp.com",
-            databaseURL: "https://lobster-shack-bali-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "lobster-shack-bali",
-            storageBucket: "lobster-shack-bali.firebasestorage.app",
-            messagingSenderId: "42452974733",
-            appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
+// Konfigurasi Firebase Anda
+const firebaseConfig = {
+    apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk", // Ganti dengan API Key Firebase Anda
+    authDomain: "lobster-shack-bali.firebaseapp.com",
+    databaseURL: "https://lobster-shack-bali-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "lobster-shack-bali",
+    storageBucket: "lobster-shack-bali.firebasestorage.app",
+    messagingSenderId: "42452974733",
+    appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
+};
+
+// Inisialisasi Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// Global variables
+let currentLanguage = localStorage.getItem('preferredLanguage') || 'id';
+let siteData = {};
+let lightbox;
+let cartItems = JSON.parse(localStorage.getItem('cartItems')) || []; // Load cart from local storage
+let map;
+let marker;
+let geocoder;
+let currentAddressLatLng = { lat: -8.749000, lng: 115.166667 }; // Default Kuta, Bali coordinates
+
+// DOM Elements
+const domElements = {
+    body: document.body,
+    mainNav: document.getElementById('main-nav'),
+    mobileMenuToggle: document.getElementById('mobile-menu-toggle'),
+    langToggleContainer: document.querySelector('.language-toggle'),
+    heroSliderWrapper: document.getElementById('hero-slider-wrapper'),
+    historyTimeline: document.getElementById('history-timeline'),
+    featuredMenuWrapper: document.getElementById('featured-menu-wrapper'),
+    menuGrid: document.getElementById('menu-grid'),
+    menuFilters: document.getElementById('menu-filters'),
+    galleryGrid: document.getElementById('gallery-grid'),
+    orderModal: document.getElementById('order-modal'),
+    orderForm: document.getElementById('order-form'),
+    modalProductDetails: document.getElementById('modal-product-details'),
+    modalCloseBtns: document.querySelectorAll('.modal-close-btn'), // Select all close buttons
+    customerAddressInput: document.getElementById('customer-address'),
+    detectLocationBtn: document.getElementById('detect-location-btn'),
+    addressMap: document.getElementById('address-map'),
+    toast: document.getElementById('toast'),
+    toastIcon: document.getElementById('toast-icon'),
+    toastMessage: document.getElementById('toast-message'),
+    cartIcon: document.getElementById('cart-icon'),
+    cartBadge: document.getElementById('cart-badge'),
+    cartModal: document.getElementById('cart-modal'),
+    cartItemsList: document.getElementById('cart-items-list'),
+    emptyCartMessage: document.getElementById('empty-cart-message'),
+    cartSubtotal: document.getElementById('cart-subtotal'),
+    cartDeliveryFee: document.getElementById('cart-delivery-fee'),
+    cartTotal: document.getElementById('cart-total'),
+    checkoutBtn: document.getElementById('checkout-btn'),
+    continueShoppingBtn: document.getElementById('continue-shopping-btn')
+};
+
+// --- Google Maps Initialization (called by Maps API script) ---
+window.initMaps = () => {
+    map = new google.maps.Map(domElements.addressMap, {
+        center: currentAddressLatLng,
+        zoom: 15,
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false,
+    });
+    marker = new google.maps.Marker({
+        position: currentAddressLatLng,
+        map: map,
+        draggable: true,
+    });
+    geocoder = new google.maps.Geocoder();
+
+    // Update input field when marker is dragged
+    marker.addListener('dragend', () => {
+        const latLng = marker.getPosition();
+        geocodeLatLng(latLng);
+    });
+
+    // Update map/marker when address input changes
+    domElements.customerAddressInput.addEventListener('change', () => {
+        geocodeAddress(domElements.customerAddressInput.value);
+    });
+
+    console.log("Google Maps Initialized.");
+};
+
+// Geocode LatLng to Address
+const geocodeLatLng = (latLng) => {
+    geocoder.geocode({ 'location': latLng }, (results, status) => {
+        if (status === 'OK') {
+            if (results[0]) {
+                domElements.customerAddressInput.value = results[0].formatted_address;
+                currentAddressLatLng = latLng;
+            } else {
+                showToast("No address found for this location.", 'error');
+            }
+        } else {
+            console.error('Geocoder failed due to: ' + status);
+            showToast("Error getting address from location.", 'error');
+        }
+    });
+};
+
+// Geocode Address to LatLng
+const geocodeAddress = (address) => {
+    geocoder.geocode({ 'address': address }, (results, status) => {
+        if (status === 'OK') {
+            if (results[0]) {
+                map.setCenter(results[0].geometry.location);
+                marker.setPosition(results[0].geometry.location);
+                currentAddressLatLng = results[0].geometry.location;
+            } else {
+                showToast("Address not found.", 'error');
+            }
+        } else {
+            console.error('Geocode was not successful for the following reason: ' + status);
+            showToast("Error finding address on map.", 'error');
+        }
+    });
+};
+
+// Update map with new coordinates
+const updateMap = (lat, lng, address = '') => {
+    currentAddressLatLng = { lat, lng };
+    map.setCenter(currentAddressLatLng);
+    marker.setPosition(currentAddressLatLng);
+    if (address) {
+        domElements.customerAddressInput.value = address;
+    }
+};
+
+// Detect user's current location
+const detectLocation = () => {
+    if (navigator.geolocation) {
+        showToast(currentLanguage === 'id' ? 'Mendeteksi lokasi...' : 'Detecting location...', 'info');
+        navigator.geolocation.getCurrentPosition(position => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            geocodeLatLng({ lat, lng }); // Reverse geocode to get address
+            showToast(currentLanguage === 'id' ? 'Lokasi ditemukan!' : 'Location detected!', 'success');
+        }, () => {
+            showToast(currentLanguage === 'id' ? 'Gagal mendeteksi lokasi. Pastikan izin lokasi diberikan.' : 'Failed to detect location. Please allow location access.', 'error');
+        });
+    } else {
+        showToast(currentLanguage === 'id' ? 'Geolocation tidak didukung oleh browser Anda.' : 'Geolocation is not supported by your browser.', 'error');
+    }
+};
+
+// --- TRANSLATION & CONTENT RENDER ---
+const updateTextContent = () => {
+    document.querySelectorAll('[data-lang-key]').forEach(el => {
+        const key = el.dataset.langKey;
+        const content = siteData.content[key];
+        if (content) {
+            el.innerHTML = content[`text_${currentLanguage}`] || content.text_id || el.innerHTML;
+        }
+    });
+    document.title = siteData.content?.page_title?.[`text_${currentLanguage}`] || 'Lobster Shack Bali';
+    updateLangButtons();
+};
+
+const updateLangButtons = () => {
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === currentLanguage);
+    });
+};
+
+// --- RENDER FUNCTIONS ---
+const renderBanners = () => {
+    domElements.heroSliderWrapper.innerHTML = siteData.banners.map(banner => `
+        <div class="swiper-slide" style="background-image: url('${banner.image_url}');">
+            <div class="slide-overlay"></div>
+        </div>
+    `).join('');
+    new Swiper('.hero-slider', { 
+        loop: true, 
+        effect: 'fade', 
+        autoplay: { delay: 5000, disableOnInteraction: false },
+        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+        pagination: { el: '.swiper-pagination', clickable: true }
+    });
+};
+
+const renderHistory = () => {
+    domElements.historyTimeline.innerHTML = siteData.history.map((item, index) => `
+        <div class="timeline-item ${index % 2 === 0 ? 'left' : 'right'}" data-aos="fade-up">
+            <div class="timeline-content">
+                <div class="year">${item.year}</div>
+                <h3>${item[`title_${currentLanguage}`] || item.title_id}</h3>
+                <p>${item[`text_${currentLanguage}`] || item.text_id}</p>
+            </div>
+        </div>
+    `).join('');
+};
+
+const renderMenu = () => {
+    let featuredHTML = '';
+    let gridHTML = '';
+    
+    siteData.products.forEach(p => {
+        const cardHTML = `
+            <div class="menu-card" data-category="${p.category_name}" data-product-id="${p.id}">
+                <div class="menu-card-image"><img src="${p.imageUrl}" alt="${p.name_en}"></div>
+                <div class="menu-card-content">
+                    <h3>${p[`name_${currentLanguage}`] || p.name_id}</h3>
+                    <p class="menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(p.price)}</p>
+                    <p class="description">${(p[`description_${currentLanguage}`] || p.description_id).substring(0, 100)}...</p>
+                    <div class="menu-card-actions">
+                        <button class="btn btn-secondary add-to-cart-btn" data-product-id="${p.id}"><i class="fas fa-cart-plus"></i> <span data-lang-key="add_to_cart_btn">Add to Cart</span></button>
+                        <button class="btn order-now-btn" data-product-id="${p.id}"><i class="fas fa-utensils"></i> <span data-lang-key="order_now_btn">Order Now</span></button>
+                    </div>
+                </div>
+            </div>`;
+        gridHTML += cardHTML;
+        if (p.is_featured) {
+            featuredHTML += `<div class="swiper-slide">${cardHTML}</div>`;
+        }
+    });
+
+    domElements.featuredMenuWrapper.innerHTML = featuredHTML;
+    domElements.menuGrid.innerHTML = gridHTML;
+    
+    const allText = currentLanguage === 'id' ? 'Semua' : 'All';
+    domElements.menuFilters.innerHTML = `<button class="filter-btn active" data-filter="all">${allText}</button>` + siteData.categories.map(c => 
+        `<button class="filter-btn" data-filter="${c.name}">${c.name}</button>`
+    ).join('');
+
+    new Swiper('.featured-slider', { 
+        slidesPerView: 'auto', 
+        spaceBetween: 30, 
+        grabCursor: true,
+        pagination: { el: '.swiper-pagination', clickable: true }
+    });
+};
+
+const renderGallery = () => {
+    domElements.galleryGrid.innerHTML = siteData.gallery_images.map(img => `
+        <a href="${img.image_url}" class="glightbox" data-gallery="our-gallery" data-title="${img[`caption_${currentLanguage}`] || img.caption_id}">
+            <img src="${img.image_url}" alt="${img.caption_en}">
+        </a>
+    `).join('');
+    if (lightbox) lightbox.reload();
+    else lightbox = GLightbox({ selector: '.glightbox' });
+};
+
+// --- CART FUNCTIONS ---
+const updateCartBadge = () => {
+    const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    domElements.cartBadge.textContent = totalItems;
+    domElements.cartBadge.classList.toggle('has-items', totalItems > 0);
+};
+
+const saveCart = () => {
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    updateCartBadge();
+};
+
+const addToCart = (productId) => {
+    const product = siteData.products.find(p => p.id === productId);
+    if (!product) return;
+
+    const existingItem = cartItems.find(item => item.id === productId);
+
+    if (existingItem) {
+        existingItem.quantity++;
+    } else {
+        cartItems.push({
+            id: product.id,
+            name_id: product.name_id,
+            name_en: product.name_en,
+            price: product.price,
+            imageUrl: product.imageUrl,
+            quantity: 1
+        });
+    }
+    saveCart();
+    showToast(currentLanguage === 'id' ? `${product[`name_${currentLanguage}`] || product.name_id} ditambahkan ke keranjang!` : `${product.name_en} added to cart!`, 'success');
+    renderCartItems(); // Re-render cart modal if open
+};
+
+const updateCartItemQuantity = (productId, change) => {
+    const itemIndex = cartItems.findIndex(item => item.id === productId);
+    if (itemIndex > -1) {
+        cartItems[itemIndex].quantity += change;
+        if (cartItems[itemIndex].quantity <= 0) {
+            cartItems.splice(itemIndex, 1); // Remove if quantity is 0 or less
+        }
+        saveCart();
+        renderCartItems();
+    }
+};
+
+const calculateCartTotals = () => {
+    let subtotal = 0;
+    cartItems.forEach(item => {
+        subtotal += item.price * item.quantity;
+    });
+    const deliveryFee = 20000; // Fixed delivery fee
+    const total = subtotal + deliveryFee;
+
+    domElements.cartSubtotal.textContent = `Rp ${new Intl.NumberFormat('id-ID').format(subtotal)}`;
+    domElements.cartDeliveryFee.textContent = `Rp ${new Intl.NumberFormat('id-ID').format(deliveryFee)}`;
+    domElements.cartTotal.textContent = `Rp ${new Intl.NumberFormat('id-ID').format(total)}`;
+};
+
+const renderCartItems = () => {
+    if (cartItems.length === 0) {
+        domElements.cartItemsList.innerHTML = '';
+        domElements.emptyCartMessage.style.display = 'block';
+    } else {
+        domElements.emptyCartMessage.style.display = 'none';
+        domElements.cartItemsList.innerHTML = cartItems.map(item => `
+            <li class="cart-item">
+                <img src="${item.imageUrl}" alt="${item.name_en}" class="cart-item-img">
+                <div class="cart-item-details">
+                    <h4>${item[`name_${currentLanguage}`] || item.name_id}</h4>
+                    <p>Rp ${new Intl.NumberFormat('id-ID').format(item.price)} / pc</p>
+                    <div class="cart-item-quantity">
+                        <button data-product-id="${item.id}" data-action="decrement">-</button>
+                        <span>${item.quantity}</span>
+                        <button data-product-id="${item.id}" data-action="increment">+</button>
+                    </div>
+                </div>
+                <span class="cart-item-price">Rp ${new Intl.NumberFormat('id-ID').format(item.price * item.quantity)}</span>
+            </li>
+        `).join('');
+    }
+    calculateCartTotals();
+};
+
+const openCartModal = () => {
+    renderCartItems();
+    domElements.cartModal.classList.add('visible');
+};
+
+const closeCartModal = () => {
+    domElements.cartModal.classList.remove('visible');
+};
+
+// --- ORDER MODAL FUNCTIONS ---
+let currentOrderProduct = null; // Store product for single order
+let currentOrderCartItems = null; // Store cart items for checkout order
+
+const openOrderModal = (productId = null, itemsFromCart = null) => {
+    domElements.orderForm.reset();
+    domElements.modalProductDetails.innerHTML = ''; // Clear previous content
+
+    if (productId) {
+        currentOrderProduct = siteData.products.find(p => p.id === productId);
+        currentOrderCartItems = null; // Reset cart items if single order
+        if (currentOrderProduct) {
+            domElements.modalProductDetails.innerHTML = `
+                <img src="${currentOrderProduct.imageUrl}" alt="${currentOrderProduct.name_en}">
+                <h3>${currentOrderProduct[`name_${currentLanguage}`] || currentOrderProduct.name_id}</h3>
+                <p class="menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(currentOrderProduct.price)}</p>
+            `;
+        }
+    } else if (itemsFromCart && itemsFromCart.length > 0) {
+        currentOrderProduct = null; // Reset single product if ordering from cart
+        currentOrderCartItems = itemsFromCart;
+        let itemsHtml = currentOrderCartItems.map(item => `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.5rem;">
+                <span>${item.quantity}x ${item[`name_${currentLanguage}`] || item.name_id}</span>
+                <span>Rp ${new Intl.NumberFormat('id-ID').format(item.price * item.quantity)}</span>
+            </div>
+        `).join('');
+        domElements.modalProductDetails.innerHTML = `
+            <h3>${currentLanguage === 'id' ? 'Ringkasan Pesanan Anda' : 'Your Order Summary'}</h3>
+            ${itemsHtml}
+            <hr style="border-top: 1px dashed var(--color-border); margin: 1rem 0;">
+            <p style="font-weight: bold; font-size: 1.1rem;">
+                ${currentLanguage === 'id' ? 'Total (belum termasuk ongkir):' : 'Subtotal:'} 
+                Rp ${new Intl.NumberFormat('id-ID').format(cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0))}
+            </p>
+        `;
+    } else {
+        showToast(currentLanguage === 'id' ? 'Tidak ada item untuk dipesan.' : 'No items to order.', 'error');
+        return;
+    }
+    
+    domElements.orderModal.classList.add('visible');
+    
+    // Ensure map is initialized and centered
+    if (map) {
+        map.setCenter(currentAddressLatLng);
+        marker.setPosition(currentAddressLatLng);
+        map.setZoom(15); // Reset zoom
+    } else {
+        // Fallback or re-initiate if map somehow didn't load (unlikely with async defer)
+        // initMaps() is called by the Google Maps API script directly
+    }
+};
+
+const closeOrderModal = () => {
+    domElements.orderModal.classList.remove('visible');
+    domElements.orderForm.reset();
+    domElements.customerAddressInput.value = ''; // Clear address input
+    currentOrderProduct = null;
+    currentOrderCartItems = null;
+    // Reset map to default center if needed, or keep last position
+    // updateMap(-8.749000, 115.166667); 
+};
+
+// --- FULL PAGE RENDER ---
+const renderAll = () => {
+    renderBanners();
+    renderHistory();
+    renderMenu();
+    renderGallery();
+    updateTextContent();
+    updateCartBadge(); // Initial cart badge update
+    AOS.init({ duration: 800, once: true, offset: 50 });
+};
+
+// --- DATA FETCHING ---
+async function fetchAllData() {
+    try {
+        const collections = ['products', 'categories', 'content', 'banners', 'gallery_images', 'history'];
+        const promises = collections.map(col => db.collection(col).get());
+        
+        const [
+            productsSnap, categoriesSnap, contentSnap, 
+            bannersSnap, gallerySnap, historySnap
+        ] = await Promise.all(promises);
+
+        siteData.products = productsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        siteData.categories = categoriesSnap.docs.map(doc => doc.data()).sort((a,b) => a.id - b.id);
+        siteData.banners = bannersSnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
+        siteData.gallery_images = gallerySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
+        siteData.history = historySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
+        
+        siteData.content = {};
+        contentSnap.docs.forEach(doc => { siteData.content[doc.id] = doc.data(); });
+
+        // Add new language keys for modal/cart if not already in Firestore (for development)
+        const newContentKeys = {
+            "add_to_cart_btn": {"text_id": "Tambah ke Keranjang", "text_en": "Add to Cart"},
+            "order_now_btn": {"text_id": "Pesan Sekarang", "text_en": "Order Now"},
+            "modal_detect_location": {"text_id": "Deteksi Lokasi", "text_en": "Detect Location"},
+            "cart_title": {"text_id": "Keranjang Anda", "text_en": "Your Cart"},
+            "cart_subtotal": {"text_id": "Subtotal:", "text_en": "Subtotal:"},
+            "cart_delivery_fee": {"text_id": "Biaya Pengiriman:", "text_en": "Delivery Fee:"},
+            "cart_total": {"text_id": "Total:", "text_en": "Total:"},
+            "cart_checkout_button": {"text_id": "Lanjut ke Pembayaran", "text_en": "Proceed to Checkout"},
+            "cart_continue_shopping": {"text_id": "Lanjut Belanja", "text_en": "Continue Shopping"}
+        };
+        Object.assign(siteData.content, newContentKeys); // Merge them
+
+        renderAll();
+    } catch (error) {
+        console.error("Error fetching data from Firebase:", error);
+        showToast("Failed to load website data.", 'error');
+    }
+}
+
+// --- EVENT LISTENERS ---
+document.addEventListener('DOMContentLoaded', () => {
+    domElements.langToggleContainer.addEventListener('click', e => {
+        if (!e.target.matches('.lang-btn')) return;
+        currentLanguage = e.target.dataset.lang;
+        localStorage.setItem('preferredLanguage', currentLanguage);
+        renderHistory(); // Re-render dynamic content
+        renderMenu();
+        renderGallery();
+        renderCartItems(); // Re-render cart with new language
+        updateTextContent();
+    });
+
+    domElements.mobileMenuToggle.addEventListener('click', () => {
+        domElements.mainNav.classList.toggle('active');
+        domElements.body.classList.toggle('nav-open');
+        const icon = domElements.mobileMenuToggle.querySelector('i');
+        icon.classList.toggle('fa-bars');
+        icon.classList.toggle('fa-times');
+    });
+
+    domElements.mainNav.addEventListener('click', (e) => { // Close nav on link click
+         if (e.target.matches('a') && domElements.mainNav.classList.contains('active')) {
+            domElements.mobileMenuToggle.click(); // Simulate click to close nav
+         }
+    });
+
+    domElements.menuFilters.addEventListener('click', handleMenuFilter);
+
+    // Event delegation for Add to Cart and Order Now buttons on menu grid
+    domElements.menuGrid.addEventListener('click', e => {
+        if (e.target.matches('.add-to-cart-btn') || e.target.closest('.add-to-cart-btn')) {
+            const productId = e.target.dataset.productId || e.target.closest('.add-to-cart-btn').dataset.productId;
+            addToCart(productId);
+        } else if (e.target.matches('.order-now-btn') || e.target.closest('.order-now-btn')) {
+            const productId = e.target.dataset.productId || e.target.closest('.order-now-btn').dataset.productId;
+            openOrderModal(productId);
+        }
+    });
+
+    // Close buttons for all modals
+    domElements.modalCloseBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const modal = e.target.closest('.modal-overlay');
+            if (modal.id === 'order-modal') closeOrderModal();
+            if (modal.id === 'cart-modal') closeCartModal();
+        });
+    });
+
+    // Close modal on overlay click
+    domElements.orderModal.addEventListener('click', e => { 
+        if (e.target === domElements.orderModal) closeOrderModal();
+    });
+    domElements.cartModal.addEventListener('click', e => { 
+        if (e.target === domElements.cartModal) closeCartModal();
+    });
+
+    // Order Form Submission
+    domElements.orderForm.addEventListener('submit', async e => {
+        e.preventDefault();
+        const customerName = document.getElementById('customer-name').value;
+        const customerPhone = document.getElementById('customer-phone').value;
+        const customerAddress = domElements.customerAddressInput.value;
+
+        let orderDetails = [];
+        let orderType = '';
+
+        if (currentOrderProduct) {
+            // Single product order
+            orderDetails.push({
+                productId: currentOrderProduct.id,
+                name: currentOrderProduct[`name_${currentLanguage}`] || currentOrderProduct.name_id,
+                price: currentOrderProduct.price,
+                quantity: 1,
+                imageUrl: currentOrderProduct.imageUrl
+            });
+            orderType = 'single';
+        } else if (currentOrderCartItems) {
+            // Cart checkout order
+            orderDetails = [...currentOrderCartItems]; // Copy cart items
+            orderType = 'cart';
+        } else {
+            showToast(currentLanguage === 'id' ? 'Tidak ada item dalam pesanan.' : 'No items in order.', 'error');
+            return;
+        }
+
+        const orderData = {
+            customerName: customerName,
+            customerPhone: customerPhone,
+            customerAddress: customerAddress,
+            addressLat: currentAddressLatLng.lat,
+            addressLng: currentAddressLatLng.lng,
+            orderDetails: orderDetails,
+            totalAmount: orderDetails.reduce((sum, item) => sum + (item.price * item.quantity), 0) + 20000, // Include delivery fee
+            orderType: orderType,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
         };
 
-        // Inisialisasi Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        // Dummy initMaps function to avoid console errors
-        function initMaps() { console.log("Google Maps Initialized."); }
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            let currentLanguage = localStorage.getItem('preferredLanguage') || 'id';
-            let siteData = {};
-            let lightbox;
-
-            const domElements = {
-                body: document.body,
-                mainNav: document.getElementById('main-nav'),
-                mobileMenuToggle: document.getElementById('mobile-menu-toggle'),
-                langToggleContainer: document.querySelector('.language-toggle'),
-                heroSliderWrapper: document.getElementById('hero-slider-wrapper'),
-                historyTimeline: document.getElementById('history-timeline'),
-                featuredMenuWrapper: document.getElementById('featured-menu-wrapper'),
-                menuGrid: document.getElementById('menu-grid'),
-                menuFilters: document.getElementById('menu-filters'),
-                galleryGrid: document.getElementById('gallery-grid'),
-                orderModal: document.getElementById('order-modal'),
-                orderForm: document.getElementById('order-form'),
-                modalProductDetails: document.getElementById('modal-product-details'),
-                modalCloseBtn: document.querySelector('.modal-close-btn'),
-                toast: document.getElementById('toast'),
-                toastIcon: document.getElementById('toast-icon'),
-                toastMessage: document.getElementById('toast-message'),
-            };
-
-            // --- TRANSLATION & CONTENT RENDER ---
-            const updateTextContent = () => {
-                document.querySelectorAll('[data-lang-key]').forEach(el => {
-                    const key = el.dataset.langKey;
-                    const content = siteData.content[key];
-                    if (content) {
-                        el.innerHTML = content[`text_${currentLanguage}`] || content.text_id || el.innerHTML;
-                    }
-                });
-                document.title = siteData.content?.page_title?.[`text_${currentLanguage}`] || 'Lobster Shack Bali';
-                updateLangButtons();
-            };
-
-            const updateLangButtons = () => {
-                document.querySelectorAll('.lang-btn').forEach(btn => {
-                    btn.classList.toggle('active', btn.dataset.lang === currentLanguage);
-                });
-            };
-
-            // --- RENDER FUNCTIONS ---
-            const renderBanners = () => {
-                domElements.heroSliderWrapper.innerHTML = siteData.banners.map(banner => `
-                    <div class="swiper-slide" style="background-image: url('${banner.image_url}');">
-                        <div class="slide-overlay"></div>
-                    </div>
-                `).join('');
-                new Swiper('.hero-slider', { 
-                    loop: true, 
-                    effect: 'fade', 
-                    autoplay: { delay: 5000, disableOnInteraction: false },
-                    navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-                    pagination: { el: '.swiper-pagination', clickable: true }
-                });
-            };
-
-            const renderHistory = () => {
-                domElements.historyTimeline.innerHTML = siteData.history.map((item, index) => `
-                    <div class="timeline-item ${index % 2 === 0 ? 'left' : 'right'}" data-aos="fade-up">
-                        <div class="timeline-content">
-                            <div class="year">${item.year}</div>
-                            <h3>${item[`title_${currentLanguage}`] || item.title_id}</h3>
-                            <p>${item[`text_${currentLanguage}`] || item.text_id}</p>
-                        </div>
-                    </div>
-                `).join('');
-            };
-
-            const renderMenu = () => {
-                let featuredHTML = '';
-                let gridHTML = '';
-                
-                siteData.products.forEach(p => {
-                    const cardHTML = `
-                        <div class="menu-card" data-category="${p.category_name}">
-                            <div class="menu-card-image"><img src="${p.imageUrl}" alt="${p.name_en}"></div>
-                            <div class="menu-card-content">
-                                <h3>${p[`name_${currentLanguage}`] || p.name_id}</h3>
-                                <p class="menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(p.price)}</p>
-                                <p class="description">${(p[`description_${currentLanguage}`] || p.description_id).substring(0, 100)}...</p>
-                                <button class="btn order-now-btn" data-product-id="${p.id}" data-lang-key="modal_order_now">Order Now</button>
-                            </div>
-                        </div>`;
-                    gridHTML += cardHTML;
-                    if (p.is_featured) {
-                        featuredHTML += `<div class="swiper-slide">${cardHTML}</div>`;
-                    }
-                });
-
-                domElements.featuredMenuWrapper.innerHTML = featuredHTML;
-                domElements.menuGrid.innerHTML = gridHTML;
-                
-                const allText = currentLanguage === 'id' ? 'Semua' : 'All';
-                domElements.menuFilters.innerHTML = `<button class="filter-btn active" data-filter="all">${allText}</button>` + siteData.categories.map(c => 
-                    `<button class="filter-btn" data-filter="${c.name}">${c.name}</button>`
-                ).join('');
-
-                new Swiper('.featured-slider', { 
-                    slidesPerView: 'auto', 
-                    spaceBetween: 30, 
-                    grabCursor: true,
-                    pagination: { el: '.swiper-pagination', clickable: true }
-                });
-            };
+        try {
+            await db.collection('orders').add(orderData);
+            showToast(currentLanguage === 'id' ? 'Pesanan berhasil dikirim!' : 'Order submitted successfully!', 'success');
             
-            const renderGallery = () => {
-                domElements.galleryGrid.innerHTML = siteData.gallery_images.map(img => `
-                    <a href="${img.image_url}" class="glightbox" data-gallery="our-gallery" data-title="${img[`caption_${currentLanguage}`] || img.caption_id}">
-                        <img src="${img.image_url}" alt="${img.caption_en}">
-                    </a>
-                `).join('');
-                if (lightbox) lightbox.reload();
-                else lightbox = GLightbox({ selector: '.glightbox' });
-            };
-
-            // --- FULL PAGE RENDER ---
-            const renderAll = () => {
-                renderBanners();
-                renderHistory();
-                renderMenu();
-                renderGallery();
-                updateTextContent();
-                AOS.init({ duration: 800, once: true, offset: 50 });
-            };
-
-            // --- FUNCTIONALITY ---
-            const handleLanguageSwitch = (e) => {
-                if (!e.target.matches('.lang-btn')) return;
-                currentLanguage = e.target.dataset.lang;
-                localStorage.setItem('preferredLanguage', currentLanguage);
-                // Re-render dynamic content without re-fetching all data
-                renderHistory();
-                renderMenu();
-                renderGallery();
-                updateTextContent();
-            };
-
-            const handleMenuFilter = (e) => {
-                if (!e.target.matches('.filter-btn')) return;
-
-                domElements.menuFilters.querySelector('.active').classList.remove('active');
-                e.target.classList.add('active');
-
-                const filter = e.target.dataset.filter;
-                document.querySelectorAll('.menu-card').forEach(card => {
-                    const isVisible = filter === 'all' || card.dataset.category === filter;
-                    card.classList.toggle('hidden', !isVisible);
-                });
-            };
-            
-            const handleMobileNav = () => {
-                domElements.mainNav.classList.toggle('active');
-                domElements.body.classList.toggle('nav-open');
-                const icon = domElements.mobileMenuToggle.querySelector('i');
-                icon.classList.toggle('fa-bars');
-                icon.classList.toggle('fa-times');
-            };
-
-            const showToast = (message, type = 'success') => {
-                domElements.toastMessage.textContent = message;
-                domElements.toast.className = 'toast-notification'; // Reset classes
-                domElements.toast.classList.add(type);
-                
-                domElements.toastIcon.className = 'fas';
-                if (type === 'success') domElements.toastIcon.classList.add('fa-check-circle');
-                if (type === 'error') domElements.toastIcon.classList.add('fa-times-circle');
-
-                domElements.toast.classList.add('show');
-                setTimeout(() => domElements.toast.classList.remove('show'), 4000);
-            };
-
-            const openOrderModal = (productId) => {
-                const product = siteData.products.find(p => p.id === productId);
-                if (!product) return;
-                
-                domElements.modalProductDetails.innerHTML = `
-                    <img src="${product.imageUrl}" alt="${product.name_en}" style="width:150px; height:150px; object-fit:cover; border-radius:50%; margin-bottom:1rem; border: 4px solid var(--color-surface); box-shadow: var(--shadow-sm);">
-                    <h3>${product[`name_${currentLanguage}`] || product.name_id}</h3>
-                    <p class="menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(product.price)}</p>
-                `;
-                domElements.orderModal.classList.add('visible');
-            };
-
-            const closeOrderModal = () => {
-                domElements.orderModal.classList.remove('visible');
-                domElements.orderForm.reset();
-            };
-            
-            // --- DATA FETCHING ---
-            async function fetchAllData() {
-                try {
-                    const collections = ['products', 'categories', 'content', 'banners', 'gallery_images', 'history'];
-                    const promises = collections.map(col => db.collection(col).get());
-                    
-                    const [
-                        productsSnap, categoriesSnap, contentSnap, 
-                        bannersSnap, gallerySnap, historySnap
-                    ] = await Promise.all(promises);
-
-                    siteData.products = productsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    siteData.categories = categoriesSnap.docs.map(doc => doc.data()).sort((a,b) => a.id - b.id);
-                    siteData.banners = bannersSnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
-                    siteData.gallery_images = gallerySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
-                    siteData.history = historySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
-                    
-                    siteData.content = {};
-                    contentSnap.docs.forEach(doc => { siteData.content[doc.id] = doc.data(); });
-                    
-                    renderAll();
-                } catch (error) {
-                    console.error("Error fetching data from Firebase:", error);
-                    showToast("Failed to load website data.", 'error');
-                }
+            // Clear cart if ordered from cart
+            if (orderType === 'cart') {
+                cartItems = [];
+                saveCart();
+                renderCartItems();
+                closeCartModal();
             }
-            
-            // --- EVENT LISTENERS ---
-            domElements.langToggleContainer.addEventListener('click', handleLanguageSwitch);
-            domElements.mobileMenuToggle.addEventListener('click', handleMobileNav);
-            domElements.mainNav.addEventListener('click', (e) => { // Close nav on link click
-                 if (e.target.matches('a') && domElements.mainNav.classList.contains('active')) {
-                    handleMobileNav();
-                 }
-            });
-            domElements.menuFilters.addEventListener('click', handleMenuFilter);
-            domElements.menuGrid.addEventListener('click', e => {
-                if (e.target.matches('.order-now-btn')) {
-                    openOrderModal(e.target.dataset.productId);
-                }
-            });
-            domElements.modalCloseBtn.addEventListener('click', closeOrderModal);
-            domElements.orderModal.addEventListener('click', e => { // Close on overlay click
-                if (e.target === domElements.orderModal) closeOrderModal();
-            });
-            domElements.orderForm.addEventListener('submit', e => {
-                e.preventDefault();
-                const successMsg = currentLanguage === 'id' ? 'Pesanan berhasil dikirim!' : 'Order submitted successfully!';
-                closeOrderModal();
-                showToast(successMsg, 'success');
-            });
+            closeOrderModal();
 
-            // --- INITIALIZATION ---
-            fetchAllData();
-            updateLangButtons();
-        });
+        } catch (error) {
+            console.error("Error submitting order:", error);
+            showToast(currentLanguage === 'id' ? 'Gagal mengirim pesanan. Silakan coba lagi.' : 'Failed to submit order. Please try again.', 'error');
+        }
+    });
+
+    // Google Maps related events
+    domElements.detectLocationBtn.addEventListener('click', detectLocation);
+
+    // Cart icon click
+    domElements.cartIcon.addEventListener('click', openCartModal);
+
+    // Cart item quantity update
+    domElements.cartItemsList.addEventListener('click', e => {
+        const target = e.target;
+        if (target.matches('button[data-action="decrement"]')) {
+            const productId = target.dataset.productId;
+            updateCartItemQuantity(productId, -1);
+        } else if (target.matches('button[data-action="increment"]')) {
+            const productId = target.dataset.productId;
+            updateCartItemQuantity(productId, 1);
+        }
+    });
+
+    // Checkout button in cart modal
+    domElements.checkoutBtn.addEventListener('click', () => {
+        if (cartItems.length > 0) {
+            closeCartModal();
+            openOrderModal(null, cartItems); // Open order modal with cart items
+        } else {
+            showToast(currentLanguage === 'id' ? 'Keranjang Anda kosong!' : 'Your cart is empty!', 'error');
+        }
+    });
+
+    // Continue Shopping button in cart modal
+    domElements.continueShoppingBtn.addEventListener('click', closeCartModal);
+
+    // Initial data fetch and render
+    fetchAllData();
+});
+
+// Helper for menu filtering (already existing)
+const handleMenuFilter = (e) => {
+    if (!e.target.matches('.filter-btn')) return;
+
+    domElements.menuFilters.querySelector('.active').classList.remove('active');
+    e.target.classList.add('active');
+
+    const filter = e.target.dataset.filter;
+    document.querySelectorAll('.menu-card').forEach(card => {
+        const isVisible = filter === 'all' || card.dataset.category === filter;
+        card.classList.toggle('hidden', !isVisible);
+    });
+};
+
     </script>
 </body>
 </html>
