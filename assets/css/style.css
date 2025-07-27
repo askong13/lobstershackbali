@@ -556,3 +556,20 @@ body.ls-nav-open, body.ls-modal-open { overflow: hidden; }
     letter-spacing: 2px;
     font-family: monospace;
 }
+
+/* Styling for new date/time inputs in popup */
+.popup-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.popup-form-group input[type="date"],
+.popup-form-group input[type="time"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: #fff;
+    font-family: var(--ls-font-body);
+    color: var(--ls-color-text);
+    line-height: 1.2;
+}
