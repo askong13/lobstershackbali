@@ -1199,6 +1199,41 @@
         </div>
     </div>
 
+    <div id="order-detail-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="order-detail-modal-title">Detail Pesanan</h2>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body" id="order-detail-content">
+                </div>
+        </div>
+    </div>
+
+    <div id="order-status-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="order-status-modal-title">Ubah Status Pesanan</h2>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="order-status-form">
+                    <input type="hidden" id="order-status-order-id">
+                    <div class="form-group">
+                        <label for="order-status-select">Pilih Status Baru</label>
+                        <select id="order-status-select">
+                            <option value="new">Baru</option>
+                            <option value="processing">Diproses</option>
+                            <option value="completed">Selesai</option>
+                            <option value="cancelled">Dibatalkan</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn"><i class="fas fa-save"></i> Perbarui Status</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
 
     <div id="toast" class="toast-notification">
         <i id="toast-icon" class="fas fa-check-circle"></i>
@@ -1344,6 +1379,18 @@
             toast: document.getElementById('toast'),
             toastIcon: document.getElementById('toast-icon'),
             toastMessage: document.getElementById('toast-message'),
+            
+            // NEW: Order Detail Modal Elements
+            orderDetailModal: document.getElementById('order-detail-modal'),
+            orderDetailModalTitle: document.getElementById('order-detail-modal-title'),
+            orderDetailContent: document.getElementById('order-detail-content'),
+
+            // NEW: Order Status Modal Elements
+            orderStatusModal: document.getElementById('order-status-modal'),
+            orderStatusModalTitle: document.getElementById('order-status-modal-title'),
+            orderStatusForm: document.getElementById('order-status-form'),
+            orderStatusOrderIdField: document.getElementById('order-status-order-id'),
+            orderStatusSelect: document.getElementById('order-status-select'),
         };
 
         // --- Variabel Global Admin ---
@@ -1393,6 +1440,9 @@
             if (user) {
                 // Pengguna login, cek klaim kustom 'admin'
                 const idTokenResult = await user.getIdTokenResult();
+                // IMPORTANT: For this 'claims.admin' to work, you MUST set a custom claim
+                // for your admin user using Firebase Admin SDK (e.g., via a Cloud Function).
+                // Example: admin.auth().setCustomUserClaims(user.uid, { admin: true });
                 if (idTokenResult.claims.admin) {
                     console.log("Admin logged in!");
                     showAdminPanel();
@@ -1401,11 +1451,12 @@
                     if (adminDoc.exists) {
                         adminData = { id: adminDoc.id, ...adminDoc.data() };
                     } else {
+                        // Create a default admin profile if it doesn't exist
                         await db.collection('admins').doc(user.uid).set({
                             name: user.displayName || 'Admin Default',
                             email: user.email,
                             createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                        }, { merge: true });
+                        }, { merge: true }); // Use merge:true to avoid overwriting if doc exists
                         const newAdminDoc = await db.collection('admins').doc(user.uid).get();
                         adminData = { id: newAdminDoc.id, ...newAdminDoc.data() };
                     }
@@ -1490,13 +1541,15 @@
 
                 // Memastikan data dimuat/dirender saat section ditampilkan
                 switch (sectionId) {
-                    case 'orders': renderOrders(); break;
-                    case 'products': renderProducts(); break;
-                    case 'categories': renderCategories(); break;
+                    case 'orders': // Orders are handled by realtime listener, no explicit call needed here
+                    case 'products': // Products are handled by realtime listener
+                    case 'categories': // Categories are handled by realtime listener
+                    case 'banners': // Banners are handled by realtime listener
+                    case 'gallery-images': // Gallery images are handled by realtime listener
+                    case 'history': // History is handled by realtime listener
+                        // No explicit render call here, the real-time listeners will ensure data is up-to-date
+                        break; 
                     case 'content': renderContent(); break;
-                    case 'banners': renderBannersAdmin(); break;
-                    case 'gallery-images': renderGalleryImagesAdmin(); break;
-                    case 'history': renderHistoryAdmin(); break;
                     case 'profile':
                         adminDom.adminNameField.value = adminData.name || '';
                         adminDom.adminEmailField.value = auth.currentUser.email || '';
@@ -1561,17 +1614,19 @@
             // Realtime listener for Orders
             db.collection('orders').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
                 const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                // Hanya render jika section orders aktif atau di dashboard untuk update badge
-                if (currentActiveSection === 'orders' || currentActiveSection === 'dashboard') {
-                    renderOrders(orders);
-                }
+                // Always render orders as they change, regardless of active section
+                renderOrders(orders);
+                // Update dashboard notification badge from here too
+                const newOrdersCount = snapshot.docs.filter(doc => doc.data().status === 'new').length;
+                adminDom.notificationBadge.textContent = newOrdersCount;
+                adminDom.notificationBadge.style.display = newOrdersCount > 0 ? 'inline-block' : 'none';
             }, error => {
                 console.error("Error fetching real-time orders:", error);
                 showToast("Gagal memuat pesanan real-time.", 'error');
             });
 
             // Realtime listener for Categories to keep product dropdown updated
-            db.collection('categories').orderBy('id').onSnapshot(snapshot => {
+            db.collection('categories').orderBy('name').onSnapshot(snapshot => { // Order by name for consistency
                 categoriesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 populateCategoryDropdown();
                 // Re-render categories table if section is active
@@ -1591,7 +1646,7 @@
             }, error => {
                 console.error("Error fetching real-time products:", error);
             });
-             // Realtime listener for Banners
+            // Realtime listener for Banners
             db.collection('banners').onSnapshot(snapshot => {
                 if (currentActiveSection === 'banners') {
                     renderBannersAdmin();
@@ -1622,10 +1677,10 @@
 
             orders.forEach(order => {
                 const row = adminDom.ordersTableBody.insertRow();
-                row.insertCell().textContent = order.id.substring(0, 6); // Short ID
+                row.insertCell().textContent = order.id.substring(0, 6).toUpperCase(); // Short ID
                 row.insertCell().textContent = order.customerName || 'N/A';
                 row.insertCell().textContent = order.customerPhone || 'N/A';
-                row.insertCell().textContent = order.customerAddress || 'N/A';
+                row.insertCell().textContent = (order.customerAddress && order.customerAddress.length > 50) ? order.customerAddress.substring(0, 50) + '...' : order.customerAddress || 'N/A';
                 row.insertCell().textContent = `Rp ${new Intl.NumberFormat('id-ID').format(order.totalAmount || 0)}`;
                 const statusCell = row.insertCell();
                 statusCell.innerHTML = `<span class="status-badge ${order.status}">${order.status ? (order.status.charAt(0).toUpperCase() + order.status.slice(1)) : 'N/A'}</span>`;
@@ -1634,10 +1689,10 @@
                 const actionsCell = row.insertCell();
                 actionsCell.className = 'action-buttons';
                 actionsCell.innerHTML = `
-                    <button title="Lihat Detail" data-id="${order.id}" data-action="view"><i class="fas fa-eye"></i></button>
-                    <button title="Ubah Status" data-id="${order.id}" data-action="status"><i class="fas fa-edit"></i></button>
-                    <button title="Hapus Pesanan" data-id="${order.id}" data-action="delete"><i class="fas fa-trash-alt"></i></button>
-                    <button title="Follow Up Customer (WhatsApp)" data-id="${order.id}" data-action="whatsapp"><i class="fab fa-whatsapp"></i></button>
+                    <button type="button" title="Lihat Detail" data-id="${order.id}" data-action="view"><i class="fas fa-eye"></i></button>
+                    <button type="button" title="Ubah Status" data-id="${order.id}" data-action="status"><i class="fas fa-edit"></i></button>
+                    <button type="button" title="Hapus Pesanan" data-id="${order.id}" data-action="delete"><i class="fas fa-trash-alt"></i></button>
+                    <button type="button" title="Follow Up Customer (WhatsApp)" data-id="${order.id}" data-action="whatsapp"><i class="fab fa-whatsapp"></i></button>
                 `;
             });
         };
@@ -1645,7 +1700,7 @@
         const renderProducts = async () => {
             adminDom.productsTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Memuat produk...</td></tr>';
             try {
-                const snapshot = await db.collection('products').get();
+                const snapshot = await db.collection('products').orderBy('name_id').get(); // Order by name for consistency
                 const products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
                 adminDom.productsTableBody.innerHTML = '';
@@ -1665,8 +1720,8 @@
                     const actionsCell = row.insertCell();
                     actionsCell.className = 'action-buttons';
                     actionsCell.innerHTML = `
-                        <button title="Edit Produk" data-id="${p.id}" data-action="edit-product"><i class="fas fa-edit"></i></button>
-                        <button title="Hapus Produk" data-id="${p.id}" data-action="delete-product"><i class="fas fa-trash-alt"></i></button>
+                        <button type="button" title="Edit Produk" data-id="${p.id}" data-action="edit-product"><i class="fas fa-edit"></i></button>
+                        <button type="button" title="Hapus Produk" data-id="${p.id}" data-action="delete-product"><i class="fas fa-trash-alt"></i></button>
                     `;
                 });
             } catch (error) {
@@ -1688,13 +1743,13 @@
 
                 categoriesData.forEach(c => {
                     const row = adminDom.categoriesTableBody.insertRow();
-                    row.insertCell().textContent = c.id.substring(0, 6);
+                    row.insertCell().textContent = c.id.substring(0, 6).toUpperCase();
                     row.insertCell().textContent = c.name;
                     const actionsCell = row.insertCell();
                     actionsCell.className = 'action-buttons';
                     actionsCell.innerHTML = `
-                        <button title="Edit Kategori" data-id="${c.id}" data-action="edit-category"><i class="fas fa-edit"></i></button>
-                        <button title="Hapus Kategori" data-id="${c.id}" data-action="delete-category"><i class="fas fa-trash-alt"></i></button>
+                        <button type="button" title="Edit Kategori" data-id="${c.id}" data-action="edit-category"><i class="fas fa-edit"></i></button>
+                        <button type="button" title="Hapus Kategori" data-id="${c.id}" data-action="delete-category"><i class="fas fa-trash-alt"></i></button>
                     `;
                 });
             } catch (error) {
@@ -1759,11 +1814,11 @@
                     bannerDiv.style.textAlign = 'left';
                     bannerDiv.innerHTML = `
                         <img src="${b.image_url}" alt="Banner" style="width:100%; height:120px; object-fit:cover; border-radius:8px; margin-bottom:15px;">
-                        <p style="font-size:0.9em; word-break: break-all;"><strong>URL:</strong> ${b.image_url.substring(0, 50)}...</p>
+                        <p style="font-size:0.9em; word-break: break-all;"><strong>URL:</strong> ${b.image_url ? b.image_url.substring(0, 50) + '...' : 'N/A'}</p>
                         <p style="font-size:0.9em;"><strong>Urutan:</strong> ${b.sort_order}</p>
                         <div class="action-buttons" style="margin-top:15px; text-align:right;">
-                            <button title="Edit Banner" data-id="${b.id}" data-action="edit-banner"><i class="fas fa-edit"></i></button>
-                            <button title="Hapus Banner" data-id="${b.id}" data-action="delete-banner"><i class="fas fa-trash-alt"></i></button>
+                            <button type="button" title="Edit Banner" data-id="${b.id}" data-action="edit-banner"><i class="fas fa-edit"></i></button>
+                            <button type="button" title="Hapus Banner" data-id="${b.id}" data-action="delete-banner"><i class="fas fa-trash-alt"></i></button>
                         </div>
                     `;
                     adminDom.bannerList.appendChild(bannerDiv);
@@ -1799,8 +1854,8 @@
                     imgDiv.innerHTML = `
                         <img src="${img.image_url}" alt="${img.caption_en}" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;">
                         <div class="action-buttons" style="position:absolute; bottom:5px; right:5px; background:rgba(255,255,255,0.8); padding:5px; border-radius:5px;">
-                            <button title="Edit Gambar" data-id="${img.id}" data-action="edit-gallery-image" style="color:#2D4C5E;"><i class="fas fa-edit"></i></button>
-                            <button title="Hapus Gambar" data-id="${img.id}" data-action="delete-gallery-image" style="color:#D84B42;"><i class="fas fa-trash-alt"></i></button>
+                            <button type="button" title="Edit Gambar" data-id="${img.id}" data-action="edit-gallery-image" style="color:#2D4C5E;"><i class="fas fa-edit"></i></button>
+                            <button type="button" title="Hapus Gambar" data-id="${img.id}" data-action="delete-gallery-image" style="color:#D84B42;"><i class="fas fa-trash-alt"></i></button>
                         </div>
                          <p style="position:absolute; bottom:5px; left:5px; color:#fff; font-size:0.8em; text-shadow:1px 1px 3px rgba(0,0,0,0.7);">${(img.caption_id || img.caption_en || '').substring(0, 20)}...</p>
                     `;
@@ -1834,8 +1889,8 @@
                         <p>${(item.text_id || item.text_en || '').substring(0, 150)}...</p>
                         <p style="font-size:0.9em; color:var(--color-text-light);"><strong>Urutan:</strong> ${item.sort_order}</p>
                         <div class="action-buttons" style="margin-top:10px; text-align:right;">
-                            <button title="Edit Riwayat" data-id="${item.id}" data-action="edit-history"><i class="fas fa-edit"></i></button>
-                            <button title="Hapus Riwayat" data-id="${item.id}" data-action="delete-history"><i class="fas fa-trash-alt"></i></button>
+                            <button type="button" title="Edit Riwayat" data-id="${item.id}" data-action="edit-history"><i class="fas fa-edit"></i></button>
+                            <button type="button" title="Hapus Riwayat" data-id="${item.id}" data-action="delete-history"><i class="fas fa-trash-alt"></i></button>
                         </div>
                     `;
                     adminDom.historyList.appendChild(historyDiv);
@@ -1918,13 +1973,37 @@
                 if (action === 'view') {
                     viewOrderDetails(orderId);
                 } else if (action === 'status') {
-                    updateOrderStatus(orderId);
+                    openOrderStatusModal(orderId); // Use new modal
                 } else if (action === 'delete') {
                     if (confirm('Anda yakin ingin menghapus pesanan ini?')) {
                         deleteOrder(orderId);
                     }
                 } else if (action === 'whatsapp') {
                     sendWhatsAppFollowUp(orderId);
+                }
+            });
+
+            // NEW: Order Status Form Submission
+            adminDom.orderStatusForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submitBtn = e.submitter;
+                submitBtn.disabled = true;
+                const orderId = adminDom.orderStatusOrderIdField.value;
+                const newStatus = adminDom.orderStatusSelect.value;
+                
+                showToast("Memperbarui status pesanan...", 'info');
+                try {
+                    await db.collection('orders').doc(orderId).update({
+                        status: newStatus,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    showToast("Status pesanan berhasil diperbarui!", 'success');
+                    closeModal(adminDom.orderStatusModal);
+                } catch (error) {
+                    console.error("Error updating order status:", error);
+                    showToast("Gagal memperbarui status: " + error.message, 'error');
+                } finally {
+                    submitBtn.disabled = false;
                 }
             });
 
@@ -1994,7 +2073,7 @@
 
                     const selectedCategory = categoriesData.find(c => c.id === adminDom.productCategoryField.value);
                     if (!selectedCategory) {
-                        showToast("Kategori tidak valid.", 'error');
+                        showToast("Kategori tidak valid. Mohon pilih kategori yang tersedia.", 'error');
                         submitBtn.disabled = false;
                         return;
                     }
@@ -2065,9 +2144,23 @@
                 showToast("Menyimpan kategori...", 'info');
 
                 const categoryId = adminDom.categoryIdField.value;
-                const categoryName = adminDom.categoryNameField.value;
+                const categoryName = adminDom.categoryNameField.value.trim();
+
+                if (!categoryName) {
+                    showToast("Nama kategori tidak boleh kosong.", 'error');
+                    submitBtn.disabled = false;
+                    return;
+                }
 
                 try {
+                    // Check for duplicate category name (case-insensitive)
+                    const existingCategories = categoriesData.map(c => c.name.toLowerCase());
+                    if (existingCategories.includes(categoryName.toLowerCase()) && (categoryId === '' || categoriesData.find(c => c.id === categoryId).name.toLowerCase() !== categoryName.toLowerCase())) {
+                        showToast("Kategori dengan nama ini sudah ada.", 'error');
+                        submitBtn.disabled = false;
+                        return;
+                    }
+
                     if (categoryId) {
                         await db.collection('categories').doc(categoryId).update({ name: categoryName });
                         showToast("Kategori berhasil diperbarui!", 'success');
@@ -2301,11 +2394,17 @@
 
                 const historyId = adminDom.historyIdField.value;
                 const year = parseInt(adminDom.historyYearField.value);
-                const titleId = adminDom.historyTitleIdField.value;
-                const titleEn = adminDom.historyTitleEnField.value;
-                const textId = adminDom.historyTextIdField.value;
-                const textEn = adminDom.historyTextEnField.value;
+                const titleId = adminDom.historyTitleIdField.value.trim();
+                const titleEn = adminDom.historyTitleEnField.value.trim();
+                const textId = adminDom.historyTextIdField.value.trim();
+                const textEn = adminDom.historyTextEnField.value.trim();
                 const sortOrder = parseInt(adminDom.historySortOrderField.value);
+
+                if (!year || !titleId || !titleEn) {
+                    showToast("Tahun, Judul (ID), dan Judul (EN) tidak boleh kosong.", 'error');
+                    submitBtn.disabled = false;
+                    return;
+                }
 
                 try {
                     const historyData = {
@@ -2459,15 +2558,15 @@
             }
         };
 
-
+        // NEW: Function to open Order Detail Modal
         const viewOrderDetails = async (orderId) => {
             try {
                 const doc = await db.collection('orders').doc(orderId).get();
                 if (doc.exists) {
                     const order = doc.data();
                     let detailsHtml = `
-                        <h3>Detail Pesanan #${orderId.substring(0, 6)}</h3>
-                        <p><strong>Nama:</strong> ${order.customerName || 'N/A'}</p>
+                        <p><strong>ID Pesanan:</strong> #${orderId.substring(0, 6).toUpperCase()}</p>
+                        <p><strong>Nama Pelanggan:</strong> ${order.customerName || 'N/A'}</p>
                         <p><strong>Telepon:</strong> ${order.customerPhone || 'N/A'}</p>
                         <p><strong>Alamat:</strong> ${order.customerAddress || 'N/A'}</p>
                         <p><strong>Waktu Pesan:</strong> ${order.timestamp ? new Date(order.timestamp.toDate()).toLocaleString() : 'N/A'}</p>
@@ -2476,9 +2575,13 @@
                         <h4>Item Pesanan:</h4>
                         <ul>
                     `;
-                    order.orderDetails.forEach(item => {
-                        detailsHtml += `<li>${item.quantity}x ${item.name} - Rp ${new Intl.NumberFormat('id-ID').format(item.price * item.quantity)}</li>`;
-                    });
+                    if (order.orderDetails && order.orderDetails.length > 0) {
+                        order.orderDetails.forEach(item => {
+                            detailsHtml += `<li>${item.quantity}x ${item.name} - Rp ${new Intl.NumberFormat('id-ID').format(item.price * item.quantity)}</li>`;
+                        });
+                    } else {
+                        detailsHtml += `<li>Tidak ada item pesanan yang tercatat.</li>`;
+                    }
                     detailsHtml += `
                         </ul>
                         <hr style="margin: 15px 0; border-top: 1px dashed var(--color-border);">
@@ -2487,9 +2590,9 @@
                         <p><strong>Total Pembayaran:</strong> Rp ${new Intl.NumberFormat('id-ID').format(order.totalAmount || 0)}</p>
                     `;
 
-                    // Use a simple prompt/alert for demonstration in this single file.
-                    // In a real app, you'd have a dedicated modal for this.
-                    alert(detailsHtml.replace(/<hr[^>]*>/g, '\n').replace(/<[^>]*>/g, '').replace(/\n\s*\n/g, '\n').trim());
+                    adminDom.orderDetailModalTitle.textContent = `Detail Pesanan #${orderId.substring(0, 6).toUpperCase()}`;
+                    adminDom.orderDetailContent.innerHTML = detailsHtml;
+                    openModal(adminDom.orderDetailModal);
                 } else {
                     showToast("Pesanan tidak ditemukan.", 'error');
                 }
@@ -2499,25 +2602,22 @@
             }
         };
 
-        const updateOrderStatus = async (orderId) => {
-            const currentOrderDoc = await db.collection('orders').doc(orderId).get();
-            const currentStatus = currentOrderDoc.exists ? currentOrderDoc.data().status : 'new';
-            const newStatus = prompt(`Masukkan status baru untuk pesanan #${orderId.substring(0, 6)} (saat ini: ${currentStatus}). Pilihan: new, processing, completed, cancelled:`, currentStatus);
-            
-            if (newStatus && ['new', 'processing', 'completed', 'cancelled'].includes(newStatus.toLowerCase())) {
-                showToast("Memperbarui status pesanan...", 'info');
-                try {
-                    await db.collection('orders').doc(orderId).update({
-                        status: newStatus.toLowerCase(),
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    showToast("Status pesanan berhasil diperbarui!", 'success');
-                } catch (error) {
-                    console.error("Error updating order status:", error);
-                    showToast("Gagal memperbarui status: " + error.message, 'error');
+        // NEW: Function to open Order Status Modal
+        const openOrderStatusModal = async (orderId) => {
+            try {
+                const doc = await db.collection('orders').doc(orderId).get();
+                if (doc.exists) {
+                    const order = doc.data();
+                    adminDom.orderStatusOrderIdField.value = orderId;
+                    adminDom.orderStatusSelect.value = order.status || 'new'; // Set current status
+                    adminDom.orderStatusModalTitle.textContent = `Ubah Status Pesanan #${orderId.substring(0, 6).toUpperCase()}`;
+                    openModal(adminDom.orderStatusModal);
+                } else {
+                    showToast("Pesanan tidak ditemukan.", 'error');
                 }
-            } else if (newStatus !== null) { // If user typed something but it's invalid
-                showToast("Status tidak valid. Pilihan: new, processing, completed, cancelled.", 'error');
+            } catch (error) {
+                console.error("Error opening order status modal:", error);
+                showToast("Gagal membuka modal status pesanan.", 'error');
             }
         };
 
@@ -2540,17 +2640,23 @@
                     const phoneNumber = order.customerPhone.replace(/\D/g, ''); // Hapus non-digit
                     
                     let message = `Halo ${order.customerName || 'pelanggan'},\n\n`;
-                    message += `Kami dari Lobster Shack Bali ingin memberitahukan bahwa status pesanan Anda (ID: #${orderId.substring(0,6)}) saat ini adalah *${(order.status || 'N/A').toUpperCase()}*.\n\n`;
+                    message += `Kami dari Lobster Shack Bali ingin memberitahukan bahwa status pesanan Anda (ID: #${orderId.substring(0,6).toUpperCase()}) saat ini adalah *${(order.status || 'N/A').toUpperCase()}*.\n\n`;
                     message += `Detail Pesanan:\n`;
-                    order.orderDetails.forEach(item => {
-                        message += `- ${item.quantity}x ${item.name} (Rp ${new Intl.NumberFormat('id-ID').format(item.price * item.quantity)})\n`;
-                    });
+                    if (order.orderDetails && order.orderDetails.length > 0) {
+                        order.orderDetails.forEach(item => {
+                            message += `- ${item.quantity}x ${item.name} (Rp ${new Intl.NumberFormat('id-ID').format(item.price * item.quantity)})\n`;
+                        });
+                    } else {
+                        message += `- Tidak ada item tercatat.\n`;
+                    }
+                    
                     message += `\nTotal Pembayaran: Rp ${new Intl.NumberFormat('id-ID').format(order.totalAmount || 0)}\n`;
                     message += `Alamat Pengiriman: ${order.customerAddress || 'N/A'}\n\n`;
                     message += `Terima kasih telah berbelanja di Lobster Shack Bali! 🦞`;
 
                     const encodedMessage = encodeURIComponent(message);
-                    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+                    // Use Indonesian WhatsApp domain if available, otherwise generic
+                    const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
                     window.open(whatsappUrl, '_blank');
                     showToast("Membuka WhatsApp untuk follow up.", 'info');
                 } else {
@@ -2596,7 +2702,8 @@
             try {
                 await db.collection('banners').doc(bannerId).delete();
                 showToast("Banner berhasil dihapus!", 'success');
-            } catch (error) {
+            }
+            catch (error) {
                 console.error("Error deleting banner:", error);
                 showToast("Gagal menghapus banner: " + error.message, 'error');
             }
