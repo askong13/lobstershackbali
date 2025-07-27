@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-key="ls_page_title">Lobster Shack Bali - Fresh Seafood</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+    <style>
+        /* ======== 🦞 MASTER RESTYLE V2 🦞 ======== */
+
+        /* ======== 1. VARIABLES & BASE ======== */
+        :root {
+            /* COLORS (Unchanged as requested) */
+            --ls-color-primary: #D84B42;
+            --ls-color-secondary: #2D4C5E;
+            --ls-color-background: #fffaf4; /* Slightly softer cream */
+            --ls-color-surface: #FFFFFF;
+            --ls-color-text: #333333;
+            --ls-color-text-light: #6c757d;
+            --ls-color-border: #EAE3D8; /* Softer border */
+
+            /* FONTS (Restyled) */
+            --ls-font-heading: 'Playfair Display', serif;
+            --ls-font-body: 'Poppins', sans-serif;
+
+            /* STYLES (Restyled) */
+            --ls-shadow-sm: 0 4px 15px rgba(45, 76, 94, .06);
+            --ls-shadow-md: 0 8px 30px rgba(45, 76, 94, .1);
+            --ls-shadow-lg: 0 12px 45px rgba(45, 76, 94, .18);
+            --ls-border-radius: 12px;
+            --ls-transition-speed: .4s;
+            --ls-container-width: 1240px;
+        }
+
+        *, ::after, ::before { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body {
+            font-family: var(--ls-font-body);
+            background-color: var(--ls-color-background);
+            color: var(--ls-color-text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+        body.ls-nav-open, body.ls-modal-open { overflow: hidden; }
+        .ls-container { width: 100%; max-width: var(--ls-container-width); margin: 0 auto; padding: 0 24px; }
+        .ls-section { padding: 6rem 0; }
+        .ls-section-header { text-align: center; margin-bottom: 4rem; }
+        .ls-section-header .ls-subtitle {
+            color: var(--ls-color-primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            display: block;
+            font-size: 0.9rem;
+        }
+        .ls-section-header .ls-title {
+            font-family: var(--ls-font-heading);
+            font-size: clamp(2.5rem, 5vw, 3.2rem);
+            font-weight: 700;
+            color: var(--ls-color-secondary);
+            line-height: 1.2;
+        }
+        .ls-btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: .75rem;
+            font-family: var(--ls-font-body); font-weight: 600;
+            padding: 0.8rem 2rem; border-radius: 50px;
+            border: 2px solid var(--ls-color-primary); cursor: pointer;
+            text-decoration: none; transition: all var(--ls-transition-speed) ease;
+            background-color: var(--ls-color-primary); color: var(--ls-color-surface);
+            font-size: 1rem; box-shadow: var(--ls-shadow-sm);
+        }
+        .ls-btn:hover {
+            background-color: #b93e36; border-color: #b93e36;
+            transform: translateY(-5px); box-shadow: var(--ls-shadow-md);
+        }
+
+        /* ======== 2. HEADER (Desktop & Mobile Fixed) ======== */
+        .ls-main-header {
+            background-color: rgba(255, 250, 244, .85);
+            -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+            padding: 1.2rem 0; border-bottom: 1px solid var(--ls-color-border);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .ls-main-header .ls-container { display: flex; justify-content: space-between; align-items: center; }
+        .ls-main-header .ls-logo { height: 50px; z-index: 1001; }
+        .ls-header-actions { display: flex; align-items: center; gap: 1.2rem; z-index: 1001; }
+        .ls-language-toggle { display: flex; background: #fff; border-radius: 50px; padding: 4px; border: 1px solid var(--ls-color-border); }
+        .ls-lang-btn {
+            background: 0 0; border: none; padding: .4rem .8rem; cursor: pointer;
+            font-weight: 600; color: var(--ls-color-text-light); border-radius: 50px; transition: all var(--ls-transition-speed) ease; font-size: 0.9rem;
+        }
+        .ls-lang-btn.active { background: var(--ls-color-primary); color: #fff; box-shadow: var(--ls-shadow-sm); }
+        
+        /* Mobile Nav & Toggle (ANIMATION UPDATED) */
+        .ls-mobile-menu-toggle { display: block; font-size: 1.5rem; color: var(--ls-color-secondary); background: transparent; border: none; cursor: pointer; padding: .5rem; z-index: 1001; }
+        .ls-main-nav {
+            position: fixed; top: 0; left: 0; /* Changed from right: 0 */
+            width: 100%; height: 100vh;
+            background-color: var(--ls-color-background);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transform: translateY(-100%); /* UPDATED: Start off-screen at the top */
+            transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            z-index: 1000;
+        }
+        .ls-main-nav.active {
+            transform: translateY(0); /* UPDATED: Slide into view from the top */
+        }
+        .ls-nav-links { list-style: none; display: flex; flex-direction: column; gap: 1rem; text-align: center; }
+        .ls-nav-links a { text-decoration: none; font-family: var(--ls-font-heading); font-size: 2.5rem; font-weight: 700; color: var(--ls-color-secondary); position: relative; padding: .5rem 1rem; transition: color var(--ls-transition-speed); }
+        .ls-nav-links a:hover, .ls-nav-links a.active { color: var(--ls-color-primary); }
+
+        /* ======== 3. HERO SECTION ======== */
+        .ls-hero-section {
+            position: relative; padding: 0; height: 90vh; min-height: 650px;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+        }
+        .ls-hero-slider { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .ls-hero-slider .swiper-slide { height: 100%; width: 100%; overflow: hidden; }
+        .ls-hero-slider .ls-slide-background {
+            width: 100%; height: 100%; background-size: cover; background-position: center;
+            transform: scale(1.15); transition: transform 9s ease-out;
+        }
+        .ls-hero-slider .swiper-slide-active .ls-slide-background { transform: scale(1); }
+        .ls-hero-slider .ls-slide-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, rgba(45, 76, 94, .7) 0%, rgba(45, 76, 94, .3) 100%);
+        }
+        .ls-hero-content {
+            position: relative; z-index: 2; text-align: center; color: var(--ls-color-surface); padding: 0 1.5rem;
+        }
+        .ls-hero-content h1 {
+            font-family: var(--ls-font-heading); font-size: clamp(3rem, 8vw, 5.5rem);
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); margin-bottom: 1rem; line-height: 1.1;
+        }
+        .ls-hero-content p {
+            font-size: clamp(1.1rem, 3vw, 1.3rem); margin: 0 auto 2.5rem; max-width: 650px;
+            font-weight: 400; color: rgba(255, 255, 255, 0.95);
+        }
+        .ls-hero-slider .swiper-pagination { bottom: 30px !important; }
+        .ls-hero-slider .swiper-pagination-bullet { background: rgba(255,255,255,0.7); width: 10px; height: 10px; opacity: 1; transition: all var(--ls-transition-speed); }
+        .ls-hero-slider .swiper-pagination-bullet-active { background-color: var(--ls-color-primary); transform: scale(1.2); }
+        
+        /* ======== 4. ABOUT (TIMELINE) ======== */
+        .ls-timeline { position: relative; max-width: 500px; margin: 2rem auto 0; }
+        .ls-timeline::after { /* Vertical line for mobile */
+            content: ""; position: absolute; width: 3px; background-color: var(--ls-color-border);
+            top: 0; bottom: 0; left: 20px;
+        }
+        .ls-timeline-item { position: relative; padding: 0 0 3rem 55px; }
+        .ls-timeline-item:last-child { padding-bottom: 0; }
+        .ls-timeline-item::after { /* Lobster icon */
+            content: "🦞"; font-size: 1rem; display: flex; align-items: center; justify-content: center;
+            position: absolute; width: 40px; height: 40px; background-color: var(--ls-color-primary); color: #fff;
+            top: 0; left: 0; border-radius: 50%; z-index: 1; box-shadow: 0 0 0 6px var(--ls-color-background);
+        }
+        .ls-timeline-content {
+            padding: 1.5rem; background-color: var(--ls-color-surface);
+            border-radius: var(--ls-border-radius); box-shadow: var(--ls-shadow-sm);
+            border: 1px solid var(--ls-color-border);
+            transition: transform var(--ls-transition-speed), box-shadow var(--ls-transition-speed);
+        }
+        .ls-timeline-content:hover { transform: translateY(-8px); box-shadow: var(--ls-shadow-md); }
+        .ls-timeline-content .ls-year { font-family: var(--ls-font-heading); color: var(--ls-color-primary); font-size: 1.8rem; font-weight: 700; line-height: 1; }
+        .ls-timeline-content h3 { font-family: var(--ls-font-body); font-size: 1.1rem; font-weight: 600; color: var(--ls-color-secondary); margin: .75rem 0 .5rem; }
+        .ls-timeline-content p { font-size: .95rem; color: var(--ls-color-text-light); line-height: 1.6; }
+        
+        /* ======== 5. MENU SECTION ======== */
+        .ls-menu-section { background-color: var(--ls-color-surface); }
+        .ls-featured-slider { padding-bottom: 4rem; }
+        .ls-featured-slider .swiper-pagination { bottom: 0 !important; }
+        .ls-menu-filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 3rem; }
+        .ls-filter-btn {
+            background: 0 0; border: 1px solid var(--ls-color-border);
+            color: var(--ls-color-text-light); font-weight: 500; padding: .6rem 1.5rem;
+            border-radius: 50px; cursor: pointer; transition: all var(--ls-transition-speed) ease; font-size: 0.95rem;
+        }
+        .ls-filter-btn.active, .ls-filter-btn:hover { background-color: var(--ls-color-secondary); color: #fff; border-color: var(--ls-color-secondary); }
+        .ls-menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; position: relative; }
+        .ls-menu-card {
+            background: var(--ls-color-surface); border-radius: var(--ls-border-radius);
+            box-shadow: var(--ls-shadow-sm); display: flex; flex-direction: column;
+            border: 1px solid var(--ls-color-border);
+            opacity: 1; transform: scale(1);
+            transition: transform 0.4s ease, opacity 0.4s ease, box-shadow 0.4s ease;
+        }
+        .ls-menu-card.hidden { transform: scale(0.9); opacity: 0; height: 0; padding: 0; margin: 0; border: 0; overflow: hidden; position: absolute; z-index: -1; }
+        .ls-menu-card:hover { transform: translateY(-12px); box-shadow: var(--ls-shadow-md); }
+        .ls-menu-card-image { width: 100%; height: 220px; overflow: hidden; border-top-left-radius: var(--ls-border-radius); border-top-right-radius: var(--ls-border-radius); }
+        .ls-menu-card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--ls-transition-speed) ease; }
+        .ls-menu-card:hover .ls-menu-card-image img { transform: scale(1.08); }
+        .ls-menu-card-content { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; text-align: left; }
+        .ls-menu-card .title-price { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.5rem; }
+        .ls-menu-card h3 { font-family: var(--ls-font-heading); color: var(--ls-color-secondary); font-size: 1.3rem; line-height: 1.3; font-weight: 700; }
+        .ls-menu-card-price { font-weight: 700; color: var(--ls-color-primary); font-size: 1.2rem; white-space: nowrap; }
+        .ls-menu-card .ls-description { flex-grow: 1; margin-bottom: 1.5rem; color: var(--ls-color-text-light); font-size: 0.9rem; }
+        
+        /* -- START: Added/Modified Styles for Action Buttons -- */
+        .ls-menu-card .ls-card-actions {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .ls-menu-card .ls-btn {
+            margin-top: 0; /* Changed from auto */
+            padding: 0.6rem 1.5rem; 
+            font-size: 0.9rem;
+        }
+        .ls-order-link {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid var(--ls-color-border);
+            background-color: #fff;
+            transition: all var(--ls-transition-speed) ease;
+            flex-shrink: 0;
+            box-shadow: var(--ls-shadow-sm);
+        }
+        .ls-order-link:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--ls-shadow-md);
+            border-color: var(--ls-color-secondary);
+        }
+        /* -- END: Added/Modified Styles for Action Buttons -- */
+
+
+        /* ======== 6. GALLERY ======== */
+        .ls-gallery-grid { columns: 2 200px; column-gap: 1rem; }
+        .ls-gallery-grid a {
+            display: block; overflow: hidden; border-radius: var(--ls-border-radius);
+            margin-bottom: 1rem; position: relative; box-shadow: var(--ls-shadow-sm);
+            transition: box-shadow var(--ls-transition-speed) ease;
+        }
+        .ls-gallery-grid a:hover { box-shadow: var(--ls-shadow-md); }
+        .ls-gallery-grid img { width: 100%; display: block; transition: transform var(--ls-transition-speed) ease; }
+        .ls-gallery-grid a:hover img { transform: scale(1.08); }
+        .ls-gallery-grid a::after {
+            content: '\f00e'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            background: rgba(45, 76, 94, 0.7); color: #fff; font-size: 1.8rem;
+            opacity: 0; transition: opacity var(--ls-transition-speed) ease;
+        }
+        .ls-gallery-grid a:hover::after { opacity: 1; }
+
+        /* ======== 7. FOOTER ======== */
+        .ls-main-footer {
+            background-color: var(--ls-color-secondary); color: rgba(255, 255, 255, .8);
+            padding: 6rem 0 2rem;
+        }
+        .ls-main-footer .footer-content {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem; text-align: left; margin-bottom: 4rem;
+        }
+        .ls-main-footer .footer-about .ls-logo { height: 60px; margin-bottom: 1.5rem; filter: brightness(0) invert(1); }
+        .ls-main-footer .footer-about p { font-size: .95rem; line-height: 1.7; max-width: 320px; }
+        .ls-footer-title { font-family: var(--ls-font-heading); color: #fff; font-size: 1.5rem; margin-bottom: 1.5rem; font-weight: 700; }
+        .ls-footer-contact-info ul { list-style: none; padding: 0; margin: 0; }
+        .ls-footer-contact-info li { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; font-size: .95rem; }
+        .ls-footer-contact-info li i { color: var(--ls-color-primary); font-size: 1.1rem; margin-top: 5px; flex-shrink: 0; width: 20px; text-align: center; }
+        .ls-footer-socials { display: flex; gap: .75rem; list-style: none; margin-top: 1.5rem; }
+        .ls-footer-socials a {
+            color: #fff; font-size: 1.1rem; transition: all 0.3s ease;
+            width: 42px; height: 42px; display: inline-flex; justify-content: center;
+            align-items: center; border: 1px solid rgba(255,255,255,0.2); border-radius: 50%;
+        }
+        .ls-footer-socials a:hover { color: var(--ls-color-secondary); background: #fff; border-color: #fff; }
+        .ls-footer-copyright { border-top: 1px solid rgba(255, 255, 255, 0.15); padding-top: 2rem; text-align: center; }
+        .ls-footer-copyright p { font-size: 0.9rem; margin-bottom: 0; color: rgba(255, 255, 255, .6); }
+        
+        /* ======== 8. PRODUCT MODAL ======== */
+        .ls-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(45, 76, 94, .85); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+            display: flex; align-items: center; justify-content: center; padding: 1.5rem;
+            z-index: 2000; opacity: 0; visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0s 0.4s ease;
+        }
+        .ls-modal-overlay.visible { opacity: 1; visibility: visible; transition-delay: 0s; }
+        .ls-modal-content {
+            background: var(--ls-color-surface); border-radius: var(--ls-border-radius);
+            width: 100%; max-width: 900px; max-height: 90vh;
+            box-shadow: var(--ls-shadow-lg); position: relative;
+            transform: scale(0.95) translateY(20px); transition: transform 0.4s ease;
+            display: flex; flex-direction: column; overflow: hidden;
+        }
+        .ls-modal-overlay.visible .ls-modal-content { transform: scale(1) translateY(0); }
+        .ls-modal-close {
+            position: absolute; top: .75rem; right: .75rem;
+            background: rgba(0,0,0,0.3); border: none; font-size: 1.2rem;
+            color: #fff; cursor: pointer; line-height: 1; border-radius: 50%;
+            transition: all 0.3s ease; z-index: 10; width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .ls-modal-close:hover { background: var(--ls-color-primary); transform: rotate(90deg); }
+        .ls-modal-body { display: flex; flex-direction: column; height: 100%; overflow-y: auto; }
+        .ls-modal-body .modal-image {
+            width: 100%; height: 250px;
+            flex-shrink: 0;
+        }
+        .ls-modal-body .modal-image img { width: 100%; height: 100%; object-fit: cover; }
+        .ls-modal-body .modal-text { padding: 2rem; }
+        .ls-modal-body .modal-text h3 {
+            font-family: var(--ls-font-heading); color: var(--ls-color-secondary);
+            font-size: 2.2rem; margin-bottom: 0.5rem; line-height: 1.2;
+        }
+        .ls-modal-body .modal-text .modal-price {
+            font-weight: 700; color: var(--ls-color-primary);
+            font-size: 1.6rem; margin-bottom: 1.5rem; display: block;
+        }
+        .ls-modal-body .modal-text .modal-description { font-size: 1rem; line-height: 1.8; color: var(--ls-color-text-light); }
+
+        /* ======== 9. COOKIE BANNER ======== */
+        .ls-cookie-consent {
+            position: fixed;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            background: var(--ls-color-secondary);
+            color: rgba(255, 255, 255, .9);
+            padding: 1.5rem;
+            z-index: 9999;
+            box-shadow: 0 -5px 25px rgba(45, 76, 94, .2);
+            transition: bottom 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            border-top: 3px solid var(--ls-color-primary);
+        }
+        .ls-cookie-consent.active { bottom: 0; }
+        .ls-cookie-consent .ls-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            text-align: center;
+        }
+        .ls-cookie-consent p { margin: 0; font-size: 0.95rem; }
+        .ls-cookie-consent p a { color: #fff; text-decoration: underline; }
+        .ls-cookie-consent .ls-btn { margin-top: 0.5rem; }
+
+        /* ======== 10. RESPONSIVE & DESKTOP OVERHAUL ======== */
+        /* Tablet */
+        @media (min-width: 576px) {
+            .ls-gallery-grid { columns: 3 200px; }
+            .ls-cookie-consent .ls-container { flex-direction: row; text-align: left; }
+            .ls-cookie-consent .ls-btn { margin-top: 0; }
+        }
+
+        /* Medium Devices & Modal layout change */
+        @media (min-width: 768px) {
+            .ls-gallery-grid { columns: 4 200px; }
+            .ls-modal-content { flex-direction: row; }
+            .ls-modal-body { flex-direction: row; }
+            .ls-modal-body .modal-image { width: 45%; height: auto; }
+            .ls-modal-body .modal-text { width: 55%; overflow-y: auto; padding: 2.5rem; }
+        }
+
+        /* Large Devices - Desktop (Menu & Toggle Confirmed) */
+        @media (min-width: 992px) {
+            /* Header & Nav */
+            .ls-main-header .ls-container {
+                display: grid; grid-template-columns: auto 1fr auto;
+                align-items: center; gap: 2rem;
+            }
+            .ls-mobile-menu-toggle { display: none; }
+            .ls-main-nav {
+                position: static; transform: none; background: transparent;
+                height: auto; width: auto; flex-direction: row; justify-content: center;
+            }
+            .ls-nav-links { flex-direction: row; gap: 1rem; }
+            .ls-nav-links a {
+                font-family: var(--ls-font-body); font-size: 1rem; font-weight: 600; padding: .5rem 1rem;
+            }
+            .ls-nav-links a::after {
+                content: ""; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
+                width: 0; height: 2px; background-color: var(--ls-color-primary);
+                transition: width var(--ls-transition-speed) ease;
+            }
+            .ls-nav-links a.active::after, .ls-nav-links a:hover::after { width: 40%; }
+            
+            /* History Timeline - Horizontal */
+            .ls-timeline { max-width: none; display: flex; justify-content: space-between; margin-top: 5rem; padding: 120px 0; }
+            .ls-timeline::after { /* Horizontal line */
+                width: 100%; height: 3px; top: 50%; left: 0; transform: translateY(-50%);
+            }
+            .ls-timeline-item { width: auto; flex: 1; padding: 0 20px; text-align: center; }
+            .ls-timeline-item::after { /* Lobster icon on the line */
+                top: 50%; left: 50%; transform: translate(-50%, -50%);
+            }
+            .ls-timeline-content { position: relative; }
+            .ls-timeline-content::before { /* Connector line */
+                content: ''; position: absolute; width: 3px; height: 30px;
+                background-color: var(--ls-color-border); left: 50%; transform: translateX(-50%);
+            }
+            /* Items ABOVE the line (odd numbers: 1st, 3rd...) */
+            .ls-timeline-item:nth-child(odd) { padding-bottom: 60px; padding-top: 0; }
+            .ls-timeline-item:nth-child(odd) .ls-timeline-content { transform: translateY(-100%); margin-top: -30px; }
+            .ls-timeline-item:nth-child(odd) .ls-timeline-content::before { top: 100%; }
+            /* Items BELOW the line (even numbers: 2nd, 4th...) */
+            .ls-timeline-item:nth-child(even) { padding-top: 60px; padding-bottom: 0; }
+            .ls-timeline-item:nth-child(even) .ls-timeline-content { margin-top: 30px; }
+            .ls-timeline-item:nth-child(even) .ls-timeline-content::before { bottom: 100%; }
+        }
+
+        /* Extra Large Screens */
+        @media (min-width: 1360px) {
+            .ls-menu-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <header class="ls-main-header">
+        <div class="ls-container">
+            <a href="#home"><img src="https://lh3.googleusercontent.com/d/1Pq8Ign3a0Wm0SHU220ov5b-jnfGDBUoO" alt="Logo Lobster Shack" class="ls-logo"></a>
+            
+            <nav class="ls-main-nav" id="ls-main-nav">
+                <ul class="ls-nav-links">
+                    <li><a href="#home" class="active" data-lang-key="nav_home">Home</a></li>
+                    <li><a href="#about" data-lang-key="nav_about">About Us</a></li>
+                    <li><a href="#menu" data-lang-key="nav_menu">Menu</a></li>
+                    <li><a href="#gallery" data-lang-key="nav_gallery">Gallery</a></li>
+                </ul>
+            </nav>
+
+            <div class="ls-header-actions">
+                <div class="ls-language-toggle">
+                    <button class="ls-lang-btn active" data-lang="id">ID</button>
+                    <button class="ls-lang-btn" data-lang="en">EN</button>
+                </div>
+                <button class="ls-mobile-menu-toggle" id="ls-mobile-menu-toggle" aria-label="Toggle Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="ls-hero-section">
+            <div class="swiper ls-hero-slider">
+                <div class="swiper-wrapper" id="ls-hero-slider-wrapper">
+                    </div>
+                <div class="swiper-pagination"></div>
+            </div>
+            <div class="ls-hero-content" data-aos="fade-up">
+                <h1 data-lang-key="hero_title">Savor the Freshness</h1>
+                <p data-lang-key="hero_subtitle">The best lobster and seafood experience in the heart of Bali.</p>
+                <a href="#menu" class="ls-btn"><i class="fas fa-utensils"></i> <span data-lang-key="hero_button">Explore Our Menu</span></a>
+            </div>
+        </section>
+
+        <section id="about" class="ls-section">
+            <div class="ls-container">
+                <div class="ls-section-header" data-aos="fade-up">
+                    <span class="ls-subtitle" data-lang-key="history_section_subtitle">Since 2025</span>
+                    <h2 class="ls-title" data-lang-key="history_title">Our Journey</h2>
+                </div>
+                <div class="ls-timeline" id="ls-history-timeline" data-aos="fade-up" data-aos-delay="200">
+                    </div>
+            </div>
+        </section>
+
+        <section id="menu" class="ls-section ls-menu-section">
+            <div class="ls-container">
+                <div class="ls-section-header" data-aos="fade-up">
+                    <span class="ls-subtitle" data-lang-key="menu_section_subtitle">Featured Dishes</span>
+                    <h2 class="ls-title" data-lang-key="menu_title">Chef's Recommendations</h2>
+                </div>
+                <div data-aos="fade-up">
+                     <div class="swiper ls-featured-slider">
+                        <div class="swiper-wrapper" id="ls-featured-menu-wrapper">
+                            </div>
+                        <div class="swiper-pagination"></div>
+                     </div>
+                </div>
+
+                <div class="ls-section-header" data-aos="fade-up" style="margin-top: 6rem; margin-bottom: 3rem;">
+                     <h2 class="ls-title" data-lang-key="full_menu_title">Our Full Menu</h2>
+                </div>
+                <div class="ls-menu-filters" id="ls-menu-filters" data-aos="fade-up">
+                    </div>
+                <div class="ls-menu-grid" id="ls-menu-grid" data-aos="fade-up">
+                    </div>
+            </div>
+        </section>
+
+        <section id="gallery" class="ls-gallery-section ls-section">
+            <div class="ls-container">
+                 <div class="ls-section-header" data-aos="fade-up">
+                    <span class="ls-subtitle" data-lang-key="gallery_section_subtitle">Our Moments</span>
+                    <h2 class="ls-title" data-lang-key="gallery_title">Tasteful Memories</h2>
+                </div>
+                <div class="ls-gallery-grid" id="ls-gallery-grid" data-aos="fade-up">
+                    </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="ls-main-footer">
+        <div class="ls-container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <img src="https://lh3.googleusercontent.com/d/1Pq8Ign3a0Wm0SHU220ov5b-jnfGDBUoO" alt="Logo Lobster Shack" class="ls-logo">
+                    <p data-lang-key="footer_description">Experience the finest catch of the day, grilled to perfection, in a cozy and inviting atmosphere. We look forward to welcoming you.</p>
+                </div>
+                <div class="footer-contact">
+                    <h3 class="ls-footer-title" data-lang-key="footer_contact_title">Contact Us</h3>
+                    <div class="ls-footer-contact-info">
+                        <ul>
+                            <li><i class="fas fa-map-marker-alt"></i> <span data-lang-key="footer_address_value">Jl. Raya Pantai Kuta No. 123, Kuta, Bali</span></li>
+                            <li><i class="fas fa-phone"></i> <span data-lang-key="footer_phone_value">+62 812-3456-7890</span></li>
+                            <li><i class="fas fa-envelope"></i> <span data-lang-key="footer_email_value">info@lobstershackbali.com</span></li>
+                            <li><i class="fas fa-clock"></i> <span data-lang-key="footer_hours_value">Daily: 11:00 AM - 10:00 PM WITA</span></li>
+                        </ul>
+                    </div>
+                </div>
+                 <div class="footer-social-links">
+                    <h3 class="ls-footer-title" data-lang-key="footer_follow_title">Follow Us</h3>
+                    <p data-lang-key="footer_follow_text">Stay connected for the latest updates and offers.</p>
+                    <ul class="ls-footer-socials">
+                        <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+                        <li><a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a></li>
+                        <li><a href="#" aria-label="TripAdvisor"><i class="fab fa-tripadvisor"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="ls-footer-copyright">
+                <p data-lang-key="footer_copyright">© 2025 Lobster Shack Bali. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="ls-modal-overlay" id="ls-product-modal-overlay">
+        <div class="ls-modal-content">
+            <button class="ls-modal-close" id="ls-modal-close-btn" aria-label="Close modal"><i class="fas fa-times"></i></button>
+            <div class="ls-modal-body" id="ls-modal-body">
+                </div>
+        </div>
+    </div>
+
+    <div class="ls-cookie-consent" id="ls-cookie-consent">
+        <div class="ls-container">
+            <p data-lang-key="cookie_text">We use cookies to enhance your Browse experience and to analyze our traffic. By clicking "Accept", you consent to our use of cookies.</p>
+            <button class="ls-btn" id="ls-cookie-accept-btn" data-lang-key="cookie_accept_btn">Accept</button>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+
+    <script>
+    'use strict';
+
+    // ======== FIREBASE CONFIGURATION ========
+    const firebaseConfig = {
+      apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
+      authDomain: "lobster-shack-bali.firebaseapp.com",
+      projectId: "lobster-shack-bali",
+      storageBucket: "lobster-shack-bali.appspot.com",
+      messagingSenderId: "42452974733",
+      appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Global variables
+    let currentLanguage = localStorage.getItem('preferredLanguage') || 'id';
+    let siteData = {};
+    let lightbox;
+
+    // DOM Elements
+    const domElements = {
+        body: document.body,
+        mainNav: document.getElementById('ls-main-nav'),
+        mobileMenuToggle: document.getElementById('ls-mobile-menu-toggle'),
+        langToggleContainer: document.querySelector('.ls-language-toggle'),
+        heroSliderWrapper: document.getElementById('ls-hero-slider-wrapper'),
+        historyTimeline: document.getElementById('ls-history-timeline'),
+        featuredMenuWrapper: document.getElementById('ls-featured-menu-wrapper'),
+        menuGrid: document.getElementById('ls-menu-grid'),
+        menuFilters: document.getElementById('ls-menu-filters'),
+        galleryGrid: document.getElementById('ls-gallery-grid'),
+        modalOverlay: document.getElementById('ls-product-modal-overlay'),
+        modalBody: document.getElementById('ls-modal-body'),
+        modalCloseBtn: document.getElementById('ls-modal-close-btn'),
+        cookieConsent: document.getElementById('ls-cookie-consent'),
+        cookieAcceptBtn: document.getElementById('ls-cookie-accept-btn'),
+    };
+    
+    // --- CORE FUNCTIONS ---
+    const updateTextContent = () => {
+        document.querySelectorAll('[data-lang-key]').forEach(el => {
+            const key = el.dataset.langKey;
+            const content = siteData.content?.[key];
+            if (content) {
+                el.innerHTML = content[`text_${currentLanguage}`] || content.text_id || el.innerHTML;
+            }
+        });
+        document.title = siteData.content?.ls_page_title?.[`text_${currentLanguage}`] || 'Lobster Shack Bali';
+        updateLangButtons();
+    };
+
+    const updateLangButtons = () => {
+        document.querySelectorAll('.ls-lang-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.lang === currentLanguage);
+        });
+    };
+    
+    // --- RENDER FUNCTIONS ---
+    const renderBanners = () => {
+        if (!siteData.banners || siteData.banners.length === 0) return;
+        domElements.heroSliderWrapper.innerHTML = siteData.banners.map(banner => `
+            <div class="swiper-slide">
+                <div class="ls-slide-background" style="background-image: url('${banner.image_url}');"></div>
+                <div class="ls-slide-overlay"></div>
+            </div>`).join('');
+        new Swiper('.ls-hero-slider', { 
+            loop: true, effect: 'fade', fadeEffect: { crossFade: true },
+            autoplay: { delay: 5000, disableOnInteraction: false },
+            pagination: { el: '.swiper-pagination', clickable: true },
+            allowTouchMove: false
+        });
+    };
+
+    const renderHistory = () => {
+        if (!siteData.history || siteData.history.length === 0) return;
+        domElements.historyTimeline.innerHTML = [...siteData.history]
+            // Sort chronologically: oldest year (lowest sort_order) first.
+            .sort((a, b) => a.sort_order - b.sort_order)
+            .map(item => `
+            <div class="ls-timeline-item" data-aos="fade-up">
+                <div class="ls-timeline-content">
+                    <div class="ls-year">${item.year}</div>
+                    <h3>${item[`title_${currentLanguage}`] || item.title_id}</h3>
+                    <p>${item[`text_${currentLanguage}`] || item.text_id}</p>
+                </div>
+            </div>`).join('');
+    };
+
+    const renderMenu = () => {
+        if (!siteData.products || !siteData.categories) return;
+        
+        // --- START: MODIFIED FUNCTION ---
+        // This function now includes a container for action buttons and conditionally adds GoFood/GrabFood links.
+        const getCardHTML = p => `
+            <div class="ls-menu-card" data-category="${p.category_name}" data-product-id="${p.id}"> 
+                <div class="ls-menu-card-image"><img src="${p.imageUrl}" alt="${p.name_en}" loading="lazy"></div> 
+                <div class="ls-menu-card-content"> 
+                    <div class="title-price">
+                        <h3>${p[`name_${currentLanguage}`] || p.name_id}</h3>
+                        <span class="ls-menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(p.price)}</span>
+                    </div>
+                    <p class="ls-description">${(p[`description_${currentLanguage}`] || p.description_id).substring(0, 90)}...</p>
+                    <div class="ls-card-actions">
+                        <button class="ls-btn ls-view-details-btn"><i class="fas fa-eye"></i> <span data-lang-key="view_details_btn">View Details</span></button>
+                        ${p.gofood_link ? `<a href="${p.gofood_link}" target="_blank" rel="noopener noreferrer" class="ls-order-link" aria-label="Order on GoFood"><img src="https://i.ibb.co/LzPWW1M/gofood-logo-2022-48x48-1.png" alt="GoFood Logo" style="width:24px; height:24px;"></a>` : ''}
+                        ${p.grabfood_link ? `<a href="${p.grabfood_link}" target="_blank" rel="noopener noreferrer" class="ls-order-link" aria-label="Order on GrabFood"><img src="https://i.ibb.co/qDWMzWd/grab-logo-48x48.png" alt="GrabFood Logo" style="width:24px; height:24px;"></a>` : ''}
+                    </div>
+                </div> 
+            </div>`;
+        // --- END: MODIFIED FUNCTION ---
+        
+        domElements.featuredMenuWrapper.innerHTML = siteData.products
+            .filter(p => p.is_featured).map(p => `<div class="swiper-slide">${getCardHTML(p)}</div>`).join('');
+            
+        domElements.menuGrid.innerHTML = siteData.products.map(p => getCardHTML(p)).join('');
+        
+        const allText = currentLanguage === 'id' ? 'Semua' : 'All';
+        domElements.menuFilters.innerHTML = `<button class="ls-filter-btn active" data-filter="all">${allText}</button>` +
+            siteData.categories.map(c => `<button class="ls-filter-btn" data-filter="${c.name}">${c.name}</button>`).join('');
+        
+        new Swiper('.ls-featured-slider', { 
+            slidesPerView: 1, spaceBetween: 24, grabCursor: true, 
+            pagination: { el: '.swiper-pagination', clickable: true },
+            breakpoints: { 576: { slidesPerView: 2 }, 992: { slidesPerView: 3 } }
+        });
+    };
+
+    const renderGallery = () => {
+        if (!siteData.gallery_images) return;
+        domElements.galleryGrid.innerHTML = siteData.gallery_images.map(img => `
+            <a href="${img.image_url}" class="glightbox" data-gallery="our-gallery" data-title="${img[`caption_${currentLanguage}`] || img.caption_id}"> 
+                <img src="${img.image_url}" alt="${img.caption_en || 'Gallery Image'}" loading="lazy"> 
+            </a>`).join('');
+        if (lightbox) { lightbox.reload(); } 
+        else { lightbox = GLightbox({ selector: '.glightbox', touchNavigation: true }); }
+    };
+
+    const showProductModal = (productId) => {
+        const product = siteData.products.find(p => p.id === productId);
+        if (!product) return;
+        domElements.modalBody.innerHTML = `
+            <div class="modal-image">
+                <img src="${product.imageUrl}" alt="${product.name_en}">
+            </div>
+            <div class="modal-text">
+                <h3>${product[`name_${currentLanguage}`] || product.name_id}</h3>
+                <span class="modal-price">Rp ${new Intl.NumberFormat('id-ID').format(product.price)}</span>
+                <p class="modal-description">${product[`description_${currentLanguage}`] || product.description_id}</p>
+            </div>`;
+        domElements.body.classList.add('ls-modal-open');
+        domElements.modalOverlay.classList.add('visible');
+    };
+
+    const hideProductModal = () => {
+        domElements.body.classList.remove('ls-modal-open');
+        domElements.modalOverlay.classList.remove('visible');
+    };
+    
+    const renderAll = () => {
+        renderBanners();
+        renderHistory();
+        renderMenu();
+        renderGallery();
+        updateTextContent();
+        AOS.init({ duration: 800, once: true, offset: 50 });
+    };
+    
+    // --- DATA FETCHING ---
+    async function fetchAllData() {
+        try {
+            const collections = ['products', 'categories', 'content', 'banners', 'gallery_images', 'history'];
+            const promises = collections.map(col => db.collection(col).get());
+            const [ productsSnap, categoriesSnap, contentSnap, bannersSnap, gallerySnap, historySnap ] = await Promise.all(promises);
+            
+            siteData.products = productsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            siteData.categories = categoriesSnap.docs.map(doc => doc.data()).sort((a,b) => a.id - b.id);
+            siteData.banners = bannersSnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
+            siteData.gallery_images = gallerySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
+            siteData.history = historySnap.docs.map(doc => doc.data()); // sort is handled in render function
+            siteData.content = {};
+            contentSnap.docs.forEach(doc => { siteData.content[doc.id] = doc.data(); });
+            
+            renderAll();
+        } catch (error) {
+            console.error("Error fetching data from Firebase:", error);
+            document.body.innerHTML = "<h1>Error loading site data. Please try again later.</h1>";
+        }
+    }
+
+    // --- COOKIE CONSENT LOGIC ---
+    const handleCookieConsent = () => {
+        if (document.cookie.split(';').some((item) => item.trim().startsWith('ls_cookie_consent='))) {
+            return; // Cookie already set
+        }
+        domElements.cookieConsent.classList.add('active');
+    };
+    
+    // --- EVENT LISTENERS ---
+    document.addEventListener('DOMContentLoaded', () => {
+        // Language Toggle
+        domElements.langToggleContainer.addEventListener('click', e => {
+            if (!e.target.matches('.ls-lang-btn') || e.target.classList.contains('active')) return;
+            currentLanguage = e.target.dataset.lang;
+            localStorage.setItem('preferredLanguage', currentLanguage);
+            // Re-render content that depends on language
+            renderHistory(); 
+            renderMenu(); 
+            renderGallery(); 
+            updateTextContent();
+        });
+        
+        // Mobile Menu
+        domElements.mobileMenuToggle.addEventListener('click', () => {
+            domElements.mainNav.classList.toggle('active');
+            domElements.body.classList.toggle('ls-nav-open');
+            const icon = domElements.mobileMenuToggle.querySelector('i');
+            icon.classList.toggle('fa-bars'); 
+            icon.classList.toggle('fa-times');
+        });
+        domElements.mainNav.addEventListener('click', (e) => {
+            if (e.target.matches('a') && domElements.mainNav.classList.contains('active')) {
+                domElements.mobileMenuToggle.click();
+            }
+        });
+        
+        // Menu Filtering
+        domElements.menuFilters.addEventListener('click', e => {
+            if (!e.target.matches('.ls-filter-btn') || e.target.classList.contains('active')) return;
+            domElements.menuFilters.querySelector('.active').classList.remove('active');
+            e.target.classList.add('active');
+            const filter = e.target.dataset.filter;
+            domElements.menuGrid.querySelectorAll('.ls-menu-card').forEach(card => {
+                const isVisible = filter === 'all' || card.dataset.category === filter;
+                card.classList.toggle('hidden', !isVisible);
+            });
+        });
+
+        // Modal Event Listeners
+        document.body.addEventListener('click', e => {
+            const detailsButton = e.target.closest('.ls-view-details-btn');
+            if (detailsButton) {
+                const card = detailsButton.closest('.ls-menu-card');
+                if (card) showProductModal(card.dataset.productId);
+            }
+        });
+        domElements.modalCloseBtn.addEventListener('click', hideProductModal);
+        domElements.modalOverlay.addEventListener('click', e => {
+            if (e.target === domElements.modalOverlay) hideProductModal();
+        });
+        
+        // Cookie Consent Accept
+        domElements.cookieAcceptBtn.addEventListener('click', () => {
+            let d = new Date();
+            d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000)); // Expire in 1 year
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = "ls_cookie_consent=accepted;" + expires + ";path=/";
+            domElements.cookieConsent.classList.remove('active');
+        });
+
+        // Active Nav Link on Scroll
+        const sections = document.querySelectorAll('main > section[id]');
+        const navLinks = document.querySelectorAll('.ls-nav-links a');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(a => {
+                a.classList.remove('active');
+                if (a.getAttribute('href').includes(current)) {
+                    a.classList.add('active');
+                }
+            });
+        }, { passive: true });
+
+        // Initial Calls
+        fetchAllData();
+        setTimeout(handleCookieConsent, 2000); // Show cookie banner after 2s
+    });
+    </script>
+</body>
+</html>
