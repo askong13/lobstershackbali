@@ -12,13 +12,11 @@
     
     <style>
         /*
-         * --- ADMIN PANEL STYLING ---
-         * Ini adalah CSS yang Anda sediakan sebelumnya.
-         * Tidak ada perubahan di bagian ini.
+         * --- ADMIN PANEL STYLING (MODIFIED) ---
          */
         :root {
-            --ls-font-heading: 'Playfair Display', serif;
-            --ls-font-body: 'Poppins', sans-serif;
+            --ls-font-heading: 'TOLYER Bold', sans-serif; /* MODIFIED FONT */
+            --ls-font-body: 'TOLYER Bold', sans-serif; /* MODIFIED FONT */
             --ls-color-primary: #D84B42;
             --ls-color-secondary: #2D4C5E;
             --ls-color-background: #F8F6F0;
@@ -112,6 +110,7 @@
             display: flex;
             flex-direction: column;
             transition: transform 0.3s ease-in-out;
+            flex-shrink: 0;
         }
         .sidebar .logo-container { padding: 0 1.5rem 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .sidebar .logo { height: 50px; filter: brightness(0) invert(1); }
@@ -210,7 +209,7 @@
         }
         td .action-btns { display: flex; gap: .5rem; }
         td .action-btns .btn { padding: .4rem .8rem; border-radius: 6px; }
-        .thumb-image { width: 100px; height: 60px; object-fit: cover; border-radius: 8px; }
+        .thumb-image { width: 100px; height: 60px; object-fit: cover; border-radius: 8px; vertical-align: middle; }
 
         /* --- MODAL --- */
         .modal-overlay {
@@ -280,7 +279,7 @@
         .fa-check-circle { color: var(--ls-color-success); }
         .fa-times-circle { color: var(--ls-color-primary); }
 
-        /* Mobile Responsive */
+        /* --- MOBILE RESPONSIVE --- */
         .menu-toggle {
             display: none;
             position: fixed;
@@ -295,14 +294,13 @@
             font-size: 1.2rem;
             z-index: 1001;
             cursor: pointer;
+            box-shadow: var(--ls-shadow-md);
         }
 
         @media (max-width: 992px) {
             .sidebar {
                 position: fixed;
-                left: 0;
-                top: 0;
-                height: 100%;
+                left: 0; top: 0; height: 100%;
                 z-index: 1000;
                 transform: translateX(-100%);
             }
@@ -311,13 +309,65 @@
                 box-shadow: 5px 0 15px rgba(0,0,0,0.2);
             }
             .main-content {
-                padding: 2rem 1.5rem;
+                padding: 1.5rem;
                 padding-top: 6rem;
             }
-            .menu-toggle {
-                display: block;
-            }
+            .menu-toggle { display: block; }
             .form-grid { grid-template-columns: 1fr; }
+        }
+
+        /* --- MOBILE RESPONSIVE TABLE-TO-CARD STYLES (NEW) --- */
+        @media (max-width: 768px) {
+            .table-wrapper {
+                overflow-x: hidden;
+            }
+            table {
+                border: 0;
+            }
+            thead {
+                display: none; /* Sembunyikan header tabel di mobile */
+            }
+            tr {
+                display: block;
+                margin-bottom: 1.5rem;
+                background: var(--ls-color-surface);
+                border-radius: var(--ls-border-radius);
+                box-shadow: var(--ls-shadow-sm);
+                border: 1px solid var(--ls-color-border);
+                padding: 1rem;
+            }
+            td {
+                display: block;
+                padding: 0.75rem 0.5rem;
+                border: none;
+                border-bottom: 1px dashed var(--ls-color-border);
+                text-align: right;
+                position: relative;
+                min-height: 30px; /* Jaga tinggi agar align */
+            }
+            tr td:last-child {
+                border-bottom: 0;
+            }
+            td::before {
+                content: attr(data-label); /* Ambil teks dari atribut data-label */
+                position: absolute;
+                left: 0.5rem;
+                width: 45%;
+                font-weight: 600;
+                color: var(--ls-color-secondary);
+                text-align: left;
+                white-space: nowrap;
+            }
+            .thumb-image {
+                max-width: 60px; /* Ukuran gambar di mobile */
+                height: auto;
+            }
+            td .action-btns {
+                justify-content: flex-end; /* Ratakan tombol ke kanan */
+            }
+            td[data-label="Actions"] {
+                padding-top: 1rem;
+            }
         }
     </style>
 </head>
@@ -503,7 +553,8 @@
                                     <th>Key</th>
                                     <th>Text (ID)</th>
                                     <th>Text (EN)</th>
-                                    <th>Image</th> <th>Action</th>
+                                    <th>Image</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -767,46 +818,39 @@
     <script>
     'use strict';
 
-    // ======================================================================
-    // 🔑 PENTING: ISI DENGAN KONFIGURASI FIREBASE PROJECT ANDA!
-    // Anda bisa mendapatkan ini dari:
-    // Firebase Console > Project Settings (ikon roda gigi) > General > Your apps
-    // Cari bagian "Firebase SDK snippet" dan pilih "Config".
-    // Salin OBJEK `firebaseConfig` dan tempelkan di bawah ini.
-    // ========================================================================
+    // --- Firebase Config (Tidak berubah) ---
     const firebaseConfig = {
-  apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
-  authDomain: "lobster-shack-bali.firebaseapp.com",
-  databaseURL: "https://lobster-shack-bali-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "lobster-shack-bali",
-  storageBucket: "lobster-shack-bali.firebasestorage.app",
-  messagingSenderId: "42452974733",
-  appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
-};
-    // ========================================================================
+      apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
+      authDomain: "lobster-shack-bali.firebaseapp.com",
+      databaseURL: "https://lobster-shack-bali-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "lobster-shack-bali",
+      storageBucket: "lobster-shack-bali.firebasestorage.app",
+      messagingSenderId: "42452974733",
+      appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
+    };
 
-    // Initialize Firebase
+    // --- Initialize Firebase (Tidak berubah) ---
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
     const storage = firebase.storage();
 
-    // ======== GLOBAL DOM ELEMENTS ========
+    // --- Global DOM Elements (Tidak berubah) ---
     const authContainer = document.getElementById('auth-container');
     const adminContainer = document.getElementById('admin-container');
     const loginForm = document.getElementById('login-form');
     const loginError = document.getElementById('login-error');
     const logoutBtn = document.getElementById('logout-btn');
 
-    // ======== APP LOGIC ========
+    // --- APP LOGIC (Bagian Rendering telah dimodifikasi) ---
     document.addEventListener('DOMContentLoaded', () => {
 
-        // --- Authentication ---
+        // --- Authentication (Tidak berubah) ---
         auth.onAuthStateChanged(user => {
             if (user) {
                 authContainer.style.display = 'none';
                 adminContainer.style.display = 'flex';
-                initAdminPanel(); // Inisialisasi panel admin saat user login
+                initAdminPanel();
             } else {
                 authContainer.style.display = 'flex';
                 adminContainer.style.display = 'none';
@@ -819,7 +863,7 @@
             const password = document.getElementById('password').value;
             auth.signInWithEmailAndPassword(email, password)
                 .catch(error => {
-                    loginError.textContent = "Login Gagal: " + error.message;
+                    loginError.textContent = "Login Failed: " + error.message;
                     loginError.style.display = 'block';
                 });
         });
@@ -829,7 +873,7 @@
             auth.signOut();
         });
 
-        // --- Initialize Panel ---
+        // --- Initialize Panel (Tidak berubah) ---
         function initAdminPanel() {
             setupNavigation();
             loadAllData();
@@ -838,11 +882,10 @@
             setupImagePreviews();
         }
         
-        // --- Global Data Arrays ---
-        // Data akan disimpan di sini setelah dimuat dari Firestore
+        // --- Global Data Arrays (Tidak berubah) ---
         let productsData = [], categoriesData = [], contentData = [], bannersData = [], galleryData = [], historyData = [];
         
-        // Memuat semua data dari Firestore secara paralel
+        // --- Load All Data (Tidak berubah) ---
         async function loadAllData() {
             try {
                 await Promise.all([
@@ -853,23 +896,20 @@
                     loadProducts(),
                     loadContent(),
                 ]);
-                // Render data ke tabel setelah semua berhasil dimuat
                 renderBanners();
                 renderGallery();
                 renderHistory();
                 renderProducts();
                 renderCategories();
                 renderContent();
-                populateCategoryDropdown(); // Mengisi dropdown kategori untuk form produk
+                populateCategoryDropdown();
             } catch (err) {
-                // Tangani error jika ada masalah saat memuat data
-                console.error("Gagal memuat data awal:", err);
-                alert("Tidak dapat memuat data dari database. Pastikan konfigurasi dan aturan keamanan Firebase sudah benar. Periksa console (F12) untuk detail error.");
+                console.error("Failed to load initial data:", err);
+                alert("Could not load data from the database. Ensure Firebase config and security rules are correct. Check console (F12) for details.");
             }
         }
         
-        // --- Navigation ---
-        // Menyiapkan navigasi sidebar dan pergantian halaman
+        // --- Navigation (Tidak berubah) ---
         function setupNavigation() {
             const navLinks = document.querySelectorAll('.sidebar-nav a, .logout-btn');
             const pages = document.querySelectorAll('.page');
@@ -909,34 +949,22 @@
 
             menuToggle.addEventListener('click', () => {
                 sidebar.classList.toggle('open');
-                if (sidebar.classList.contains('open')) {
-                    menuToggle.innerHTML = '<i class="fas fa-times"></i>';
-                } else {
-                    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                }
+                menuToggle.innerHTML = sidebar.classList.contains('open') ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
             });
         }
         
-        // --- Modal Handling ---
-        // Menyiapkan fungsi untuk membuka/menutup modal
+        // --- Modal & Image Preview Handling (Tidak berubah) ---
         function setupModals() {
             document.querySelectorAll('.modal-overlay').forEach(modal => {
-                modal.addEventListener('click', e => {
-                    if (e.target === modal) closeModal(modal.id);
-                });
+                modal.addEventListener('click', e => { if (e.target === modal) closeModal(modal.id); });
             });
             document.querySelectorAll('.modal-close-btn').forEach(btn => {
-                btn.addEventListener('click', e => {
-                    closeModal(btn.closest('.modal-overlay').id);
-                });
+                btn.addEventListener('click', () => closeModal(btn.closest('.modal-overlay').id));
             });
         }
-
         function openModal(modalId) { document.getElementById(modalId).classList.add('visible'); }
         function closeModal(modalId) { document.getElementById(modalId).classList.remove('visible'); }
         
-        // --- Image Preview Handling ---
-        // Menyiapkan pratinjau gambar saat memilih file
         function setupImagePreviews() {
             const handleFileChange = (inputId, previewId) => {
                 document.getElementById(inputId).addEventListener('change', (e) => {
@@ -946,8 +974,7 @@
                         preview.src = URL.createObjectURL(file);
                         preview.style.display = 'block';
                     } else {
-                        preview.style.display = 'none';
-                        preview.src = '#';
+                        preview.style.display = 'none'; preview.src = '#';
                     }
                 });
             };
@@ -957,138 +984,106 @@
             handleFileChange('gallery-image', 'gallery-image-preview');
         }
 
-        // --- Data Fetching ---
-        // Fungsi generik untuk memuat data dari koleksi tertentu
+        // --- Data Fetching (Tidak berubah) ---
         async function loadCollection(name, orderByField, orderDirection = 'asc') {
             let query = db.collection(name);
-            if (orderByField) {
-                query = query.orderBy(orderByField, orderDirection);
-            }
+            if (orderByField) { query = query.orderBy(orderByField, orderDirection); }
             const snapshot = await query.get();
             return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         }
-
-        // Fungsi spesifik untuk memuat setiap koleksi
         async function loadProducts() { productsData = await loadCollection('products', 'name_en'); }
         async function loadCategories() { categoriesData = await loadCollection('categories', 'id'); }
         async function loadContent() { contentData = await loadCollection('content'); }
         async function loadBanners() { bannersData = await loadCollection('banners', 'sort_order'); }
-        async function loadGallery() { galleryData = await loadCollection('gallery_images', 'sort_order'); } // Menggunakan gallery_images
+        async function loadGallery() { galleryData = await loadCollection('gallery_images', 'sort_order'); }
         async function loadHistory() { historyData = await loadCollection('history', 'sort_order', 'desc'); }
         
-        // --- Rendering ---
-        // Fungsi generik untuk merender data ke tabel HTML
+        // ======== RENDERING FUNCTIONS (MODIFIED FOR RESPONSIVENESS) ========
         const renderTable = (tableId, data, rowRenderer) => {
             const tbody = document.querySelector(`#${tableId} tbody`);
-            tbody.innerHTML = data.map(rowRenderer).join('');
+            tbody.innerHTML = data.map(rowRenderer).join('') || `<tr><td colspan="100%" style="text-align:center; padding: 2rem;">No data available.</td></tr>`;
         };
 
         const getImageUrl = (url) => url || 'https://via.placeholder.com/100x60?text=No+Image';
+        const renderActionButtons = (collection, id, name, imageUrl) => `
+            <div class="action-btns">
+                <button class="btn btn-sm btn-outline" onclick="editItem('${collection}', '${id}')"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-sm btn-danger" onclick="deleteItem('${collection}', '${id}', '${name.replace(/'/g, "\\'")}', '${imageUrl}')"><i class="fas fa-trash"></i></button>
+            </div>`;
 
-        // Fungsi spesifik untuk merender setiap tabel
         let renderBanners = () => renderTable('banners-table', bannersData, b => `
             <tr>
-                <td><img src="${getImageUrl(b.image_url)}" alt="Banner" class="thumb-image"></td>
-                <td>${b.sort_order}</td>
-                <td>
-                    <div class="action-btns">
-                        <button class="btn btn-sm btn-outline" onclick="editBanner('${b.id}')"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteItem('banners', '${b.id}', 'Banner', '${b.image_url}')"><i class="fas fa-trash"></i></button>
-                    </div>
-                </td>
+                <td data-label="Image"><img src="${getImageUrl(b.image_url)}" alt="Banner" class="thumb-image"></td>
+                <td data-label="Sort Order">${b.sort_order}</td>
+                <td data-label="Actions">${renderActionButtons('banners', b.id, `Banner #${b.sort_order}`, b.image_url)}</td>
             </tr>`);
 
         let renderGallery = () => renderTable('gallery-table', galleryData, g => `
             <tr>
-                <td><img src="${getImageUrl(g.image_url)}" alt="Gallery" class="thumb-image"></td>
-                <td>${g.sort_order}</td>
-                <td>${g.caption_id}<br><small class="text-muted">${g.caption_en}</small></td>
-                <td>
-                    <div class="action-btns">
-                        <button class="btn btn-sm btn-outline" onclick="editGallery('${g.id}')"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteItem('gallery_images', '${g.id}', 'Gallery Image: ${g.caption_en}', '${g.image_url}')"><i class="fas fa-trash"></i></button>
-                    </div>
-                </td>
+                <td data-label="Image"><img src="${getImageUrl(g.image_url)}" alt="Gallery" class="thumb-image"></td>
+                <td data-label="Sort Order">${g.sort_order}</td>
+                <td data-label="Caption">${g.caption_id}<br><small class="text-muted">${g.caption_en}</small></td>
+                <td data-label="Actions">${renderActionButtons('gallery_images', g.id, `Gallery: ${g.caption_en}`, g.image_url)}</td>
             </tr>`);
 
         let renderHistory = () => renderTable('history-table', historyData, h => `
             <tr>
-                <td>${h.sort_order}</td>
-                <td>${h.year}</td>
-                <td>${h.title_id}<br><small class="text-muted">${h.title_en}</small></td>
-                <td>
-                    <div class="action-btns">
-                        <button class="btn btn-sm btn-outline" onclick="editHistory('${h.id}')"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteItem('history', '${h.id}', 'History: ${h.year} - ${h.title_en}')"><i class="fas fa-trash"></i></button>
-                    </div>
-                </td>
+                <td data-label="Sort Order">${h.sort_order}</td>
+                <td data-label="Year">${h.year}</td>
+                <td data-label="Title">${h.title_id}<br><small class="text-muted">${h.title_en}</small></td>
+                <td data-label="Actions">${renderActionButtons('history', h.id, `History: ${h.title_en}`)}</td>
             </tr>`);
         
         let renderProducts = () => renderTable('products-table', productsData, p => `
             <tr>
-                <td><img src="${getImageUrl(p.imageUrl)}" alt="${p.name_en}" class="thumb-image"></td>
-                <td>${p.name_id}<br><small class="text-muted">${p.name_en}</small></td>
-                <td>${p.category_name}</td>
-                <td>${new Intl.NumberFormat('id-ID').format(p.price)}</td>
-                <td><i class="fas ${p.is_featured ? 'fa-check-circle' : 'fa-times-circle'}"></i></td>
-                <td>
-                    <div class="action-btns">
-                        <button class="btn btn-sm btn-outline" onclick="editProduct('${p.id}')"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteItem('products', '${p.id}', '${p.name_en}', '${p.imageUrl}')"><i class="fas fa-trash"></i></button>
-                    </div>
-                </td>
+                <td data-label="Image"><img src="${getImageUrl(p.imageUrl)}" alt="${p.name_en}" class="thumb-image"></td>
+                <td data-label="Name">${p.name_id}<br><small class="text-muted">${p.name_en}</small></td>
+                <td data-label="Category">${p.category_name}</td>
+                <td data-label="Price">${new Intl.NumberFormat('id-ID').format(p.price)}</td>
+                <td data-label="Featured"><i class="fas ${p.is_featured ? 'fa-check-circle' : 'fa-times-circle'}"></i></td>
+                <td data-label="Actions">${renderActionButtons('products', p.id, p.name_en, p.imageUrl)}</td>
             </tr>`);
         
         let renderCategories = () => renderTable('categories-table', categoriesData, c => `
             <tr>
-                <td>${c.id}</td>
-                <td>${c.name}</td>
-                <td>
-                    <div class="action-btns">
-                        <button class="btn btn-sm btn-outline" onclick="editCategory('${c.id}')"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteItem('categories', '${c.id}', 'Category: ${c.name}')"><i class="fas fa-trash"></i></button>
-                    </div>
-                </td>
+                <td data-label="Sort Order">${c.id}</td>
+                <td data-label="Name">${c.name}</td>
+                <td data-label="Actions">${renderActionButtons('categories', c.id, `Category: ${c.name}`)}</td>
             </tr>`);
         
         let renderContent = () => renderTable('content-table', contentData.sort((a,b) => a.id.localeCompare(b.id)), c => `
             <tr>
-                <td><strong>${c.id}</strong></td>
-                <td>${(c.text_id || '').substring(0, 50)}${(c.text_id || '').length > 50 ? '...' : ''}</td>
-                <td>${(c.text_en || '').substring(0, 50)}${(c.text_en || '').length > 50 ? '...' : ''}</td>
-                <td>${c.imageUrl ? `<img src="${c.imageUrl}" alt="Content" class="thumb-image">` : 'N/A'}</td>
-                <td>
+                <td data-label="Key"><strong>${c.id}</strong></td>
+                <td data-label="Text (ID)">${(c.text_id || '').substring(0, 50)}${(c.text_id || '').length > 50 ? '...' : ''}</td>
+                <td data-label="Text (EN)">${(c.text_en || '').substring(0, 50)}${(c.text_en || '').length > 50 ? '...' : ''}</td>
+                <td data-label="Image">${c.imageUrl ? `<img src="${c.imageUrl}" alt="Content" class="thumb-image">` : 'N/A'}</td>
+                <td data-label="Action">
                     <div class="action-btns">
-                        <button class="btn btn-sm btn-outline" onclick="editContent('${c.id}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-outline" onclick="editItem('content', '${c.id}')"><i class="fas fa-edit"></i></button>
                     </div>
                 </td>
             </tr>`);
         
-        // Mengisi dropdown kategori pada form produk
+        // --- Populate Dropdown (Tidak berubah) ---
         function populateCategoryDropdown() {
             const select = document.getElementById('product-category');
             select.innerHTML = '<option value="">Select a category</option>';
             categoriesData.forEach(c => { select.innerHTML += `<option value="${c.name}">${c.name}</option>`; });
         }
 
-        // --- Utility Functions ---
-        // Mereset form setelah submit atau saat membuka form baru
+        // --- Utility Functions (Tidak berubah) ---
         const resetForm = (formId, modalTitleId, titleText) => {
             document.getElementById(formId).reset();
             document.querySelectorAll(`#${formId} input[type=hidden]`).forEach(input => input.value = '');
             document.getElementById(modalTitleId).textContent = titleText;
             document.querySelectorAll(`#${formId} .image-preview`).forEach(img => { img.style.display = 'none'; img.src = '#'; });
         };
-
-        // Mengunggah gambar ke Firebase Storage
         const uploadImage = async (file, path) => {
             if (!file) return null;
             const filePath = `${path}/${Date.now()}_${file.name}`;
             const fileSnapshot = await storage.ref(filePath).put(file);
             return fileSnapshot.ref.getDownloadURL();
         };
-
-        // Menyimpan data ke Firestore (add atau update)
         const saveToDb = async (collectionName, id, data) => {
             if (id) {
                 await db.collection(collectionName).doc(id).update(data);
@@ -1097,261 +1092,153 @@
             }
         };
 
-        // --- Forms & Actions ---
-        // Menyiapkan event listener untuk tombol "Add New..."
+        // --- Forms & Actions (Tidak berubah) ---
         function setupForms() {
-            // New Item Buttons
-            document.getElementById('add-new-banner-btn').addEventListener('click', () => {
-                resetForm('banner-form', 'banner-modal-title', 'Add New Banner');
-                openModal('banner-modal');
-            });
-            document.getElementById('add-new-gallery-btn').addEventListener('click', () => {
-                resetForm('gallery-form', 'gallery-modal-title', 'Add New Gallery Image');
-                openModal('gallery-modal');
-            });
-            document.getElementById('add-new-history-btn').addEventListener('click', () => {
-                resetForm('history-form', 'history-modal-title', 'Add New History Item');
-                openModal('history-modal');
-            });
-            document.getElementById('add-new-product-btn').addEventListener('click', () => {
-                resetForm('product-form', 'product-modal-title', 'Add New Product');
-                openModal('product-modal');
-            });
-            document.getElementById('add-new-category-btn').addEventListener('click', () => {
-                resetForm('category-form', 'category-modal-title', 'Add New Category');
-                openModal('category-modal');
-            });
-
-            // Form Submissions (untuk setiap modal)
+            document.getElementById('add-new-banner-btn').addEventListener('click', () => { resetForm('banner-form', 'banner-modal-title', 'Add New Banner'); openModal('banner-modal'); });
+            document.getElementById('add-new-gallery-btn').addEventListener('click', () => { resetForm('gallery-form', 'gallery-modal-title', 'Add New Gallery Image'); openModal('gallery-modal'); });
+            document.getElementById('add-new-history-btn').addEventListener('click', () => { resetForm('history-form', 'history-modal-title', 'Add New History Item'); openModal('history-modal'); });
+            document.getElementById('add-new-product-btn').addEventListener('click', () => { resetForm('product-form', 'product-modal-title', 'Add New Product'); openModal('product-modal'); });
+            document.getElementById('add-new-category-btn').addEventListener('click', () => { resetForm('category-form', 'category-modal-title', 'Add New Category'); openModal('category-modal'); });
+            
+            // Form Submissions
             document.getElementById('banner-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const id = document.getElementById('banner-id').value;
                 const imageFile = document.getElementById('banner-image').files[0];
                 const data = { sort_order: Number(document.getElementById('banner-sort-order').value) };
-                
                 try {
                     const imageUrl = await uploadImage(imageFile, 'banners');
                     if (imageUrl) data.image_url = imageUrl;
                     else if (!id) { alert("An image is required for a new banner."); return; }
-
                     await saveToDb('banners', id, data);
-                    closeModal('banner-modal');
-                    await loadBanners();
-                    renderBanners();
+                    closeModal('banner-modal'); await loadBanners(); renderBanners();
                 } catch(err) { alert("Error saving banner: " + err.message); }
             });
-
             document.getElementById('gallery-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const id = document.getElementById('gallery-id').value;
                 const imageFile = document.getElementById('gallery-image').files[0];
-                const data = {
-                    sort_order: Number(document.getElementById('gallery-sort-order').value),
-                    caption_id: document.getElementById('gallery-caption-id').value,
-                    caption_en: document.getElementById('gallery-caption-en').value,
-                };
-
+                const data = { sort_order: Number(document.getElementById('gallery-sort-order').value), caption_id: document.getElementById('gallery-caption-id').value, caption_en: document.getElementById('gallery-caption-en').value };
                 try {
-                    const imageUrl = await uploadImage(imageFile, 'gallery'); // Mengunggah ke folder 'gallery' di Storage
+                    const imageUrl = await uploadImage(imageFile, 'gallery');
                     if (imageUrl) data.image_url = imageUrl;
-                    else if (!id) { alert("An image is required for a new gallery item."); return; }
-
-                    await saveToDb('gallery_images', id, data); // Menyimpan ke koleksi 'gallery_images' di Firestore
-                    closeModal('gallery-modal');
-                    await loadGallery();
-                    renderGallery();
+                    else if (!id) { alert("An image is required."); return; }
+                    await saveToDb('gallery_images', id, data);
+                    closeModal('gallery-modal'); await loadGallery(); renderGallery();
                 } catch(err) { alert("Error saving gallery item: " + err.message); }
             });
-
             document.getElementById('history-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const id = document.getElementById('history-id').value;
-                const data = {
-                    year: document.getElementById('history-year').value,
-                    sort_order: Number(document.getElementById('history-sort-order').value),
-                    title_id: document.getElementById('history-title-id').value,
-                    title_en: document.getElementById('history-title-en').value,
-                    text_id: document.getElementById('history-text-id').value,
-                    text_en: document.getElementById('history-text-en').value,
-                };
+                const data = { year: document.getElementById('history-year').value, sort_order: Number(document.getElementById('history-sort-order').value), title_id: document.getElementById('history-title-id').value, title_en: document.getElementById('history-title-en').value, text_id: document.getElementById('history-text-id').value, text_en: document.getElementById('history-text-en').value };
                 try {
                     await saveToDb('history', id, data);
-                    closeModal('history-modal');
-                    await loadHistory();
-                    renderHistory();
+                    closeModal('history-modal'); await loadHistory(); renderHistory();
                 } catch(err) { alert("Error saving history item: " + err.message); }
             });
-
             document.getElementById('product-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const id = document.getElementById('product-id').value;
                 const imageFile = document.getElementById('product-image').files[0];
-                const data = {
-                    name_id: document.getElementById('product-name-id').value,
-                    name_en: document.getElementById('product-name-en').value,
-                    description_id: document.getElementById('product-description-id').value,
-                    description_en: document.getElementById('product-description-en').value,
-                    price: Number(document.getElementById('product-price').value),
-                    category_name: document.getElementById('product-category').value,
-                    is_featured: document.getElementById('product-featured').checked
-                };
-                
+                const data = { name_id: document.getElementById('product-name-id').value, name_en: document.getElementById('product-name-en').value, description_id: document.getElementById('product-description-id').value, description_en: document.getElementById('product-description-en').value, price: Number(document.getElementById('product-price').value), category_name: document.getElementById('product-category').value, is_featured: document.getElementById('product-featured').checked };
                 try {
                     const imageUrl = await uploadImage(imageFile, 'products');
                     if (imageUrl) data.imageUrl = imageUrl;
-                    
                     await saveToDb('products', id, data);
-                    closeModal('product-modal');
-                    await loadProducts();
-                    renderProducts();
+                    closeModal('product-modal'); await loadProducts(); renderProducts();
                 } catch(err) { alert("Error saving product: " + err.message); }
             });
-
             document.getElementById('category-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const docId = document.getElementById('category-id').value;
-                const data = {
-                    name: document.getElementById('category-name').value,
-                    id: Number(document.getElementById('category-sort-id').value) 
-                };
-
+                const data = { name: document.getElementById('category-name').value, id: Number(document.getElementById('category-sort-id').value) };
                 try {
-                    if (docId) { 
-                        await db.collection('categories').doc(docId).update(data);
-                    } else { 
-                        await db.collection('categories').add(data);
-                    }
-                    closeModal('category-modal');
-                    await loadCategories();
-                    renderCategories();
-                    populateCategoryDropdown();
+                    if (docId) { await db.collection('categories').doc(docId).update(data); } else { await db.collection('categories').add(data); }
+                    closeModal('category-modal'); await loadCategories(); renderCategories(); populateCategoryDropdown();
                 } catch(err) { alert("Error saving category: " + err.message); }
             });
-
             document.getElementById('content-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const key = document.getElementById('content-key').value;
                 const imageFile = document.getElementById('content-image').files[0];
-                let data = {
-                    text_id: document.getElementById('content-text-id').value,
-                    text_en: document.getElementById('content-text-en').value,
-                };
-                 try {
+                let data = { text_id: document.getElementById('content-text-id').value, text_en: document.getElementById('content-text-en').value, };
+                try {
                     const imageUrl = await uploadImage(imageFile, 'content');
                     if (imageUrl) data.imageUrl = imageUrl;
-                    
                     await db.collection('content').doc(key).update(data);
-                    closeModal('content-modal');
-                    await loadContent();
-                    renderContent();
+                    closeModal('content-modal'); await loadContent(); renderContent();
                 } catch(err) { alert("Error saving content: " + err.message); }
             });
         }
         
-        // --- Edit and Delete Functions (exposed to global scope for onclick) ---
-        // Fungsi untuk mengisi form dengan data item yang akan diedit
+        // --- Edit and Delete Functions (Now using a generic editItem function) ---
         const populateForm = (data, fields) => {
             fields.forEach(field => {
                 const element = document.getElementById(field.id);
-                if (element.type === 'checkbox') {
-                    element.checked = data[field.key] || false;
-                } else {
-                    element.value = data[field.key] || '';
-                }
+                if (element.type === 'checkbox') { element.checked = data[field.key] || false; } 
+                else { element.value = data[field.key] || ''; }
             });
         };
-
-        // Menampilkan pratinjau gambar saat mengedit item yang sudah punya gambar
         const showImagePreview = (previewId, imageUrl) => {
             const preview = document.getElementById(previewId);
-            if (imageUrl) {
-                preview.src = imageUrl;
-                preview.style.display = 'block';
-            } else {
-                preview.style.display = 'none';
-                preview.src = '#';
+            if (imageUrl) { preview.src = imageUrl; preview.style.display = 'block'; } 
+            else { preview.style.display = 'none'; preview.src = '#'; }
+        };
+
+        window.editItem = (collection, id) => {
+            let item, formId, modalId, modalTitle, fields, previewId, imageUrlKey;
+            switch(collection) {
+                case 'banners':
+                    item = bannersData.find(i => i.id === id);
+                    modalId = 'banner-modal'; formId = 'banner-form'; modalTitle = 'Edit Banner';
+                    fields = [{id: 'banner-id', key: 'id'}, {id: 'banner-sort-order', key: 'sort_order'}];
+                    previewId = 'banner-image-preview'; imageUrlKey = 'image_url';
+                    break;
+                case 'gallery_images':
+                    item = galleryData.find(i => i.id === id);
+                    modalId = 'gallery-modal'; formId = 'gallery-form'; modalTitle = 'Edit Gallery Image';
+                    fields = [{id: 'gallery-id', key: 'id'}, {id: 'gallery-sort-order', key: 'sort_order'}, {id: 'gallery-caption-id', key: 'caption_id'}, {id: 'gallery-caption-en', key: 'caption_en'}];
+                    previewId = 'gallery-image-preview'; imageUrlKey = 'image_url';
+                    break;
+                case 'history':
+                    item = historyData.find(i => i.id === id);
+                    modalId = 'history-modal'; formId = 'history-form'; modalTitle = 'Edit History Item';
+                    fields = [{id: 'history-id', key: 'id'}, {id: 'history-year', key: 'year'}, {id: 'history-sort-order', key: 'sort_order'}, {id: 'history-title-id', key: 'title_id'}, {id: 'history-title-en', key: 'title_en'}, {id: 'history-text-id', key: 'text_id'}, {id: 'history-text-en', key: 'text_en'}];
+                    break;
+                case 'products':
+                    item = productsData.find(i => i.id === id);
+                    modalId = 'product-modal'; formId = 'product-form'; modalTitle = 'Edit Product';
+                    fields = [{id: 'product-id', key: 'id'}, {id: 'product-name-id', key: 'name_id'}, {id: 'product-name-en', key: 'name_en'}, {id: 'product-description-id', key: 'description_id'}, {id: 'product-description-en', key: 'description_en'}, {id: 'product-price', key: 'price'}, {id: 'product-category', key: 'category_name'}, {id: 'product-featured', key: 'is_featured'}];
+                    previewId = 'product-image-preview'; imageUrlKey = 'imageUrl';
+                    break;
+                case 'categories':
+                    item = categoriesData.find(c => c.id === id);
+                    modalId = 'category-modal'; formId = 'category-form'; modalTitle = 'Edit Category';
+                    fields = [{id: 'category-id', key: 'id'}, {id: 'category-name', key: 'name'}, {id: 'category-sort-id', key: 'id'}];
+                    break;
+                case 'content':
+                    item = contentData.find(c => c.id === id);
+                    modalId = 'content-modal'; formId = 'content-form'; modalTitle = `Edit Content: ${id}`;
+                    document.getElementById('content-key-display').textContent = id;
+                    fields = [{id: 'content-key', key: 'id'}, {id: 'content-text-id', key: 'text_id'}, {id: 'content-text-en', key: 'text_en'}];
+                    previewId = 'content-image-preview'; imageUrlKey = 'imageUrl';
+                    break;
             }
-        };
-        
-        // Fungsi edit untuk setiap jenis data
-        window.editBanner = (id) => {
-            const item = bannersData.find(i => i.id === id); if (!item) return;
-            resetForm('banner-form', 'banner-modal-title', 'Edit Banner');
-            populateForm(item, [{id: 'banner-id', key: 'id'}, {id: 'banner-sort-order', key: 'sort_order'}]);
-            showImagePreview('banner-image-preview', item.image_url);
-            openModal('banner-modal');
+            if (!item) return;
+            resetForm(formId, `${modalId.replace('-modal','')}-modal-title`, modalTitle);
+            populateForm(item, fields);
+            if(previewId && imageUrlKey) showImagePreview(previewId, item[imageUrlKey]);
+            openModal(modalId);
         };
 
-        window.editGallery = (id) => {
-            const item = galleryData.find(i => i.id === id); if (!item) return;
-            resetForm('gallery-form', 'gallery-modal-title', 'Edit Gallery Image');
-            populateForm(item, [
-                {id: 'gallery-id', key: 'id'}, 
-                {id: 'gallery-sort-order', key: 'sort_order'}, 
-                {id: 'gallery-caption-id', key: 'caption_id'}, 
-                {id: 'gallery-caption-en', key: 'caption_en'}
-            ]);
-            showImagePreview('gallery-image-preview', item.image_url);
-            openModal('gallery-modal');
-        };
-
-        window.editHistory = (id) => {
-            const item = historyData.find(i => i.id === id); if (!item) return;
-            resetForm('history-form', 'history-modal-title', 'Edit History Item');
-            populateForm(item, [
-                {id: 'history-id', key: 'id'}, {id: 'history-year', key: 'year'}, 
-                {id: 'history-sort-order', key: 'sort_order'}, {id: 'history-title-id', key: 'title_id'}, 
-                {id: 'history-title-en', key: 'title_en'}, {id: 'history-text-id', key: 'text_id'}, 
-                {id: 'history-text-en', key: 'text_en'}
-            ]);
-            openModal('history-modal');
-        };
-
-        window.editProduct = (id) => {
-            const item = productsData.find(i => i.id === id); if (!item) return;
-            resetForm('product-form', 'product-modal-title', 'Edit Product');
-            populateForm(item, [
-                {id: 'product-id', key: 'id'}, {id: 'product-name-id', key: 'name_id'},
-                {id: 'product-name-en', key: 'name_en'}, {id: 'product-description-id', key: 'description_id'},
-                {id: 'product-description-en', key: 'description_en'}, {id: 'product-price', key: 'price'},
-                {id: 'product-category', key: 'category_name'}, {id: 'product-featured', key: 'is_featured'}
-            ]);
-            showImagePreview('product-image-preview', item.imageUrl);
-            openModal('product-modal');
-        };
-
-        window.editCategory = (id) => {
-            const item = categoriesData.find(c => c.id === id); if (!item) return;
-            resetForm('category-form', 'category-modal-title', 'Edit Category');
-            populateForm(item, [{id: 'category-id', key: 'id'}, {id: 'category-name', key: 'name'}, {id: 'category-sort-id', key: 'id'}]);
-            openModal('category-modal');
-        };
-
-        window.editContent = (key) => {
-            const item = contentData.find(c => c.id === key); if (!item) return;
-            resetForm('content-form', 'content-modal-title', `Edit Content: ${key}`);
-            document.getElementById('content-key-display').textContent = key;
-            populateForm(item, [
-                {id: 'content-key', key: 'id'}, {id: 'content-text-id', key: 'text_id'},
-                {id: 'content-text-en', key: 'text_en'}
-            ]);
-            showImagePreview('content-image-preview', item.imageUrl);
-            openModal('content-modal');
-        };
-
-        // Fungsi delete untuk setiap jenis data, termasuk penghapusan gambar dari Storage
         window.deleteItem = async (collection, id, name, imageUrl) => {
-            if (confirm(`Anda yakin ingin menghapus "${name}"? Tindakan ini tidak dapat dibatalkan.`)) {
+            if (confirm(`Are you sure you want to delete "${name}"? This cannot be undone.`)) {
                 try {
-                    if (imageUrl) {
-                        // Hanya coba hapus jika URL valid (bukan placeholder)
-                        if(imageUrl.startsWith('https://firebasestorage.googleapis.com')) {
-                           await storage.refFromURL(imageUrl).delete().catch(error => console.warn("Tidak dapat menghapus gambar dari Storage (mungkin sudah tidak ada):", error.message));
-                        }
+                    if (imageUrl && imageUrl.startsWith('https://firebasestorage.googleapis.com')) {
+                        await storage.refFromURL(imageUrl).delete().catch(err => console.warn("Could not delete image (it may not exist):", err.message));
                     }
                     await db.collection(collection).doc(id).delete();
                     
-                    // Muat ulang data yang relevan dan render ulang tabel setelah penghapusan
                     switch (collection) {
                         case 'banners': await loadBanners(); renderBanners(); break;
                         case 'gallery_images': await loadGallery(); renderGallery(); break;
@@ -1359,16 +1246,15 @@
                         case 'products': await loadProducts(); renderProducts(); break;
                         case 'categories': await loadCategories(); renderCategories(); populateCategoryDropdown(); break;
                     }
-                    alert(`${name} berhasil dihapus.`);
+                    alert(`"${name}" was deleted successfully.`);
                 } catch(err) {
-                    alert("Gagal menghapus item. Periksa console untuk detail.");
-                    console.error("Gagal menghapus item: ", err);
+                    alert("Failed to delete item. Check console for details.");
+                    console.error("Failed to delete item: ", err);
                 }
             }
         };
 
     }); // End DOMContentLoaded
     </script>
-
 </body>
 </html>
