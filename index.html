@@ -351,7 +351,10 @@
 <body>
     <header class="ls-main-header">
         <div class="ls-container">
-            <a href="#home"><img src=https://firebasestorage.googleapis.com/v0/b/lobster-shack-bali.firebasestorage.app/o/1753624796681.png?alt=media&token=7f6ba3b9-08a4-4a92-a3bc-1dc569944b48" alt="Logo Lobster Shack" class="ls-logo"></a>
+            <a href="#home">
+    <img src="" alt="Logo Lobster Shack" class="ls-logo" id="header-logo">
+</a>
+
             
             <nav class="ls-main-nav" id="ls-main-nav">
                 <ul class="ls-nav-links">
@@ -439,8 +442,8 @@
         <div class="ls-container">
             <div class="footer-content">
                 <div class="footer-about">
-                    <img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo Lobster Shack" class="ls-logo">
-                    <p data-lang-key="footer_description">Experience the finest catch of the day, grilled to perfection, in a cozy and inviting atmosphere. We look forward to welcoming you.</p>
+    <img src="" alt="Logo Lobster Shack" class="ls-logo" id="footer-logo">
+    <p data-lang-key="footer_description">Experience the finest catch of the day, grilled to perfection, in a cozy and inviting atmosphere. We look forward to welcoming you.</p>
                 </div>
                 <div class="footer-contact">
                     <h3 class="ls-footer-title" data-lang-key="footer_contact_title">Contact Us</h3>
@@ -477,275 +480,350 @@
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+    <script 'use strict';
 
-    <script>
-    'use strict';
+/**
+ * ========================================
+ * LOBSTER SHACK BALI - MAIN SCRIPT
+ * ========================================
+ */
 
-    // ======== FIREBASE CONFIGURATION (UNCHANGED) ========
-    const firebaseConfig = {
-      apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
-      authDomain: "lobster-shack-bali.firebaseapp.com",
-      projectId: "lobster-shack-bali",
-      storageBucket: "lobster-shack-bali.appspot.com",
-      messagingSenderId: "42452974733",
-      appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
-    };
+// ======== FIREBASE CONFIGURATION ========
+// Konfigurasi ini menghubungkan situs web ke proyek Firebase Anda.
+const firebaseConfig = {
+  apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
+  authDomain: "lobster-shack-bali.firebaseapp.com",
+  projectId: "lobster-shack-bali",
+  storageBucket: "lobster-shack-bali.appspot.com",
+  messagingSenderId: "42452974733",
+  appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
+};
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-    // Global variables
-    let currentLanguage = localStorage.getItem('preferredLanguage') || 'id';
-    let siteData = {};
-    let lightbox;
+// ======== GLOBAL VARIABLES ========
+// Variabel ini menyimpan state dan data situs.
+let currentLanguage = localStorage.getItem('preferredLanguage') || 'id'; // Bahasa default 'id'
+let siteData = {}; // Objek untuk menampung semua data dari Firestore
+let lightbox; // Variabel untuk instance GLightbox galeri
 
-    const domElements = {
-        body: document.body,
-        mainNav: document.getElementById('ls-main-nav'),
-        mobileMenuToggle: document.getElementById('ls-mobile-menu-toggle'),
-        langToggleContainer: document.querySelector('.ls-language-toggle'),
-        heroSliderWrapper: document.getElementById('ls-hero-slider-wrapper'),
-        historyTimeline: document.getElementById('ls-history-timeline'),
-        featuredMenuWrapper: document.getElementById('ls-featured-menu-wrapper'),
-        menuGrid: document.getElementById('ls-menu-grid'),
-        menuFilters: document.getElementById('ls-menu-filters'),
-        galleryGrid: document.getElementById('ls-gallery-grid'),
-        // New Modal Elements
-        modalOverlay: document.getElementById('ls-product-modal-overlay'),
-        modalBody: document.getElementById('ls-modal-body'),
-        modalCloseBtn: document.getElementById('ls-modal-close-btn'),
-    };
-    
-    const updateTextContent = () => {
-        document.querySelectorAll('[data-lang-key]').forEach(el => {
-            const key = el.dataset.langKey;
-            const content = siteData.content[key];
-            if (content) {
-                el.innerHTML = content[`text_${currentLanguage}`] || content.text_id || el.innerHTML;
-            }
-        });
-        document.title = siteData.content?.ls_page_title?.[`text_${currentLanguage}`] || 'Lobster Shack Bali';
-        updateLangButtons();
-    };
+// ======== DOM ELEMENT SELECTOR ========
+// Mengumpulkan semua elemen DOM yang diperlukan di satu tempat agar mudah diakses.
+const domElements = {
+    body: document.body,
+    headerLogo: document.getElementById('header-logo'),
+    footerLogo: document.getElementById('footer-logo'),
+    mainNav: document.getElementById('ls-main-nav'),
+    mobileMenuToggle: document.getElementById('ls-mobile-menu-toggle'),
+    langToggleContainer: document.querySelector('.ls-language-toggle'),
+    heroSliderWrapper: document.getElementById('ls-hero-slider-wrapper'),
+    historyTimeline: document.getElementById('ls-history-timeline'),
+    featuredMenuWrapper: document.getElementById('ls-featured-menu-wrapper'),
+    menuGrid: document.getElementById('ls-menu-grid'),
+    menuFilters: document.getElementById('ls-menu-filters'),
+    galleryGrid: document.getElementById('ls-gallery-grid'),
+    modalOverlay: document.getElementById('ls-product-modal-overlay'),
+    modalBody: document.getElementById('ls-modal-body'),
+    modalCloseBtn: document.getElementById('ls-modal-close-btn'),
+};
 
-    const updateLangButtons = () => {
-        document.querySelectorAll('.ls-lang-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.lang === currentLanguage);
-        });
-    };
-    
-    // --- RENDER FUNCTIONS (BANNER FUNCTION CORRECTED) ---
-    const renderBanners = () => {
-        if (!siteData.banners || siteData.banners.length === 0) return;
-        domElements.heroSliderWrapper.innerHTML = siteData.banners.map(banner => `
-            <div class="swiper-slide">
-                <div class="ls-slide-background" style="background-image: url('${banner.image_url}');"></div>
-                <div class="ls-slide-overlay"></div>
+// ======== DATA FETCHING FUNCTION ========
+/**
+ * Mengambil semua data yang diperlukan dari beberapa koleksi di Firestore
+ * secara bersamaan menggunakan Promise.all untuk efisiensi.
+ */
+async function fetchAllData() {
+    try {
+        const collections = ['products', 'categories', 'content', 'banners', 'gallery_images', 'history'];
+        const promises = collections.map(col => db.collection(col).get());
+        const [ productsSnap, categoriesSnap, contentSnap, bannersSnap, gallerySnap, historySnap ] = await Promise.all(promises);
+
+        // Memproses dan menyimpan data ke dalam objek global siteData
+        siteData.products = productsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        siteData.categories = categoriesSnap.docs.map(doc => doc.data()).sort((a,b) => a.id - b.id);
+        siteData.banners = bannersSnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
+        siteData.gallery_images = gallerySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
+        siteData.history = historySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
+
+        siteData.content = {};
+        contentSnap.docs.forEach(doc => { siteData.content[doc.id] = doc.data(); });
+        
+        // Setelah semua data berhasil diambil, panggil fungsi untuk merender seluruh halaman.
+        renderAll();
+
+    } catch (error) {
+        console.error("Error fetching data from Firebase:", error);
+        document.body.innerHTML = "<h1>Error: Gagal memuat data situs. Silakan coba lagi nanti.</h1>";
+    }
+}
+
+// ======== RENDER FUNCTIONS ========
+// Kumpulan fungsi untuk mengisi konten HTML dari data yang telah diambil.
+
+/**
+ * Merender seluruh komponen halaman setelah data tersedia.
+ * Juga menginisialisasi plugin seperti AOS.
+ */
+const renderAll = () => {
+    renderLogo();
+    renderBanners();
+    renderHistory();
+    renderMenu();
+    renderGallery();
+    updateTextContent(); // Memperbarui semua teks sesuai bahasa yang dipilih
+    AOS.init({ duration: 800, once: true, offset: 50 }); // Inisialisasi animasi AOS
+};
+
+/**
+ * Mengatur sumber gambar untuk logo header dan footer dari data Firestore.
+ */
+const renderLogo = () => {
+    const logoUrl = siteData.content?.logo?.image_url;
+    if (logoUrl) {
+        if (domElements.headerLogo) domElements.headerLogo.src = logoUrl;
+        if (domElements.footerLogo) domElements.footerLogo.src = logoUrl;
+    } else {
+        console.warn("URL Logo tidak ditemukan di koleksi 'content' Firestore.");
+    }
+};
+
+/**
+ * Membuat slider banner di bagian hero.
+ */
+const renderBanners = () => {
+    if (!siteData.banners || siteData.banners.length === 0) return;
+    domElements.heroSliderWrapper.innerHTML = siteData.banners.map(banner => `
+        <div class="swiper-slide">
+            <div class="ls-slide-background" style="background-image: url('${banner.image_url}');"></div>
+            <div class="ls-slide-overlay"></div>
+        </div>
+    `).join('');
+    new Swiper('.ls-hero-slider', {
+        loop: true, effect: 'fade', fadeEffect: { crossFade: true },
+        autoplay: { delay: 5000, disableOnInteraction: false },
+        pagination: { el: '.swiper-pagination', clickable: true },
+        allowTouchMove: false
+    });
+};
+
+/**
+ * Membuat timeline sejarah perusahaan.
+ */
+const renderHistory = () => {
+    if (!siteData.history || siteData.history.length === 0) return;
+    domElements.historyTimeline.innerHTML = [...siteData.history]
+        .sort((a, b) => b.sort_order - a.sort_order)
+        .map((item, index) => `
+        <div class="ls-timeline-item ${index % 2 === 0 ? 'left' : 'right'}" data-aos="fade-up">
+            <div class="ls-timeline-content">
+                <div class="ls-year">${item.year}</div>
+                <h3>${item[`title_${currentLanguage}`] || item.title_id}</h3>
+                <p>${item[`text_${currentLanguage}`] || item.text_id}</p>
             </div>
-        `).join('');
-        new Swiper('.ls-hero-slider', { 
-            loop: true, effect: 'fade', fadeEffect: { crossFade: true },
-            autoplay: { delay: 5000, disableOnInteraction: false },
-            pagination: { el: '.swiper-pagination', clickable: true },
-            allowTouchMove: false
-        });
-    };
+        </div>
+    `).join('');
+};
 
-    const renderHistory = () => {
-        if (!siteData.history || siteData.history.length === 0) return;
-        domElements.historyTimeline.innerHTML = [...siteData.history]
-            .sort((a, b) => b.sort_order - a.sort_order)
-            .map((item, index) => `
-            <div class="ls-timeline-item ${index % 2 === 0 ? 'left' : 'right'}" data-aos="fade-up">
-                <div class="ls-timeline-content">
-                    <div class="ls-year">${item.year}</div>
-                    <h3>${item[`title_${currentLanguage}`] || item.title_id}</h3>
-                    <p>${item[`text_${currentLanguage}`] || item.text_id}</p>
+/**
+ * Membuat slider menu unggulan, filter kategori, dan grid menu lengkap.
+ */
+const renderMenu = () => {
+    if (!siteData.products || !siteData.categories) return;
+
+    const getCardHTML = (p) => `
+        <div class="ls-menu-card" data-category="${p.category_name}" data-product-id="${p.id}">
+            <div class="ls-menu-card-image"><img src="${p.imageUrl}" alt="${p.name_en}"></div>
+            <div class="ls-menu-card-content">
+                <div class="title-price">
+                    <h3>${p[`name_${currentLanguage}`] || p.name_id}</h3>
+                    <span class="ls-menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(p.price)}</span>
                 </div>
+                <p class="ls-description">${(p[`description_${currentLanguage}`] || p.description_id).substring(0, 90)}...</p>
+                <button class="ls-btn ls-view-details-btn"><span data-lang-key="view_details_btn">View Details</span></button>
             </div>
-        `).join('');
-    };
+        </div>`;
 
-    const renderMenu = () => {
-        if (!siteData.products || !siteData.categories) return;
-        
-        const getCardHTML = (p) => `
-            <div class="ls-menu-card" data-category="${p.category_name}" data-product-id="${p.id}"> 
-                <div class="ls-menu-card-image"><img src="${p.imageUrl}" alt="${p.name_en}"></div> 
-                <div class="ls-menu-card-content"> 
-                    <div class="title-price">
-                        <h3>${p[`name_${currentLanguage}`] || p.name_id}</h3>
-                        <span class="ls-menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(p.price)}</span>
-                    </div>
-                    <p class="ls-description">${(p[`description_${currentLanguage}`] || p.description_id).substring(0, 90)}...</p>
-                    <button class="ls-btn ls-view-details-btn"><span data-lang-key="view_details_btn">View Details</span></button>
-                </div> 
-            </div>`;
-        
-        let featuredHTML = siteData.products
-            .filter(p => p.is_featured)
-            .map(p => `<div class="swiper-slide">${getCardHTML(p)}</div>`)
-            .join('');
-            
-        let gridHTML = siteData.products.map(p => getCardHTML(p)).join('');
-        
-        domElements.featuredMenuWrapper.innerHTML = featuredHTML;
-        domElements.menuGrid.innerHTML = gridHTML;
+    domElements.featuredMenuWrapper.innerHTML = siteData.products
+        .filter(p => p.is_featured)
+        .map(p => `<div class="swiper-slide">${getCardHTML(p)}</div>`).join('');
 
-        const allText = currentLanguage === 'id' ? 'Semua' : 'All';
-        domElements.menuFilters.innerHTML = `<button class="ls-filter-btn active" data-filter="all">${allText}</button>` +
-            siteData.categories.map(c => `<button class="ls-filter-btn" data-filter="${c.name}">${c.name}</button>`).join('');
-        
-        new Swiper('.ls-featured-slider', { 
-            slidesPerView: 'auto', spaceBetween: 30, grabCursor: true, 
-            pagination: { el: '.swiper-pagination', clickable: true },
-            breakpoints: { 320: { slidesPerView: 1 }, 768: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } }
-        });
-    };
+    domElements.menuGrid.innerHTML = siteData.products.map(p => getCardHTML(p)).join('');
 
-    const renderGallery = () => {
-        if (!siteData.gallery_images) return;
-        domElements.galleryGrid.innerHTML = siteData.gallery_images.map(img => `
-            <a href="${img.image_url}" class="glightbox" data-gallery="our-gallery" data-title="${img[`caption_${currentLanguage}`] || img.caption_id}"> 
-                <img src="${img.image_url}" alt="${img.caption_en}" loading="lazy"> 
-            </a>`).join('');
-        
-        if (lightbox) { lightbox.reload(); } 
-        else { lightbox = GLightbox({ selector: '.glightbox' }); }
-    };
+    const allText = currentLanguage === 'id' ? 'Semua' : 'All';
+    domElements.menuFilters.innerHTML = `<button class="ls-filter-btn active" data-filter="all">${allText}</button>` +
+        siteData.categories.map(c => `<button class="ls-filter-btn" data-filter="${c.name}">${c.name}</button>`).join('');
 
-    // --- NEW: MODAL RENDER FUNCTION ---
-    const showProductModal = (productId) => {
-        const product = siteData.products.find(p => p.id === productId);
-        if (!product) return;
-        
-        domElements.modalBody.innerHTML = `
-            <div class="modal-image">
-                <img src="${product.imageUrl}" alt="${product.name_en}">
-            </div>
-            <div class="modal-text">
-                <h3>${product[`name_${currentLanguage}`] || product.name_id}</h3>
-                <span class="modal-price">Rp ${new Intl.NumberFormat('id-ID').format(product.price)}</span>
-                <p class="modal-description">${product[`description_${currentLanguage}`] || product.description_id}</p>
-            </div>
-        `;
-        domElements.body.classList.add('ls-modal-open');
-        domElements.modalOverlay.classList.add('visible');
-    };
+    new Swiper('.ls-featured-slider', {
+        slidesPerView: 'auto', spaceBetween: 30, grabCursor: true,
+        pagination: { el: '.swiper-pagination', clickable: true },
+        breakpoints: { 320: { slidesPerView: 1 }, 768: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } }
+    });
+};
 
-    const hideProductModal = () => {
-        domElements.body.classList.remove('ls-modal-open');
-        domElements.modalOverlay.classList.remove('visible');
-    };
-    
-    const renderAll = () => {
-        renderBanners();
+/**
+ * Membuat grid galeri gambar dan menginisialisasi GLightbox.
+ */
+const renderGallery = () => {
+    if (!siteData.gallery_images) return;
+    domElements.galleryGrid.innerHTML = siteData.gallery_images.map(img => `
+        <a href="${img.image_url}" class="glightbox" data-gallery="our-gallery" data-title="${img[`caption_${currentLanguage}`] || img.caption_id}">
+            <img src="${img.image_url}" alt="${img.caption_en}" loading="lazy">
+        </a>`).join('');
+
+    if (lightbox) { lightbox.reload(); }
+    else { lightbox = GLightbox({ selector: '.glightbox' }); }
+};
+
+// ======== UI/UX FUNCTIONS ========
+// Fungsi yang menangani interaksi dan pembaruan UI.
+
+/**
+ * Memperbarui semua elemen teks dengan atribut `data-lang-key`
+ * sesuai dengan bahasa yang sedang aktif.
+ */
+const updateTextContent = () => {
+    document.querySelectorAll('[data-lang-key]').forEach(el => {
+        const key = el.dataset.langKey;
+        const content = siteData.content[key];
+        if (content) {
+            el.innerHTML = content[`text_${currentLanguage}`] || content.text_id || el.innerHTML;
+        }
+    });
+    document.title = siteData.content?.ls_page_title?.[`text_${currentLanguage}`] || 'Lobster Shack Bali';
+    updateLangButtons();
+};
+
+/**
+ * Mengatur kelas 'active' pada tombol pilihan bahasa.
+ */
+const updateLangButtons = () => {
+    document.querySelectorAll('.ls-lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === currentLanguage);
+    });
+};
+
+/**
+ * Menampilkan modal dengan detail produk yang dipilih.
+ * @param {string} productId - ID produk yang akan ditampilkan.
+ */
+const showProductModal = (productId) => {
+    const product = siteData.products.find(p => p.id === productId);
+    if (!product) return;
+
+    domElements.modalBody.innerHTML = `
+        <div class="modal-image">
+            <img src="${product.imageUrl}" alt="${product.name_en}">
+        </div>
+        <div class="modal-text">
+            <h3>${product[`name_${currentLanguage}`] || product.name_id}</h3>
+            <span class="modal-price">Rp ${new Intl.NumberFormat('id-ID').format(product.price)}</span>
+            <p class="modal-description">${product[`description_${currentLanguage}`] || product.description_id}</p>
+        </div>
+    `;
+    domElements.body.classList.add('ls-modal-open');
+    domElements.modalOverlay.classList.add('visible');
+};
+
+/**
+ * Menutup dan menyembunyikan modal detail produk.
+ */
+const hideProductModal = () => {
+    domElements.body.classList.remove('ls-modal-open');
+    domElements.modalOverlay.classList.remove('visible');
+};
+
+
+// ======== EVENT LISTENERS INITIALIZATION ========
+/**
+ * Titik masuk utama script. Menunggu hingga seluruh DOM dimuat
+ * sebelum menambahkan event listener dan memulai pengambilan data.
+ */
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Event listener untuk tombol ganti bahasa
+    domElements.langToggleContainer.addEventListener('click', e => {
+        if (!e.target.matches('.ls-lang-btn')) return;
+        currentLanguage = e.target.dataset.lang;
+        localStorage.setItem('preferredLanguage', currentLanguage);
+        // Render ulang komponen yang berisi teks
         renderHistory();
         renderMenu();
         renderGallery();
         updateTextContent();
-        AOS.init({ duration: 800, once: true, offset: 50 });
-    };
-    
-    // --- DATA FETCHING (UNCHANGED) ---
-    async function fetchAllData() {
-        try {
-            const collections = ['products', 'categories', 'content', 'banners', 'gallery_images', 'history'];
-            const promises = collections.map(col => db.collection(col).get());
-            const [ productsSnap, categoriesSnap, contentSnap, bannersSnap, gallerySnap, historySnap ] = await Promise.all(promises);
-            
-            siteData.products = productsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            siteData.categories = categoriesSnap.docs.map(doc => doc.data()).sort((a,b) => a.id - b.id);
-            siteData.banners = bannersSnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
-            siteData.gallery_images = gallerySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
-            siteData.history = historySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
-            
-            siteData.content = {};
-            contentSnap.docs.forEach(doc => { siteData.content[doc.id] = doc.data(); });
-            
-            renderAll();
-        } catch (error) {
-            console.error("Error fetching data from Firebase:", error);
-            document.body.innerHTML = "<h1>Error loading site data. Please try again later.</h1>";
-        }
-    }
-    
-    // --- EVENT LISTENERS (MODIFIED) ---
-    document.addEventListener('DOMContentLoaded', () => {
-        // Language Toggle
-        domElements.langToggleContainer.addEventListener('click', e => {
-            if (!e.target.matches('.ls-lang-btn')) return;
-            currentLanguage = e.target.dataset.lang;
-            localStorage.setItem('preferredLanguage', currentLanguage);
-            renderHistory(); renderMenu(); renderGallery(); updateTextContent();
-        });
-        
-        // Mobile Menu
-        domElements.mobileMenuToggle.addEventListener('click', () => {
-            domElements.mainNav.classList.toggle('active');
-            domElements.body.classList.toggle('ls-nav-open');
-            const icon = domElements.mobileMenuToggle.querySelector('i');
-            icon.classList.toggle('fa-bars'); icon.classList.toggle('fa-times');
-        });
-        domElements.mainNav.addEventListener('click', (e) => {
-            if (e.target.matches('a') && domElements.mainNav.classList.contains('active')) {
-                domElements.mobileMenuToggle.click();
-            }
-        });
-        
-        // Menu Filtering
-        domElements.menuFilters.addEventListener('click', e => {
-            if (!e.target.matches('.ls-filter-btn')) return;
-            domElements.menuFilters.querySelector('.active').classList.remove('active');
-            e.target.classList.add('active');
-            const filter = e.target.dataset.filter;
-            document.querySelectorAll('.ls-menu-card').forEach(card => {
-                const isVisible = filter === 'all' || card.dataset.category === filter;
-                card.classList.toggle('hidden', !isVisible);
-            });
-        });
-
-        // --- NEW: MODAL EVENT LISTENERS ---
-        // Open modal on "View Details" click (using event delegation)
-        document.body.addEventListener('click', (e) => {
-            const detailsButton = e.target.closest('.ls-view-details-btn');
-            if (detailsButton) {
-                const card = detailsButton.closest('.ls-menu-card');
-                if (card) {
-                    const productId = card.dataset.productId;
-                    showProductModal(productId);
-                }
-            }
-        });
-        // Close modal
-        domElements.modalCloseBtn.addEventListener('click', hideProductModal);
-        domElements.modalOverlay.addEventListener('click', e => {
-            if (e.target === domElements.modalOverlay) { hideProductModal(); }
-        });
-        
-        // Active Nav Link on Scroll
-        const sections = document.querySelectorAll('main section');
-        const navLinks = document.querySelectorAll('.ls-nav-links a');
-        window.addEventListener('scroll', () => {
-            let current = '';
-            sections.forEach(section => {
-                if (pageYOffset >= section.offsetTop - 150) { current = section.getAttribute('id'); }
-            });
-            navLinks.forEach(a => {
-                a.classList.remove('active');
-                if (a.getAttribute('href').includes(current)) { a.classList.add('active'); }
-            });
-        });
-
-        fetchAllData();
     });
+
+    // Event listener untuk tombol menu seluler (hamburger)
+    domElements.mobileMenuToggle.addEventListener('click', () => {
+        domElements.mainNav.classList.toggle('active');
+        domElements.body.classList.toggle('ls-nav-open');
+        const icon = domElements.mobileMenuToggle.querySelector('i');
+        icon.classList.toggle('fa-bars');
+        icon.classList.toggle('fa-times');
+    });
+
+    // Event listener untuk menutup menu seluler saat link di-klik
+    domElements.mainNav.addEventListener('click', (e) => {
+        if (e.target.matches('a') && domElements.mainNav.classList.contains('active')) {
+            domElements.mobileMenuToggle.click();
+        }
+    });
+
+    // Event listener untuk filter menu (menggunakan event delegation)
+    domElements.menuFilters.addEventListener('click', e => {
+        if (!e.target.matches('.ls-filter-btn')) return;
+        domElements.menuFilters.querySelector('.active').classList.remove('active');
+        e.target.classList.add('active');
+        const filter = e.target.dataset.filter;
+        document.querySelectorAll('.ls-menu-card').forEach(card => {
+            const isVisible = filter === 'all' || card.dataset.category === filter;
+            card.classList.toggle('hidden', !isVisible);
+        });
+    });
+
+    // Event listener untuk membuka modal (menggunakan event delegation)
+    document.body.addEventListener('click', (e) => {
+        const detailsButton = e.target.closest('.ls-view-details-btn');
+        if (detailsButton) {
+            const card = detailsButton.closest('.ls-menu-card');
+            if (card) {
+                const productId = card.dataset.productId;
+                showProductModal(productId);
+            }
+        }
+    });
+
+    // Event listener untuk menutup modal
+    domElements.modalCloseBtn.addEventListener('click', hideProductModal);
+    domElements.modalOverlay.addEventListener('click', e => {
+        if (e.target === domElements.modalOverlay) {
+            hideProductModal();
+        }
+    });
+
+    // Event listener untuk menandai link navigasi yang aktif saat scrolling
+    const sections = document.querySelectorAll('main section');
+    const navLinks = document.querySelectorAll('.ls-nav-links a');
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            if (pageYOffset >= section.offsetTop - 150) {
+                current = section.getAttribute('id');
+            }
+        });
+        navLinks.forEach(a => {
+            a.classList.remove('active');
+            if (a.getAttribute('href').includes(current)) {
+                a.classList.add('active');
+            }
+        });
+    }, { passive: true }); // Opsi passive untuk performa scroll yang lebih baik
+
+    // Mulai proses dengan mengambil semua data dari Firebase
+    fetchAllData();
+});
+
     </script>
 </body>
 </html>
