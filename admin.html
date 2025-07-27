@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Lobster Shack Bali</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <style>
+        :root {
+            --ls-font-heading: 'Playfair Display', serif;
+            --ls-font-body: 'Poppins', sans-serif;
+            --ls-color-primary: #D84B42;
+            --ls-color-secondary: #2D4C5E;
+            --ls-color-background: #F8F6F0;
+            --ls-color-surface: #FFFFFF;
+            --ls-color-text: #333333;
+            --ls-color-text-light: #6c757d;
+            --ls-color-border: #E0DACE;
+            --ls-color-success: #28a745;
+            --ls-shadow-sm: 0 4px 12px rgba(45, 76, 94, .1);
+            --ls-shadow-md: 0 8px 25px rgba(45, 76, 94, .15);
+            --ls-border-radius: 12px;
+            --ls-transition-speed: .3s;
+        }
+
+        *, ::after, ::before { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            height: 100%;
+            font-family: var(--ls-font-body);
+            background-color: var(--ls-color-background);
+            color: var(--ls-color-text);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* --- AUTH PAGE --- */
+        #auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+        }
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            padding: 40px;
+            background-color: var(--ls-color-surface);
+            border-radius: var(--ls-border-radius);
+            box-shadow: var(--ls-shadow-md);
+            text-align: center;
+        }
+        .login-card .logo {
+            height: 70px;
+            margin-bottom: 20px;
+        }
+        .login-card h1 {
+            font-family: var(--ls-font-heading);
+            color: var(--ls-color-secondary);
+            margin-bottom: 2rem;
+        }
+        .login-card .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        .login-card label { display: block; font-weight: 600; margin-bottom: .5rem; color: var(--ls-color-secondary); }
+        .login-card input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--ls-color-border);
+            font-size: 1rem;
+            transition: all var(--ls-transition-speed);
+        }
+        .login-card input:focus {
+            outline: none;
+            border-color: var(--ls-color-primary);
+            box-shadow: 0 0 0 4px rgba(216, 75, 66, 0.2);
+        }
+        .login-card .error-message {
+            color: var(--ls-color-primary);
+            background-color: rgba(216, 75, 66, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 1rem;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        /* --- ADMIN PANEL LAYOUT --- */
+        #admin-container {
+            display: flex;
+            height: 100%;
+        }
+        .sidebar {
+            width: 260px;
+            background-color: var(--ls-color-secondary);
+            color: #fff;
+            padding: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease-in-out;
+        }
+        .sidebar .logo-container { padding: 0 1.5rem 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar .logo { height: 50px; filter: brightness(0) invert(1); }
+        .sidebar-nav { flex-grow: 1; }
+        .sidebar-nav ul { list-style: none; }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all var(--ls-transition-speed);
+            border-left: 4px solid transparent;
+        }
+        .sidebar-nav a:hover { background-color: rgba(255,255,255,0.05); color: #fff; }
+        .sidebar-nav a.active {
+            background-color: rgba(0,0,0,0.2);
+            color: #fff;
+            font-weight: 600;
+            border-left-color: var(--ls-color-primary);
+        }
+        .sidebar-nav a i { width: 20px; text-align: center; font-size: 1.1rem; }
+        .logout-btn { background: none; border: none; width: 100%; }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn .5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .page-header h1 {
+            font-family: var(--ls-font-heading);
+            color: var(--ls-color-secondary);
+        }
+        
+        /* --- GENERIC COMPONENTS --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            font-weight: 600;
+            padding: .75rem 1.5rem;
+            border-radius: 50px;
+            border: 2px solid var(--ls-color-primary);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all var(--ls-transition-speed);
+            background-color: var(--ls-color-primary);
+            color: var(--ls-color-surface);
+            font-size: 0.95rem;
+        }
+        .btn:hover { background-color: #b93e36; border-color: #b93e36; transform: translateY(-2px); }
+        .btn-secondary { background-color: var(--ls-color-secondary); border-color: var(--ls-color-secondary); }
+        .btn-secondary:hover { background-color: #1e3542; border-color: #1e3542; }
+        .btn-outline { background: transparent; color: var(--ls-color-secondary); border-color: var(--ls-color-border); }
+        .btn-outline:hover { background: var(--ls-color-secondary); color: var(--ls-color-surface); border-color: var(--ls-color-secondary);}
+        .btn-danger { background-color: #dc3545; border-color: #dc3545; }
+        .btn-danger:hover { background-color: #c82333; border-color: #bd2130; }
+        
+        .card {
+            background-color: var(--ls-color-surface);
+            border-radius: var(--ls-border-radius);
+            box-shadow: var(--ls-shadow-sm);
+            padding: 2rem;
+        }
+
+        .table-wrapper { overflow-x: auto; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--ls-color-border);
+        }
+        th {
+            background-color: #f9f9f9;
+            font-weight: 600;
+            color: var(--ls-color-secondary);
+        }
+        td .action-btns { display: flex; gap: .5rem; }
+        td .action-btns .btn { padding: .4rem .8rem; border-radius: 6px; }
+        .product-img-thumb { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; }
+
+        /* --- MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 50px 20px;
+            overflow-y: auto;
+        }
+        .modal-overlay.visible { display: flex; }
+        .modal-content {
+            background: var(--ls-color-background);
+            border-radius: var(--ls-border-radius);
+            width: 100%;
+            max-width: 700px;
+            box-shadow: var(--ls-shadow-lg);
+            animation: slideDown .4s ease-out;
+        }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--ls-color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--ls-color-surface);
+            border-radius: var(--ls-border-radius) var(--ls-border-radius) 0 0;
+        }
+        .modal-header h2 { font-family: var(--ls-font-heading); color: var(--ls-color-secondary); }
+        .modal-close-btn { font-size: 1.8rem; background: 0 0; border: none; cursor: pointer; color: #aaa; transition: all .3s; }
+        .modal-close-btn:hover { color: var(--ls-color-primary); transform: rotate(90deg); }
+        .modal-body { padding: 2rem; }
+        
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: .5rem; color: var(--ls-color-secondary); }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--ls-color-border);
+            font-size: 1rem;
+            font-family: var(--ls-font-body);
+            transition: all var(--ls-transition-speed);
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--ls-color-primary);
+            box-shadow: 0 0 0 4px rgba(216, 75, 66, 0.2);
+        }
+        textarea { min-height: 120px; resize: vertical; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .form-check { display: flex; align-items: center; gap: .75rem; }
+        .form-check input { width: auto; }
+        .form-check label { margin: 0; }
+        #image-preview { max-width: 150px; margin-top: 1rem; border-radius: 8px; }
+
+        /* --- Coming Soon & Specific Pages --- */
+        .coming-soon-card { text-align: center; padding: 5rem 2rem; }
+        .coming-soon-card i { font-size: 5rem; color: var(--ls-color-border); margin-bottom: 1.5rem; }
+        .coming-soon-card h2 { font-family: var(--ls-font-heading); color: var(--ls-color-secondary); font-size: 2.5rem; }
+        .coming-soon-card p { color: var(--ls-color-text-light); max-width: 400px; margin: 1rem auto 0; }
+        .fa-check-circle { color: var(--ls-color-success); }
+        .fa-times-circle { color: var(--ls-color-primary); }
+
+        /* Mobile Responsive */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            background: var(--ls-color-secondary);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            z-index: 1001;
+            cursor: pointer;
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100%;
+                z-index: 1000;
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+                box-shadow: 5px 0 15px rgba(0,0,0,0.2);
+            }
+            .main-content {
+                padding: 2rem 1.5rem;
+                padding-top: 6rem;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="auth-container">
+        <div class="login-card">
+            <img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo" class="logo">
+            <h1>Admin Panel Login</h1>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Login</button>
+                <div id="login-error" class="error-message"></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="admin-container" style="display: none;">
+        <button class="menu-toggle"><i class="fas fa-bars"></i></button>
+
+        <aside class="sidebar">
+            <div class="logo-container">
+                <img src="https://i.ibb.co/L8yN5s2/Logo-Lobster-Shack.png" alt="Logo" class="logo">
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#dashboard" class="nav-link active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="#products" class="nav-link"><i class="fas fa-utensils"></i> Products</a></li>
+                    <li><a href="#categories" class="nav-link"><i class="fas fa-tags"></i> Categories</a></li>
+                    <li><a href="#content" class="nav-link"><i class="fas fa-file-alt"></i> Content</a></li>
+                    <li><a href="#orders" class="nav-link"><i class="fas fa-receipt"></i> Pesanan</a></li>
+                    <li><a href="#pos" class="nav-link"><i class="fas fa-cash-register"></i> POS</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" id="logout-btn" class="logout-btn sidebar-nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <section id="page-dashboard" class="page active">
+                <div class="page-header">
+                    <h1>Dashboard</h1>
+                </div>
+                <div class="card">
+                    <div class="coming-soon-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h2>Analytics Coming Soon</h2>
+                        <p>We are working on bringing you insightful analytics about your sales, popular products, and more. Stay tuned!</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-products" class="page">
+                <div class="page-header">
+                    <h1>Manage Products</h1>
+                    <button class="btn" id="add-new-product-btn"><i class="fas fa-plus"></i> Add New Product</button>
+                </div>
+                <div class="card">
+                    <div class="table-wrapper">
+                        <table id="products-table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Name (ID/EN)</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Featured</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-categories" class="page">
+                <div class="page-header">
+                    <h1>Manage Categories</h1>
+                    <button class="btn" id="add-new-category-btn"><i class="fas fa-plus"></i> Add New Category</button>
+                </div>
+                <div class="card">
+                     <div class="table-wrapper">
+                        <table id="categories-table">
+                            <thead>
+                                <tr>
+                                    <th>Sort Order (ID)</th>
+                                    <th>Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-content" class="page">
+                 <div class="page-header">
+                    <h1>Manage Website Content</h1>
+                </div>
+                <div class="card">
+                    <div class="table-wrapper">
+                        <table id="content-table">
+                            <thead>
+                                <tr>
+                                    <th>Key</th>
+                                    <th>Text (ID)</th>
+                                    <th>Text (EN)</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-orders" class="page">
+                <div class="page-header"><h1>Pesanan</h1></div>
+                <div class="card">
+                    <div class="coming-soon-card">
+                        <i class="fas fa-receipt"></i>
+                        <h2>Order Management Coming Soon</h2>
+                        <p>A dedicated interface to view and manage all incoming customer orders from the website will be available here.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="page-pos" class="page">
+                <div class="page-header"><h1>Point of Sale (POS)</h1></div>
+                 <div class="card">
+                    <div class="coming-soon-card">
+                        <i class="fas fa-cash-register"></i>
+                        <h2>POS System Coming Soon</h2>
+                        <p>An integrated Point of Sale system for handling on-site orders is under development. This feature will streamline your entire sales process.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="product-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="product-modal-title">Add New Product</h2>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="product-form">
+                    <input type="hidden" id="product-id">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="product-name-id">Product Name (ID)</label>
+                            <input type="text" id="product-name-id" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-name-en">Product Name (EN)</label>
+                            <input type="text" id="product-name-en" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-description-id">Description (ID)</label>
+                        <textarea id="product-description-id" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-description-en">Description (EN)</label>
+                        <textarea id="product-description-en" required></textarea>
+                    </div>
+                    <div class="form-grid">
+                         <div class="form-group">
+                            <label for="product-price">Price (IDR)</label>
+                            <input type="number" id="product-price" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-category">Category</label>
+                            <select id="product-category" required></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-image">Product Image</label>
+                        <input type="file" id="product-image" accept="image/*">
+                        <img id="image-preview" src="#" alt="Image Preview" style="display: none;">
+                    </div>
+                     <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" id="product-featured">
+                            <label for="product-featured">Is this a featured product?</label>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                         <button type="submit" class="btn btn-secondary"><i class="fas fa-save"></i> Save Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="category-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 id="category-modal-title">Add New Category</h2>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="category-form">
+                    <input type="hidden" id="category-id">
+                    <div class="form-group">
+                        <label for="category-name">Category Name</label>
+                        <input type="text" id="category-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category-sort-id">Sort Order (Number)</label>
+                        <input type="number" id="category-sort-id" required>
+                        <small>Lower number appears first.</small>
+                    </div>
+                    <div style="text-align: right;">
+                        <button type="submit" class="btn btn-secondary"><i class="fas fa-save"></i> Save Category</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div id="content-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="content-modal-title">Edit Content</h2>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="content-form">
+                    <input type="hidden" id="content-key">
+                    <p>Editing key: <strong id="content-key-display"></strong></p>
+                    <div class="form-group">
+                        <label for="content-text-id">Text (ID)</label>
+                        <textarea id="content-text-id" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="content-text-en">Text (EN)</label>
+                        <textarea id="content-text-en" required></textarea>
+                    </div>
+                    <div style="text-align: right;">
+                        <button type="submit" class="btn btn-secondary"><i class="fas fa-save"></i> Save Content</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    
+    <script>
+    'use strict';
+
+    // ======== FIREBASE CONFIGURATION (FROM YOUR FILE) ========
+    const firebaseConfig = {
+      apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
+      authDomain: "lobster-shack-bali.firebaseapp.com",
+      projectId: "lobster-shack-bali",
+      storageBucket: "lobster-shack-bali.firebasestorage.app",
+      messagingSenderId: "42452974733",
+      appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+
+    // ======== GLOBAL DOM ELEMENTS ========
+    const authContainer = document.getElementById('auth-container');
+    const adminContainer = document.getElementById('admin-container');
+    const loginForm = document.getElementById('login-form');
+    const loginError = document.getElementById('login-error');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    // ======== APP LOGIC ========
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- Authentication ---
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                authContainer.style.display = 'none';
+                adminContainer.style.display = 'flex';
+                initAdminPanel();
+            } else {
+                authContainer.style.display = 'flex';
+                adminContainer.style.display = 'none';
+            }
+        });
+
+        loginForm.addEventListener('submit', e => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            auth.signInWithEmailAndPassword(email, password)
+                .catch(error => {
+                    loginError.textContent = error.message;
+                    loginError.style.display = 'block';
+                });
+        });
+
+        logoutBtn.addEventListener('click', e => {
+            e.preventDefault();
+            auth.signOut();
+        });
+
+        // --- Initialize Panel ---
+        function initAdminPanel() {
+            setupNavigation();
+            loadAllData();
+            setupModals();
+            setupForms();
+        }
+
+        let productsData = [];
+        let categoriesData = [];
+        let contentData = [];
+        
+        async function loadAllData() {
+            await Promise.all([
+                loadCategories(),
+                loadProducts(),
+                loadContent(),
+            ]);
+            renderProducts();
+            renderCategories();
+            renderContent();
+            populateCategoryDropdown();
+        }
+        
+        // --- Navigation ---
+        function setupNavigation() {
+            const navLinks = document.querySelectorAll('.sidebar-nav a, .logout-btn');
+            const pages = document.querySelectorAll('.page');
+            const sidebar = document.querySelector('.sidebar');
+            const menuToggle = document.querySelector('.menu-toggle');
+
+            function switchPage(hash) {
+                const targetId = 'page-' + (hash.substring(1) || 'dashboard');
+                
+                navLinks.forEach(link => link.classList.remove('active'));
+                pages.forEach(page => page.classList.remove('active'));
+                
+                const activeLink = document.querySelector(`.sidebar-nav a[href="${hash}"]`) || document.querySelector('.sidebar-nav a[href="#dashboard"]');
+                const activePage = document.getElementById(targetId) || document.getElementById('page-dashboard');
+
+                activeLink.classList.add('active');
+                activePage.classList.add('active');
+
+                if (window.innerWidth <= 992) {
+                    sidebar.classList.remove('open');
+                    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    if (link.id !== 'logout-btn') {
+                        e.preventDefault();
+                        const hash = link.getAttribute('href');
+                        window.location.hash = hash;
+                    }
+                });
+            });
+            
+            window.addEventListener('hashchange', () => switchPage(window.location.hash));
+            switchPage(window.location.hash);
+
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+                if (sidebar.classList.contains('open')) {
+                    menuToggle.innerHTML = '<i class="fas fa-times"></i>';
+                } else {
+                    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            });
+        }
+        
+        // --- Modal Handling ---
+        function setupModals() {
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.addEventListener('click', e => {
+                    if (e.target === modal) closeModal(modal.id);
+                });
+            });
+            document.querySelectorAll('.modal-close-btn').forEach(btn => {
+                btn.addEventListener('click', e => {
+                    closeModal(btn.closest('.modal-overlay').id);
+                });
+            });
+        }
+
+        function openModal(modalId) { document.getElementById(modalId).classList.add('visible'); }
+        function closeModal(modalId) { document.getElementById(modalId).classList.remove('visible'); }
+
+        // --- Data Fetching ---
+        async function loadProducts() {
+            const snapshot = await db.collection('products').get();
+            productsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        }
+
+        async function loadCategories() {
+            const snapshot = await db.collection('categories').orderBy('id').get();
+            categoriesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        }
+
+        async function loadContent() {
+            const snapshot = await db.collection('content').get();
+            contentData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        }
+        
+        // --- Rendering ---
+        function renderProducts() {
+            const tbody = document.querySelector('#products-table tbody');
+            tbody.innerHTML = '';
+            productsData.forEach(p => {
+                const row = `
+                    <tr>
+                        <td><img src="${p.imageUrl || 'https://via.placeholder.com/60'}" alt="${p.name_en}" class="product-img-thumb"></td>
+                        <td>${p.name_id}<br><small class="text-muted">${p.name_en}</small></td>
+                        <td>${p.category_name}</td>
+                        <td>${new Intl.NumberFormat('id-ID').format(p.price)}</td>
+                        <td><i class="fas ${p.is_featured ? 'fa-check-circle' : 'fa-times-circle'}"></i></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="btn btn-sm btn-outline" onclick="editProduct('${p.id}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteProduct('${p.id}', '${p.name_en}')"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+        
+        function renderCategories() {
+            const tbody = document.querySelector('#categories-table tbody');
+            tbody.innerHTML = '';
+            categoriesData.forEach(c => {
+                const row = `
+                    <tr>
+                        <td>${c.id}</td>
+                        <td>${c.name}</td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="btn btn-sm btn-outline" onclick="editCategory('${c.id}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteCategory('${c.id}', '${c.name}')"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+        
+        function renderContent() {
+            const tbody = document.querySelector('#content-table tbody');
+            tbody.innerHTML = '';
+            contentData.sort((a,b) => a.id.localeCompare(b.id)).forEach(c => {
+                const row = `
+                    <tr>
+                        <td><strong>${c.id}</strong></td>
+                        <td>${(c.text_id || '').substring(0, 50)}...</td>
+                        <td>${(c.text_en || '').substring(0, 50)}...</td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="btn btn-sm btn-outline" onclick="editContent('${c.id}')"><i class="fas fa-edit"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+        
+        function populateCategoryDropdown() {
+            const select = document.getElementById('product-category');
+            select.innerHTML = '<option value="">Select a category</option>';
+            categoriesData.forEach(c => {
+                select.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+            });
+        }
+
+        // --- Forms & Actions ---
+        function setupForms() {
+            // Product form
+            document.getElementById('add-new-product-btn').addEventListener('click', () => {
+                document.getElementById('product-form').reset();
+                document.getElementById('product-id').value = '';
+                document.getElementById('product-modal-title').textContent = 'Add New Product';
+                document.getElementById('image-preview').style.display = 'none';
+                openModal('product-modal');
+            });
+
+            document.getElementById('product-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const id = document.getElementById('product-id').value;
+                const imageFile = document.getElementById('product-image').files[0];
+                const data = {
+                    name_id: document.getElementById('product-name-id').value,
+                    name_en: document.getElementById('product-name-en').value,
+                    description_id: document.getElementById('product-description-id').value,
+                    description_en: document.getElementById('product-description-en').value,
+                    price: Number(document.getElementById('product-price').value),
+                    category_name: document.getElementById('product-category').value,
+                    is_featured: document.getElementById('product-featured').checked
+                };
+                
+                try {
+                    if (imageFile) {
+                        const filePath = `products/${Date.now()}_${imageFile.name}`;
+                        const fileSnapshot = await storage.ref(filePath).put(imageFile);
+                        data.imageUrl = await fileSnapshot.ref.getDownloadURL();
+                    }
+                    
+                    if (id) {
+                        await db.collection('products').doc(id).update(data);
+                    } else {
+                        await db.collection('products').add(data);
+                    }
+                    
+                    closeModal('product-modal');
+                    await loadProducts();
+                    renderProducts();
+                } catch(err) {
+                    console.error("Error saving product:", err);
+                    alert("Error saving product. See console for details.");
+                }
+            });
+
+            document.getElementById('product-image').addEventListener('change', (e) => {
+                const preview = document.getElementById('image-preview');
+                const file = e.target.files[0];
+                if (file) {
+                    preview.src = URL.createObjectURL(file);
+                    preview.style.display = 'block';
+                }
+            });
+
+            // Category form
+            document.getElementById('add-new-category-btn').addEventListener('click', () => {
+                document.getElementById('category-form').reset();
+                document.getElementById('category-id').value = '';
+                document.getElementById('category-modal-title').textContent = 'Add New Category';
+                openModal('category-modal');
+            });
+
+            document.getElementById('category-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const id = document.getElementById('category-id').value;
+                const data = {
+                    name: document.getElementById('category-name').value,
+                    id: Number(document.getElementById('category-sort-id').value)
+                };
+
+                try {
+                    if (id) {
+                        await db.collection('categories').doc(id).update(data);
+                    } else {
+                        await db.collection('categories').add(data);
+                    }
+                    closeModal('category-modal');
+                    await loadCategories();
+                    renderCategories();
+                    populateCategoryDropdown();
+                } catch(err) {
+                    console.error("Error saving category:", err);
+                    alert("Error saving category. See console for details.");
+                }
+            });
+
+            // Content form
+            document.getElementById('content-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const key = document.getElementById('content-key').value;
+                const data = {
+                    text_id: document.getElementById('content-text-id').value,
+                    text_en: document.getElementById('content-text-en').value,
+                };
+                 try {
+                    await db.collection('content').doc(key).update(data);
+                    closeModal('content-modal');
+                    await loadContent();
+                    renderContent();
+                } catch(err) {
+                    console.error("Error saving content:", err);
+                    alert("Error saving content. See console for details.");
+                }
+            });
+        }
+        
+        // Expose functions to global scope for onclick attributes
+        window.editProduct = (id) => {
+            const product = productsData.find(p => p.id === id);
+            if (!product) return;
+            document.getElementById('product-form').reset();
+            document.getElementById('product-id').value = id;
+            document.getElementById('product-name-id').value = product.name_id;
+            document.getElementById('product-name-en').value = product.name_en;
+            document.getElementById('product-description-id').value = product.description_id;
+            document.getElementById('product-description-en').value = product.description_en;
+            document.getElementById('product-price').value = product.price;
+            document.getElementById('product-category').value = product.category_name;
+            document.getElementById('product-featured').checked = product.is_featured;
+            
+            const preview = document.getElementById('image-preview');
+            if (product.imageUrl) {
+                preview.src = product.imageUrl;
+                preview.style.display = 'block';
+            } else {
+                preview.style.display = 'none';
+            }
+            
+            document.getElementById('product-modal-title').textContent = 'Edit Product';
+            openModal('product-modal');
+        };
+
+        window.deleteProduct = async (id, name) => {
+            if (confirm(`Are you sure you want to delete "${name}"? This cannot be undone.`)) {
+                try {
+                    await db.collection('products').doc(id).delete();
+                    await loadProducts();
+                    renderProducts();
+                } catch(err) {
+                    console.error("Error deleting product: ", err);
+                    alert("Error deleting product.");
+                }
+            }
+        };
+
+        window.editCategory = (id) => {
+            const category = categoriesData.find(c => c.id === id);
+            if (!category) return;
+            document.getElementById('category-form').reset();
+            document.getElementById('category-id').value = id;
+            document.getElementById('category-name').value = category.name;
+            document.getElementById('category-sort-id').value = category.id;
+            document.getElementById('category-modal-title').textContent = 'Edit Category';
+            openModal('category-modal');
+        };
+
+        window.deleteCategory = async (id, name) => {
+             if (confirm(`Are you sure you want to delete category "${name}"?`)) {
+                 try {
+                    await db.collection('categories').doc(id).delete();
+                    await loadCategories();
+                    renderCategories();
+                    populateCategoryDropdown();
+                } catch(err) {
+                    console.error("Error deleting category: ", err);
+                    alert("Error deleting category.");
+                }
+            }
+        };
+
+        window.editContent = (key) => {
+            const content = contentData.find(c => c.id === key);
+            if (!content) return;
+            document.getElementById('content-form').reset();
+            document.getElementById('content-key').value = key;
+            document.getElementById('content-key-display').textContent = key;
+            document.getElementById('content-text-id').value = content.text_id || '';
+            document.getElementById('content-text-en').value = content.text_en || '';
+            document.getElementById('content-modal-title').textContent = `Edit Content: ${key}`;
+            openModal('content-modal');
+        };
+
+    }); // End DOMContentLoaded
+    </script>
+
+</body>
+</html>
