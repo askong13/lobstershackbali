@@ -242,12 +242,15 @@
             background-position: center;
         }
         .hero-slider .slide-overlay {
-            background: linear-gradient(rgba(45, 76, 94, .65), rgba(45, 76, 94, .65));
+            /* Updated for 'burn' effect and darker overlay */
+            background: linear-gradient(rgba(45, 76, 94, .75), rgba(45, 76, 94, .75)); /* Darker overlay */
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            /* Optional: Add a subtle animation or filter for 'burn' */
+            /* filter: brightness(0.8); /* Example subtle darken */
         }
         .hero-content {
             position: relative;
@@ -267,7 +270,7 @@
             max-width: 600px;
             line-height: 1.6;
         }
-        .hero-slider .swiper-button-next, .hero-slider .swiper-button-prev { color: #fff; }
+        /* Removed swiper-button-next and swiper-button-prev styles as they are no longer used */
         .hero-slider .swiper-pagination-bullet-active { background-color: var(--color-primary); }
 
         /* ------------------- */
@@ -576,6 +579,31 @@
             font-size: 1.5rem;
             color: var(--color-primary);
         }
+        #modal-product-details .order-summary-items {
+            max-height: 150px; /* Limit height for summary list */
+            overflow-y: auto;
+            margin-bottom: 1rem;
+        }
+        #modal-product-details .order-summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            color: var(--color-text);
+        }
+        #modal-product-details .order-summary-item span:first-child {
+            font-weight: 500;
+        }
+        #modal-product-details .order-summary-total {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--color-secondary);
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
 
         .location-input-group {
             display: flex;
@@ -808,8 +836,6 @@
             <div class="swiper hero-slider">
                 <div class="swiper-wrapper" id="hero-slider-wrapper">
                     </div>
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
                 <div class="swiper-pagination"></div>
 
                 <div class="hero-content" data-aos="fade-up">
@@ -915,7 +941,7 @@
         </div>
         <div class="modal-body">
             <form id="order-form">
-                <div id="modal-product-details" style="text-align:center; margin-bottom: 2rem;">
+                <div id="modal-product-details">
                     </div>
                 <div class="form-group">
                     <label for="customer-name" data-lang-key="modal_name_label">Name</label>
@@ -1076,6 +1102,9 @@ window.initMaps = () => {
         geocodeAddress(domElements.customerAddressInput.value);
     });
 
+    // Initially reverse geocode the default position to populate the address field
+    geocodeLatLng(currentAddressLatLng);
+
     console.log("Google Maps Initialized.");
 };
 
@@ -1087,11 +1116,11 @@ const geocodeLatLng = (latLng) => {
                 domElements.customerAddressInput.value = results[0].formatted_address;
                 currentAddressLatLng = latLng;
             } else {
-                showToast("No address found for this location.", 'error');
+                showToast(currentLanguage === 'id' ? "Tidak ada alamat ditemukan untuk lokasi ini." : "No address found for this location.", 'error');
             }
         } else {
             console.error('Geocoder failed due to: ' + status);
-            showToast("Error getting address from location.", 'error');
+            showToast(currentLanguage === 'id' ? "Error mendapatkan alamat dari lokasi." : "Error getting address from location.", 'error');
         }
     });
 };
@@ -1105,11 +1134,11 @@ const geocodeAddress = (address) => {
                 marker.setPosition(results[0].geometry.location);
                 currentAddressLatLng = results[0].geometry.location;
             } else {
-                showToast("Address not found.", 'error');
+                showToast(currentLanguage === 'id' ? "Alamat tidak ditemukan." : "Address not found.", 'error');
             }
         } else {
             console.error('Geocode was not successful for the following reason: ' + status);
-            showToast("Error finding address on map.", 'error');
+            showToast(currentLanguage === 'id' ? "Error menemukan alamat di peta." : "Error finding address on map.", 'error');
         }
     });
 };
@@ -1126,6 +1155,10 @@ const updateMap = (lat, lng, address = '') => {
 
 // Detect user's current location
 const detectLocation = () => {
+    if (!map || !geocoder) {
+        showToast(currentLanguage === 'id' ? 'Peta belum siap. Silakan coba lagi.' : 'Map is not ready. Please try again.', 'error');
+        return;
+    }
     if (navigator.geolocation) {
         showToast(currentLanguage === 'id' ? 'Mendeteksi lokasi...' : 'Detecting location...', 'info');
         navigator.geolocation.getCurrentPosition(position => {
@@ -1133,8 +1166,24 @@ const detectLocation = () => {
             const lng = position.coords.longitude;
             geocodeLatLng({ lat, lng }); // Reverse geocode to get address
             showToast(currentLanguage === 'id' ? 'Lokasi ditemukan!' : 'Location detected!', 'success');
-        }, () => {
-            showToast(currentLanguage === 'id' ? 'Gagal mendeteksi lokasi. Pastikan izin lokasi diberikan.' : 'Failed to detect location. Please allow location access.', 'error');
+        }, (error) => {
+            console.error("Geolocation error:", error);
+            let errorMessage = '';
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = currentLanguage === 'id' ? 'Izin lokasi ditolak. Silakan izinkan akses lokasi di pengaturan browser Anda.' : 'Location permission denied. Please allow location access in your browser settings.';
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = currentLanguage === 'id' ? 'Informasi lokasi tidak tersedia.' : 'Location information is unavailable.';
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = currentLanguage === 'id' ? 'Permintaan untuk mendapatkan lokasi pengguna telah habis waktu.' : 'The request to get user location timed out.';
+                    break;
+                default:
+                    errorMessage = currentLanguage === 'id' ? 'Terjadi kesalahan tidak dikenal saat mendeteksi lokasi.' : 'An unknown error occurred while detecting location.';
+                    break;
+            }
+            showToast(errorMessage, 'error');
         });
     } else {
         showToast(currentLanguage === 'id' ? 'Geolocation tidak didukung oleh browser Anda.' : 'Geolocation is not supported by your browser.', 'error');
@@ -1171,7 +1220,7 @@ const renderBanners = () => {
         loop: true, 
         effect: 'fade', 
         autoplay: { delay: 5000, disableOnInteraction: false },
-        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+        // Navigation arrows are removed as requested
         pagination: { el: '.swiper-pagination', clickable: true }
     });
 };
@@ -1354,18 +1403,20 @@ const openOrderModal = (productId = null, itemsFromCart = null) => {
         currentOrderProduct = null; // Reset single product if ordering from cart
         currentOrderCartItems = itemsFromCart;
         let itemsHtml = currentOrderCartItems.map(item => `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.5rem;">
+            <div class="order-summary-item">
                 <span>${item.quantity}x ${item[`name_${currentLanguage}`] || item.name_id}</span>
                 <span>Rp ${new Intl.NumberFormat('id-ID').format(item.price * item.quantity)}</span>
             </div>
         `).join('');
         domElements.modalProductDetails.innerHTML = `
             <h3>${currentLanguage === 'id' ? 'Ringkasan Pesanan Anda' : 'Your Order Summary'}</h3>
-            ${itemsHtml}
+            <div class="order-summary-items">
+                ${itemsHtml}
+            </div>
             <hr style="border-top: 1px dashed var(--color-border); margin: 1rem 0;">
-            <p style="font-weight: bold; font-size: 1.1rem;">
-                ${currentLanguage === 'id' ? 'Total (belum termasuk ongkir):' : 'Subtotal:'} 
-                Rp ${new Intl.NumberFormat('id-ID').format(cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0))}
+            <p class="order-summary-total">
+                <span>${currentLanguage === 'id' ? 'Subtotal Pesanan:' : 'Order Subtotal:'}</span> 
+                <span>Rp ${new Intl.NumberFormat('id-ID').format(cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0))}</span>
             </p>
         `;
     } else {
@@ -1380,9 +1431,13 @@ const openOrderModal = (productId = null, itemsFromCart = null) => {
         map.setCenter(currentAddressLatLng);
         marker.setPosition(currentAddressLatLng);
         map.setZoom(15); // Reset zoom
+        // Also update the address input field from the current map marker position
+        geocodeLatLng(currentAddressLatLng);
     } else {
-        // Fallback or re-initiate if map somehow didn't load (unlikely with async defer)
-        // initMaps() is called by the Google Maps API script directly
+        // This case should ideally not happen if initMaps is called by the Google Maps script
+        // However, if map is null, it means initMaps hasn't run yet.
+        // The script is loaded async defer, so initMaps is guaranteed to run.
+        // We will just wait for initMaps to handle the map initialization.
     }
 };
 
@@ -1487,6 +1542,18 @@ document.addEventListener('DOMContentLoaded', () => {
             openOrderModal(productId);
         }
     });
+
+    // Event delegation for featured slider buttons
+    domElements.featuredMenuWrapper.addEventListener('click', e => {
+        if (e.target.matches('.add-to-cart-btn') || e.target.closest('.add-to-cart-btn')) {
+            const productId = e.target.dataset.productId || e.target.closest('.add-to-cart-btn').dataset.productId;
+            addToCart(productId);
+        } else if (e.target.matches('.order-now-btn') || e.target.closest('.order-now-btn')) {
+            const productId = e.target.dataset.productId || e.target.closest('.order-now-btn').dataset.productId;
+            openOrderModal(productId);
+        }
+    });
+
 
     // Close buttons for all modals
     domElements.modalCloseBtns.forEach(btn => {
@@ -1614,6 +1681,27 @@ const handleMenuFilter = (e) => {
     });
 };
 
+// Toast notification function (existing)
+function showToast(message, type = 'info') {
+    domElements.toastMessage.textContent = message;
+    domElements.toastIcon.className = 'fas'; // Reset icon classes
+    if (type === 'success') {
+        domElements.toastIcon.classList.add('fa-check-circle');
+        domElements.toast.classList.add('success');
+    } else if (type === 'error') {
+        domElements.toastIcon.classList.add('fa-times-circle');
+        domElements.toast.classList.add('error');
+    } else { // info
+        domElements.toastIcon.classList.add('fa-info-circle');
+        domElements.toast.classList.add('info');
+    }
+
+    domElements.toast.classList.add('show');
+    setTimeout(() => {
+        domElements.toast.classList.remove('show');
+        domElements.toast.classList.remove('success', 'error', 'info'); // Clean up classes
+    }, 3000);
+}
     </script>
 </body>
 </html>
