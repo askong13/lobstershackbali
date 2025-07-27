@@ -87,7 +87,7 @@ const renderMenu = () => {
                 <p class="ls-description">${(p[`description_${currentLanguage}`] || p.description_id).substring(0, 90)}...</p>
                 <div class="ls-card-actions">
                     <button class="ls-btn ls-view-details-btn"><i class="fas fa-eye"></i> <span data-lang-key="view_details_btn">View Details</span></button>
-                    ${p.gofood_link ? `<a href="${p.gofood_link}" target="_blank" rel="noopener noreferrer" class="ls-order-link" aria-label="Order on GoFood"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRF4G3lRAltCydaksfc29WU0fH7mJrnweaDYLqBrCw33Vxb6QfzKD87ANo&s=10" alt="GoFood Logo" style="width:27px; height:27px;"></a>` : ''}
+                    ${p.gofood_link ? `<a href="${p.gofood_link}" target="_blank" rel="noopener noreferrer" class="ls-order-link" aria-label="Order on GoFood"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRF4G3lRAltCydaksfc29WU0fH7mJrnweaDYLqBrCw33Vxb6QfzKD87ANo&s=10" alt="GoFood Logo" style="width:50px; height:50px;"></a>` : ''}
                     ${p.grabfood_link ? `<a href="${p.grabfood_link}" target="_blank" rel="noopener noreferrer" class="ls-order-link" aria-label="Order on GrabFood"><img src="https://i.ibb.co/qDWMzWd/grab-logo-48x48.png" alt="GrabFood Logo" style="width:24px; height:24px;"></a>` : ''}
                 </div>
             </div> 
