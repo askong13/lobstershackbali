@@ -9,11 +9,12 @@ function setupFloatingButton() {
     const directionBtn = document.getElementById('fab-direction');
     const whatsappBtn = document.getElementById('fab-whatsapp');
 
+    // Dine In Modal Elements
     const dineInModal = document.getElementById('ls-dine-in-modal');
     const closeDineInBtn = document.getElementById('ls-dine-in-close-btn');
     const customerNameInput = document.getElementById('customer-name');
-    const currentDateEl = document.getElementById('current-date');
-    const currentTimeEl = document.getElementById('current-time');
+    const reservationDateInput = document.getElementById('reservation-date');
+    const reservationTimeInput = document.getElementById('reservation-time');
     const generateCodeBtn = document.getElementById('generate-code-btn');
     const cancelCodeBtn = document.getElementById('cancel-code-btn');
     const dineInStep1 = document.getElementById('dine-in-step-1');
@@ -31,23 +32,27 @@ function setupFloatingButton() {
     });
 
     // --- DINE IN POPUP LOGIC ---
+    const setMinDateForInput = () => {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        reservationDateInput.min = `${yyyy}-${mm}-${dd}`;
+    };
+
     const openDineInModal = () => {
-        // Cek apakah sudah ada kode di local storage
         const existingReservation = JSON.parse(localStorage.getItem('reservation'));
         if (existingReservation && existingReservation.code) {
-            // Jika ada, langsung tampilkan step 2
-            customerNameInput.value = existingReservation.name;
             reservationCodeEl.textContent = existingReservation.code;
             dineInStep1.style.display = 'none';
             dineInStep2.style.display = 'block';
         } else {
-            // Jika tidak ada, tampilkan step 1
-            const now = new Date();
-            currentDateEl.textContent = now.toLocaleDateString('en-GB'); // Format DD/MM/YYYY
-            currentTimeEl.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
             dineInStep1.style.display = 'block';
             dineInStep2.style.display = 'none';
             customerNameInput.value = '';
+            reservationDateInput.value = '';
+            reservationTimeInput.value = '';
+            setMinDateForInput();
         }
         dineInModal.classList.add('visible');
     };
@@ -65,12 +70,11 @@ function setupFloatingButton() {
 
     // --- RESERVATION CODE LOGIC ---
     const generateReservationCode = () => {
-        const now = new Date();
-        const year = now.getFullYear().toString().slice(-2);
-        const month = (now.getMonth() + 1).toString().padStart(2, '0');
-        const day = now.getDate().toString().padStart(2, '0');
+        const date = new Date();
+        const year = date.getFullYear().toString().slice(-2);
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const randomPart = Math.random().toString(36).substring(2, 6).toUpperCase();
-        return `LSB-${year}${month}${day}-${randomPart}`;
+        return `LSB-${year}${month}-${randomPart}`;
     };
 
     const saveReservationToFirebase = async (reservationData) => {
@@ -79,54 +83,64 @@ function setupFloatingButton() {
             console.log('Reservation saved to Firebase');
         } catch (error) {
             console.error("Error saving reservation to Firebase: ", error);
-            alert("Failed to save reservation to our system. Please try again.");
+            alert("Failed to save reservation to our system. Please check console for details.");
+            throw error; // Lempar error agar bisa ditangkap
         }
     };
 
-    generateCodeBtn.addEventListener('click', () => {
+    generateCodeBtn.addEventListener('click', async () => {
         const customerName = customerNameInput.value.trim();
-        if (!customerName) {
-            alert("Please enter your name.");
+        const reservationDate = reservationDateInput.value;
+        const reservationTime = reservationTimeInput.value;
+
+        if (!customerName || !reservationDate || !reservationTime) {
+            alert("Please complete all fields: Name, Date, and Time.");
             return;
         }
 
         const code = generateReservationCode();
-        const reservationTime = new Date();
         
         const reservationData = {
             code: code,
             name: customerName,
-            date: reservationTime.toLocaleDateString('en-GB'),
-            time: reservationTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-            createdAt: firebase.firestore.FieldValue.serverTimestamp() // Requires firebase global
+            reservationDate: reservationDate,
+            reservationTime: reservationTime,
+            status: 'pending', // Status awal reservasi
+            createdAt: new Date() // FIX: Menggunakan new Date() untuk timestamp klien
         };
-
-        // Save to Local Storage
-        localStorage.setItem('reservation', JSON.stringify(reservationData));
         
-        // Save to Firebase
-        saveReservationToFirebase(reservationData);
+        try {
+            // Coba simpan ke Firebase terlebih dahulu
+            await saveReservationToFirebase(reservationData);
+            
+            // Jika berhasil, simpan ke Local Storage dan update UI
+            localStorage.setItem('reservation', JSON.stringify({ code: code, name: customerName }));
+            reservationCodeEl.textContent = code;
+            dineInStep1.style.display = 'none';
+            dineInStep2.style.display = 'block';
 
-        // Update UI
-        reservationCodeEl.textContent = code;
-        dineInStep1.style.display = 'none';
-        dineInStep2.style.display = 'block';
+        } catch (error) {
+            // Jika gagal menyimpan ke firebase, jangan lanjutkan
+            console.log("UI update aborted due to Firebase save failure.");
+        }
     });
 
     cancelCodeBtn.addEventListener('click', () => {
-        if (confirm("Are you sure you want to cancel this code and generate a new one?")) {
+        if (confirm("Are you sure you want to cancel this code and make a new reservation?")) {
             localStorage.removeItem('reservation');
-            // Reset UI
             dineInStep2.style.display = 'none';
             dineInStep1.style.display = 'block';
-            customerNameInput.value = ''; // Clear name input
+            customerNameInput.value = '';
+            reservationDateInput.value = '';
+            reservationTimeInput.value = '';
+            setMinDateForInput();
         }
     });
 
     // --- GET DIRECTION LOGIC ---
     const latitude = -8.7222;
     const longitude = 115.1682;
-    directionBtn.href = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+    directionBtn.href = `http://googleusercontent.com/maps.google.com/5{latitude},${longitude}`;
 
     // --- WHATSAPP CHAT LOGIC ---
     const rawPhoneNumber = siteData.content?.footer_phone_value?.text_id || '6281234567890';
