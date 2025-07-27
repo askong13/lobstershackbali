@@ -205,7 +205,7 @@
         }
         td .action-btns { display: flex; gap: .5rem; }
         td .action-btns .btn { padding: .4rem .8rem; border-radius: 6px; }
-        .product-img-thumb { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; }
+        .product-img-thumb, .content-img-thumb { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; }
 
         /* --- MODAL --- */
         .modal-overlay {
@@ -265,7 +265,7 @@
         .form-check { display: flex; align-items: center; gap: .75rem; }
         .form-check input { width: auto; }
         .form-check label { margin: 0; }
-        #image-preview { max-width: 150px; margin-top: 1rem; border-radius: 8px; }
+        #image-preview, #content-image-preview { max-width: 150px; margin-top: 1rem; border-radius: 8px; }
 
         /* --- Coming Soon & Specific Pages --- */
         .coming-soon-card { text-align: center; padding: 5rem 2rem; }
@@ -432,7 +432,7 @@
                                     <th>Key</th>
                                     <th>Text (ID)</th>
                                     <th>Text (EN)</th>
-                                    <th>Action</th>
+                                    <th>Image</th> <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -565,6 +565,11 @@
                     <div class="form-group">
                         <label for="content-text-en">Text (EN)</label>
                         <textarea id="content-text-en" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="content-image">Content Image (Optional)</label>
+                        <input type="file" id="content-image" accept="image/*">
+                        <img id="content-image-preview" src="#" alt="Image Preview" style="display: none;">
                     </div>
                     <div style="text-align: right;">
                         <button type="submit" class="btn btn-secondary"><i class="fas fa-save"></i> Save Content</button>
@@ -793,8 +798,11 @@
                 const row = `
                     <tr>
                         <td><strong>${c.id}</strong></td>
-                        <td>${(c.text_id || '').substring(0, 50)}...</td>
-                        <td>${(c.text_en || '').substring(0, 50)}...</td>
+                        <td>${(c.text_id || '').substring(0, 50)}${(c.text_id || '').length > 50 ? '...' : ''}</td>
+                        <td>${(c.text_en || '').substring(0, 50)}${(c.text_en || '').length > 50 ? '...' : ''}</td>
+                        <td>
+                            ${c.imageUrl ? `<img src="${c.imageUrl}" alt="Content Image" class="content-img-thumb">` : 'N/A'}
+                        </td>
                         <td>
                             <div class="action-btns">
                                 <button class="btn btn-sm btn-outline" onclick="editContent('${c.id}')"><i class="fas fa-edit"></i></button>
@@ -821,7 +829,8 @@
                 document.getElementById('product-form').reset();
                 document.getElementById('product-id').value = '';
                 document.getElementById('product-modal-title').textContent = 'Add New Product';
-                document.getElementById('image-preview').style.display = 'none';
+                document.getElementById('image-preview').style.display = 'none'; // Ensure preview is hidden for new product
+                document.getElementById('image-preview').src = '#'; // Clear existing image
                 openModal('product-modal');
             });
 
@@ -842,14 +851,30 @@
                 try {
                     if (imageFile) {
                         const filePath = `products/${Date.now()}_${imageFile.name}`;
+                        console.log("Attempting to upload product image to:", filePath);
                         const fileSnapshot = await storage.ref(filePath).put(imageFile);
                         data.imageUrl = await fileSnapshot.ref.getDownloadURL();
+                        console.log("Product image uploaded successfully:", data.imageUrl);
+                    } else if (id) {
+                         // If no new file is selected, keep the old image URL if editing
+                        const existingProduct = productsData.find(p => p.id === id);
+                        if (existingProduct && existingProduct.imageUrl) {
+                            data.imageUrl = existingProduct.imageUrl;
+                        } else {
+                            data.imageUrl = ''; // Clear if no old image and no new image
+                        }
+                    } else {
+                        data.imageUrl = ''; // For new product with no image
                     }
                     
                     if (id) {
+                        console.log("Updating product with ID:", id, "Data:", data);
                         await db.collection('products').doc(id).update(data);
+                        console.log("Product updated successfully!");
                     } else {
-                        await db.collection('products').add(data);
+                        console.log("Adding new product. Data:", data);
+                        const docRef = await db.collection('products').add(data);
+                        console.log("Product added successfully with ID:", docRef.id);
                     }
                     
                     closeModal('product-modal');
@@ -857,7 +882,7 @@
                     renderProducts();
                 } catch(err) {
                     console.error("Error saving product:", err);
-                    alert("Error saving product. See console for details.");
+                    alert("Error saving product. Please check console for details: " + err.message);
                 }
             });
 
@@ -867,6 +892,9 @@
                 if (file) {
                     preview.src = URL.createObjectURL(file);
                     preview.style.display = 'block';
+                } else {
+                    preview.style.display = 'none';
+                    preview.src = '#'; // Clear image if no file selected
                 }
             });
 
@@ -888,9 +916,13 @@
 
                 try {
                     if (id) {
+                        console.log("Updating category with ID:", id, "Data:", data);
                         await db.collection('categories').doc(id).update(data);
+                        console.log("Category updated successfully!");
                     } else {
-                        await db.collection('categories').add(data);
+                        console.log("Adding new category. Data:", data);
+                        const docRef = await db.collection('categories').add(data);
+                        console.log("Category added successfully with ID:", docRef.id);
                     }
                     closeModal('category-modal');
                     await loadCategories();
@@ -898,7 +930,7 @@
                     populateCategoryDropdown();
                 } catch(err) {
                     console.error("Error saving category:", err);
-                    alert("Error saving category. See console for details.");
+                    alert("Error saving category. Please check console for details: " + err.message);
                 }
             });
 
@@ -906,18 +938,50 @@
             document.getElementById('content-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const key = document.getElementById('content-key').value;
-                const data = {
+                const imageFile = document.getElementById('content-image').files[0];
+                let data = {
                     text_id: document.getElementById('content-text-id').value,
                     text_en: document.getElementById('content-text-en').value,
                 };
                  try {
+                    if (imageFile) {
+                        const filePath = `content/${key}_${Date.now()}_${imageFile.name}`;
+                        console.log("Attempting to upload content image to:", filePath);
+                        const fileSnapshot = await storage.ref(filePath).put(imageFile);
+                        data.imageUrl = await fileSnapshot.ref.getDownloadURL();
+                        console.log("Content image uploaded successfully:", data.imageUrl);
+                    } else {
+                        // If no new file, keep the existing image URL or clear it
+                        const existingContent = contentData.find(c => c.id === key);
+                        if (existingContent && existingContent.imageUrl) {
+                            data.imageUrl = existingContent.imageUrl;
+                        } else {
+                            data.imageUrl = ''; // Clear if no old image and no new image
+                        }
+                    }
+
+                    console.log("Updating content with key:", key, "Data:", data);
                     await db.collection('content').doc(key).update(data);
+                    console.log("Content updated successfully!");
+                    
                     closeModal('content-modal');
                     await loadContent();
                     renderContent();
                 } catch(err) {
                     console.error("Error saving content:", err);
-                    alert("Error saving content. See console for details.");
+                    alert("Error saving content. Please check console for details: " + err.message);
+                }
+            });
+
+            document.getElementById('content-image').addEventListener('change', (e) => {
+                const preview = document.getElementById('content-image-preview');
+                const file = e.target.files[0];
+                if (file) {
+                    preview.src = URL.createObjectURL(file);
+                    preview.style.display = 'block';
+                } else {
+                    preview.style.display = 'none';
+                    preview.src = '#'; // Clear image if no file selected
                 }
             });
         }
@@ -942,6 +1006,7 @@
                 preview.style.display = 'block';
             } else {
                 preview.style.display = 'none';
+                preview.src = '#'; // Clear existing image if product has none
             }
             
             document.getElementById('product-modal-title').textContent = 'Edit Product';
@@ -951,12 +1016,22 @@
         window.deleteProduct = async (id, name) => {
             if (confirm(`Are you sure you want to delete "${name}"? This cannot be undone.`)) {
                 try {
+                    // Optionally, delete the image from storage first
+                    const productToDelete = productsData.find(p => p.id === id);
+                    if (productToDelete && productToDelete.imageUrl) {
+                        const imageRef = storage.refFromURL(productToDelete.imageUrl);
+                        await imageRef.delete().catch(error => {
+                            console.warn("Could not delete old product image (might not exist or permissions issue):", error);
+                        });
+                    }
+
                     await db.collection('products').doc(id).delete();
+                    console.log(`Product "${name}" deleted successfully.`);
                     await loadProducts();
                     renderProducts();
                 } catch(err) {
                     console.error("Error deleting product: ", err);
-                    alert("Error deleting product.");
+                    alert("Error deleting product. Please check console for details.");
                 }
             }
         };
@@ -976,12 +1051,13 @@
              if (confirm(`Are you sure you want to delete category "${name}"?`)) {
                  try {
                     await db.collection('categories').doc(id).delete();
+                    console.log(`Category "${name}" deleted successfully.`);
                     await loadCategories();
                     renderCategories();
                     populateCategoryDropdown();
                 } catch(err) {
                     console.error("Error deleting category: ", err);
-                    alert("Error deleting category.");
+                    alert("Error deleting category. Please check console for details.");
                 }
             }
         };
@@ -994,6 +1070,16 @@
             document.getElementById('content-key-display').textContent = key;
             document.getElementById('content-text-id').value = content.text_id || '';
             document.getElementById('content-text-en').value = content.text_en || '';
+            
+            const preview = document.getElementById('content-image-preview');
+            if (content.imageUrl) {
+                preview.src = content.imageUrl;
+                preview.style.display = 'block';
+            } else {
+                preview.style.display = 'none';
+                preview.src = '#'; // Clear existing image if content has none
+            }
+
             document.getElementById('content-modal-title').textContent = `Edit Content: ${key}`;
             openModal('content-modal');
         };
