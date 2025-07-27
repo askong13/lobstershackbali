@@ -165,6 +165,7 @@ async function fetchAllData() {
         contentSnap.docs.forEach(doc => { siteData.content[doc.id] = doc.data(); });
         
         renderAll();
+setupFloatingButton();
     } catch (error) {
         console.error("Error fetching data from Firebase:", error);
         document.body.innerHTML = "<h1>Error loading site data. Please try again later.</h1>";
