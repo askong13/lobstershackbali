@@ -4,17 +4,543 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lobster Shack Bali - Admin Panel</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* CSS DARI style.css DIMASUKKAN DI SINI */
+        :root {
+            --primary-color: #D84B42; /* Lobster Red */
+            --secondary-color: #2D4C5E; /* Dark Blue */
+            --background-color: #F8F6F0; /* Light Cream */
+            --surface-color: #FFFFFF; /* White */
+            --text-color: #333333;
+            --text-light-color: #6c757d;
+            --border-color: #E0DACE;
+            --shadow-sm: 0 2px 8px rgba(45, 76, 94, .07);
+            --shadow-md: 0 4px 15px rgba(45, 76, 94, .12);
+            --border-radius: 8px;
+            --transition-speed: .3s;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex; /* For sidebar layout */
+            min-height: 100vh;
+        }
+        body.nav-open {
+            overflow: hidden; /* Prevent scrolling when mobile nav is open */
+        }
+
+        /* Login Page */
+        #auth-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            min-height: 100vh;
+            background-color: var(--secondary-color);
+            color: var(--surface-color);
+        }
+
+        #auth-container h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+        }
+
+        #login-form {
+            background-color: var(--surface-color);
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        #login-form input {
+            width: calc(100% - 20px);
+            padding: 12px 10px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        /* Admin Panel Layout */
+        #admin-panel {
+            display: flex;
+            width: 100%;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--secondary-color);
+            color: #fff;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-md);
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            height: 100vh; /* Make sidebar take full height */
+            overflow-y: auto; /* Enable scrolling for many menu items */
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        .sidebar .main-nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar .main-nav li {
+            margin-bottom: 0.75rem;
+        }
+
+        .sidebar .main-nav a, .sidebar .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+            font-weight: 500;
+            width: 100%;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .sidebar .main-nav a:hover, .sidebar .logout-btn:hover,
+        .sidebar .main-nav a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--surface-color);
+        }
+
+        .sidebar .main-nav i {
+            font-size: 1.2rem;
+            width: 20px; /* Align icons */
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 2rem;
+            background-color: var(--background-color);
+        }
+
+        .content-header {
+            background-color: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+        }
+
+        .content-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: var(--secondary-color);
+        }
+
+        /* General styles for sections */
+        .section-content {
+            background-color: var(--surface-color);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+        }
+
+        .section-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .75rem;
+            padding: .75rem 1.5rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all var(--transition-speed) ease;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--surface-color);
+        }
+
+        .btn-primary:hover {
+            background-color: #b93e36;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--surface-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #1e3a4d;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-edit {
+            background-color: #ffc107;
+            color: var(--text-color);
+            padding: .5rem 1rem;
+            border-radius: 5px;
+        }
+        .btn-edit:hover { background-color: #e0a800; }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: #fff;
+            padding: .5rem 1rem;
+            border-radius: 5px;
+        }
+        .btn-delete:hover { background-color: #c82333; }
+
+        .btn-info {
+            background-color: #17a2b8;
+            color: #fff;
+            padding: .5rem 1rem;
+            border-radius: 5px;
+        }
+        .btn-info:hover { background-color: #138496; }
+
+        /* Table Styles */
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 1.5rem;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .admin-table th, .admin-table td {
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .admin-table th {
+            background-color: var(--secondary-color);
+            color: var(--surface-color);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .admin-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .admin-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: .5rem;
+            color: var(--secondary-color);
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="password"],
+        .form-group input[type="number"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: .8rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(216, 75, 66, 0.2);
+        }
+
+        .form-group input[type="checkbox"] {
+            margin-right: 0.5rem;
+            transform: scale(1.2); /* Make checkbox slightly larger */
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .6);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-speed) ease, visibility 0s var(--transition-speed);
+        }
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0s;
+        }
+
+        .modal-content {
+            background: var(--background-color);
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 650px; /* Adjust as needed */
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(.9);
+            transition: transform var(--transition-speed) ease;
+        }
+        .modal-overlay.visible .modal-content {
+            transform: scale(1);
+        }
+
+
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+        .modal-header h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+        }
+        .modal-close-btn {
+            font-size: 1.75rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #aaa;
+            transition: color 0.3s ease;
+        }
+        .modal-close-btn:hover { color: var(--primary-color); }
+        .modal-body { padding: 1.5rem 2rem; }
+
+
+        /* Order Details specific styling */
+        .order-details-modal .modal-content {
+            max-width: 800px;
+        }
+        .order-summary, .order-items {
+            margin-bottom: 1.5rem;
+        }
+        .order-summary p {
+            margin-bottom: 0.5rem;
+        }
+        .order-summary strong {
+            color: var(--secondary-color);
+        }
+        .order-items table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        .order-items th, .order-items td {
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            text-align: left;
+        }
+        .order-items th {
+            background-color: #f0f0f0;
+        }
+        .order-status-select {
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            font-size: 1rem;
+        }
+
+        /* Toast Notification */
+        .toast-notification {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--secondary-color);
+            color: #fff;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transform: translateX(calc(100% + 2rem));
+            transition: transform .5s ease-in-out;
+        }
+        .toast-notification.show { transform: translateX(0); }
+        .toast-notification.error { background-color: var(--primary-color); }
+        .toast-notification.success { background-color: #28a745; }
+        .toast-notification.info { background-color: #17a2b8; }
+        .toast-notification i { font-size: 1.5rem; }
+        .toast-notification p { margin: 0; }
+
+        /* Spinner */
+        #loading-spinner {
+            color: var(--primary-color);
+            text-shadow: 0 0 5px rgba(0,0,0,0.2);
+        }
+
+        /* Utility classes */
+        .text-success { color: #28a745; }
+        .text-danger { color: #dc3545; }
+        .text-warning { color: #ffc107; }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 1rem;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+                overflow-y: visible; /* Allow content to overflow if nav is expanded */
+            }
+            .sidebar .main-nav {
+                display: none; /* Hide nav links on small screens initially */
+                position: absolute;
+                top: 100%; /* Position below header */
+                left: 0;
+                width: 100%;
+                background-color: var(--secondary-color);
+                box-shadow: var(--shadow-md);
+                flex-direction: column;
+                padding: 1rem 0;
+                height: auto; /* Allow height to adjust */
+            }
+            .sidebar.active .main-nav {
+                display: flex;
+            }
+            .sidebar .main-nav ul {
+                width: 100%;
+                text-align: center;
+            }
+            .sidebar .main-nav li {
+                margin-bottom: 0;
+            }
+            .sidebar .main-nav a, .sidebar .logout-btn {
+                padding: 0.75rem 0;
+                justify-content: center;
+                border-radius: 0;
+            }
+            .mobile-nav-toggle {
+                display: block;
+                font-size: 1.5rem;
+                color: #fff;
+                background: none;
+                border: none;
+                cursor: pointer;
+                z-index: 1001; /* Ensure it's clickable */
+            }
+            .content {
+                padding: 1rem;
+            }
+            .modal-content {
+                max-width: 95%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #login-form {
+                padding: 1.5rem;
+            }
+            .content-header h1 {
+                font-size: 1.8rem;
+            }
+            .section-content {
+                padding: 1.5rem;
+            }
+            .admin-table th, .admin-table td {
+                padding: 8px 10px;
+            }
+            .btn {
+                padding: .6rem 1rem;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <div id="auth-container">
-        <h2>Admin Login</h2>
+        <h2>Lobster Shack Admin Login</h2>
         <form id="login-form">
             <input type="email" id="login-email" placeholder="Email" required>
             <input type="password" id="login-password" placeholder="Password" required>
-            <button type="submit">Login</button>
-            <p id="auth-error-message" style="color: red;"></p>
+            <button type="submit" class="btn btn-primary">Login</button>
+            <p id="auth-error-message" style="color: red; margin-top: 10px;"></p>
         </form>
     </div>
 
@@ -22,8 +548,11 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h3>Lobster Shack Admin</h3>
+                <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle Navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
-            <nav class="main-nav">
+            <nav class="main-nav" id="sidebar-nav">
                 <ul>
                     <li><a href="#dashboard" class="nav-link active" data-section="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                     <li><a href="#orders" class="nav-link" data-section="orders"><i class="fas fa-receipt"></i> Orders</a></li>
@@ -42,22 +571,14 @@
             <header class="content-header">
                 <h1 id="current-section-title">Dashboard</h1>
             </header>
-            <div class="section-content" id="dashboard-section">
-                </div>
-            <div class="section-content" id="orders-section" style="display: none;">
-                </div>
-            <div class="section-content" id="products-section" style="display: none;">
-                </div>
-            <div class="section-content" id="categories-section" style="display: none;">
-                </div>
-            <div class="section-content" id="banners-section" style="display: none;">
-                </div>
-            <div class="section-content" id="gallery-section" style="display: none;">
-                </div>
-            <div class="section-content" id="history-section" style="display: none;">
-                </div>
-            <div class="section-content" id="content-section" style="display: none;">
-                </div>
+            <div class="section-content" id="dashboard-section"></div>
+            <div class="section-content" id="orders-section" style="display: none;"></div>
+            <div class="section-content" id="products-section" style="display: none;"></div>
+            <div class="section-content" id="categories-section" style="display: none;"></div>
+            <div class="section-content" id="banners-section" style="display: none;"></div>
+            <div class="section-content" id="gallery-section" style="display: none;"></div>
+            <div class="section-content" id="history-section" style="display: none;"></div>
+            <div class="section-content" id="content-section" style="display: none;"></div>
         </main>
     </div>
 
@@ -65,19 +586,1864 @@
         <i class="fas fa-spinner fa-spin fa-3x"></i>
     </div>
 
+    <div id="toast" class="toast-notification">
+        <i id="toast-icon" class="fas fa-check-circle"></i>
+        <p id="toast-message">Notification</p>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/dashboard.js"></script>
-    <script src="js/orders.js"></script>
-    <script src="js/products.js"></script>
-    <script src="js/categories.js"></script>
-    <script src="js/banners.js"></script>
-    <script src="js/gallery.js"></script>
-    <script src="js/history.js"></script>
-    <script src="js/content.js"></script>
+
+    <script>
+        // SCRIPT DARI app.js, auth.js, dashboard.js, orders.js, products.js, categories.js, banners.js, gallery.js, history.js, content.js DIMASUKKAN DI SINI
+
+        // --- app.js content start ---
+        // Firebase config (USE YOUR ACTUAL ADMIN PANEL'S API KEY - it's okay if different from client)
+const firebaseConfig = {
+  apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
+  authDomain: "lobster-shack-bali.firebaseapp.com",
+  databaseURL: "https://lobster-shack-bali-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "lobster-shack-bali",
+  storageBucket: "lobster-shack-bali.firebasestorage.app",
+  messagingSenderId: "42452974733",
+  appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
+};
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        const storage = firebase.storage();
+
+        // Global utility functions
+        const showSpinner = () => { document.getElementById('loading-spinner').style.display = 'block'; };
+        const hideSpinner = () => { document.getElementById('loading-spinner').style.display = 'none'; };
+
+        const showToast = (message, type = 'info') => {
+            const toast = document.getElementById('toast');
+            const toastIcon = document.getElementById('toast-icon');
+            const toastMessage = document.getElementById('toast-message');
+
+            if (!toast) { console.warn("Toast element not found."); return; }
+
+            toastMessage.textContent = message;
+            toast.className = 'toast-notification'; // Reset classes
+            toast.classList.add(type, 'show');
+
+            const iconMap = { 'success': 'fa-check-circle', 'error': 'fa-times-circle', 'info': 'fa-info-circle' };
+            toastIcon.className = `fas ${iconMap[type] || 'fa-info-circle'}`;
+
+            setTimeout(() => { toast.classList.remove('show'); }, 4000);
+        };
+
+        const showModal = (modalElement) => {
+            modalElement.classList.add('visible');
+        };
+
+        const hideModal = (modalElement) => {
+            modalElement.classList.remove('visible');
+        };
+
+        // Routing and section loading
+        const sections = document.querySelectorAll('.section-content');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const currentSectionTitle = document.getElementById('current-section-title');
+        const mobileNavToggle = document.getElementById('mobile-nav-toggle');
+        const sidebarNav = document.getElementById('sidebar-nav');
+        const body = document.body;
+
+        const loadSection = (sectionId) => {
+            showSpinner();
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            const targetSection = document.getElementById(`${sectionId}-section`);
+            const targetNavLink = document.querySelector(`[data-section="${sectionId}"]`);
+
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                currentSectionTitle.textContent = targetNavLink ? targetNavLink.textContent.trim() : sectionId.charAt(0).toUpperCase() + sectionId.slice(1);
+                targetNavLink && targetNavLink.classList.add('active');
+
+                // Call specific load functions for each section
+                switch (sectionId) {
+                    case 'dashboard':
+                        loadDashboard();
+                        break;
+                    case 'orders':
+                        loadOrders();
+                        break;
+                    case 'products':
+                        loadProducts();
+                        break;
+                    case 'categories':
+                        loadCategories();
+                        break;
+                    case 'banners':
+                        loadBanners();
+                        break;
+                    case 'gallery':
+                        loadGallery();
+                        break;
+                    case 'history':
+                        loadHistory();
+                        break;
+                    case 'content':
+                        loadContent();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            hideSpinner();
+        };
+
+        window.addEventListener('hashchange', () => {
+            const sectionId = window.location.hash.substring(1) || 'dashboard';
+            if (firebase.auth().currentUser) { // Only load sections if authenticated
+                loadSection(sectionId);
+            }
+            // Close mobile nav after hash change
+            if (sidebarNav.classList.contains('active')) {
+                mobileNavToggle.click();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile nav toggle
+            if (mobileNavToggle) {
+                mobileNavToggle.addEventListener('click', () => {
+                    sidebarNav.classList.toggle('active');
+                    mobileNavToggle.querySelector('i').classList.toggle('fa-bars');
+                    mobileNavToggle.querySelector('i').classList.toggle('fa-times');
+                    body.classList.toggle('nav-open'); // To prevent body scroll
+                });
+            }
+
+            // Close mobile nav when clicking a link inside it
+            if (sidebarNav) {
+                sidebarNav.addEventListener('click', (e) => {
+                    if (e.target.matches('.nav-link') || e.target.closest('.nav-link')) {
+                        if (sidebarNav.classList.contains('active')) {
+                            mobileNavToggle.click(); // Simulate click to close
+                        }
+                    }
+                });
+            }
+        });
+        // --- app.js content end ---
+
+        // --- auth.js content start ---
+        const loginForm = document.getElementById('login-form');
+        const loginEmailInput = document.getElementById('login-email');
+        const loginPasswordInput = document.getElementById('login-password');
+        const authErrorMessage = document.getElementById('auth-error-message');
+        const adminPanel = document.getElementById('admin-panel');
+        const authContainer = document.getElementById('auth-container');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // User is signed in, show admin panel
+                authContainer.style.display = 'none';
+                adminPanel.style.display = 'flex'; // Assuming flex layout for sidebar + main
+                // Ensure initial section is loaded based on hash or default to dashboard
+                const initialSection = window.location.hash.substring(1) || 'dashboard';
+                loadSection(initialSection);
+            } else {
+                // User is signed out, show login form
+                authContainer.style.display = 'block';
+                adminPanel.style.display = 'none';
+                // Clear any previous error messages
+                authErrorMessage.textContent = '';
+            }
+            hideSpinner(); // Hide spinner after auth state is determined
+        });
+
+        if (loginForm) {
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                showSpinner();
+                const email = loginEmailInput.value;
+                const password = loginPasswordInput.value;
+
+                auth.signInWithEmailAndPassword(email, password)
+                    .then((userCredential) => {
+                        // Signed in
+                        authErrorMessage.textContent = '';
+                        showToast("Login successful!", 'success');
+                        // The onAuthStateChanged listener will handle UI update
+                    })
+                    .catch((error) => {
+                        let errorMessage = "Login failed.";
+                        if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+                            errorMessage = "Invalid email or password.";
+                        } else {
+                            errorMessage = error.message;
+                        }
+                        authErrorMessage.textContent = errorMessage;
+                        showToast(errorMessage, 'error');
+                    })
+                    .finally(() => {
+                        hideSpinner();
+                    });
+            });
+        }
+
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                showSpinner();
+                auth.signOut()
+                    .then(() => {
+                        showToast("Logged out successfully!", 'success');
+                        window.location.hash = ''; // Clear hash
+                    })
+                    .catch((error) => {
+                        showToast(`Logout failed: ${error.message}`, 'error');
+                    })
+                    .finally(() => {
+                        hideSpinner();
+                    });
+            });
+        }
+
+        // How to create an admin user (run this ONCE in your browser console after logging in with a temporary account or after disabling auth rules temporarily for creation)
+        /*
+        setTimeout(() => { // Small delay to ensure Firebase is initialized
+            if (firebase.auth().currentUser) {
+                // If you're logged in as an admin, you can create more users here:
+                // Or if you temporarily relaxed rules to create the first one.
+                // BE CAREFUL: Only run this once!
+                firebase.auth().createUserWithEmailAndPassword("admin@example.com", "your_strong_admin_password_here")
+                    .then((userCredential) => {
+                        console.log("Admin user created:", userCredential.user);
+                    })
+                    .catch((error) => {
+                        console.error("Error creating admin user:", error.message);
+                    });
+            } else {
+                console.log("Not authenticated. Log in first to create an admin user via console.");
+            }
+        }, 2000);
+        */
+        // --- auth.js content end ---
+
+        // --- dashboard.js content start ---
+        const dashboardSection = document.getElementById('dashboard-section');
+
+        async function loadDashboard() {
+            showSpinner();
+            dashboardSection.innerHTML = `
+                <h2>Dashboard Overview</h2>
+                <div class="dashboard-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div class="stat-card" style="background-color: #e0f2f7; padding: 20px; border-radius: 8px; box-shadow: var(--shadow-sm);">
+                        <h3 style="color: var(--secondary-color); margin-bottom: 10px;">Total Orders</h3>
+                        <p style="font-size: 2.5rem; font-weight: 700; color: var(--primary-color);" id="total-orders-count">0</p>
+                    </div>
+                    <div class="stat-card" style="background-color: #e6f9ed; padding: 20px; border-radius: 8px; box-shadow: var(--shadow-sm);">
+                        <h3 style="color: var(--secondary-color); margin-bottom: 10px;">Total Products</h3>
+                        <p style="font-size: 2.5rem; font-weight: 700; color: var(--primary-color);" id="total-products-count">0</p>
+                    </div>
+                    <div class="stat-card" style="background-color: #fff3e0; padding: 20px; border-radius: 8px; box-shadow: var(--shadow-sm);">
+                        <h3 style="color: var(--secondary-color); margin-bottom: 10px;">New Orders (Today)</h3>
+                        <p style="font-size: 2.5rem; font-weight: 700; color: var(--primary-color);" id="new-orders-count">0</p>
+                    </div>
+                </div>
+
+                <div class="recent-orders" style="margin-top: 30px;">
+                    <h2>Recent Orders</h2>
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer Name</th>
+                                    <th>Total Amount</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-orders-table-body">
+                                <tr><td colspan="6" style="text-align: center;">Loading recent orders...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            const totalOrdersCount = document.getElementById('total-orders-count');
+            const totalProductsCount = document.getElementById('total-products-count');
+            const newOrdersCount = document.getElementById('new-orders-count');
+            const recentOrdersTableBody = document.getElementById('recent-orders-table-body');
+
+            try {
+                // Fetch total orders
+                const ordersSnapshot = await db.collection('orders').get();
+                totalOrdersCount.textContent = ordersSnapshot.size;
+
+                // Fetch total products
+                const productsSnapshot = await db.collection('products').get();
+                totalProductsCount.textContent = productsSnapshot.size;
+
+                // Fetch new orders today
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const tomorrow = new Date(today);
+                tomorrow.setDate(today.getDate() + 1);
+
+                const newOrdersSnapshot = await db.collection('orders')
+                    .where('timestamp', '>=', today)
+                    .where('timestamp', '<', tomorrow)
+                    .get();
+                newOrdersCount.textContent = newOrdersSnapshot.size;
+
+                // Fetch recent orders (e.g., last 5)
+                const recentOrdersSnapshot = await db.collection('orders')
+                    .orderBy('timestamp', 'desc')
+                    .limit(5)
+                    .get();
+
+                recentOrdersTableBody.innerHTML = '';
+                if (recentOrdersSnapshot.empty) {
+                    recentOrdersTableBody.innerHTML = `<tr><td colspan="6" style="text-align: center;">No recent orders.</td></tr>`;
+                } else {
+                    recentOrdersSnapshot.docs.forEach(doc => {
+                        const order = doc.data();
+                        const orderDate = order.timestamp ? new Date(order.timestamp.seconds * 1000).toLocaleString() : 'N/A';
+                        const row = recentOrdersTableBody.insertRow();
+                        row.innerHTML = `
+                            <td>${doc.id.substring(0, 6)}...</td>
+                            <td>${order.customerName}</td>
+                            <td>Rp ${new Intl.NumberFormat('id-ID').format(order.totalAmount)}</td>
+                            <td><span class="status-${order.status}">${order.status.toUpperCase()}</span></td>
+                            <td>${orderDate}</td>
+                            <td>
+                                <button class="btn btn-info view-order-btn" data-id="${doc.id}"><i class="fas fa-eye"></i> View</button>
+                            </td>
+                        `;
+                    });
+                }
+
+                // Add event listener for view order buttons (delegated)
+                recentOrdersTableBody.addEventListener('click', (e) => {
+                    const viewBtn = e.target.closest('.view-order-btn');
+                    if (viewBtn) {
+                        const orderId = viewBtn.dataset.id;
+                        // Use the viewOrderDetails function from orders.js
+                        if (typeof viewOrderDetails === 'function') {
+                            viewOrderDetails(orderId);
+                        } else {
+                            console.warn("viewOrderDetails function not found. Ensure orders.js is loaded correctly.");
+                        }
+                    }
+                });
+
+            } catch (error) {
+                console.error("Error loading dashboard data:", error);
+                showToast("Failed to load dashboard data.", 'error');
+            } finally {
+                hideSpinner();
+            }
+        }
+        // --- dashboard.js content end ---
+
+        // --- orders.js content start ---
+        const ordersSection = document.getElementById('orders-section');
+        let orderModal; // Will be defined when loadOrders is called
+        let currentOrderId = null; // To keep track of the order being viewed/edited
+
+        async function loadOrders() {
+            showSpinner();
+            ordersSection.innerHTML = `
+                <h2>Order Management</h2>
+                <div class="filters" style="margin-bottom: 20px;">
+                    <label for="order-status-filter">Filter by Status:</label>
+                    <select id="order-status-filter" style="padding: 8px; border-radius: 5px; border: 1px solid var(--border-color);">
+                        <option value="all">All</option>
+                        <option value="new">New</option>
+                        <option value="processing">Processing</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer Name</th>
+                                <th>Total Amount</th>
+                                <th>Status</th>
+                                <th>Order Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-table-body">
+                            <tr><td colspan="6" style="text-align: center;">Loading orders...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="order-details-modal" class="modal-overlay order-details-modal" style="display: none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Order Details (<span id="modal-order-id"></span>)</h3>
+                            <button class="modal-close-btn">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="order-summary">
+                                <p><strong>Customer Name:</strong> <span id="modal-customer-name"></span></p>
+                                <p><strong>Phone:</strong> <span id="modal-customer-phone"></span></p>
+                                <p><strong>Address:</strong> <span id="modal-customer-address"></span></p>
+                                <p><strong>Order Date:</strong> <span id="modal-order-date"></span></p>
+                                <p><strong>Subtotal:</strong> <span id="modal-order-subtotal"></span></p>
+                                <p><strong>Delivery Fee:</strong> <span id="modal-order-delivery-fee"></span></p>
+                                <p style="font-size: 1.2rem; font-weight: bold;"><strong>Total Amount:</strong> <span id="modal-order-total-amount"></span></p>
+                                <p><strong>Current Status:</strong> <span id="modal-order-status-text"></span></p>
+                            </div>
+
+                            <div class="order-items">
+                                <h4>Items:</h4>
+                                <div class="table-responsive">
+                                    <table class="admin-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Item</th>
+                                                <th>Quantity</th>
+                                                <th>Price</th>
+                                                <th>Subtotal</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="modal-order-items-body">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="order-status-update">Update Status:</label>
+                                <select id="order-status-update" class="order-status-select">
+                                    <option value="new">New</option>
+                                    <option value="processing">Processing</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                                <button id="update-order-status-btn" class="btn btn-primary" style="margin-left: 10px;">Update Status</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const ordersTableBody = document.getElementById('orders-table-body');
+            const orderStatusFilter = document.getElementById('order-status-filter');
+            orderModal = document.getElementById('order-details-modal');
+            const modalCloseBtn = orderModal.querySelector('.modal-close-btn');
+            const updateOrderStatusBtn = document.getElementById('update-order-status-btn');
+            const orderStatusUpdateSelect = document.getElementById('order-status-update');
+
+            // Listener for filter change
+            orderStatusFilter.addEventListener('change', () => {
+                renderOrders(orderStatusFilter.value);
+            });
+
+            // Initial render of orders
+            renderOrders('all');
+
+            // Close Modal event listeners
+            modalCloseBtn.addEventListener('click', () => {
+                hideModal(orderModal);
+            });
+            orderModal.addEventListener('click', (e) => {
+                if (e.target === orderModal) {
+                    hideModal(orderModal);
+                }
+            });
+
+            // Update order status button click
+            updateOrderStatusBtn.addEventListener('click', async () => {
+                if (!currentOrderId) return;
+                const newStatus = orderStatusUpdateSelect.value;
+                showSpinner();
+                try {
+                    await db.collection('orders').doc(currentOrderId).update({ status: newStatus });
+                    showToast(`Order ${currentOrderId.substring(0, 6)}... status updated to ${newStatus.toUpperCase()}.`, 'success');
+                    hideModal(orderModal);
+                    renderOrders(orderStatusFilter.value); // Re-render orders to show updated status
+                } catch (error) {
+                    console.error("Error updating order status:", error);
+                    showToast("Failed to update order status.", 'error');
+                } finally {
+                    hideSpinner();
+                }
+            });
+        }
+
+        async function renderOrders(filterStatus) {
+            showSpinner();
+            const ordersTableBody = document.getElementById('orders-table-body');
+            ordersTableBody.innerHTML = `<tr><td colspan="6" style="text-align: center;">Loading orders...</td></tr>`;
+
+            let query = db.collection('orders').orderBy('timestamp', 'desc');
+            if (filterStatus !== 'all') {
+                query = query.where('status', '==', filterStatus);
+            }
+
+            try {
+                const snapshot = await query.get();
+                ordersTableBody.innerHTML = '';
+                if (snapshot.empty) {
+                    ordersTableBody.innerHTML = `<tr><td colspan="6" style="text-align: center;">No orders found for this status.</td></tr>`;
+                } else {
+                    snapshot.docs.forEach(doc => {
+                        const order = doc.data();
+                        const orderDate = order.timestamp ? new Date(order.timestamp.seconds * 1000).toLocaleString() : 'N/A';
+                        const row = ordersTableBody.insertRow();
+                        row.innerHTML = `
+                            <td>${doc.id.substring(0, 8)}...</td>
+                            <td>${order.customerName}</td>
+                            <td>Rp ${new Intl.NumberFormat('id-ID').format(order.totalAmount)}</td>
+                            <td><span class="status-${order.status}">${order.status.toUpperCase()}</span></td>
+                            <td>${orderDate}</td>
+                            <td>
+                                <button class="btn btn-info view-order-btn" data-id="${doc.id}"><i class="fas fa-eye"></i> View</button>
+                            </td>
+                        `;
+                    });
+                }
+                // Add event listener for view order buttons (delegated)
+                ordersTableBody.querySelectorAll('.view-order-btn').forEach(btn => {
+                    btn.removeEventListener('click', handleViewOrderClick); // Remove old listener to prevent duplicates
+                    btn.addEventListener('click', handleViewOrderClick);
+                });
+
+            } catch (error) {
+                console.error("Error fetching orders:", error);
+                showToast("Failed to load orders.", 'error');
+            } finally {
+                hideSpinner();
+            }
+        }
+
+        async function handleViewOrderClick(e) {
+            const orderId = e.target.closest('button')?.dataset.id;
+            if (orderId) {
+                viewOrderDetails(orderId);
+            }
+        }
+
+        // Global function to be called from dashboard.js
+        window.viewOrderDetails = async (orderId) => {
+            showSpinner();
+            currentOrderId = orderId;
+            try {
+                const orderDoc = await db.collection('orders').doc(orderId).get();
+                if (orderDoc.exists) {
+                    const order = orderDoc.data();
+                    document.getElementById('modal-order-id').textContent = orderId.substring(0, 8);
+                    document.getElementById('modal-customer-name').textContent = order.customerName;
+                    document.getElementById('modal-customer-phone').textContent = order.customerPhone;
+                    document.getElementById('modal-customer-address').textContent = order.customerAddress;
+                    document.getElementById('modal-order-date').textContent = order.timestamp ? new Date(order.timestamp.seconds * 1000).toLocaleString() : 'N/A';
+                    document.getElementById('modal-order-subtotal').textContent = `Rp ${new Intl.NumberFormat('id-ID').format(order.subtotal)}`;
+                    document.getElementById('modal-order-delivery-fee').textContent = `Rp ${new Intl.NumberFormat('id-ID').format(order.deliveryFee)}`;
+                    document.getElementById('modal-order-total-amount').textContent = `Rp ${new Intl.NumberFormat('id-ID').format(order.totalAmount)}`;
+                    document.getElementById('modal-order-status-text').textContent = order.status.toUpperCase();
+                    document.getElementById('order-status-update').value = order.status;
+
+                    const modalOrderItemsBody = document.getElementById('modal-order-items-body');
+                    modalOrderItemsBody.innerHTML = '';
+                    order.orderDetails.forEach(item => {
+                        const row = modalOrderItemsBody.insertRow();
+                        row.innerHTML = `
+                            <td>${item.name}</td>
+                            <td>${item.quantity}</td>
+                            <td>Rp ${new Intl.NumberFormat('id-ID').format(item.price)}</td>
+                            <td>Rp ${new Intl.NumberFormat('id-ID').format(item.price * item.quantity)}</td>
+                        `;
+                    });
+                    showModal(orderModal);
+                } else {
+                    showToast("Order not found!", 'error');
+                }
+            } catch (error) {
+                console.error("Error fetching order details:", error);
+                showToast("Failed to load order details.", 'error');
+            } finally {
+                hideSpinner();
+            }
+        };
+        // --- orders.js content end ---
+
+        // --- products.js content start ---
+        const productsSection = document.getElementById('products-section');
+        let productModal; // Will be defined when loadProducts is called
+
+        async function loadProducts() {
+            showSpinner();
+            productsSection.innerHTML = `
+                <h2>Product Management</h2>
+                <button id="add-product-btn" class="btn btn-primary" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Add New Product</button>
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name (ID)</th>
+                                <th>Name (EN)</th>
+                                <th>Price</th>
+                                <th>Category</th>
+                                <th>Featured</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-table-body">
+                            </tbody>
+                    </table>
+                </div>
+
+                <div id="product-modal" class="modal-overlay">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 id="product-modal-title">Add/Edit Product</h3>
+                            <button class="modal-close-btn">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="product-form">
+                                <input type="hidden" id="product-id">
+                                <div class="form-group">
+                                    <label for="product-name-id">Name (Indonesian)</label>
+                                    <input type="text" id="product-name-id" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="product-name-en">Name (English)</label>
+                                    <input type="text" id="product-name-en" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="product-description-id">Description (Indonesian)</label>
+                                    <textarea id="product-description-id" rows="3"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="product-description-en">Description (English)</label>
+                                    <textarea id="product-description-en" rows="3"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="product-price">Price (Rp)</label>
+                                    <input type="number" id="product-price" required min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="product-category">Category</label>
+                                    <select id="product-category" required>
+                                        </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="product-image-upload">Product Image</label>
+                                    <input type="file" id="product-image-upload" accept="image/*">
+                                    <img id="product-current-image" src="" alt="Current Product Image" style="max-width: 150px; margin-top: 10px; display: none;">
+                                </div>
+                                <div class="form-group">
+                                    <input type="checkbox" id="product-is-featured">
+                                    <label for="product-is-featured">Featured Product</label>
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="save-product-btn">Save Product</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const productsTableBody = document.getElementById('products-table-body');
+            const addProductBtn = document.getElementById('add-product-btn');
+            productModal = document.getElementById('product-modal');
+            const productModalTitle = document.getElementById('product-modal-title');
+            const productForm = document.getElementById('product-form');
+            const productIdInput = document.getElementById('product-id');
+            const productNameIdInput = document.getElementById('product-name-id');
+            const productNameEnInput = document.getElementById('product-name-en');
+            const productDescriptionIdInput = document.getElementById('product-description-id');
+            const productDescriptionEnInput = document.getElementById('product-description-en');
+            const productPriceInput = document.getElementById('product-price');
+            const productCategorySelect = document.getElementById('product-category');
+            const productImageUploadInput = document.getElementById('product-image-upload');
+            const productCurrentImage = document.getElementById('product-current-image');
+            const productIsFeaturedInput = document.getElementById('product-is-featured');
+            const saveProductBtn = document.getElementById('save-product-btn');
+            const modalCloseBtn = productModal.querySelector('.modal-close-btn');
+
+            let currentImageUrl = ''; // To store current image URL for editing
+
+            // Populate categories
+            const categoriesSnapshot = await db.collection('categories').orderBy('id').get();
+            productCategorySelect.innerHTML = categoriesSnapshot.docs.map(doc => {
+                const category = doc.data();
+                return `<option value="${category.name}">${category.name}</option>`;
+            }).join('');
+
+            // Real-time listener for products
+            db.collection('products').onSnapshot(snapshot => {
+                productsTableBody.innerHTML = '';
+                if (snapshot.empty) {
+                    productsTableBody.innerHTML = `<tr><td colspan="7" style="text-align: center;">No products found.</td></tr>`;
+                } else {
+                    snapshot.docs.forEach(doc => {
+                        const product = doc.data();
+                        const row = productsTableBody.insertRow();
+                        row.innerHTML = `
+                            <td><img src="${product.imageUrl}" alt="${product.name_en}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;"></td>
+                            <td>${product.name_id}</td>
+                            <td>${product.name_en}</td>
+                            <td>Rp ${new Intl.NumberFormat('id-ID').format(product.price)}</td>
+                            <td>${product.category_name}</td>
+                            <td>${product.is_featured ? '<i class="fas fa-check-circle text-success"></i>' : '<i class="fas fa-times-circle text-danger"></i>'}</td>
+                            <td>
+                                <button class="btn btn-edit" data-id="${doc.id}"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-delete" data-id="${doc.id}"><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        `;
+                    });
+                }
+                hideSpinner();
+            }, error => {
+                console.error("Error fetching products: ", error);
+                showToast("Failed to load products.", 'error');
+                hideSpinner();
+            });
+
+            // Open Add Product Modal
+            addProductBtn.addEventListener('click', () => {
+                productForm.reset();
+                productIdInput.value = '';
+                productModalTitle.textContent = 'Add New Product';
+                productCurrentImage.style.display = 'none';
+                productCurrentImage.src = '';
+                currentImageUrl = '';
+                productImageUploadInput.required = true; // Image required for new product
+                showModal(productModal);
+            });
+
+            // Close Modal
+            modalCloseBtn.addEventListener('click', () => {
+                hideModal(productModal);
+            });
+            productModal.addEventListener('click', (e) => {
+                if (e.target === productModal) {
+                    hideModal(productModal);
+                }
+            });
+
+            // Handle Edit/Delete actions (delegated listener)
+            productsTableBody.addEventListener('click', async (e) => {
+                const id = e.target.closest('button')?.dataset.id;
+                if (!id) return;
+
+                if (e.target.closest('.btn-edit')) {
+                    showSpinner();
+                    const doc = await db.collection('products').doc(id).get();
+                    if (doc.exists) {
+                        const product = doc.data();
+                        productIdInput.value = doc.id;
+                        productNameIdInput.value = product.name_id;
+                        productNameEnInput.value = product.name_en;
+                        productDescriptionIdInput.value = product.description_id || '';
+                        productDescriptionEnInput.value = product.description_en || '';
+                        productPriceInput.value = product.price;
+                        productCategorySelect.value = product.category_name;
+                        productIsFeaturedInput.checked = product.is_featured;
+                        currentImageUrl = product.imageUrl;
+                        productCurrentImage.src = product.imageUrl;
+                        productCurrentImage.style.display = 'block';
+                        productImageUploadInput.required = false; // Not required when editing
+
+                        productModalTitle.textContent = 'Edit Product';
+                        showModal(productModal);
+                    } else {
+                        showToast("Product not found!", 'error');
+                    }
+                    hideSpinner();
+                } else if (e.target.closest('.btn-delete')) {
+                    if (confirm('Are you sure you want to delete this product?')) {
+                        showSpinner();
+                        try {
+                            const productDoc = await db.collection('products').doc(id).get();
+                            if (productDoc.exists && productDoc.data().imageUrl) {
+                                const imageUrl = productDoc.data().imageUrl;
+                                // Get path from URL and delete from storage
+                                const imageRef = storage.refFromURL(imageUrl);
+                                await imageRef.delete();
+                            }
+                            await db.collection('products').doc(id).delete();
+                            showToast("Product deleted successfully!", 'success');
+                        } catch (error) {
+                            console.error("Error deleting product: ", error);
+                            showToast(`Failed to delete product: ${error.message}`, 'error');
+                        } finally {
+                            hideSpinner();
+                        }
+                    }
+                }
+            });
+
+            // Handle Product Form Submission
+            productForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                saveProductBtn.disabled = true;
+                showSpinner();
+
+                const id = productIdInput.value;
+                const name_id = productNameIdInput.value;
+                const name_en = productNameEnInput.value;
+                const description_id = productDescriptionIdInput.value;
+                const description_en = productDescriptionEnInput.value;
+                const price = parseFloat(productPriceInput.value);
+                const category_name = productCategorySelect.value;
+                const is_featured = productIsFeaturedInput.checked;
+                const imageFile = productImageUploadInput.files[0];
+
+                let imageUrl = currentImageUrl; // Default to current image if no new one uploaded
+
+                try {
+                    if (imageFile) {
+                        const storageRef = storage.ref(`product_images/${Date.now()}_${imageFile.name}`);
+                        await storageRef.put(imageFile);
+                        imageUrl = await storageRef.getDownloadURL();
+
+                        // Delete old image if it exists and is different
+                        if (currentImageUrl && currentImageUrl !== imageUrl) {
+                            try {
+                                const oldImageRef = storage.refFromURL(currentImageUrl);
+                                await oldImageRef.delete();
+                            } catch (deleteError) {
+                                console.warn("Could not delete old image (might not exist or path issue):", deleteError.message);
+                            }
+                        }
+                    } else if (!id) { // If adding new product and no image selected
+                        showToast("Product image is required for new products.", 'error');
+                        return;
+                    }
+
+                    const productData = {
+                        name_id,
+                        name_en,
+                        description_id,
+                        description_en,
+                        price,
+                        category_name,
+                        is_featured,
+                        imageUrl,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp() // Add timestamp
+                    };
+
+                    if (id) {
+                        await db.collection('products').doc(id).update(productData);
+                        showToast("Product updated successfully!", 'success');
+                    } else {
+                        await db.collection('products').add(productData);
+                        showToast("Product added successfully!", 'success');
+                    }
+                    hideModal(productModal);
+                } catch (error) {
+                    console.error("Error saving product: ", error);
+                    showToast(`Failed to save product: ${error.message}`, 'error');
+                } finally {
+                    saveProductBtn.disabled = false;
+                    hideSpinner();
+                }
+            });
+        }
+        // --- products.js content end ---
+
+        // --- categories.js content start ---
+        const categoriesSection = document.getElementById('categories-section');
+        let categoryModal; // Will be defined when loadCategories is called
+
+        async function loadCategories() {
+            showSpinner();
+            categoriesSection.innerHTML = `
+                <h2>Category Management</h2>
+                <button id="add-category-btn" class="btn btn-primary" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Add New Category</button>
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Category Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categories-table-body">
+                            </tbody>
+                    </table>
+                </div>
+
+                <div id="category-modal" class="modal-overlay">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 id="category-modal-title">Add/Edit Category</h3>
+                            <button class="modal-close-btn">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="category-form">
+                                <input type="hidden" id="category-id-field">
+                                <div class="form-group">
+                                    <label for="category-name">Category Name</label>
+                                    <input type="text" id="category-name" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="save-category-btn">Save Category</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const categoriesTableBody = document.getElementById('categories-table-body');
+            const addCategoryBtn = document.getElementById('add-category-btn');
+            categoryModal = document.getElementById('category-modal');
+            const categoryModalTitle = document.getElementById('category-modal-title');
+            const categoryForm = document.getElementById('category-form');
+            const categoryIdField = document.getElementById('category-id-field');
+            const categoryNameInput = document.getElementById('category-name');
+            const saveCategoryBtn = document.getElementById('save-category-btn');
+            const modalCloseBtn = categoryModal.querySelector('.modal-close-btn');
+
+            // Real-time listener for categories
+            db.collection('categories').orderBy('id').onSnapshot(snapshot => {
+                categoriesTableBody.innerHTML = '';
+                if (snapshot.empty) {
+                    categoriesTableBody.innerHTML = `<tr><td colspan="2" style="text-align: center;">No categories found.</td></tr>`;
+                } else {
+                    snapshot.docs.forEach(doc => {
+                        const category = doc.data();
+                        const row = categoriesTableBody.insertRow();
+                        row.innerHTML = `
+                            <td>${category.name}</td>
+                            <td>
+                                <button class="btn btn-edit" data-id="${doc.id}" data-name="${category.name}"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-delete" data-id="${doc.id}"><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        `;
+                    });
+                }
+                hideSpinner();
+            }, error => {
+                console.error("Error fetching categories: ", error);
+                showToast("Failed to load categories.", 'error');
+                hideSpinner();
+            });
+
+            // Open Add Category Modal
+            addCategoryBtn.addEventListener('click', () => {
+                categoryForm.reset();
+                categoryIdField.value = '';
+                categoryModalTitle.textContent = 'Add New Category';
+                showModal(categoryModal);
+            });
+
+            // Close Modal
+            modalCloseBtn.addEventListener('click', () => {
+                hideModal(categoryModal);
+            });
+            categoryModal.addEventListener('click', (e) => {
+                if (e.target === categoryModal) {
+                    hideModal(categoryModal);
+                }
+            });
+
+            // Handle Edit/Delete actions (delegated listener)
+            categoriesTableBody.addEventListener('click', async (e) => {
+                const id = e.target.closest('button')?.dataset.id;
+                if (!id) return;
+
+                if (e.target.closest('.btn-edit')) {
+                    const name = e.target.closest('button').dataset.name;
+                    categoryIdField.value = id;
+                    categoryNameInput.value = name;
+                    categoryModalTitle.textContent = 'Edit Category';
+                    showModal(categoryModal);
+                } else if (e.target.closest('.btn-delete')) {
+                    if (confirm('Are you sure you want to delete this category? This will NOT delete products associated with it, but they might become unfilterable by category on the frontend unless you reassign them.')) {
+                        showSpinner();
+                        try {
+                            await db.collection('categories').doc(id).delete();
+                            showToast("Category deleted successfully!", 'success');
+                        } catch (error) {
+                            console.error("Error deleting category: ", error);
+                            showToast(`Failed to delete category: ${error.message}`, 'error');
+                        } finally {
+                            hideSpinner();
+                        }
+                    }
+                }
+            });
+
+            // Handle Category Form Submission
+            categoryForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                saveCategoryBtn.disabled = true;
+                showSpinner();
+
+                const id = categoryIdField.value;
+                const name = categoryNameInput.value.trim();
+
+                if (!name) {
+                    showToast("Category name cannot be empty.", 'error');
+                    saveCategoryBtn.disabled = false;
+                    hideSpinner();
+                    return;
+                }
+
+                try {
+                    if (id) {
+                        // Update existing
+                        await db.collection('categories').doc(id).update({ name: name });
+                        showToast("Category updated successfully!", 'success');
+                    } else {
+                        // Add new (Firestore will auto-generate ID)
+                        // You might want to also add a sequential 'id' field for sorting,
+                        // but for now, rely on Firestore doc ID or a simple order by name.
+                        await db.collection('categories').add({ name: name, id: Date.now() }); // Using timestamp as simple sort ID
+                        showToast("Category added successfully!", 'success');
+                    }
+                    hideModal(categoryModal);
+                } catch (error) {
+                    console.error("Error saving category: ", error);
+                    showToast(`Failed to save category: ${error.message}`, 'error');
+                } finally {
+                    saveCategoryBtn.disabled = false;
+                    hideSpinner();
+                }
+            });
+        }
+        // --- categories.js content end ---
+
+        // --- banners.js content start ---
+        const bannersSection = document.getElementById('banners-section');
+        let bannerModal; // Will be defined when loadBanners is called
+
+        async function loadBanners() {
+            showSpinner();
+            bannersSection.innerHTML = `
+                <h2>Banner Management</h2>
+                <button id="add-banner-btn" class="btn btn-primary" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Add New Banner</button>
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Sort Order</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="banners-table-body">
+                            </tbody>
+                    </table>
+                </div>
+
+                <div id="banner-modal" class="modal-overlay">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 id="banner-modal-title">Add/Edit Banner</h3>
+                            <button class="modal-close-btn">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="banner-form">
+                                <input type="hidden" id="banner-id">
+                                <div class="form-group">
+                                    <label for="banner-image-upload">Banner Image</label>
+                                    <input type="file" id="banner-image-upload" accept="image/*">
+                                    <img id="banner-current-image" src="" alt="Current Banner Image" style="max-width: 200px; margin-top: 10px; display: none;">
+                                </div>
+                                <div class="form-group">
+                                    <label for="banner-sort-order">Sort Order</label>
+                                    <input type="number" id="banner-sort-order" min="1" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="save-banner-btn">Save Banner</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const bannersTableBody = document.getElementById('banners-table-body');
+            const addBannerBtn = document.getElementById('add-banner-btn');
+            bannerModal = document.getElementById('banner-modal');
+            const bannerModalTitle = document.getElementById('banner-modal-title');
+            const bannerForm = document.getElementById('banner-form');
+            const bannerIdInput = document.getElementById('banner-id');
+            const bannerImageUploadInput = document.getElementById('banner-image-upload');
+            const bannerCurrentImage = document.getElementById('banner-current-image');
+            const bannerSortOrderInput = document.getElementById('banner-sort-order');
+            const saveBannerBtn = document.getElementById('save-banner-btn');
+            const modalCloseBtn = bannerModal.querySelector('.modal-close-btn');
+
+            let currentImageUrl = ''; // To store current image URL for editing
+
+            // Real-time listener for banners
+            db.collection('banners').orderBy('sort_order').onSnapshot(snapshot => {
+                bannersTableBody.innerHTML = '';
+                if (snapshot.empty) {
+                    bannersTableBody.innerHTML = `<tr><td colspan="3" style="text-align: center;">No banners found.</td></tr>`;
+                } else {
+                    snapshot.docs.forEach(doc => {
+                        const banner = doc.data();
+                        const row = bannersTableBody.insertRow();
+                        row.innerHTML = `
+                            <td><img src="${banner.image_url}" alt="Banner" style="width: 100px; height: 60px; object-fit: cover; border-radius: 5px;"></td>
+                            <td>${banner.sort_order}</td>
+                            <td>
+                                <button class="btn btn-edit" data-id="${doc.id}"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-delete" data-id="${doc.id}"><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        `;
+                    });
+                }
+                hideSpinner();
+            }, error => {
+                console.error("Error fetching banners: ", error);
+                showToast("Failed to load banners.", 'error');
+                hideSpinner();
+            });
+
+            // Open Add Banner Modal
+            addBannerBtn.addEventListener('click', () => {
+                bannerForm.reset();
+                bannerIdInput.value = '';
+                bannerModalTitle.textContent = 'Add New Banner';
+                bannerCurrentImage.style.display = 'none';
+                bannerCurrentImage.src = '';
+                currentImageUrl = '';
+                bannerImageUploadInput.required = true; // Image required for new banner
+                showModal(bannerModal);
+            });
+
+            // Close Modal
+            modalCloseBtn.addEventListener('click', () => {
+                hideModal(bannerModal);
+            });
+            bannerModal.addEventListener('click', (e) => {
+                if (e.target === bannerModal) {
+                    hideModal(bannerModal);
+                }
+            });
+
+            // Handle Edit/Delete actions (delegated listener)
+            bannersTableBody.addEventListener('click', async (e) => {
+                const id = e.target.closest('button')?.dataset.id;
+                if (!id) return;
+
+                if (e.target.closest('.btn-edit')) {
+                    showSpinner();
+                    const doc = await db.collection('banners').doc(id).get();
+                    if (doc.exists) {
+                        const banner = doc.data();
+                        bannerIdInput.value = doc.id;
+                        bannerSortOrderInput.value = banner.sort_order;
+                        currentImageUrl = banner.image_url;
+                        bannerCurrentImage.src = banner.image_url;
+                        bannerCurrentImage.style.display = 'block';
+                        bannerImageUploadInput.required = false; // Not required when editing
+
+                        bannerModalTitle.textContent = 'Edit Banner';
+                        showModal(bannerModal);
+                    } else {
+                        showToast("Banner not found!", 'error');
+                    }
+                    hideSpinner();
+                } else if (e.target.closest('.btn-delete')) {
+                    if (confirm('Are you sure you want to delete this banner?')) {
+                        showSpinner();
+                        try {
+                            const bannerDoc = await db.collection('banners').doc(id).get();
+                            if (bannerDoc.exists && bannerDoc.data().image_url) {
+                                const imageUrl = bannerDoc.data().image_url;
+                                const imageRef = storage.refFromURL(imageUrl);
+                                await imageRef.delete();
+                            }
+                            await db.collection('banners').doc(id).delete();
+                            showToast("Banner deleted successfully!", 'success');
+                        } catch (error) {
+                            console.error("Error deleting banner: ", error);
+                            showToast(`Failed to delete banner: ${error.message}`, 'error');
+                        } finally {
+                            hideSpinner();
+                        }
+                    }
+                }
+            });
+
+            // Handle Banner Form Submission
+            bannerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                saveBannerBtn.disabled = true;
+                showSpinner();
+
+                const id = bannerIdInput.value;
+                const sort_order = parseInt(bannerSortOrderInput.value);
+                const imageFile = bannerImageUploadInput.files[0];
+
+                let imageUrl = currentImageUrl; // Default to current image if no new one uploaded
+
+                try {
+                    if (imageFile) {
+                        const storageRef = storage.ref(`banner_images/${Date.now()}_${imageFile.name}`);
+                        await storageRef.put(imageFile);
+                        imageUrl = await storageRef.getDownloadURL();
+
+                        // Delete old image if it exists and is different
+                        if (currentImageUrl && currentImageUrl !== imageUrl) {
+                            try {
+                                const oldImageRef = storage.refFromURL(currentImageUrl);
+                                await oldImageRef.delete();
+                            } catch (deleteError) {
+                                console.warn("Could not delete old image (might not exist or path issue):", deleteError.message);
+                            }
+                        }
+                    } else if (!id) { // If adding new banner and no image selected
+                        showToast("Banner image is required for new banners.", 'error');
+                        return;
+                    }
+
+                    const bannerData = {
+                        sort_order,
+                        image_url: imageUrl,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+
+                    if (id) {
+                        await db.collection('banners').doc(id).update(bannerData);
+                        showToast("Banner updated successfully!", 'success');
+                    } else {
+                        await db.collection('banners').add(bannerData);
+                        showToast("Banner added successfully!", 'success');
+                    }
+                    hideModal(bannerModal);
+                } catch (error) {
+                    console.error("Error saving banner: ", error);
+                    showToast(`Failed to save banner: ${error.message}`, 'error');
+                } finally {
+                    saveBannerBtn.disabled = false;
+                    hideSpinner();
+                }
+            });
+        }
+        // --- banners.js content end ---
+
+        // --- gallery.js content start ---
+        const gallerySection = document.getElementById('gallery-section');
+        let galleryModal; // Will be defined when loadGallery is called
+
+        async function loadGallery() {
+            showSpinner();
+            gallerySection.innerHTML = `
+                <h2>Gallery Management</h2>
+                <button id="add-gallery-btn" class="btn btn-primary" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Add New Gallery Image</button>
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Caption (ID)</th>
+                                <th>Caption (EN)</th>
+                                <th>Sort Order</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gallery-table-body">
+                            </tbody>
+                    </table>
+                </div>
+
+                <div id="gallery-modal" class="modal-overlay">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 id="gallery-modal-title">Add/Edit Gallery Image</h3>
+                            <button class="modal-close-btn">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="gallery-form">
+                                <input type="hidden" id="gallery-id">
+                                <div class="form-group">
+                                    <label for="gallery-image-upload">Gallery Image</label>
+                                    <input type="file" id="gallery-image-upload" accept="image/*">
+                                    <img id="gallery-current-image" src="" alt="Current Gallery Image" style="max-width: 200px; margin-top: 10px; display: none;">
+                                </div>
+                                <div class="form-group">
+                                    <label for="gallery-caption-id">Caption (Indonesian)</label>
+                                    <textarea id="gallery-caption-id" rows="2"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="gallery-caption-en">Caption (English)</label>
+                                    <textarea id="gallery-caption-en" rows="2"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="gallery-sort-order">Sort Order</label>
+                                    <input type="number" id="gallery-sort-order" min="1" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="save-gallery-btn">Save Gallery Image</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const galleryTableBody = document.getElementById('gallery-table-body');
+            const addGalleryBtn = document.getElementById('add-gallery-btn');
+            galleryModal = document.getElementById('gallery-modal');
+            const galleryModalTitle = document.getElementById('gallery-modal-title');
+            const galleryForm = document.getElementById('gallery-form');
+            const galleryIdInput = document.getElementById('gallery-id');
+            const galleryImageUploadInput = document.getElementById('gallery-image-upload');
+            const galleryCurrentImage = document.getElementById('gallery-current-image');
+            const galleryCaptionIdInput = document.getElementById('gallery-caption-id');
+            const galleryCaptionEnInput = document.getElementById('gallery-caption-en');
+            const gallerySortOrderInput = document.getElementById('gallery-sort-order');
+            const saveGalleryBtn = document.getElementById('save-gallery-btn');
+            const modalCloseBtn = galleryModal.querySelector('.modal-close-btn');
+
+            let currentImageUrl = ''; // To store current image URL for editing
+
+            // Real-time listener for gallery images
+            db.collection('gallery_images').orderBy('sort_order').onSnapshot(snapshot => {
+                galleryTableBody.innerHTML = '';
+                if (snapshot.empty) {
+                    galleryTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center;">No gallery images found.</td></tr>`;
+                } else {
+                    snapshot.docs.forEach(doc => {
+                        const image = doc.data();
+                        const row = galleryTableBody.insertRow();
+                        row.innerHTML = `
+                            <td><img src="${image.image_url}" alt="${image.caption_en}" style="width: 80px; height: 50px; object-fit: cover; border-radius: 5px;"></td>
+                            <td>${image.caption_id || 'N/A'}</td>
+                            <td>${image.caption_en || 'N/A'}</td>
+                            <td>${image.sort_order}</td>
+                            <td>
+                                <button class="btn btn-edit" data-id="${doc.id}"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-delete" data-id="${doc.id}"><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        `;
+                    });
+                }
+                hideSpinner();
+            }, error => {
+                console.error("Error fetching gallery images: ", error);
+                showToast("Failed to load gallery images.", 'error');
+                hideSpinner();
+            });
+
+            // Open Add Gallery Modal
+            addGalleryBtn.addEventListener('click', () => {
+                galleryForm.reset();
+                galleryIdInput.value = '';
+                galleryModalTitle.textContent = 'Add New Gallery Image';
+                galleryCurrentImage.style.display = 'none';
+                galleryCurrentImage.src = '';
+                currentImageUrl = '';
+                galleryImageUploadInput.required = true; // Image required for new
+                showModal(galleryModal);
+            });
+
+            // Close Modal
+            modalCloseBtn.addEventListener('click', () => {
+                hideModal(galleryModal);
+            });
+            galleryModal.addEventListener('click', (e) => {
+                if (e.target === galleryModal) {
+                    hideModal(galleryModal);
+                }
+            });
+
+            // Handle Edit/Delete actions (delegated listener)
+            galleryTableBody.addEventListener('click', async (e) => {
+                const id = e.target.closest('button')?.dataset.id;
+                if (!id) return;
+
+                if (e.target.closest('.btn-edit')) {
+                    showSpinner();
+                    const doc = await db.collection('gallery_images').doc(id).get();
+                    if (doc.exists) {
+                        const image = doc.data();
+                        galleryIdInput.value = doc.id;
+                        galleryCaptionIdInput.value = image.caption_id || '';
+                        galleryCaptionEnInput.value = image.caption_en || '';
+                        gallerySortOrderInput.value = image.sort_order;
+                        currentImageUrl = image.image_url;
+                        galleryCurrentImage.src = image.image_url;
+                        galleryCurrentImage.style.display = 'block';
+                        galleryImageUploadInput.required = false; // Not required when editing
+
+                        galleryModalTitle.textContent = 'Edit Gallery Image';
+                        showModal(galleryModal);
+                    } else {
+                        showToast("Gallery image not found!", 'error');
+                    }
+                    hideSpinner();
+                } else if (e.target.closest('.btn-delete')) {
+                    if (confirm('Are you sure you want to delete this gallery image?')) {
+                        showSpinner();
+                        try {
+                            const imageDoc = await db.collection('gallery_images').doc(id).get();
+                            if (imageDoc.exists && imageDoc.data().image_url) {
+                                const imageUrl = imageDoc.data().image_url;
+                                const imageRef = storage.refFromURL(imageUrl);
+                                await imageRef.delete();
+                            }
+                            await db.collection('gallery_images').doc(id).delete();
+                            showToast("Gallery image deleted successfully!", 'success');
+                        } catch (error) {
+                            console.error("Error deleting gallery image: ", error);
+                            showToast(`Failed to delete gallery image: ${error.message}`, 'error');
+                        } finally {
+                            hideSpinner();
+                        }
+                    }
+                }
+            });
+
+            // Handle Gallery Form Submission
+            galleryForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                saveGalleryBtn.disabled = true;
+                showSpinner();
+
+                const id = galleryIdInput.value;
+                const caption_id = galleryCaptionIdInput.value.trim();
+                const caption_en = galleryCaptionEnInput.value.trim();
+                const sort_order = parseInt(gallerySortOrderInput.value);
+                const imageFile = galleryImageUploadInput.files[0];
+
+                let imageUrl = currentImageUrl; // Default to current image if no new one uploaded
+
+                try {
+                    if (imageFile) {
+                        const storageRef = storage.ref(`gallery_images/${Date.now()}_${imageFile.name}`);
+                        await storageRef.put(imageFile);
+                        imageUrl = await storageRef.getDownloadURL();
+
+                        // Delete old image if it exists and is different
+                        if (currentImageUrl && currentImageUrl !== imageUrl) {
+                            try {
+                                const oldImageRef = storage.refFromURL(currentImageUrl);
+                                await oldImageRef.delete();
+                            } catch (deleteError) {
+                                console.warn("Could not delete old image (might not exist or path issue):", deleteError.message);
+                            }
+                        }
+                    } else if (!id) { // If adding new and no image uploaded
+                        showToast("Gallery image is required for new entries.", 'error');
+                        return;
+                    }
+
+                    const imageData = {
+                        caption_id,
+                        caption_en,
+                        sort_order,
+                        image_url: imageUrl,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+
+                    if (id) {
+                        await db.collection('gallery_images').doc(id).update(imageData);
+                        showToast("Gallery image updated successfully!", 'success');
+                    } else {
+                        await db.collection('gallery_images').add(imageData);
+                        showToast("Gallery image added successfully!", 'success');
+                    }
+                    hideModal(galleryModal);
+                } catch (error) {
+                    console.error("Error saving gallery image: ", error);
+                    showToast(`Failed to save gallery image: ${error.message}`, 'error');
+                } finally {
+                    saveGalleryBtn.disabled = false;
+                    hideSpinner();
+                }
+            });
+        }
+        // --- gallery.js content end ---
+
+        // --- history.js content start ---
+        const historySection = document.getElementById('history-section');
+        let historyModal; // Will be defined when loadHistory is called
+
+        async function loadHistory() {
+            showSpinner();
+            historySection.innerHTML = `
+                <h2>History Management</h2>
+                <button id="add-history-btn" class="btn btn-primary" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Add New History Item</button>
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Year</th>
+                                <th>Title (ID)</th>
+                                <th>Title (EN)</th>
+                                <th>Sort Order</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body">
+                            </tbody>
+                    </table>
+                </div>
+
+                <div id="history-modal" class="modal-overlay">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 id="history-modal-title">Add/Edit History Item</h3>
+                            <button class="modal-close-btn">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="history-form">
+                                <input type="hidden" id="history-id">
+                                <div class="form-group">
+                                    <label for="history-year">Year</label>
+                                    <input type="number" id="history-year" required min="1900" max="2100">
+                                </div>
+                                <div class="form-group">
+                                    <label for="history-title-id">Title (Indonesian)</label>
+                                    <input type="text" id="history-title-id" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="history-title-en">Title (English)</label>
+                                    <input type="text" id="history-title-en" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="history-text-id">Text (Indonesian)</label>
+                                    <textarea id="history-text-id" rows="3"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="history-text-en">Text (English)</label>
+                                    <textarea id="history-text-en" rows="3"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="history-sort-order">Sort Order</label>
+                                    <input type="number" id="history-sort-order" min="1" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="save-history-btn">Save History Item</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const historyTableBody = document.getElementById('history-table-body');
+            const addHistoryBtn = document.getElementById('add-history-btn');
+            historyModal = document.getElementById('history-modal');
+            const historyModalTitle = document.getElementById('history-modal-title');
+            const historyForm = document.getElementById('history-form');
+            const historyIdInput = document.getElementById('history-id');
+            const historyYearInput = document.getElementById('history-year');
+            const historyTitleIdInput = document.getElementById('history-title-id');
+            const historyTitleEnInput = document.getElementById('history-title-en');
+            const historyTextIdInput = document.getElementById('history-text-id');
+            const historyTextEnInput = document.getElementById('history-text-en');
+            const historySortOrderInput = document.getElementById('history-sort-order');
+            const saveHistoryBtn = document.getElementById('save-history-btn');
+            const modalCloseBtn = historyModal.querySelector('.modal-close-btn');
+
+            // Real-time listener for history items
+            db.collection('history').orderBy('sort_order').onSnapshot(snapshot => {
+                historyTableBody.innerHTML = '';
+                if (snapshot.empty) {
+                    historyTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center;">No history items found.</td></tr>`;
+                } else {
+                    snapshot.docs.forEach(doc => {
+                        const item = doc.data();
+                        const row = historyTableBody.insertRow();
+                        row.innerHTML = `
+                            <td>${item.year}</td>
+                            <td>${item.title_id || 'N/A'}</td>
+                            <td>${item.title_en || 'N/A'}</td>
+                            <td>${item.sort_order}</td>
+                            <td>
+                                <button class="btn btn-edit" data-id="${doc.id}"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-delete" data-id="${doc.id}"><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        `;
+                    });
+                }
+                hideSpinner();
+            }, error => {
+                console.error("Error fetching history items: ", error);
+                showToast("Failed to load history items.", 'error');
+                hideSpinner();
+            });
+
+            // Open Add History Modal
+            addHistoryBtn.addEventListener('click', () => {
+                historyForm.reset();
+                historyIdInput.value = '';
+                historyModalTitle.textContent = 'Add New History Item';
+                showModal(historyModal);
+            });
+
+            // Close Modal
+            modalCloseBtn.addEventListener('click', () => {
+                hideModal(historyModal);
+            });
+            historyModal.addEventListener('click', (e) => {
+                if (e.target === historyModal) {
+                    hideModal(historyModal);
+                }
+            });
+
+            // Handle Edit/Delete actions (delegated listener)
+            historyTableBody.addEventListener('click', async (e) => {
+                const id = e.target.closest('button')?.dataset.id;
+                if (!id) return;
+
+                if (e.target.closest('.btn-edit')) {
+                    showSpinner();
+                    const doc = await db.collection('history').doc(id).get();
+                    if (doc.exists) {
+                        const item = doc.data();
+                        historyIdInput.value = doc.id;
+                        historyYearInput.value = item.year;
+                        historyTitleIdInput.value = item.title_id || '';
+                        historyTitleEnInput.value = item.title_en || '';
+                        historyTextIdInput.value = item.text_id || '';
+                        historyTextEnInput.value = item.text_en || '';
+                        historySortOrderInput.value = item.sort_order;
+
+                        historyModalTitle.textContent = 'Edit History Item';
+                        showModal(historyModal);
+                    } else {
+                        showToast("History item not found!", 'error');
+                    }
+                    hideSpinner();
+                } else if (e.target.closest('.btn-delete')) {
+                    if (confirm('Are you sure you want to delete this history item?')) {
+                        showSpinner();
+                        try {
+                            await db.collection('history').doc(id).delete();
+                            showToast("History item deleted successfully!", 'success');
+                        } catch (error) {
+                            console.error("Error deleting history item: ", error);
+                            showToast(`Failed to delete history item: ${error.message}`, 'error');
+                        } finally {
+                            hideSpinner();
+                        }
+                    }
+                }
+            });
+
+            // Handle History Form Submission
+            historyForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                saveHistoryBtn.disabled = true;
+                showSpinner();
+
+                const id = historyIdInput.value;
+                const year = parseInt(historyYearInput.value);
+                const title_id = historyTitleIdInput.value.trim();
+                const title_en = historyTitleEnInput.value.trim();
+                const text_id = historyTextIdInput.value.trim();
+                const text_en = historyTextEnInput.value.trim();
+                const sort_order = parseInt(historySortOrderInput.value);
+
+                if (isNaN(year) || isNaN(sort_order) || !title_id || !title_en) {
+                    showToast("Please fill all required fields correctly.", 'error');
+                    saveHistoryBtn.disabled = false;
+                    hideSpinner();
+                    return;
+                }
+
+                const historyData = {
+                    year,
+                    title_id,
+                    title_en,
+                    text_id,
+                    text_en,
+                    sort_order,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                try {
+                    if (id) {
+                        await db.collection('history').doc(id).update(historyData);
+                        showToast("History item updated successfully!", 'success');
+                    } else {
+                        await db.collection('history').add(historyData);
+                        showToast("History item added successfully!", 'success');
+                    }
+                    hideModal(historyModal);
+                } catch (error) {
+                    console.error("Error saving history item: ", error);
+                    showToast(`Failed to save history item: ${error.message}`, 'error');
+                } finally {
+                    saveHistoryBtn.disabled = false;
+                    hideSpinner();
+                }
+            });
+        }
+        // --- history.js content end ---
+
+        // --- content.js content start ---
+        const contentSection = document.getElementById('content-section');
+        let contentModal; // Will be defined when loadContent is called
+
+        async function loadContent() {
+            showSpinner();
+            contentSection.innerHTML = `
+                <h2>Static Content Management (ID & EN)</h2>
+                <p style="margin-bottom: 20px; color: var(--text-light-color);">
+                    Manage translatable text content for the main website. Each item has an Indonesian and English version.
+                </p>
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Content Key</th>
+                                <th>Text (ID)</th>
+                                <th>Text (EN)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="content-table-body">
+                            </tbody>
+                    </table>
+                </div>
+
+                <div id="content-modal" class="modal-overlay">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 id="content-modal-title">Edit Content</h3>
+                            <button class="modal-close-btn">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="content-form">
+                                <input type="hidden" id="content-id">
+                                <div class="form-group">
+                                    <label for="content-key">Content Key (Not Editable)</label>
+                                    <input type="text" id="content-key" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="content-text-id">Text (Indonesian)</label>
+                                    <textarea id="content-text-id" rows="3" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="content-text-en">Text (English)</label>
+                                    <textarea id="content-text-en" rows="3" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="save-content-btn">Save Content</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const contentTableBody = document.getElementById('content-table-body');
+            contentModal = document.getElementById('content-modal');
+            const contentModalTitle = document.getElementById('content-modal-title');
+            const contentForm = document.getElementById('content-form');
+            const contentIdInput = document.getElementById('content-id');
+            const contentKeyInput = document.getElementById('content-key');
+            const contentTextIdInput = document.getElementById('content-text-id');
+            const contentTextEnInput = document.getElementById('content-text-en');
+            const saveContentBtn = document.getElementById('save-content-btn');
+            const modalCloseBtn = contentModal.querySelector('.modal-close-btn');
+
+            // Real-time listener for content items
+            db.collection('content').onSnapshot(snapshot => {
+                contentTableBody.innerHTML = '';
+                if (snapshot.empty) {
+                    contentTableBody.innerHTML = `<tr><td colspan="4" style="text-align: center;">No content items found.</td></tr>`;
+                } else {
+                    snapshot.docs.forEach(doc => {
+                        const content = doc.data();
+                        const row = contentTableBody.insertRow();
+                        row.innerHTML = `
+                            <td><strong>${doc.id}</strong></td>
+                            <td>${content.text_id || 'N/A'}</td>
+                            <td>${content.text_en || 'N/A'}</td>
+                            <td>
+                                <button class="btn btn-edit" data-id="${doc.id}"><i class="fas fa-edit"></i></button>
+                            </td>
+                        `;
+                    });
+                }
+                hideSpinner();
+            }, error => {
+                console.error("Error fetching content: ", error);
+                showToast("Failed to load content.", 'error');
+                hideSpinner();
+            });
+
+            // Close Modal
+            modalCloseBtn.addEventListener('click', () => {
+                hideModal(contentModal);
+            });
+            contentModal.addEventListener('click', (e) => {
+                if (e.target === contentModal) {
+                    hideModal(contentModal);
+                }
+            });
+
+            // Handle Edit action (delegated listener)
+            contentTableBody.addEventListener('click', async (e) => {
+                const id = e.target.closest('button')?.dataset.id;
+                if (!id) return;
+
+                if (e.target.closest('.btn-edit')) {
+                    showSpinner();
+                    const doc = await db.collection('content').doc(id).get();
+                    if (doc.exists) {
+                        const content = doc.data();
+                        contentIdInput.value = doc.id;
+                        contentKeyInput.value = doc.id; // Content Key is the Doc ID
+                        contentTextIdInput.value = content.text_id || '';
+                        contentTextEnInput.value = content.text_en || '';
+
+                        contentModalTitle.textContent = `Edit Content: ${doc.id}`;
+                        showModal(contentModal);
+                    } else {
+                        showToast("Content item not found!", 'error');
+                    }
+                    hideSpinner();
+                }
+            });
+
+            // Handle Content Form Submission
+            contentForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                saveContentBtn.disabled = true;
+                showSpinner();
+
+                const id = contentIdInput.value;
+                const text_id = contentTextIdInput.value.trim();
+                const text_en = contentTextEnInput.value.trim();
+
+                if (!text_id || !text_en) {
+                    showToast("Both Indonesian and English text are required.", 'error');
+                    saveContentBtn.disabled = false;
+                    hideSpinner();
+                    return;
+                }
+
+                const contentData = {
+                    text_id,
+                    text_en,
+                    last_updated: firebase.firestore.FieldValue.serverTimestamp() // Add update timestamp
+                };
+
+                try {
+                    await db.collection('content').doc(id).update(contentData);
+                    showToast("Content updated successfully!", 'success');
+                    hideModal(contentModal);
+                } catch (error) {
+                    console.error("Error saving content: ", error);
+                    showToast(`Failed to save content: ${error.message}`, 'error');
+                } finally {
+                    saveContentBtn.disabled = false;
+                    hideSpinner();
+                }
+            });
+        }
+        // --- content.js content end ---
+
+    </script>
 </body>
 </html>
