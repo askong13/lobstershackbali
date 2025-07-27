@@ -11,6 +11,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
     <style>
+        /*
+         * --- ADMIN PANEL STYLING ---
+         * Ini adalah CSS yang Anda sediakan sebelumnya.
+         * Tidak ada perubahan di bagian ini.
+         */
         :root {
             --ls-font-heading: 'Playfair Display', serif;
             --ls-font-body: 'Poppins', sans-serif;
@@ -753,6 +758,7 @@
             </div>
         </div>
     </div>
+
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -761,9 +767,13 @@
     <script>
     'use strict';
 
-    // 🔑 ======================================================================
-    // PASTIKAN BAGIAN INI SUDAH BENAR SESUAI PROJECT FIREBASE ANDA
-    // Salin dari: Project Settings > General > Your apps > Firebase SDK snippet > Config
+    // ======================================================================
+    // 🔑 PENTING: ISI DENGAN KONFIGURASI FIREBASE PROJECT ANDA!
+    // Anda bisa mendapatkan ini dari:
+    // Firebase Console > Project Settings (ikon roda gigi) > General > Your apps
+    // Cari bagian "Firebase SDK snippet" dan pilih "Config".
+    // Salin OBJEK `firebaseConfig` dan tempelkan di bawah ini.
+    // ========================================================================
     const firebaseConfig = {
   apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
   authDomain: "lobster-shack-bali.firebaseapp.com",
@@ -796,7 +806,7 @@
             if (user) {
                 authContainer.style.display = 'none';
                 adminContainer.style.display = 'flex';
-                initAdminPanel();
+                initAdminPanel(); // Inisialisasi panel admin saat user login
             } else {
                 authContainer.style.display = 'flex';
                 adminContainer.style.display = 'none';
@@ -829,8 +839,10 @@
         }
         
         // --- Global Data Arrays ---
+        // Data akan disimpan di sini setelah dimuat dari Firestore
         let productsData = [], categoriesData = [], contentData = [], bannersData = [], galleryData = [], historyData = [];
         
+        // Memuat semua data dari Firestore secara paralel
         async function loadAllData() {
             try {
                 await Promise.all([
@@ -841,20 +853,23 @@
                     loadProducts(),
                     loadContent(),
                 ]);
+                // Render data ke tabel setelah semua berhasil dimuat
                 renderBanners();
                 renderGallery();
                 renderHistory();
                 renderProducts();
                 renderCategories();
                 renderContent();
-                populateCategoryDropdown();
+                populateCategoryDropdown(); // Mengisi dropdown kategori untuk form produk
             } catch (err) {
+                // Tangani error jika ada masalah saat memuat data
                 console.error("Gagal memuat data awal:", err);
                 alert("Tidak dapat memuat data dari database. Pastikan konfigurasi dan aturan keamanan Firebase sudah benar. Periksa console (F12) untuk detail error.");
             }
         }
         
         // --- Navigation ---
+        // Menyiapkan navigasi sidebar dan pergantian halaman
         function setupNavigation() {
             const navLinks = document.querySelectorAll('.sidebar-nav a, .logout-btn');
             const pages = document.querySelectorAll('.page');
@@ -903,6 +918,7 @@
         }
         
         // --- Modal Handling ---
+        // Menyiapkan fungsi untuk membuka/menutup modal
         function setupModals() {
             document.querySelectorAll('.modal-overlay').forEach(modal => {
                 modal.addEventListener('click', e => {
@@ -920,6 +936,7 @@
         function closeModal(modalId) { document.getElementById(modalId).classList.remove('visible'); }
         
         // --- Image Preview Handling ---
+        // Menyiapkan pratinjau gambar saat memilih file
         function setupImagePreviews() {
             const handleFileChange = (inputId, previewId) => {
                 document.getElementById(inputId).addEventListener('change', (e) => {
@@ -941,6 +958,7 @@
         }
 
         // --- Data Fetching ---
+        // Fungsi generik untuk memuat data dari koleksi tertentu
         async function loadCollection(name, orderByField, orderDirection = 'asc') {
             let query = db.collection(name);
             if (orderByField) {
@@ -950,14 +968,16 @@
             return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         }
 
+        // Fungsi spesifik untuk memuat setiap koleksi
         async function loadProducts() { productsData = await loadCollection('products', 'name_en'); }
         async function loadCategories() { categoriesData = await loadCollection('categories', 'id'); }
         async function loadContent() { contentData = await loadCollection('content'); }
         async function loadBanners() { bannersData = await loadCollection('banners', 'sort_order'); }
-        async function loadGallery() { galleryData = await loadCollection('gallery_images', 'sort_order'); }
+        async function loadGallery() { galleryData = await loadCollection('gallery_images', 'sort_order'); } // Menggunakan gallery_images
         async function loadHistory() { historyData = await loadCollection('history', 'sort_order', 'desc'); }
         
         // --- Rendering ---
+        // Fungsi generik untuk merender data ke tabel HTML
         const renderTable = (tableId, data, rowRenderer) => {
             const tbody = document.querySelector(`#${tableId} tbody`);
             tbody.innerHTML = data.map(rowRenderer).join('');
@@ -965,7 +985,8 @@
 
         const getImageUrl = (url) => url || 'https://via.placeholder.com/100x60?text=No+Image';
 
-        renderBanners = () => renderTable('banners-table', bannersData, b => `
+        // Fungsi spesifik untuk merender setiap tabel
+        let renderBanners = () => renderTable('banners-table', bannersData, b => `
             <tr>
                 <td><img src="${getImageUrl(b.image_url)}" alt="Banner" class="thumb-image"></td>
                 <td>${b.sort_order}</td>
@@ -977,7 +998,7 @@
                 </td>
             </tr>`);
 
-        renderGallery = () => renderTable('gallery-table', galleryData, g => `
+        let renderGallery = () => renderTable('gallery-table', galleryData, g => `
             <tr>
                 <td><img src="${getImageUrl(g.image_url)}" alt="Gallery" class="thumb-image"></td>
                 <td>${g.sort_order}</td>
@@ -990,7 +1011,7 @@
                 </td>
             </tr>`);
 
-        renderHistory = () => renderTable('history-table', historyData, h => `
+        let renderHistory = () => renderTable('history-table', historyData, h => `
             <tr>
                 <td>${h.sort_order}</td>
                 <td>${h.year}</td>
@@ -1003,7 +1024,7 @@
                 </td>
             </tr>`);
         
-        renderProducts = () => renderTable('products-table', productsData, p => `
+        let renderProducts = () => renderTable('products-table', productsData, p => `
             <tr>
                 <td><img src="${getImageUrl(p.imageUrl)}" alt="${p.name_en}" class="thumb-image"></td>
                 <td>${p.name_id}<br><small class="text-muted">${p.name_en}</small></td>
@@ -1018,7 +1039,7 @@
                 </td>
             </tr>`);
         
-        renderCategories = () => renderTable('categories-table', categoriesData, c => `
+        let renderCategories = () => renderTable('categories-table', categoriesData, c => `
             <tr>
                 <td>${c.id}</td>
                 <td>${c.name}</td>
@@ -1030,7 +1051,7 @@
                 </td>
             </tr>`);
         
-        renderContent = () => renderTable('content-table', contentData.sort((a,b) => a.id.localeCompare(b.id)), c => `
+        let renderContent = () => renderTable('content-table', contentData.sort((a,b) => a.id.localeCompare(b.id)), c => `
             <tr>
                 <td><strong>${c.id}</strong></td>
                 <td>${(c.text_id || '').substring(0, 50)}${(c.text_id || '').length > 50 ? '...' : ''}</td>
@@ -1043,6 +1064,7 @@
                 </td>
             </tr>`);
         
+        // Mengisi dropdown kategori pada form produk
         function populateCategoryDropdown() {
             const select = document.getElementById('product-category');
             select.innerHTML = '<option value="">Select a category</option>';
@@ -1050,6 +1072,7 @@
         }
 
         // --- Utility Functions ---
+        // Mereset form setelah submit atau saat membuka form baru
         const resetForm = (formId, modalTitleId, titleText) => {
             document.getElementById(formId).reset();
             document.querySelectorAll(`#${formId} input[type=hidden]`).forEach(input => input.value = '');
@@ -1057,6 +1080,7 @@
             document.querySelectorAll(`#${formId} .image-preview`).forEach(img => { img.style.display = 'none'; img.src = '#'; });
         };
 
+        // Mengunggah gambar ke Firebase Storage
         const uploadImage = async (file, path) => {
             if (!file) return null;
             const filePath = `${path}/${Date.now()}_${file.name}`;
@@ -1064,6 +1088,7 @@
             return fileSnapshot.ref.getDownloadURL();
         };
 
+        // Menyimpan data ke Firestore (add atau update)
         const saveToDb = async (collectionName, id, data) => {
             if (id) {
                 await db.collection(collectionName).doc(id).update(data);
@@ -1073,6 +1098,7 @@
         };
 
         // --- Forms & Actions ---
+        // Menyiapkan event listener untuk tombol "Add New..."
         function setupForms() {
             // New Item Buttons
             document.getElementById('add-new-banner-btn').addEventListener('click', () => {
@@ -1096,7 +1122,7 @@
                 openModal('category-modal');
             });
 
-            // Form Submissions
+            // Form Submissions (untuk setiap modal)
             document.getElementById('banner-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const id = document.getElementById('banner-id').value;
@@ -1126,11 +1152,11 @@
                 };
 
                 try {
-                    const imageUrl = await uploadImage(imageFile, 'gallery');
+                    const imageUrl = await uploadImage(imageFile, 'gallery'); // Mengunggah ke folder 'gallery' di Storage
                     if (imageUrl) data.image_url = imageUrl;
                     else if (!id) { alert("An image is required for a new gallery item."); return; }
 
-                    await saveToDb('gallery_images', id, data);
+                    await saveToDb('gallery_images', id, data); // Menyimpan ke koleksi 'gallery_images' di Firestore
                     closeModal('gallery-modal');
                     await loadGallery();
                     renderGallery();
@@ -1223,6 +1249,7 @@
         }
         
         // --- Edit and Delete Functions (exposed to global scope for onclick) ---
+        // Fungsi untuk mengisi form dengan data item yang akan diedit
         const populateForm = (data, fields) => {
             fields.forEach(field => {
                 const element = document.getElementById(field.id);
@@ -1234,6 +1261,7 @@
             });
         };
 
+        // Menampilkan pratinjau gambar saat mengedit item yang sudah punya gambar
         const showImagePreview = (previewId, imageUrl) => {
             const preview = document.getElementById(previewId);
             if (imageUrl) {
@@ -1245,6 +1273,7 @@
             }
         };
         
+        // Fungsi edit untuk setiap jenis data
         window.editBanner = (id) => {
             const item = bannersData.find(i => i.id === id); if (!item) return;
             resetForm('banner-form', 'banner-modal-title', 'Edit Banner');
@@ -1310,18 +1339,19 @@
             openModal('content-modal');
         };
 
+        // Fungsi delete untuk setiap jenis data, termasuk penghapusan gambar dari Storage
         window.deleteItem = async (collection, id, name, imageUrl) => {
             if (confirm(`Anda yakin ingin menghapus "${name}"? Tindakan ini tidak dapat dibatalkan.`)) {
                 try {
                     if (imageUrl) {
                         // Hanya coba hapus jika URL valid (bukan placeholder)
                         if(imageUrl.startsWith('https://firebasestorage.googleapis.com')) {
-                           await storage.refFromURL(imageUrl).delete().catch(error => console.warn("Tidak dapat menghapus gambar:", error.message));
+                           await storage.refFromURL(imageUrl).delete().catch(error => console.warn("Tidak dapat menghapus gambar dari Storage (mungkin sudah tidak ada):", error.message));
                         }
                     }
                     await db.collection(collection).doc(id).delete();
                     
-                    // Muat ulang data yang relevan dan render ulang
+                    // Muat ulang data yang relevan dan render ulang tabel setelah penghapusan
                     switch (collection) {
                         case 'banners': await loadBanners(); renderBanners(); break;
                         case 'gallery_images': await loadGallery(); renderGallery(); break;
@@ -1329,6 +1359,7 @@
                         case 'products': await loadProducts(); renderProducts(); break;
                         case 'categories': await loadCategories(); renderCategories(); populateCategoryDropdown(); break;
                     }
+                    alert(`${name} berhasil dihapus.`);
                 } catch(err) {
                     alert("Gagal menghapus item. Periksa console untuk detail.");
                     console.error("Gagal menghapus item: ", err);
