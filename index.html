@@ -15,42 +15,79 @@
 
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
-        /* Custom Styles for User Request */
+        /* === FINAL STYLING REVISIONS === */
+
+        /* 1. Larger Logo in Header */
         .ls-main-header .ls-logo {
-            height: 65px; /* LOGO SIZE INCREASED */
+            height: 65px; 
         }
 
-        /* About Us Section Article Style */
+        /* 2. Hero Slider Image Position */
+        .ls-hero-slider .ls-slide-background {
+            background-size: cover;
+            /* REVISED: Ensure top of the image is always visible */
+            background-position: center top; 
+        }
+        
+        /* 3. Menu Card Image Position */
+        .ls-menu-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* REVISED: Ensure top of the product photo is always visible */
+            object-position: top; 
+            transition: transform var(--ls-transition-speed) ease;
+        }
+        .ls-menu-card:hover .ls-menu-card-image img {
+            transform: scale(1.08);
+        }
+
+        /* 4. "About Us" Section Restyled as an Article */
         .ls-about-section-content {
             max-width: 800px;
             margin: 0 auto;
-            text-align: center;
-            padding: 2.5rem;
-            background: var(--ls-color-surface);
-            border-radius: var(--ls-border-radius);
-            box-shadow: var(--ls-shadow-sm);
-            border: 1px solid var(--ls-color-border);
+            text-align: left; /* Justify for article look */
+            /* REVISED: Removed box styling */
+            background: none;
+            box-shadow: none;
+            border: none;
+            padding: 0;
         }
         .ls-about-section-content .about-logo {
+            display: block;
             max-height: 80px;
-            margin-bottom: 2rem;
+            margin: 0 auto 2rem auto; /* Center the logo */
         }
         .ls-about-section-content h3 {
+            text-align: center; /* Center the title */
             font-family: var(--ls-font-heading);
             color: var(--ls-color-secondary);
-            font-size: 2rem;
-            margin-bottom: 1rem;
+            font-size: clamp(1.8rem, 5vw, 2.2rem);
+            margin-bottom: 1.5rem;
         }
         .ls-about-section-content p {
-            font-size: 1rem;
-            line-height: 1.8;
+            font-size: 1.05rem;
+            line-height: 1.9;
             color: var(--ls-color-text-light);
-            white-space: pre-wrap; /* Allows line breaks from textarea */
+            white-space: pre-wrap;
+            margin-bottom: 1rem; /* Spacing between paragraphs */
+        }
+        /* REVISED: Drop cap for the first letter */
+        .ls-about-section-content p:first-of-type::first-letter {
+            font-family: var(--ls-font-heading);
+            font-size: 4.5rem;
+            font-weight: 700;
+            color: var(--ls-color-primary);
+            float: left;
+            line-height: 0.8;
+            padding-right: 12px;
+            padding-top: 5px;
+            padding-bottom: 2px;
         }
 
         /* Uniform Menu Card Sizing */
         .ls-featured-slider .swiper-wrapper {
-            align-items: stretch; /* Make all slides same height in a row */
+            align-items: stretch;
         }
         .ls-featured-slider .swiper-slide, .ls-menu-grid .ls-menu-card {
             height: auto; 
@@ -58,7 +95,7 @@
         .ls-menu-card {
             display: flex;
             flex-direction: column;
-            height: 100%; /* Ensure cards take full height of the flex container */
+            height: 100%;
         }
         .ls-menu-card-content {
             flex-grow: 1;
@@ -69,7 +106,7 @@
             flex-grow: 1;
         }
         .ls-menu-card .ls-card-actions {
-            margin-top: auto; /* Push actions to the bottom */
+            margin-top: auto;
         }
     </style>
 </head>
