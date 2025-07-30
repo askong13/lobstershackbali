@@ -187,7 +187,7 @@ async function fetchAllData() {
         contentSnap.docs.forEach(doc => { siteData.content[doc.id] = doc.data(); });
         
         renderAll();
-        // Check if the function from floating.js exists before calling it
+        
         if (typeof setupFloatingButton === 'function') {
             setupFloatingButton();
         }
