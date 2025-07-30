@@ -70,8 +70,18 @@
             </section>
 
             <section id="page-history" class="page">
-                <div class="page-header"><h1>Manage History Timeline</h1><button class="btn" id="add-new-history-btn"><i class="fas fa-plus"></i> Add New</button></div>
-                <div class="card"><div class="table-wrapper"><table id="history-table"><thead><tr><th>Sort Order</th><th>Year</th><th>Title (ID/EN)</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
+                <div class="page-header"><h1>Manage History / About Us Article</h1></div>
+                <div class="card">
+                    <div class="table-wrapper">
+                        <table id="history-table">
+                            <thead><tr><th>Title (ID/EN)</th><th>Content Preview</th><th>Actions</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                     <div class="info-card" style="margin-top: 2rem; background-color: #f0f8ff; padding: 1rem; border-radius: 8px;">
+                        <strong>Note:</strong> Only one "History" article is displayed on the website. If you add more than one, only the first one will be shown. You can edit the existing one.
+                    </div>
+                </div>
             </section>
 
             <section id="page-gallery" class="page">
@@ -107,16 +117,18 @@
     </div>
     
     <div id="banner-modal" class="modal-overlay">
-        <div class="modal-content" style="max-width: 500px;"><div class="modal-header"><h2 id="banner-modal-title"></h2><button class="modal-close-btn">&times;</button></div><div class="modal-body"><form id="banner-form"><input type="hidden" id="banner-id"><div class="form-group"><label for="banner-sort-order">Sort Order</label><input type="number" id="banner-sort-order" required><small>Lower number appears first.</small></div><div class="form-group"><label for="banner-image">Banner Image</label><input type="file" id="banner-image" accept="image/*"><img id="banner-image-preview" src="#" alt="Preview" class="image-preview"></div><div style="text-align: right;"><button type="submit" class="btn btn-secondary"><i class="fas fa-save"></i> Save</button></div></form></div></div>
+        <div class="modal-content" style="max-width: 500px;"><div class="modal-header"><h2 id="banner-modal-title"></h2><button class="modal-close-btn">×</button></div><div class="modal-body"><form id="banner-form"><input type="hidden" id="banner-id"><div class="form-group"><label for="banner-sort-order">Sort Order</label><input type="number" id="banner-sort-order" required><small>Lower number appears first.</small></div><div class="form-group"><label for="banner-image">Banner Image</label><input type="file" id="banner-image" accept="image/*"><img id="banner-image-preview" src="#" alt="Preview" class="image-preview"></div><div style="text-align: right;"><button type="submit" class="btn btn-secondary"><i class="fas fa-save"></i> Save</button></div></form></div></div>
     </div>
     <div id="gallery-modal" class="modal-overlay">
-        <div class="modal-content"><div class="modal-header"><h2 id="gallery-modal-title"></h2><button class="modal-close-btn">&times;</button></div><div class="modal-body"><form id="gallery-form"><input type="hidden" id="gallery-id"><div class="form-group"><label for="gallery-sort-order">Sort Order</label><input type="number" id="gallery-sort-order" required></div><div class="form-grid"><div class="form-group"><label for="gallery-caption-id">Caption (ID)</label><input type="text" id="gallery-caption-id" required></div><div class="form-group"><label for="gallery-caption-en">Caption (EN)</label><input type="text" id="gallery-caption-en" required></div></div><div class="form-group"><label for="gallery-image">Image</label><input type="file" id="gallery-image" accept="image/*"><img id="gallery-image-preview" src="#" alt="Preview" class="image-preview"></div><div style="text-align: right;"><button type="submit" class="btn btn-secondary"><i class="fas fa-save"></i> Save</button></div></form></div></div>
+        <div class="modal-content"><div class="modal-header"><h2 id="gallery-modal-title"></h2><button class="modal-close-btn">×</button></div><div class="modal-body"><form id="gallery-form"><input type="hidden" id="gallery-id"><div class="form-group"><label for="gallery-sort-order">Sort Order</label><input type="number" id="gallery-sort-order" required></div><div class="form-grid"><div class="form-group"><label for="gallery-caption-id">Caption (ID)</label><input type="text" id="gallery-caption-id" required></div><div class="form-group"><label for="gallery-caption-en">Caption (EN)</label><input type="text" id="gallery-caption-en" required></div></div><div class="form-group"><label for="gallery-image">Image</label><input type="file" id="gallery-image" accept="image/*"><img id="gallery-image-preview" src="#" alt="Preview" class="image-preview"></div><div style="text-align: right;"><button type="submit" class="btn btn-secondary"><i class="fas fa-save"></i> Save</button></div></form></div></div>
     </div>
+    
     <div id="history-modal" class="modal-overlay">
-        <div class="modal-content"><div class="modal-header"><h2 id="history-modal-title"></h2><button class="modal-close-btn">&times;</button></div><div class="modal-body"><form id="history-form"><input type="hidden" id="history-id"><div class="form-grid"><div class="form-group"><label for="history-year">Year</label><input type="number" id="history-year" required placeholder="e.g. 2025"></div><div class="form-group"><label for="history-sort-order">Sort Order</label><input type="number" id="history-sort-order" required><small>Lower number appears first.</small></div></div><div class="form-grid"><div class="form-group"><label for="history-title-id">Title (ID)</label><input type="text" id="history-title-id" required></div><div class="form-group"><label for="history-title-en">Title (EN)</label><input type="text" id="history-title-en" required></div></div><div class="form-group"><label for="history-text-id">Text (ID)</label><textarea id="history-text-id" required></textarea></div><div class="form-group"><label for="history-text-en">Text (EN)</label><textarea id="history-text-en" required></textarea></div><div style="text-align: right;"><button type="submit" class="btn btn-secondary"><i class="fas fa-save"></i> Save</button></div></form></div></div>
+        <div class="modal-content"><div class="modal-header"><h2 id="history-modal-title"></h2><button class="modal-close-btn">×</button></div><div class="modal-body"><form id="history-form"><input type="hidden" id="history-id"><div class="form-grid"><div class="form-group"><label for="history-title-id">Title (ID)</label><input type="text" id="history-title-id" required></div><div class="form-group"><label for="history-title-en">Title (EN)</label><input type="text" id="history-title-en" required></div></div><div class="form-group"><label for="history-text-id">Text / Article (ID)</label><textarea id="history-text-id" required rows="6"></textarea></div><div class="form-group"><label for="history-text-en">Text / Article (EN)</label><textarea id="history-text-en" required rows="6"></textarea></div><div style="text-align: right;"><button type="submit" class="btn btn-secondary"><i class="fas fa-save"></i> Save</button></div></form></div></div>
     </div>
+
     <div id="product-modal" class="modal-overlay">
-        <div class="modal-content"><div class="modal-header"><h2 id="product-modal-title"></h2><button class="modal-close-btn">&times;</button></div><div class="modal-body"><form id="product-form"><input type="hidden" id="product-id"><div class="form-grid"><div class="form-group"><label for="product-name-id">Name (ID)</label><input type="text" id="product-name-id" required></div><div class="form-group"><label for="product-name-en">Name (EN)</label><input type="text" id="product-name-en" required></div></div><div class="form-group"><label for="product-description-id">Description (ID)</label><textarea id="product-description-id" required></textarea></div><div class="form-group"><label for="product-description-en">Description (EN)</label><textarea id="product-description-en" required></textarea></div><div class="form-grid"><div class="form-group"><label for="product-price">Price (IDR)</label><input type="number" id="product-price" required></div><div class="form-group"><label for="product-category">Category</label><select id="product-category" required></select></div></div>
+        <div class="modal-content"><div class="modal-header"><h2 id="product-modal-title"></h2><button class="modal-close-btn">×</button></div><div class="modal-body"><form id="product-form"><input type="hidden" id="product-id"><div class="form-grid"><div class="form-group"><label for="product-name-id">Name (ID)</label><input type="text" id="product-name-id" required></div><div class="form-group"><label for="product-name-en">Name (EN)</label><input type="text" id="product-name-en" required></div></div><div class="form-group"><label for="product-description-id">Description (ID)</label><textarea id="product-description-id" required></textarea></div><div class="form-group"><label for="product-description-en">Description (EN)</label><textarea id="product-description-en" required></textarea></div><div class="form-grid"><div class="form-group"><label for="product-price">Price (IDR)</label><input type="number" id="product-price" required></div><div class="form-group"><label for="product-category">Category</label><select id="product-category" required></select></div></div>
             <div class="form-grid">
                 <div class="form-group">
                     <label for="product-gofood-link">GoFood Link (Optional)</label>
@@ -130,10 +142,10 @@
             <div class="form-group"><label for="product-image">Image</label><input type="file" id="product-image" accept="image/*"><img id="product-image-preview" src="#" alt="Preview" class="image-preview"></div><div class="form-group"><div class="form-check"><input type="checkbox" id="product-featured"><label for="product-featured">Is this a featured product?</label></div></div><div style="text-align: right;"><button type="submit" class="btn btn-secondary"><i class="fas fa-save"></i> Save</button></div></form></div></div>
     </div>
     <div id="category-modal" class="modal-overlay">
-        <div class="modal-content" style="max-width: 500px;"><div class="modal-header"><h2 id="category-modal-title"></h2><button class="modal-close-btn">&times;</button></div><div class="modal-body"><form id="category-form"><input type="hidden" id="category-id"><div class="form-group"><label for="category-name">Name</label><input type="text" id="category-name" required></div><div class="form-group"><label for="category-sort-id">Sort Order</label><input type="number" id="category-sort-id" required><small>Lower number appears first.</small></div><div style="text-align: right;"><button type="submit" class="btn btn-secondary"><i class="fas fa-save"></i> Save</button></div></form></div></div>
+        <div class="modal-content" style="max-width: 500px;"><div class="modal-header"><h2 id="category-modal-title"></h2><button class="modal-close-btn">×</button></div><div class="modal-body"><form id="category-form"><input type="hidden" id="category-id"><div class="form-group"><label for="category-name">Name</label><input type="text" id="category-name" required></div><div class="form-group"><label for="category-sort-id">Sort Order</label><input type="number" id="category-sort-id" required><small>Lower number appears first.</small></div><div style="text-align: right;"><button type="submit" class="btn btn-secondary"><i class="fas fa-save"></i> Save</button></div></form></div></div>
     </div>
     <div id="content-modal" class="modal-overlay">
-        <div class="modal-content"><div class="modal-header"><h2 id="content-modal-title"></h2><button class="modal-close-btn">&times;</button></div><div class="modal-body"><form id="content-form"><input type="hidden" id="content-key"><p>Editing key: <strong id="content-key-display"></strong></p><div class="form-group"><label for="content-text-id">Text (ID)</label><textarea id="content-text-id" required></textarea></div><div class="form-group"><label for="content-text-en">Text (EN)</label><textarea id="content-text-en" required></textarea></div><div class="form-group"><label for="content-image">Image (Optional)</label><input type="file" id="content-image" accept="image/*"><img id="content-image-preview" src="#" alt="Preview" class="image-preview"></div><div style="text-align: right;"><button type="submit" class="btn btn-secondary"><i class="fas fa-save"></i> Save</button></div></form></div></div>
+        <div class="modal-content"><div class="modal-header"><h2 id="content-modal-title"></h2><button class="modal-close-btn">×</button></div><div class="modal-body"><form id="content-form"><input type="hidden" id="content-key"><p>Editing key: <strong id="content-key-display"></strong></p><div class="form-group"><label for="content-text-id">Text (ID)</label><textarea id="content-text-id" required></textarea></div><div class="form-group"><label for="content-text-en">Text (EN)</label><textarea id="content-text-en" required></textarea></div><div class="form-group"><label for="content-image">Image (Optional)</label><input type="file" id="content-image" accept="image/*"><img id="content-image-preview" src="#" alt="Preview" class="image-preview"></div><div style="text-align: right;"><button type="submit" class="btn btn-secondary"><i class="fas fa-save"></i> Save</button></div></form></div></div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -142,5 +154,92 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     
     <script src="assets/js/admin.js"></script>
+    <script>
+        // Override admin.js functions to match new History/About Us design
+        document.addEventListener('DOMContentLoaded', () => {
+            // Wait for the main admin script to load and initialize
+            setTimeout(() => {
+                const originalRenderHistory = window.renderHistory;
+                window.renderHistory = () => {
+                     const renderTable = (tableId, data, rowRenderer) => {
+                        const tbody = document.querySelector(`#${tableId} tbody`);
+                        if(!tbody) return;
+                        tbody.innerHTML = data.map(rowRenderer).join('') || `<tr><td colspan="100%" style="text-align:center; padding: 2rem;">No article found. Please add one.</td></tr>`;
+                    };
+                     const renderActionButtons = (collection, id, name) => `
+                        <div class="action-btns">
+                            <button class="btn btn-sm btn-outline" onclick="editItem('${collection}', '${id}')"><i class="fas fa-edit"></i> Edit</button>
+                        </div>`;
+
+                    renderTable('history-table', historyData, h => `
+                        <tr>
+                            <td data-label="Title">${h.title_id}<br><small class="text-muted">${h.title_en}</small></td>
+                            <td data-label="Content Preview">${(h.text_en || '').substring(0, 80)}...</td>
+                            <td data-label="Actions">${renderActionButtons('history', h.id, h.title_en)}</td>
+                        </tr>
+                    `);
+                };
+
+                const originalSetupForms = window.setupForms;
+                window.setupForms = () => {
+                    originalSetupForms(); // Call original function
+                     if(document.getElementById('add-new-history-btn')) {
+                       document.getElementById('add-new-history-btn').style.display = 'none'; // Hide add button
+                    }
+                    // Override history form submission
+                    document.getElementById('history-form').addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        const id = document.getElementById('history-id').value;
+                        const data = {
+                            title_id: document.getElementById('history-title-id').value,
+                            title_en: document.getElementById('history-title-en').value,
+                            text_id: document.getElementById('history-text-id').value,
+                            text_en: document.getElementById('history-text-en').value
+                        };
+                        // Remove year and sort_order if they exist
+                        delete data.year;
+                        delete data.sort_order;
+
+                        try {
+                            await saveToDb('history', id, data);
+                            closeModal('history-modal');
+                            await loadHistory();
+                            renderHistory();
+                        } catch (err) {
+                            alert("Error saving history article: " + err.message);
+                        }
+                    });
+                };
+
+                 const originalEditItem = window.editItem;
+                 window.editItem = (collection, id) => {
+                    if (collection === 'history') {
+                        const item = historyData.find(i => i.id === id);
+                        if (!item) return;
+                        const modalId = 'history-modal';
+                        const formId = 'history-form';
+                        const modalTitle = 'Edit History Article';
+
+                        resetForm(formId, 'history-modal-title', modalTitle);
+                        document.getElementById('history-id').value = item.id || '';
+                        document.getElementById('history-title-id').value = item.title_id || '';
+                        document.getElementById('history-title-en').value = item.title_en || '';
+                        document.getElementById('history-text-id').value = item.text_id || '';
+                        document.getElementById('history-text-en').value = item.text_en || '';
+                        openModal(modalId);
+                    } else {
+                        originalEditItem(collection, id);
+                    }
+                };
+
+                // Re-initialize to apply overrides
+                if (window.auth && window.auth.currentUser) {
+                    setupForms();
+                    renderHistory();
+                }
+
+            }, 500); // Delay to ensure admin.js is loaded
+        });
+    </script>
 </body>
 </html>
