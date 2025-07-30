@@ -13,7 +13,8 @@ const domElements = {
     mobileMenuToggle: document.getElementById('ls-mobile-menu-toggle'),
     langToggleContainer: document.querySelector('.ls-language-toggle'),
     heroSliderWrapper: document.getElementById('ls-hero-slider-wrapper'),
-    historyTimeline: document.getElementById('ls-history-timeline'),
+    // REVISED: New container for the About Us article
+    aboutUsArticle: document.getElementById('ls-about-us-article'), 
     featuredMenuWrapper: document.getElementById('ls-featured-menu-wrapper'),
     menuGrid: document.getElementById('ls-menu-grid'),
     menuFilters: document.getElementById('ls-menu-filters'),
@@ -31,7 +32,9 @@ const updateTextContent = () => {
         const key = el.dataset.langKey;
         const content = siteData.content?.[key];
         if (content) {
-            el.innerHTML = content[`text_${currentLanguage}`] || content.text_id || el.innerHTML;
+            // Use innerText for most elements to avoid re-rendering icons, but innerHTML for specific ones if needed.
+            const target = el.querySelector('span') || el;
+            target.innerHTML = content[`text_${currentLanguage}`] || content.text_id || target.innerHTML;
         }
     });
     document.title = siteData.content?.ls_page_title?.[`text_${currentLanguage}`] || 'Lobster Shack Bali';
@@ -46,7 +49,7 @@ const updateLangButtons = () => {
 
 // --- RENDER FUNCTIONS ---
 const renderBanners = () => {
-    if (!siteData.banners || siteData.banners.length === 0) return;
+    if (!siteData.banners || siteData.banners.length === 0 || !domElements.heroSliderWrapper) return;
     domElements.heroSliderWrapper.innerHTML = siteData.banners.map(banner => `
         <div class="swiper-slide">
             <div class="ls-slide-background" style="background-image: url('${banner.image_url}');"></div>
@@ -60,22 +63,30 @@ const renderBanners = () => {
     });
 };
 
+// --- REVISED renderHistory function ---
 const renderHistory = () => {
-    if (!siteData.history || siteData.history.length === 0) return;
-    domElements.historyTimeline.innerHTML = [...siteData.history]
-        .sort((a, b) => a.sort_order - b.sort_order)
-        .map(item => `
-        <div class="ls-timeline-item" data-aos="fade-up">
-            <div class="ls-timeline-content">
-                <div class="ls-year">${item.year}</div>
-                <h3>${item[`title_${currentLanguage}`] || item.title_id}</h3>
-                <p>${item[`text_${currentLanguage}`] || item.text_id}</p>
-            </div>
-        </div>`).join('');
+    // This function now renders a single article, not a timeline.
+    if (!domElements.aboutUsArticle) return; // Exit if the new container doesn't exist
+
+    // The "history" collection is now used for the single About Us article.
+    // We'll take the first document found in the collection.
+    const aboutArticleData = siteData.history && siteData.history.length > 0 ? siteData.history[0] : null;
+
+    if (aboutArticleData) {
+        domElements.aboutUsArticle.innerHTML = `
+            <img src="https://lh3.googleusercontent.com/d/1GIdbd0F7kn0O4L8qEr-25GXSEWbLNVj9" alt="Lobster Shack Bali" class="about-logo">
+            <h3>${aboutArticleData[`title_${currentLanguage}`] || aboutArticleData.title_id}</h3>
+            <p>${aboutArticleData[`text_${currentLanguage}`] || aboutArticleData.text_id}</p>
+        `;
+    } else {
+        domElements.aboutUsArticle.innerHTML = '<p>Our story is being written. Please check back soon!</p>';
+    }
 };
 
+
 const renderMenu = () => {
-    if (!siteData.products || !siteData.categories) return;
+    if (!siteData.products || !siteData.categories || !domElements.menuGrid) return;
+    
     const getCardHTML = p => `
         <div class="ls-menu-card" data-category="${p.category_name}" data-product-id="${p.id}"> 
             <div class="ls-menu-card-image"><img src="${p.imageUrl}" alt="${p.name_en}" loading="lazy"></div> 
@@ -84,23 +95,27 @@ const renderMenu = () => {
                     <h3>${p[`name_${currentLanguage}`] || p.name_id}</h3>
                     <span class="ls-menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(p.price)}</span>
                 </div>
-                <p class="ls-description">${(p[`description_${currentLanguage}`] || p.description_id).substring(0, 90)}...</p>
+                <p class="ls-description">${(p[`description_${currentLanguage}`] || p.description_id)}</p>
                 <div class="ls-card-actions">
                     <button class="ls-btn ls-view-details-btn"><i class="fas fa-eye"></i> <span data-lang-key="view_details_btn">View Details</span></button>
-                    ${p.gofood_link ? `<a href="${p.gofood_link}" target="_blank" rel="noopener noreferrer" class="ls-order-link" aria-label="Order on GoFood"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRF4G3lRAltCydaksfc29WU0fH7mJrnweaDYLqBrCw33Vxb6QfzKD87ANo&s=10" alt="GoFood Logo" style="width:50px; height:50px;"></a>` : ''}
-                    ${p.grabfood_link ? `<a href="${p.grabfood_link}" target="_blank" rel="noopener noreferrer" class="ls-order-link" aria-label="Order on GrabFood"><img src="https://iconlogovector.com/uploads/images/2023/11/lg-655d63568932b-grab-food.png" alt="GrabFood Logo" style="width:50px; height:50px;"></a>` : ''}
+                    ${p.gofood_link ? `<a href="${p.gofood_link}" target="_blank" rel="noopener noreferrer" class="ls-order-link" aria-label="Order on GoFood"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRF4G3lRAltCydaksfc29WU0fH7mJrnweaDYLqBrCw33Vxb6QfzKD87ANo&s=10" alt="GoFood Logo" style="width:24px; height:24px;"></a>` : ''}
+                    ${p.grabfood_link ? `<a href="${p.grabfood_link}" target="_blank" rel="noopener noreferrer" class="ls-order-link" aria-label="Order on GrabFood"><img src="https://iconlogovector.com/uploads/images/2023/11/lg-655d63568932b-grab-food.png" alt="GrabFood Logo" style="width:24px; height:24px;"></a>` : ''}
                 </div>
             </div> 
         </div>`;
     
-    domElements.featuredMenuWrapper.innerHTML = siteData.products
-        .filter(p => p.is_featured).map(p => `<div class="swiper-slide">${getCardHTML(p)}</div>`).join('');
+    if(domElements.featuredMenuWrapper) {
+        domElements.featuredMenuWrapper.innerHTML = siteData.products
+            .filter(p => p.is_featured).map(p => `<div class="swiper-slide">${getCardHTML(p)}</div>`).join('');
+    }
         
     domElements.menuGrid.innerHTML = siteData.products.map(p => getCardHTML(p)).join('');
     
     const allText = currentLanguage === 'id' ? 'Semua' : 'All';
-    domElements.menuFilters.innerHTML = `<button class="ls-filter-btn active" data-filter="all">${allText}</button>` +
-        siteData.categories.map(c => `<button class="ls-filter-btn" data-filter="${c.name}">${c.name}</button>`).join('');
+    if(domElements.menuFilters) {
+        domElements.menuFilters.innerHTML = `<button class="ls-filter-btn active" data-filter="all">${allText}</button>` +
+            siteData.categories.map(c => `<button class="ls-filter-btn" data-filter="${c.name}">${c.name}</button>`).join('');
+    }
     
     new Swiper('.ls-featured-slider', { 
         slidesPerView: 1, spaceBetween: 24, grabCursor: true, 
@@ -110,18 +125,21 @@ const renderMenu = () => {
 };
 
 const renderGallery = () => {
-    if (!siteData.gallery_images) return;
+    if (!siteData.gallery_images || !domElements.galleryGrid) return;
     domElements.galleryGrid.innerHTML = siteData.gallery_images.map(img => `
         <a href="${img.image_url}" class="glightbox" data-gallery="our-gallery" data-title="${img[`caption_${currentLanguage}`] || img.caption_id}"> 
             <img src="${img.image_url}" alt="${img.caption_en || 'Gallery Image'}" loading="lazy"> 
         </a>`).join('');
-    if (lightbox) { lightbox.reload(); } 
-    else { lightbox = GLightbox({ selector: '.glightbox', touchNavigation: true }); }
+    if (lightbox) { 
+        lightbox.reload(); 
+    } else { 
+        lightbox = GLightbox({ selector: '.glightbox', touchNavigation: true }); 
+    }
 };
 
 const showProductModal = (productId) => {
     const product = siteData.products.find(p => p.id === productId);
-    if (!product) return;
+    if (!product || !domElements.modalOverlay) return;
     domElements.modalBody.innerHTML = `
         <div class="modal-image">
             <img src="${product.imageUrl}" alt="${product.name_en}">
@@ -136,6 +154,7 @@ const showProductModal = (productId) => {
 };
 
 const hideProductModal = () => {
+    if (!domElements.modalOverlay) return;
     domElements.body.classList.remove('ls-modal-open');
     domElements.modalOverlay.classList.remove('visible');
 };
@@ -160,21 +179,21 @@ async function fetchAllData() {
         siteData.categories = categoriesSnap.docs.map(doc => doc.data()).sort((a,b) => a.id - b.id);
         siteData.banners = bannersSnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
         siteData.gallery_images = gallerySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
-        siteData.history = historySnap.docs.map(doc => doc.data());
+        siteData.history = historySnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         siteData.content = {};
         contentSnap.docs.forEach(doc => { siteData.content[doc.id] = doc.data(); });
         
         renderAll();
-setupFloatingButton();
+        setupFloatingButton(); // This is called from floating.js
     } catch (error) {
         console.error("Error fetching data from Firebase:", error);
-        document.body.innerHTML = "<h1>Error loading site data. Please try again later.</h1>";
+        if (document.body) document.body.innerHTML = "<h1>Error loading site data. Please try again later.</h1>";
     }
 }
 
 // --- COOKIE CONSENT LOGIC ---
 const handleCookieConsent = () => {
-    if (document.cookie.split(';').some((item) => item.trim().startsWith('ls_cookie_consent='))) {
+    if (!domElements.cookieConsent || document.cookie.split(';').some((item) => item.trim().startsWith('ls_cookie_consent='))) {
         return;
     }
     domElements.cookieConsent.classList.add('active');
@@ -182,61 +201,74 @@ const handleCookieConsent = () => {
 
 // --- EVENT LISTENERS ---
 function addAllEventListeners() {
-    domElements.langToggleContainer.addEventListener('click', e => {
-        if (!e.target.matches('.ls-lang-btn') || e.target.classList.contains('active')) return;
-        currentLanguage = e.target.dataset.lang;
-        localStorage.setItem('preferredLanguage', currentLanguage);
-        renderHistory(); 
-        renderMenu(); 
-        renderGallery(); 
-        updateTextContent();
-    });
-    
-    domElements.mobileMenuToggle.addEventListener('click', () => {
-        domElements.mainNav.classList.toggle('active');
-        domElements.body.classList.toggle('ls-nav-open');
-        const icon = domElements.mobileMenuToggle.querySelector('i');
-        icon.classList.toggle('fa-bars'); 
-        icon.classList.toggle('fa-times');
-    });
-
-    domElements.mainNav.addEventListener('click', (e) => {
-        if (e.target.matches('a') && domElements.mainNav.classList.contains('active')) {
-            domElements.mobileMenuToggle.click();
-        }
-    });
-    
-    domElements.menuFilters.addEventListener('click', e => {
-        if (!e.target.matches('.ls-filter-btn') || e.target.classList.contains('active')) return;
-        domElements.menuFilters.querySelector('.active').classList.remove('active');
-        e.target.classList.add('active');
-        const filter = e.target.dataset.filter;
-        domElements.menuGrid.querySelectorAll('.ls-menu-card').forEach(card => {
-            const isVisible = filter === 'all' || card.dataset.category === filter;
-            card.classList.toggle('hidden', !isVisible);
+    if (domElements.langToggleContainer) {
+        domElements.langToggleContainer.addEventListener('click', e => {
+            if (!e.target.matches('.ls-lang-btn') || e.target.classList.contains('active')) return;
+            currentLanguage = e.target.dataset.lang;
+            localStorage.setItem('preferredLanguage', currentLanguage);
+            // Re-render content that depends on language
+            renderHistory(); 
+            renderMenu(); 
+            renderGallery(); 
+            updateTextContent();
         });
-    });
+    }
+    
+    if (domElements.mobileMenuToggle) {
+        domElements.mobileMenuToggle.addEventListener('click', () => {
+            domElements.mainNav.classList.toggle('active');
+            domElements.body.classList.toggle('ls-nav-open');
+            const icon = domElements.mobileMenuToggle.querySelector('i');
+            icon.classList.toggle('fa-bars'); 
+            icon.classList.toggle('fa-times');
+        });
+    }
 
-    document.body.addEventListener('click', e => {
-        const detailsButton = e.target.closest('.ls-view-details-btn');
-        if (detailsButton) {
-            const card = detailsButton.closest('.ls-menu-card');
-            if (card) showProductModal(card.dataset.productId);
-        }
-    });
+    if (domElements.mainNav) {
+        domElements.mainNav.addEventListener('click', (e) => {
+            if (e.target.matches('a') && domElements.mainNav.classList.contains('active')) {
+                domElements.mobileMenuToggle.click();
+            }
+        });
+    }
+    
+    if (domElements.menuFilters) {
+        domElements.menuFilters.addEventListener('click', e => {
+            if (!e.target.matches('.ls-filter-btn') || e.target.classList.contains('active')) return;
+            domElements.menuFilters.querySelector('.active').classList.remove('active');
+            e.target.classList.add('active');
+            const filter = e.target.dataset.filter;
+            domElements.menuGrid.querySelectorAll('.ls-menu-card').forEach(card => {
+                const isVisible = filter === 'all' || card.dataset.category === filter;
+                card.classList.toggle('hidden', !isVisible);
+            });
+        });
+    }
 
-    domElements.modalCloseBtn.addEventListener('click', hideProductModal);
-    domElements.modalOverlay.addEventListener('click', e => {
+    if (domElements.body) {
+        domElements.body.addEventListener('click', e => {
+            const detailsButton = e.target.closest('.ls-view-details-btn');
+            if (detailsButton) {
+                const card = detailsButton.closest('.ls-menu-card');
+                if (card) showProductModal(card.dataset.productId);
+            }
+        });
+    }
+
+    if(domElements.modalCloseBtn) domElements.modalCloseBtn.addEventListener('click', hideProductModal);
+    if(domElements.modalOverlay) domElements.modalOverlay.addEventListener('click', e => {
         if (e.target === domElements.modalOverlay) hideProductModal();
     });
     
-    domElements.cookieAcceptBtn.addEventListener('click', () => {
-        let d = new Date();
-        d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
-        let expires = "expires=" + d.toUTCString();
-        document.cookie = "ls_cookie_consent=accepted;" + expires + ";path=/";
-        domElements.cookieConsent.classList.remove('active');
-    });
+    if (domElements.cookieAcceptBtn) {
+        domElements.cookieAcceptBtn.addEventListener('click', () => {
+            let d = new Date();
+            d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = "ls_cookie_consent=accepted;" + expires + ";path=/";
+            domElements.cookieConsent.classList.remove('active');
+        });
+    }
 
     const sections = document.querySelectorAll('main > section[id]');
     const navLinks = document.querySelectorAll('.ls-nav-links a');
@@ -257,24 +289,23 @@ function addAllEventListeners() {
     }, { passive: true });
 }
 
-
 // --- APP INITIALIZATION ---
 async function initApp() {
     try {
-        // Fetch Firebase config from Netlify function
-        const response = await fetch('/.netlify/functions/firebase-config');
-        if (!response.ok) {
-            throw new Error(`Failed to fetch Firebase config: ${response.statusText}`);
-        }
-        const firebaseConfig = await response.json();
+        const firebaseConfig = {
+            apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
+            authDomain: "lobster-shack-bali.firebaseapp.com",
+            projectId: "lobster-shack-bali",
+            storageBucket: "lobster-shack-bali.appspot.com",
+            messagingSenderId: "42452974733",
+            appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
+        };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         db = firebase.firestore();
 
-        // Add event listeners and fetch data
         addAllEventListeners();
-        fetchAllData();
+        await fetchAllData();
         setTimeout(handleCookieConsent, 2000);
 
     } catch (error) {
@@ -283,5 +314,4 @@ async function initApp() {
     }
 }
 
-// Start the application when the DOM is ready
 document.addEventListener('DOMContentLoaded', initApp);
