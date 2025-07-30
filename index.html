@@ -14,55 +14,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
 
     <link rel="stylesheet" href="assets/css/style.css">
-    <style>
-        /* === FINAL STYLING REVISIONS === */
-
-        /* General Adjustments */
-        .ls-main-header .ls-logo { height: 65px; }
-        .ls-hero-slider .ls-slide-background { background-position: center top; }
-        .ls-menu-card-image img { object-position: top; }
-
-        /* "About Us" Article Styling */
-        .ls-about-section-content { max-width: 800px; margin: 0 auto; background: none; box-shadow: none; border: none; padding: 0; text-align: center; }
-        .about-logo { display: block; max-height: 80px; margin: 0 auto 2rem auto; }
-        .about-text-container h3 { font-family: var(--ls-font-heading); color: var(--ls-color-secondary); font-size: clamp(1.8rem, 5vw, 2.2rem); margin-bottom: 1.5rem; }
-        .about-text-container p { text-align: left; font-size: 1.05rem; line-height: 1.9; color: var(--ls-color-text-light); white-space: pre-wrap; margin-bottom: 1rem; }
-        
-        /* Drop Capital (Huruf Awal Besar) */
-        .about-text-container p:first-of-type::first-letter {
-            font-family: var(--ls-font-heading);
-            font-size: 4.5rem;
-            font-weight: 700;
-            color: var(--ls-color-primary); /* Warna merah sesuai permintaan */
-            float: left;
-            line-height: 0.8;
-            padding-right: 12px;
-            padding-top: 5px;
-        }
-        
-        /* "See More" Functionality */
-        .expandable-text { position: relative; overflow: hidden; transition: max-height 0.5s ease-out; }
-        .expandable-text:not(.expanded) { max-height: 200px; }
-        .expandable-text .fade-out { position: absolute; bottom: 0; left: 0; width: 100%; height: 80px; background: linear-gradient(to top, var(--ls-color-background), transparent); pointer-events: none; transition: opacity 0.3s; }
-        .expandable-text.expanded .fade-out { opacity: 0; }
-        .see-more-btn { display: block; margin-top: 1rem; text-align: center; }
-        .see-more-btn button { background: none; border: none; color: var(--ls-color-primary); font-weight: 600; cursor: pointer; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* Uniform Menu Card & Description Truncation */
-        .ls-featured-slider .swiper-wrapper, .ls-menu-grid { align-items: stretch; }
-        .ls-featured-slider .swiper-slide, .ls-menu-grid .ls-menu-card { height: 100%; }
-        .ls-menu-card { display: flex; flex-direction: column; }
-        .ls-menu-card-content { flex-grow: 1; display: flex; flex-direction: column; }
-        .ls-menu-card .ls-description {
-            flex-grow: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2; /* Limit to 2 lines */
-            -webkit-box-orient: vertical;
-        }
-        .ls-menu-card .ls-card-actions { margin-top: auto; }
-    </style>
 </head>
 <body>
     <header class="ls-main-header">
