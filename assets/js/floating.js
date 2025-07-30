@@ -1,11 +1,9 @@
 'use strict';
 
-// Fungsi ini akan dipanggil dari main.js setelah data dari Firebase dimuat
+// This function will be called from main.js after Firebase data is loaded
 function setupFloatingButton() {
     // --- DOM Elements ---
     const fabContainer = document.querySelector('.ls-fab-container');
-    if (!fabContainer) return; // Hentikan jika tombol utama tidak ada di HTML
-
     const fabMainBtn = document.querySelector('.ls-fab-main');
     const dineInBtn = document.getElementById('fab-dine-in');
     const directionBtn = document.getElementById('fab-direction');
@@ -23,6 +21,12 @@ function setupFloatingButton() {
     const dineInStep2 = document.getElementById('dine-in-step-2');
     const reservationCodeEl = document.getElementById('reservation-code');
 
+    // Safety check for critical elements
+    if (!fabContainer || !fabMainBtn || !dineInBtn || !dineInModal) {
+        console.warn("Floating Action Button or its modal not found. Aborting setup.");
+        return;
+    }
+
     if (!siteData.content || !db) {
         console.error("FAB dependencies not found (siteData or db). Cannot initialize.");
         return;
@@ -39,16 +43,16 @@ function setupFloatingButton() {
         const yyyy = today.getFullYear();
         const mm = String(today.getMonth() + 1).padStart(2, '0');
         const dd = String(today.getDate()).padStart(2, '0');
-        if(reservationDateInput) reservationDateInput.min = `${yyyy}-${mm}-${dd}`;
+        if (reservationDateInput) reservationDateInput.min = `${yyyy}-${mm}-${dd}`;
     };
 
     const openDineInModal = () => {
         const existingReservation = JSON.parse(localStorage.getItem('reservation'));
-        if (existingReservation && existingReservation.code) {
+        if (existingReservation && existingReservation.code && reservationCodeEl && dineInStep1 && dineInStep2) {
             reservationCodeEl.textContent = existingReservation.code;
             dineInStep1.style.display = 'none';
             dineInStep2.style.display = 'block';
-        } else {
+        } else if (dineInStep1 && dineInStep2 && customerNameInput && reservationDateInput && reservationTimeInput) {
             dineInStep1.style.display = 'block';
             dineInStep2.style.display = 'none';
             customerNameInput.value = '';
@@ -65,7 +69,9 @@ function setupFloatingButton() {
         openDineInModal();
         fabContainer.classList.remove('active');
     });
-    closeDineInBtn.addEventListener('click', closeDineInModal);
+    
+    if (closeDineInBtn) closeDineInBtn.addEventListener('click', closeDineInModal);
+    
     dineInModal.addEventListener('click', (e) => {
         if (e.target === dineInModal) closeDineInModal();
     });
@@ -90,64 +96,62 @@ function setupFloatingButton() {
         }
     };
 
-    generateCodeBtn.addEventListener('click', async () => {
-        const customerName = customerNameInput.value.trim();
-        const reservationDate = reservationDateInput.value;
-        const reservationTime = reservationTimeInput.value;
+    if (generateCodeBtn) {
+        generateCodeBtn.addEventListener('click', async () => {
+            if (!customerNameInput || !reservationDateInput || !reservationTimeInput) return;
+            const customerName = customerNameInput.value.trim();
+            const reservationDate = reservationDateInput.value;
+            const reservationTime = reservationTimeInput.value;
 
-        if (!customerName || !reservationDate || !reservationTime) {
-            alert("Please complete all fields: Name, Date, and Time.");
-            return;
-        }
+            if (!customerName || !reservationDate || !reservationTime) {
+                alert("Please complete all fields: Name, Date, and Time.");
+                return;
+            }
 
-        const code = generateReservationCode();
-        
-        const reservationData = {
-            code: code,
-            name: customerName,
-            reservationDate: reservationDate,
-            reservationTime: reservationTime,
-            status: 'pending',
-            createdAt: new Date()
-        };
-        
-        try {
-            await saveReservationToFirebase(reservationData);
-            localStorage.setItem('reservation', JSON.stringify({ code: code, name: customerName }));
-            reservationCodeEl.textContent = code;
-            dineInStep1.style.display = 'none';
-            dineInStep2.style.display = 'block';
-        } catch (error) {
-            console.log("UI update aborted due to Firebase save failure.");
-        }
-    });
-
-    cancelCodeBtn.addEventListener('click', () => {
-        if (confirm("Are you sure you want to cancel this code and make a new reservation?")) {
-            localStorage.removeItem('reservation');
-            dineInStep2.style.display = 'none';
-            dineInStep1.style.display = 'block';
-            customerNameInput.value = '';
-            reservationDateInput.value = '';
-            reservationTimeInput.value = '';
-            setMinDateForInput();
-        }
-    });
-
-    // --- GET DIRECTION LOGIC (FIXED) ---
-    const latitude = -8.6716371;
-    const longitude = 115.16241;
-    // FIX: URL ini akan membuka Google Maps, mendeteksi lokasi pengguna,
-    // dan langsung memulai navigasi mode motor ke tujuan.
-    directionBtn.href = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
-
-    // --- WHATSAPP CHAT LOGIC ---
-    const rawPhoneNumber = siteData.content?.footer_phone_value?.text_id || '6281234567890';
-    let cleanPhoneNumber = rawPhoneNumber.replace(/[\s+-]/g, '');
-    if (cleanPhoneNumber.startsWith('0')) {
-        cleanPhoneNumber = '62' + cleanPhoneNumber.substring(1);
+            const code = generateReservationCode();
+            const reservationData = { code, name: customerName, reservationDate, reservationTime, status: 'pending', createdAt: new Date() };
+            
+            try {
+                await saveReservationToFirebase(reservationData);
+                localStorage.setItem('reservation', JSON.stringify({ code: code, name: customerName }));
+                if (reservationCodeEl) reservationCodeEl.textContent = code;
+                if (dineInStep1) dineInStep1.style.display = 'none';
+                if (dineInStep2) dineInStep2.style.display = 'block';
+            } catch (error) {
+                console.log("UI update aborted due to Firebase save failure.");
+            }
+        });
     }
-    const greetingMessage = "Hello Lobster Shack Bali, I would like to make an inquiry.";
-    const encodedMessage = encodeURIComponent(greetingMessage);
-    whatsappBtn.href = `https://wa.me/${cleanPhoneNumber}?text=${encodedMessage}`;
+
+    if (cancelCodeBtn) {
+        cancelCodeBtn.addEventListener('click', () => {
+            if (confirm("Are you sure you want to cancel this code and make a new reservation?")) {
+                localStorage.removeItem('reservation');
+                if (dineInStep2) dineInStep2.style.display = 'none';
+                if (dineInStep1) dineInStep1.style.display = 'block';
+                if (customerNameInput) customerNameInput.value = '';
+                if (reservationDateInput) reservationDateInput.value = '';
+                if (reservationTimeInput) reservationTimeInput.value = '';
+                setMinDateForInput();
+            }
+        });
+    }
+
+    // --- GET DIRECTION & WHATSAPP LOGIC ---
+    if (directionBtn) {
+        const latitude = -8.6716371;
+        const longitude = 115.16241;
+        directionBtn.href = `https://maps.google.com/maps?daddr=${latitude},${longitude}&dirflg=d`;
+    }
+
+    if (whatsappBtn) {
+        const rawPhoneNumber = siteData.content?.footer_phone_value?.text_id || '6281234567890';
+        let cleanPhoneNumber = rawPhoneNumber.replace(/[\s+-]/g, '');
+        if (cleanPhoneNumber.startsWith('0')) {
+            cleanPhoneNumber = '62' + cleanPhoneNumber.substring(1);
+        }
+        const greetingMessage = "Hello Lobster Shack Bali, I would like to make an inquiry.";
+        const encodedMessage = encodeURIComponent(greetingMessage);
+        whatsappBtn.href = `https://wa.me/${cleanPhoneNumber}?text=${encodedMessage}`;
+    }
 }
