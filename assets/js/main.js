@@ -4,7 +4,7 @@
 let currentLanguage = localStorage.getItem('preferredLanguage') || 'id';
 let siteData = {};
 let lightbox;
-let db; // Firebase database instance
+let db;
 
 // DOM Elements
 const domElements = {
@@ -63,23 +63,18 @@ const renderBanners = () => {
 
 const renderHistory = () => {
     if (!domElements.aboutUsArticle) return;
-    const aboutArticleData = siteData.history && siteData.history.length > 0 ? siteData.history[0] : null;
-
-    if (aboutArticleData) {
-        const title = aboutArticleData[`title_${currentLanguage}`] || aboutArticleData.title_id;
-        const text = aboutArticleData[`text_${currentLanguage}`] || aboutArticleData.text_id;
-
+    const data = siteData.history && siteData.history.length > 0 ? siteData.history[0] : null;
+    if (data) {
+        const title = data[`title_${currentLanguage}`] || data.title_id;
+        const text = data[`text_${currentLanguage}`] || data.text_id;
         domElements.aboutUsArticle.innerHTML = `
-            <img src="https://lh3.googleusercontent.com/d/1GIdbd0F7kn0O4L8qEr-25GXSEWbLNVj9" alt="Lobster Shack Bali" class="about-logo">
-            <div class="about-text-container">
+            <div data-aos="zoom-in">
+                <img src="https://lh3.googleusercontent.com/d/1GIdbd0F7kn0O4L8qEr-25GXSEWbLNVj9" alt="Logo Lobster Shack" class="about-logo">
+            </div>
+            <div class="about-text-container" data-aos="fade-up" data-aos-delay="100">
                 <h3>${title}</h3>
-                <div class="expandable-text">
-                    <p>${text}</p>
-                    <div class="fade-out"></div>
-                </div>
-                <div class="see-more-btn">
-                    <button type="button">See More</button>
-                </div>
+                <div class="expandable-text"><p>${text}</p><div class="fade-out"></div></div>
+                <div class="see-more-btn"><button type="button">See More</button></div>
             </div>`;
     } else {
         domElements.aboutUsArticle.innerHTML = '<p>Our story is being written. Please check back soon!</p>';
@@ -143,17 +138,59 @@ const renderGallery = () => {
 const showProductModal = (productId) => {
     const product = siteData.products.find(p => p.id === productId);
     if (!product || !domElements.modalOverlay) return;
+
+    let optionsHTML = '';
+    const hasGoFood = product.gofood_link && product.gofood_link.trim() !== '';
+    const hasGrabFood = product.grabfood_link && product.grabfood_link.trim() !== '';
+
+    if (hasGoFood || hasGrabFood) {
+        optionsHTML = `
+            <div class="modal-options">
+                <button id="modal-dinein-btn" class="ls-btn btn-outline">Dine In</button>
+                <button id="modal-online-btn" class="ls-btn">Pesan Online</button>
+            </div>
+            <div class="modal-online-choice">
+                ${hasGoFood ? `<a href="${product.gofood_link}" target="_blank" class="ls-btn">GoFood</a>` : ''}
+                ${hasGrabFood ? `<a href="${product.grabfood_link}" target="_blank" class="ls-btn">GrabFood</a>` : ''}
+            </div>`;
+    } else {
+        optionsHTML = `
+            <div class="modal-options">
+                <button id="modal-dinein-btn" class="ls-btn">Dine In</button>
+            </div>
+            <p class="dine-in-only-msg">Hanya Tersedia Dine In</p>`;
+    }
+
     domElements.modalBody.innerHTML = `
-        <div class="modal-image">
-            <img src="${product.imageUrl}" alt="${product.name_en}">
-        </div>
+        <div class="modal-image"><img src="${product.imageUrl}" alt="${product.name_en}"></div>
         <div class="modal-text">
             <h3>${product[`name_${currentLanguage}`] || product.name_id}</h3>
             <span class="modal-price">Rp ${new Intl.NumberFormat('id-ID').format(product.price)}</span>
             <p class="modal-description">${product[`description_${currentLanguage}`] || product.description_id}</p>
+            ${optionsHTML}
         </div>`;
+
     domElements.body.classList.add('ls-modal-open');
     domElements.modalOverlay.classList.add('visible');
+
+    document.getElementById('modal-online-btn')?.addEventListener('click', () => {
+        if (hasGoFood && hasGrabFood) {
+            document.querySelector('.modal-options').style.display = 'none';
+            document.querySelector('.modal-online-choice').style.display = 'flex';
+        } else if (hasGoFood) {
+            window.open(product.gofood_link, '_blank');
+        } else if (hasGrabFood) {
+            window.open(product.grabfood_link, '_blank');
+        }
+    });
+
+    document.getElementById('modal-dinein-btn')?.addEventListener('click', () => {
+        hideProductModal();
+        setTimeout(() => {
+            const fabDineIn = document.getElementById('fab-dine-in');
+            if (fabDineIn) fabDineIn.click();
+        }, 300);
+    });
 };
 
 const hideProductModal = () => {
@@ -197,15 +234,7 @@ async function fetchAllData() {
     }
 }
 
-// --- COOKIE CONSENT LOGIC ---
-const handleCookieConsent = () => {
-    if (!domElements.cookieConsent || document.cookie.split(';').some((item) => item.trim().startsWith('ls_cookie_consent='))) {
-        return;
-    }
-    domElements.cookieConsent.classList.add('active');
-};
-
-// --- EVENT LISTENERS & HELPERS ---
+// --- HELPERS & EVENT LISTENERS ---
 function setupSeeMoreButton() {
     const seeMoreBtn = document.querySelector('.see-more-btn button');
     if (seeMoreBtn) {
@@ -278,13 +307,15 @@ function addAllEventListeners() {
         if (e.target === domElements.modalOverlay) hideProductModal();
     });
     
-    if (domElements.cookieAcceptBtn) {
-        domElements.cookieAcceptBtn.addEventListener('click', () => {
+    const cookieAcceptBtn = document.getElementById('ls-cookie-accept-btn');
+    if (cookieAcceptBtn) {
+        cookieAcceptBtn.addEventListener('click', () => {
+            const cookieConsent = document.getElementById('ls-cookie-consent');
             let d = new Date();
             d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
             let expires = "expires=" + d.toUTCString();
             document.cookie = "ls_cookie_consent=accepted;" + expires + ";path=/";
-            domElements.cookieConsent.classList.remove('active');
+            if (cookieConsent) cookieConsent.classList.remove('active');
         });
     }
 
@@ -324,7 +355,13 @@ async function initApp() {
 
         addAllEventListeners();
         await fetchAllData();
-        setTimeout(handleCookieConsent, 2000);
+        
+        const cookieConsent = document.getElementById('ls-cookie-consent');
+        if (cookieConsent && !document.cookie.includes('ls_cookie_consent=accepted')) {
+            setTimeout(() => {
+                cookieConsent.classList.add('active');
+            }, 2000);
+        }
 
     } catch (error) {
         console.error("Failed to initialize app:", error);
