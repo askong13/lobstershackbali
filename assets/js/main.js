@@ -187,6 +187,7 @@ async function fetchAllData() {
         contentSnap.docs.forEach(doc => { siteData.content[doc.id] = doc.data(); });
         
         renderAll();
+        // Check if the function from floating.js exists before calling it
         if (typeof setupFloatingButton === 'function') {
             setupFloatingButton();
         }
@@ -210,8 +211,10 @@ function setupSeeMoreButton() {
     if (seeMoreBtn) {
         seeMoreBtn.addEventListener('click', () => {
             const expandableText = document.querySelector('.expandable-text');
-            expandableText.classList.toggle('expanded');
-            seeMoreBtn.textContent = expandableText.classList.contains('expanded') ? 'See Less' : 'See More';
+            if (expandableText) {
+                expandableText.classList.toggle('expanded');
+                seeMoreBtn.textContent = expandableText.classList.contains('expanded') ? 'See Less' : 'See More';
+            }
         });
     }
 }
