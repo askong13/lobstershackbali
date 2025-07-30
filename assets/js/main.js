@@ -13,7 +13,6 @@ const domElements = {
     mobileMenuToggle: document.getElementById('ls-mobile-menu-toggle'),
     langToggleContainer: document.querySelector('.ls-language-toggle'),
     heroSliderWrapper: document.getElementById('ls-hero-slider-wrapper'),
-    // REVISED: New container for the About Us article
     aboutUsArticle: document.getElementById('ls-about-us-article'), 
     featuredMenuWrapper: document.getElementById('ls-featured-menu-wrapper'),
     menuGrid: document.getElementById('ls-menu-grid'),
@@ -32,7 +31,6 @@ const updateTextContent = () => {
         const key = el.dataset.langKey;
         const content = siteData.content?.[key];
         if (content) {
-            // Use innerText for most elements to avoid re-rendering icons, but innerHTML for specific ones if needed.
             const target = el.querySelector('span') || el;
             target.innerHTML = content[`text_${currentLanguage}`] || content.text_id || target.innerHTML;
         }
@@ -63,26 +61,31 @@ const renderBanners = () => {
     });
 };
 
-// --- REVISED renderHistory function ---
 const renderHistory = () => {
-    // This function now renders a single article, not a timeline.
-    if (!domElements.aboutUsArticle) return; // Exit if the new container doesn't exist
-
-    // The "history" collection is now used for the single About Us article.
-    // We'll take the first document found in the collection.
+    if (!domElements.aboutUsArticle) return;
     const aboutArticleData = siteData.history && siteData.history.length > 0 ? siteData.history[0] : null;
 
     if (aboutArticleData) {
+        const title = aboutArticleData[`title_${currentLanguage}`] || aboutArticleData.title_id;
+        const text = aboutArticleData[`text_${currentLanguage}`] || aboutArticleData.text_id;
+
         domElements.aboutUsArticle.innerHTML = `
             <img src="https://lh3.googleusercontent.com/d/1GIdbd0F7kn0O4L8qEr-25GXSEWbLNVj9" alt="Lobster Shack Bali" class="about-logo">
-            <h3>${aboutArticleData[`title_${currentLanguage}`] || aboutArticleData.title_id}</h3>
-            <p>${aboutArticleData[`text_${currentLanguage}`] || aboutArticleData.text_id}</p>
-        `;
+            <div class="about-text-container">
+                <h3>${title}</h3>
+                <div class="expandable-text">
+                    <p>${text}</p>
+                    <div class="fade-out"></div>
+                </div>
+                <div class="see-more-btn">
+                    <button type="button">See More</button>
+                </div>
+            </div>`;
     } else {
         domElements.aboutUsArticle.innerHTML = '<p>Our story is being written. Please check back soon!</p>';
     }
+    setupSeeMoreButton();
 };
-
 
 const renderMenu = () => {
     if (!siteData.products || !siteData.categories || !domElements.menuGrid) return;
@@ -184,7 +187,9 @@ async function fetchAllData() {
         contentSnap.docs.forEach(doc => { siteData.content[doc.id] = doc.data(); });
         
         renderAll();
-        setupFloatingButton(); // This is called from floating.js
+        if (typeof setupFloatingButton === 'function') {
+            setupFloatingButton();
+        }
     } catch (error) {
         console.error("Error fetching data from Firebase:", error);
         if (document.body) document.body.innerHTML = "<h1>Error loading site data. Please try again later.</h1>";
@@ -199,14 +204,24 @@ const handleCookieConsent = () => {
     domElements.cookieConsent.classList.add('active');
 };
 
-// --- EVENT LISTENERS ---
+// --- EVENT LISTENERS & HELPERS ---
+function setupSeeMoreButton() {
+    const seeMoreBtn = document.querySelector('.see-more-btn button');
+    if (seeMoreBtn) {
+        seeMoreBtn.addEventListener('click', () => {
+            const expandableText = document.querySelector('.expandable-text');
+            expandableText.classList.toggle('expanded');
+            seeMoreBtn.textContent = expandableText.classList.contains('expanded') ? 'See Less' : 'See More';
+        });
+    }
+}
+
 function addAllEventListeners() {
     if (domElements.langToggleContainer) {
         domElements.langToggleContainer.addEventListener('click', e => {
             if (!e.target.matches('.ls-lang-btn') || e.target.classList.contains('active')) return;
             currentLanguage = e.target.dataset.lang;
             localStorage.setItem('preferredLanguage', currentLanguage);
-            // Re-render content that depends on language
             renderHistory(); 
             renderMenu(); 
             renderGallery(); 
