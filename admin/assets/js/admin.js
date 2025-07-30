@@ -1,394 +1,317 @@
 'use strict';
 
-// --- Global variables ---
-let auth, db, storage;
-let productsData = [], categoriesData = [], contentData = [], bannersData = [], galleryData = [], historyData = [];
+// Global variables
+let currentLanguage = localStorage.getItem('preferredLanguage') || 'id';
+let siteData = {};
+let lightbox;
+let db; // Firebase database instance
 
-// --- DOM Elements ---
-const authContainer = document.getElementById('auth-container');
-const adminContainer = document.getElementById('admin-container');
-const loginForm = document.getElementById('login-form');
-const loginError = document.getElementById('login-error');
-const logoutBtn = document.getElementById('logout-btn');
+// DOM Elements
+const domElements = {
+    body: document.body,
+    mainNav: document.getElementById('ls-main-nav'),
+    mobileMenuToggle: document.getElementById('ls-mobile-menu-toggle'),
+    langToggleContainer: document.querySelector('.ls-language-toggle'),
+    heroSliderWrapper: document.getElementById('ls-hero-slider-wrapper'),
+    // REVISED: New container for the About Us article
+    aboutUsArticle: document.getElementById('ls-about-us-article'), 
+    featuredMenuWrapper: document.getElementById('ls-featured-menu-wrapper'),
+    menuGrid: document.getElementById('ls-menu-grid'),
+    menuFilters: document.getElementById('ls-menu-filters'),
+    galleryGrid: document.getElementById('ls-gallery-grid'),
+    modalOverlay: document.getElementById('ls-product-modal-overlay'),
+    modalBody: document.getElementById('ls-modal-body'),
+    modalCloseBtn: document.getElementById('ls-modal-close-btn'),
+    cookieConsent: document.getElementById('ls-cookie-consent'),
+    cookieAcceptBtn: document.getElementById('ls-cookie-accept-btn'),
+};
 
-// --- APP INITIALIZATION ---
-async function initializeApp() {
-    try {
-        const response = await fetch('/.netlify/functions/firebase-config');
-        if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
-        const firebaseConfig = await response.json();
-
-        firebase.initializeApp(firebaseConfig);
-        auth = firebase.auth();
-        db = firebase.firestore();
-        storage = firebase.storage();
-
-        setupAuthListener();
-    } catch (error) {
-        console.error("Firebase initialization failed:", error);
-        document.body.innerHTML = `<h1>Error: Could not initialize application.</h1><p>Please check the console for details and ensure Netlify environment variables are set correctly.</p>`;
-    }
-}
-
-// --- AUTHENTICATION ---
-function setupAuthListener() {
-    auth.onAuthStateChanged(user => {
-        if (user) {
-            authContainer.style.display = 'none';
-            adminContainer.style.display = 'flex';
-            initAdminPanel();
-        } else {
-            authContainer.style.display = 'flex';
-            adminContainer.style.display = 'none';
+// --- CORE FUNCTIONS ---
+const updateTextContent = () => {
+    document.querySelectorAll('[data-lang-key]').forEach(el => {
+        const key = el.dataset.langKey;
+        const content = siteData.content?.[key];
+        if (content) {
+            // Use innerText for most elements to avoid re-rendering icons, but innerHTML for specific ones if needed.
+            const target = el.querySelector('span') || el;
+            target.innerHTML = content[`text_${currentLanguage}`] || content.text_id || target.innerHTML;
         }
     });
+    document.title = siteData.content?.ls_page_title?.[`text_${currentLanguage}`] || 'Lobster Shack Bali';
+    updateLangButtons();
+};
 
-    loginForm.addEventListener('submit', e => {
-        e.preventDefault();
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        auth.signInWithEmailAndPassword(email, password)
-            .catch(error => {
-                loginError.textContent = "Login Failed: " + error.message;
-                loginError.style.display = 'block';
-            });
+const updateLangButtons = () => {
+    document.querySelectorAll('.ls-lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === currentLanguage);
     });
+};
 
-    logoutBtn.addEventListener('click', e => {
-        e.preventDefault();
-        auth.signOut();
+// --- RENDER FUNCTIONS ---
+const renderBanners = () => {
+    if (!siteData.banners || siteData.banners.length === 0 || !domElements.heroSliderWrapper) return;
+    domElements.heroSliderWrapper.innerHTML = siteData.banners.map(banner => `
+        <div class="swiper-slide">
+            <div class="ls-slide-background" style="background-image: url('${banner.image_url}');"></div>
+            <div class="ls-slide-overlay"></div>
+        </div>`).join('');
+    new Swiper('.ls-hero-slider', {
+        loop: true, effect: 'fade', fadeEffect: { crossFade: true },
+        autoplay: { delay: 5000, disableOnInteraction: false },
+        pagination: { el: '.swiper-pagination', clickable: true },
+        allowTouchMove: false
     });
-}
+};
 
-// --- PANEL SETUP ---
-function initAdminPanel() {
-    setupNavigation();
-    loadAllData();
-    setupModals();
-    setupForms();
-    setupImagePreviews();
-}
+// --- REVISED renderHistory function ---
+const renderHistory = () => {
+    // This function now renders a single article, not a timeline.
+    if (!domElements.aboutUsArticle) return; // Exit if the new container doesn't exist
 
-async function loadAllData() {
-    try {
-        await Promise.all([
-            loadBanners(), loadGallery(), loadHistory(),
-            loadCategories(), loadProducts(), loadContent(),
-        ]);
-        renderAllTables();
-        populateCategoryDropdown();
-    } catch (err) {
-        console.error("Failed to load data:", err);
-        alert("Could not load data. Check console for details.");
+    // The "history" collection is now used for the single About Us article.
+    // We'll take the first document found in the collection.
+    const aboutArticleData = siteData.history && siteData.history.length > 0 ? siteData.history[0] : null;
+
+    if (aboutArticleData) {
+        domElements.aboutUsArticle.innerHTML = `
+            <img src="https://lh3.googleusercontent.com/d/1GIdbd0F7kn0O4L8qEr-25GXSEWbLNVj9" alt="Lobster Shack Bali" class="about-logo">
+            <h3>${aboutArticleData[`title_${currentLanguage}`] || aboutArticleData.title_id}</h3>
+            <p>${aboutArticleData[`text_${currentLanguage}`] || aboutArticleData.text_id}</p>
+        `;
+    } else {
+        domElements.aboutUsArticle.innerHTML = '<p>Our story is being written. Please check back soon!</p>';
     }
-}
+};
 
-function renderAllTables() {
-    renderBanners(); renderGallery(); renderHistory();
-    renderProducts(); renderCategories(); renderContent();
-}
 
-// --- NAVIGATION ---
-function setupNavigation() {
-    const navLinks = document.querySelectorAll('.sidebar-nav a');
-    const pages = document.querySelectorAll('.page');
-    const sidebar = document.querySelector('.sidebar');
-    const menuToggle = document.querySelector('.menu-toggle');
-
-    const switchPage = (hash) => {
-        const targetId = 'page-' + (hash.substring(1) || 'dashboard');
-        navLinks.forEach(link => link.classList.remove('active'));
-        pages.forEach(page => page.classList.remove('active'));
-        
-        const activeLink = document.querySelector(`.sidebar-nav a[href="${hash}"]`) || document.querySelector('.sidebar-nav a[href="#dashboard"]');
-        const activePage = document.getElementById(targetId) || document.getElementById('page-dashboard');
-
-        if(activeLink) activeLink.classList.add('active');
-        if(activePage) activePage.classList.add('active');
-
-        if (window.innerWidth <= 992 && sidebar.classList.contains('open')) {
-            sidebar.classList.remove('open');
-            menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-        }
-    };
-
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            if (link.id !== 'logout-btn') {
-                e.preventDefault();
-                window.location.hash = link.getAttribute('href');
-            }
-        });
-    });
+const renderMenu = () => {
+    if (!siteData.products || !siteData.categories || !domElements.menuGrid) return;
     
-    window.addEventListener('hashchange', () => switchPage(window.location.hash));
-    switchPage(window.location.hash);
-
-    menuToggle.addEventListener('click', () => {
-        sidebar.classList.toggle('open');
-        menuToggle.innerHTML = sidebar.classList.contains('open') ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+    const getCardHTML = p => `
+        <div class="ls-menu-card" data-category="${p.category_name}" data-product-id="${p.id}"> 
+            <div class="ls-menu-card-image"><img src="${p.imageUrl}" alt="${p.name_en}" loading="lazy"></div> 
+            <div class="ls-menu-card-content"> 
+                <div class="title-price">
+                    <h3>${p[`name_${currentLanguage}`] || p.name_id}</h3>
+                    <span class="ls-menu-card-price">Rp ${new Intl.NumberFormat('id-ID').format(p.price)}</span>
+                </div>
+                <p class="ls-description">${(p[`description_${currentLanguage}`] || p.description_id)}</p>
+                <div class="ls-card-actions">
+                    <button class="ls-btn ls-view-details-btn"><i class="fas fa-eye"></i> <span data-lang-key="view_details_btn">View Details</span></button>
+                    ${p.gofood_link ? `<a href="${p.gofood_link}" target="_blank" rel="noopener noreferrer" class="ls-order-link" aria-label="Order on GoFood"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRF4G3lRAltCydaksfc29WU0fH7mJrnweaDYLqBrCw33Vxb6QfzKD87ANo&s=10" alt="GoFood Logo" style="width:24px; height:24px;"></a>` : ''}
+                    ${p.grabfood_link ? `<a href="${p.grabfood_link}" target="_blank" rel="noopener noreferrer" class="ls-order-link" aria-label="Order on GrabFood"><img src="https://iconlogovector.com/uploads/images/2023/11/lg-655d63568932b-grab-food.png" alt="GrabFood Logo" style="width:24px; height:24px;"></a>` : ''}
+                </div>
+            </div> 
+        </div>`;
+    
+    if(domElements.featuredMenuWrapper) {
+        domElements.featuredMenuWrapper.innerHTML = siteData.products
+            .filter(p => p.is_featured).map(p => `<div class="swiper-slide">${getCardHTML(p)}</div>`).join('');
+    }
+        
+    domElements.menuGrid.innerHTML = siteData.products.map(p => getCardHTML(p)).join('');
+    
+    const allText = currentLanguage === 'id' ? 'Semua' : 'All';
+    if(domElements.menuFilters) {
+        domElements.menuFilters.innerHTML = `<button class="ls-filter-btn active" data-filter="all">${allText}</button>` +
+            siteData.categories.map(c => `<button class="ls-filter-btn" data-filter="${c.name}">${c.name}</button>`).join('');
+    }
+    
+    new Swiper('.ls-featured-slider', { 
+        slidesPerView: 1, spaceBetween: 24, grabCursor: true, 
+        pagination: { el: '.swiper-pagination', clickable: true },
+        breakpoints: { 576: { slidesPerView: 2 }, 992: { slidesPerView: 3 } }
     });
-}
+};
 
-// --- MODALS & PREVIEWS ---
-function setupModals() {
-    document.querySelectorAll('.modal-overlay').forEach(modal => {
-        modal.addEventListener('click', e => { if (e.target === modal) closeModal(modal.id); });
-    });
-    document.querySelectorAll('.modal-close-btn').forEach(btn => {
-        btn.addEventListener('click', () => closeModal(btn.closest('.modal-overlay').id));
-    });
-}
-const openModal = (modalId) => document.getElementById(modalId).classList.add('visible');
-const closeModal = (modalId) => document.getElementById(modalId).classList.remove('visible');
+const renderGallery = () => {
+    if (!siteData.gallery_images || !domElements.galleryGrid) return;
+    domElements.galleryGrid.innerHTML = siteData.gallery_images.map(img => `
+        <a href="${img.image_url}" class="glightbox" data-gallery="our-gallery" data-title="${img[`caption_${currentLanguage}`] || img.caption_id}"> 
+            <img src="${img.image_url}" alt="${img.caption_en || 'Gallery Image'}" loading="lazy"> 
+        </a>`).join('');
+    if (lightbox) { 
+        lightbox.reload(); 
+    } else { 
+        lightbox = GLightbox({ selector: '.glightbox', touchNavigation: true }); 
+    }
+};
 
-function setupImagePreviews() {
-    const handleFileChange = (inputId, previewId) => {
-        document.getElementById(inputId).addEventListener('change', (e) => {
-            const preview = document.getElementById(previewId);
-            const file = e.target.files[0];
-            if (file) {
-                preview.src = URL.createObjectURL(file);
-                preview.style.display = 'block';
-            }
-        });
-    };
-    handleFileChange('product-image', 'product-image-preview');
-    handleFileChange('content-image', 'content-image-preview');
-    handleFileChange('banner-image', 'banner-image-preview');
-    handleFileChange('gallery-image', 'gallery-image-preview');
-}
+const showProductModal = (productId) => {
+    const product = siteData.products.find(p => p.id === productId);
+    if (!product || !domElements.modalOverlay) return;
+    domElements.modalBody.innerHTML = `
+        <div class="modal-image">
+            <img src="${product.imageUrl}" alt="${product.name_en}">
+        </div>
+        <div class="modal-text">
+            <h3>${product[`name_${currentLanguage}`] || product.name_id}</h3>
+            <span class="modal-price">Rp ${new Intl.NumberFormat('id-ID').format(product.price)}</span>
+            <p class="modal-description">${product[`description_${currentLanguage}`] || product.description_id}</p>
+        </div>`;
+    domElements.body.classList.add('ls-modal-open');
+    domElements.modalOverlay.classList.add('visible');
+};
+
+const hideProductModal = () => {
+    if (!domElements.modalOverlay) return;
+    domElements.body.classList.remove('ls-modal-open');
+    domElements.modalOverlay.classList.remove('visible');
+};
+
+const renderAll = () => {
+    renderBanners();
+    renderHistory();
+    renderMenu();
+    renderGallery();
+    updateTextContent();
+    AOS.init({ duration: 800, once: true, offset: 50 });
+};
 
 // --- DATA FETCHING ---
-async function loadCollection(name, orderByField, orderDirection = 'asc') {
-    let query = db.collection(name);
-    if (orderByField) query = query.orderBy(orderByField, orderDirection);
-    const snapshot = await query.get();
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-}
-async function loadProducts() { productsData = await loadCollection('products', 'name_en'); }
-async function loadCategories() { categoriesData = await loadCollection('categories', 'id'); }
-async function loadContent() { contentData = await loadCollection('content'); }
-async function loadBanners() { bannersData = await loadCollection('banners', 'sort_order'); }
-async function loadGallery() { galleryData = await loadCollection('gallery_images', 'sort_order'); }
-async function loadHistory() { historyData = await loadCollection('history', 'sort_order', 'asc'); }
-
-// --- TABLE RENDERING ---
-const renderTable = (tableId, data, rowRenderer) => {
-    const tbody = document.querySelector(`#${tableId} tbody`);
-    if(!tbody) return;
-    tbody.innerHTML = data.map(rowRenderer).join('') || `<tr><td colspan="100%" style="text-align:center; padding: 2rem;">No data available.</td></tr>`;
-};
-const getImageUrl = (url) => url || 'https://via.placeholder.com/100x60?text=No+Img';
-const renderActionButtons = (collection, id, name, imageUrl) => `
-    <div class="action-btns">
-        <button class="btn btn-sm btn-outline" onclick="editItem('${collection}', '${id}')"><i class="fas fa-edit"></i></button>
-        <button class="btn btn-sm btn-danger" onclick="deleteItem('${collection}', '${id}', '${name.replace(/'/g, "\\'")}', '${imageUrl}')"><i class="fas fa-trash"></i></button>
-    </div>`;
-
-const renderBanners = () => renderTable('banners-table', bannersData, b => `<tr><td data-label="Image"><img src="${getImageUrl(b.image_url)}" class="thumb-image"></td><td data-label="Sort Order">${b.sort_order}</td><td data-label="Actions">${renderActionButtons('banners', b.id, `Banner #${b.sort_order}`, b.image_url)}</td></tr>`);
-const renderGallery = () => renderTable('gallery-table', galleryData, g => `<tr><td data-label="Image"><img src="${getImageUrl(g.image_url)}" class="thumb-image"></td><td data-label="Sort Order">${g.sort_order}</td><td data-label="Caption">${g.caption_id}<br><small class="text-muted">${g.caption_en}</small></td><td data-label="Actions">${renderActionButtons('gallery_images', g.id, g.caption_en, g.image_url)}</td></tr>`);
-const renderHistory = () => renderTable('history-table', historyData, h => `<tr><td data-label="Sort Order">${h.sort_order}</td><td data-label="Year">${h.year}</td><td data-label="Title">${h.title_id}<br><small class="text-muted">${h.title_en}</small></td><td data-label="Actions">${renderActionButtons('history', h.id, h.title_en)}</td></tr>`);
-const renderProducts = () => renderTable('products-table', productsData, p => `<tr><td data-label="Image"><img src="${getImageUrl(p.imageUrl)}" class="thumb-image"></td><td data-label="Name">${p.name_id}<br><small class="text-muted">${p.name_en}</small></td><td data-label="Category">${p.category_name}</td><td data-label="Price">${new Intl.NumberFormat('id-ID').format(p.price)}</td><td data-label="Featured"><i class="fas ${p.is_featured ? 'fa-check-circle' : 'fa-times-circle'}"></i></td><td data-label="Actions">${renderActionButtons('products', p.id, p.name_en, p.imageUrl)}</td></tr>`);
-const renderCategories = () => renderTable('categories-table', categoriesData, c => `<tr><td data-label="Sort Order">${c.id}</td><td data-label="Name">${c.name}</td><td data-label="Actions">${renderActionButtons('categories', c.id, c.name)}</td></tr>`);
-const renderContent = () => renderTable('content-table', contentData.sort((a,b) => a.id.localeCompare(b.id)), c => `<tr><td data-label="Key"><strong>${c.id}</strong></td><td data-label="Text (ID)">${(c.text_id || '').substring(0, 50)}...</td><td data-label="Text (EN)">${(c.text_en || '').substring(0, 50)}...</td><td data-label="Image">${c.imageUrl ? `<img src="${c.imageUrl}" class="thumb-image">` : 'N/A'}</td><td data-label="Action"><div class="action-btns"><button class="btn btn-sm btn-outline" onclick="editItem('content', '${c.id}')"><i class="fas fa-edit"></i></button></div></td></tr>`);
-
-// --- FORM HANDLING ---
-function populateCategoryDropdown() {
-    const select = document.getElementById('product-category');
-    select.innerHTML = '<option value="">Select a category</option>';
-    categoriesData.forEach(c => { select.innerHTML += `<option value="${c.name}">${c.name}</option>`; });
-}
-
-const resetForm = (formId, modalTitleId, titleText) => {
-    document.getElementById(formId).reset();
-    document.querySelectorAll(`#${formId} input[type=hidden]`).forEach(input => input.value = '');
-    document.getElementById(modalTitleId).textContent = titleText;
-    document.querySelectorAll(`#${formId} .image-preview`).forEach(img => { img.style.display = 'none'; img.src = '#'; });
-};
-const uploadImage = async (file, path) => {
-    if (!file) return null;
-    const filePath = `${path}/${Date.now()}_${file.name}`;
-    const fileSnapshot = await storage.ref(filePath).put(file);
-    return fileSnapshot.ref.getDownloadURL();
-};
-const saveToDb = async (collectionName, id, data) => {
-    if (id) {
-        await db.collection(collectionName).doc(id).update(data);
-    } else {
-        await db.collection(collectionName).add(data);
+async function fetchAllData() {
+    try {
+        const collections = ['products', 'categories', 'content', 'banners', 'gallery_images', 'history'];
+        const promises = collections.map(col => db.collection(col).get());
+        const [ productsSnap, categoriesSnap, contentSnap, bannersSnap, gallerySnap, historySnap ] = await Promise.all(promises);
+        
+        siteData.products = productsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        siteData.categories = categoriesSnap.docs.map(doc => doc.data()).sort((a,b) => a.id - b.id);
+        siteData.banners = bannersSnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
+        siteData.gallery_images = gallerySnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
+        siteData.history = historySnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        siteData.content = {};
+        contentSnap.docs.forEach(doc => { siteData.content[doc.id] = doc.data(); });
+        
+        renderAll();
+        setupFloatingButton(); // This is called from floating.js
+    } catch (error) {
+        console.error("Error fetching data from Firebase:", error);
+        if (document.body) document.body.innerHTML = "<h1>Error loading site data. Please try again later.</h1>";
     }
+}
+
+// --- COOKIE CONSENT LOGIC ---
+const handleCookieConsent = () => {
+    if (!domElements.cookieConsent || document.cookie.split(';').some((item) => item.trim().startsWith('ls_cookie_consent='))) {
+        return;
+    }
+    domElements.cookieConsent.classList.add('active');
 };
 
-function setupForms() {
-    document.getElementById('add-new-banner-btn').addEventListener('click', () => { resetForm('banner-form', 'banner-modal-title', 'Add Banner'); openModal('banner-modal'); });
-    document.getElementById('add-new-gallery-btn').addEventListener('click', () => { resetForm('gallery-form', 'gallery-modal-title', 'Add Gallery Image'); openModal('gallery-modal'); });
-    document.getElementById('add-new-history-btn').addEventListener('click', () => { resetForm('history-form', 'history-modal-title', 'Add History'); openModal('history-modal'); });
-    document.getElementById('add-new-product-btn').addEventListener('click', () => { resetForm('product-form', 'product-modal-title', 'Add Product'); openModal('product-modal'); });
-    document.getElementById('add-new-category-btn').addEventListener('click', () => { resetForm('category-form', 'category-modal-title', 'Add Category'); openModal('category-modal'); });
+// --- EVENT LISTENERS ---
+function addAllEventListeners() {
+    if (domElements.langToggleContainer) {
+        domElements.langToggleContainer.addEventListener('click', e => {
+            if (!e.target.matches('.ls-lang-btn') || e.target.classList.contains('active')) return;
+            currentLanguage = e.target.dataset.lang;
+            localStorage.setItem('preferredLanguage', currentLanguage);
+            // Re-render content that depends on language
+            renderHistory(); 
+            renderMenu(); 
+            renderGallery(); 
+            updateTextContent();
+        });
+    }
+    
+    if (domElements.mobileMenuToggle) {
+        domElements.mobileMenuToggle.addEventListener('click', () => {
+            domElements.mainNav.classList.toggle('active');
+            domElements.body.classList.toggle('ls-nav-open');
+            const icon = domElements.mobileMenuToggle.querySelector('i');
+            icon.classList.toggle('fa-bars'); 
+            icon.classList.toggle('fa-times');
+        });
+    }
 
-    document.getElementById('product-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const id = document.getElementById('product-id').value;
-        const imageFile = document.getElementById('product-image').files[0];
-        const data = {
-            name_id: document.getElementById('product-name-id').value,
-            name_en: document.getElementById('product-name-en').value,
-            description_id: document.getElementById('product-description-id').value,
-            description_en: document.getElementById('product-description-en').value,
-            price: Number(document.getElementById('product-price').value),
-            category_name: document.getElementById('product-category').value,
-            is_featured: document.getElementById('product-featured').checked,
-            gofood_link: document.getElementById('product-gofood-link').value.trim(),
-            grabfood_link: document.getElementById('product-grabfood-link').value.trim()
-        };
-        try {
-            const imageUrl = await uploadImage(imageFile, 'products');
-            if (imageUrl) data.imageUrl = imageUrl;
-            await saveToDb('products', id, data);
-            closeModal('product-modal'); await loadProducts(); renderProducts();
-        } catch(err) { alert("Error saving product: " + err.message); }
+    if (domElements.mainNav) {
+        domElements.mainNav.addEventListener('click', (e) => {
+            if (e.target.matches('a') && domElements.mainNav.classList.contains('active')) {
+                domElements.mobileMenuToggle.click();
+            }
+        });
+    }
+    
+    if (domElements.menuFilters) {
+        domElements.menuFilters.addEventListener('click', e => {
+            if (!e.target.matches('.ls-filter-btn') || e.target.classList.contains('active')) return;
+            domElements.menuFilters.querySelector('.active').classList.remove('active');
+            e.target.classList.add('active');
+            const filter = e.target.dataset.filter;
+            domElements.menuGrid.querySelectorAll('.ls-menu-card').forEach(card => {
+                const isVisible = filter === 'all' || card.dataset.category === filter;
+                card.classList.toggle('hidden', !isVisible);
+            });
+        });
+    }
+
+    if (domElements.body) {
+        domElements.body.addEventListener('click', e => {
+            const detailsButton = e.target.closest('.ls-view-details-btn');
+            if (detailsButton) {
+                const card = detailsButton.closest('.ls-menu-card');
+                if (card) showProductModal(card.dataset.productId);
+            }
+        });
+    }
+
+    if(domElements.modalCloseBtn) domElements.modalCloseBtn.addEventListener('click', hideProductModal);
+    if(domElements.modalOverlay) domElements.modalOverlay.addEventListener('click', e => {
+        if (e.target === domElements.modalOverlay) hideProductModal();
     });
     
-    // Other form submissions (banner, gallery, etc.)
-    document.getElementById('banner-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const id = document.getElementById('banner-id').value;
-        const imageFile = document.getElementById('banner-image').files[0];
-        const data = { sort_order: Number(document.getElementById('banner-sort-order').value) };
-        try {
-            const imageUrl = await uploadImage(imageFile, 'banners');
-            if (imageUrl) data.image_url = imageUrl;
-            else if (!id) return alert("Image is required for new banners.");
-            await saveToDb('banners', id, data);
-            closeModal('banner-modal'); await loadBanners(); renderBanners();
-        } catch(err) { alert("Error saving banner: " + err.message); }
-    });
-    document.getElementById('gallery-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const id = document.getElementById('gallery-id').value;
-        const imageFile = document.getElementById('gallery-image').files[0];
-        const data = { sort_order: Number(document.getElementById('gallery-sort-order').value), caption_id: document.getElementById('gallery-caption-id').value, caption_en: document.getElementById('gallery-caption-en').value };
-        try {
-            const imageUrl = await uploadImage(imageFile, 'gallery');
-            if (imageUrl) data.image_url = imageUrl;
-            else if (!id) return alert("Image is required for new gallery items.");
-            await saveToDb('gallery_images', id, data);
-            closeModal('gallery-modal'); await loadGallery(); renderGallery();
-        } catch(err) { alert("Error saving gallery item: " + err.message); }
-    });
-    document.getElementById('history-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const id = document.getElementById('history-id').value;
-        const data = { year: document.getElementById('history-year').value, sort_order: Number(document.getElementById('history-sort-order').value), title_id: document.getElementById('history-title-id').value, title_en: document.getElementById('history-title-en').value, text_id: document.getElementById('history-text-id').value, text_en: document.getElementById('history-text-en').value };
-        try {
-            await saveToDb('history', id, data);
-            closeModal('history-modal'); await loadHistory(); renderHistory();
-        } catch(err) { alert("Error saving history item: " + err.message); }
-    });
-    document.getElementById('category-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const docId = document.getElementById('category-id').value;
-        const data = { name: document.getElementById('category-name').value, id: Number(document.getElementById('category-sort-id').value) };
-        try {
-            await saveToDb('categories', docId, data);
-            closeModal('category-modal'); await loadCategories(); renderCategories(); populateCategoryDropdown();
-        } catch(err) { alert("Error saving category: " + err.message); }
-    });
-    document.getElementById('content-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const key = document.getElementById('content-key').value;
-        const imageFile = document.getElementById('content-image').files[0];
-        let data = { text_id: document.getElementById('content-text-id').value, text_en: document.getElementById('content-text-en').value };
-        try {
-            const imageUrl = await uploadImage(imageFile, 'content');
-            if (imageUrl) data.imageUrl = imageUrl;
-            await db.collection('content').doc(key).update(data);
-            closeModal('content-modal'); await loadContent(); renderContent();
-        } catch(err) { alert("Error saving content: " + err.message); }
-    });
+    if (domElements.cookieAcceptBtn) {
+        domElements.cookieAcceptBtn.addEventListener('click', () => {
+            let d = new Date();
+            d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = "ls_cookie_consent=accepted;" + expires + ";path=/";
+            domElements.cookieConsent.classList.remove('active');
+        });
+    }
+
+    const sections = document.querySelectorAll('main > section[id]');
+    const navLinks = document.querySelectorAll('.ls-nav-links a');
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (window.pageYOffset >= sectionTop - 150) {
+                current = section.getAttribute('id');
+            }
+        });
+        navLinks.forEach(a => {
+            a.classList.remove('active');
+            if (a.getAttribute('href').includes(current)) {
+                a.classList.add('active');
+            }
+        });
+    }, { passive: true });
 }
 
-// --- EDIT & DELETE ---
-const populateForm = (data, fields) => {
-    fields.forEach(field => {
-        const element = document.getElementById(field.id);
-        if(!element) return;
-        if (element.type === 'checkbox') { element.checked = data[field.key] || false; } 
-        else { element.value = data[field.key] || ''; }
-    });
-};
-const showImagePreview = (previewId, imageUrl) => {
-    const preview = document.getElementById(previewId);
-    if (imageUrl) { preview.src = imageUrl; preview.style.display = 'block'; }
-    else { preview.style.display = 'none'; }
-};
-
-window.editItem = (collection, id) => {
-    let item, modalId, modalTitle, fields, previewId, imageUrlKey;
-    switch(collection) {
-        case 'banners':
-            item = bannersData.find(i => i.id === id); modalId = 'banner-modal'; modalTitle = 'Edit Banner';
-            fields = [{id: 'banner-id', key: 'id'}, {id: 'banner-sort-order', key: 'sort_order'}];
-            previewId = 'banner-image-preview'; imageUrlKey = 'image_url';
-            break;
-        case 'gallery_images':
-            item = galleryData.find(i => i.id === id); modalId = 'gallery-modal'; modalTitle = 'Edit Gallery Image';
-            fields = [{id: 'gallery-id', key: 'id'}, {id: 'gallery-sort-order', key: 'sort_order'}, {id: 'gallery-caption-id', key: 'caption_id'}, {id: 'gallery-caption-en', key: 'caption_en'}];
-            previewId = 'gallery-image-preview'; imageUrlKey = 'image_url';
-            break;
-        case 'history':
-            item = historyData.find(i => i.id === id); modalId = 'history-modal'; modalTitle = 'Edit History Item';
-            fields = [{id: 'history-id', key: 'id'}, {id: 'history-year', key: 'year'}, {id: 'history-sort-order', key: 'sort_order'}, {id: 'history-title-id', key: 'title_id'}, {id: 'history-title-en', key: 'title_en'}, {id: 'history-text-id', key: 'text_id'}, {id: 'history-text-en', key: 'text_en'}];
-            break;
-        case 'products':
-            item = productsData.find(i => i.id === id); modalId = 'product-modal'; modalTitle = 'Edit Product';
-            fields = [
-                {id: 'product-id', key: 'id'}, {id: 'product-name-id', key: 'name_id'}, {id: 'product-name-en', key: 'name_en'},
-                {id: 'product-description-id', key: 'description_id'}, {id: 'product-description-en', key: 'description_en'},
-                {id: 'product-price', key: 'price'}, {id: 'product-category', key: 'category_name'}, {id: 'product-featured', key: 'is_featured'},
-                {id: 'product-gofood-link', key: 'gofood_link'}, {id: 'product-grabfood-link', key: 'grabfood_link'}
-            ];
-            previewId = 'product-image-preview'; imageUrlKey = 'imageUrl';
-            break;
-        case 'categories':
-            item = categoriesData.find(c => c.id === id); modalId = 'category-modal'; modalTitle = 'Edit Category';
-            fields = [{id: 'category-id', key: 'id'}, {id: 'category-name', key: 'name'}, {id: 'category-sort-id', key: 'id'}];
-            break;
-        case 'content':
-            item = contentData.find(c => c.id === id); modalId = 'content-modal'; modalTitle = `Edit Content: ${id}`;
-            document.getElementById('content-key-display').textContent = id;
-            fields = [{id: 'content-key', key: 'id'}, {id: 'content-text-id', key: 'text_id'}, {id: 'content-text-en', key: 'text_en'}];
-            previewId = 'content-image-preview'; imageUrlKey = 'imageUrl';
-            break;
-    }
-    if (!item) return;
-    resetForm(`${modalId.replace('-modal','')}-form`, `${modalId.replace('-modal','')}-modal-title`, modalTitle);
-    populateForm(item, fields);
-    if(previewId && imageUrlKey) showImagePreview(previewId, item[imageUrlKey]);
-    openModal(modalId);
-};
-
-window.deleteItem = async (collection, id, name, imageUrl) => {
-    if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
+// --- APP INITIALIZATION ---
+async function initApp() {
     try {
-        if (imageUrl && imageUrl.startsWith('https://firebasestorage.googleapis.com')) {
-            await storage.refFromURL(imageUrl).delete().catch(err => console.warn("Image delete failed:", err.message));
-        }
-        await db.collection(collection).doc(id).delete();
-        
-        switch (collection) {
-            case 'banners': await loadBanners(); renderBanners(); break;
-            case 'gallery_images': await loadGallery(); renderGallery(); break;
-            case 'history': await loadHistory(); renderHistory(); break;
-            case 'products': await loadProducts(); renderProducts(); break;
-            case 'categories': await loadCategories(); renderCategories(); populateCategoryDropdown(); break;
-        }
-        alert(`"${name}" deleted successfully.`);
-    } catch(err) {
-        alert("Failed to delete item: " + err.message);
-    }
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
+            authDomain: "lobster-shack-bali.firebaseapp.com",
+            projectId: "lobster-shack-bali",
+            storageBucket: "lobster-shack-bali.appspot.com",
+            messagingSenderId: "42452974733",
+            appId: "1:42452974733:web:5cad780f8295edd2b5f6c4"
+        };
 
-// --- START APP ---
-document.addEventListener('DOMContentLoaded', initializeApp);
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+
+        addAllEventListeners();
+        await fetchAllData();
+        setTimeout(handleCookieConsent, 2000);
+
+    } catch (error) {
+        console.error("Failed to initialize app:", error);
+        document.body.innerHTML = `<h1>Error initializing application.</h1><p>Could not load configuration. Please contact support.</p>`;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', initApp);
