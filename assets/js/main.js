@@ -21,8 +21,6 @@ const domElements = {
     modalOverlay: document.getElementById('ls-product-modal-overlay'),
     modalBody: document.getElementById('ls-modal-body'),
     modalCloseBtn: document.getElementById('ls-modal-close-btn'),
-    cookieConsent: document.getElementById('ls-cookie-consent'),
-    cookieAcceptBtn: document.getElementById('ls-cookie-accept-btn'),
 };
 
 // --- CORE FUNCTIONS ---
@@ -47,18 +45,9 @@ const updateLangButtons = () => {
 
 // --- RENDER FUNCTIONS ---
 const renderBanners = () => {
-    if (!siteData.banners || siteData.banners.length === 0 || !domElements.heroSliderWrapper) return;
-    domElements.heroSliderWrapper.innerHTML = siteData.banners.map(banner => `
-        <div class="swiper-slide">
-            <div class="ls-slide-background" style="background-image: url('${banner.image_url}');"></div>
-            <div class="ls-slide-overlay"></div>
-        </div>`).join('');
-    new Swiper('.ls-hero-slider', {
-        loop: true, effect: 'fade', fadeEffect: { crossFade: true },
-        autoplay: { delay: 5000, disableOnInteraction: false },
-        pagination: { el: '.swiper-pagination', clickable: true },
-        allowTouchMove: false
-    });
+    if (!siteData.banners || !domElements.heroSliderWrapper) return;
+    domElements.heroSliderWrapper.innerHTML = siteData.banners.map(banner => `<div class="swiper-slide"><div class="ls-slide-background" style="background-image: url('${banner.image_url}');"></div><div class="ls-slide-overlay"></div></div>`).join('');
+    new Swiper('.ls-hero-slider', { loop: true, effect: 'fade', autoplay: { delay: 5000 }, pagination: { el: '.swiper-pagination', clickable: true } });
 };
 
 const renderHistory = () => {
@@ -69,7 +58,7 @@ const renderHistory = () => {
         const text = data[`text_${currentLanguage}`] || data.text_id;
         domElements.aboutUsArticle.innerHTML = `
             <div data-aos="zoom-in">
-                <img src="https://lh3.googleusercontent.com/d/1GIdbd0F7kn0O4L8qEr-25GXSEWbLNVj9" alt="Logo Lobster Shack" class="about-logo">
+                <img src="https://lh3.googleusercontent.com/d/1GIdbd0F7kn0O4L8qEr-25GXSEWbLNVj9" alt="Logo" class="about-logo">
             </div>
             <div class="about-text-container" data-aos="fade-up" data-aos-delay="100">
                 <h3>${title}</h3>
@@ -84,10 +73,9 @@ const renderHistory = () => {
 
 const renderMenu = () => {
     if (!siteData.products || !siteData.categories || !domElements.menuGrid) return;
-    
     const getCardHTML = p => `
-        <div class="ls-menu-card" data-category="${p.category_name}" data-product-id="${p.id}"> 
-            <div class="ls-menu-card-image"><img src="${p.imageUrl}" alt="${p.name_en}" loading="lazy"></div> 
+        <div class="ls-menu-card" data-category="${p.category_name}" data-product-id="${p.id}" style="display: flex;"> 
+            <div class="ls-menu-card-image"><img src="${p.imageUrl || 'https://via.placeholder.com/400x300'}" alt="${p.name_en}" loading="lazy"></div> 
             <div class="ls-menu-card-content"> 
                 <div class="title-price">
                     <h3>${p[`name_${currentLanguage}`] || p.name_id}</h3>
@@ -96,8 +84,8 @@ const renderMenu = () => {
                 <p class="ls-description">${(p[`description_${currentLanguage}`] || p.description_id)}</p>
                 <div class="ls-card-actions">
                     <button class="ls-btn ls-view-details-btn"><i class="fas fa-eye"></i> <span data-lang-key="view_details_btn">View Details</span></button>
-                    ${p.gofood_link ? `<a href="${p.gofood_link}" target="_blank" rel="noopener noreferrer" class="ls-order-link" aria-label="Order on GoFood"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRF4G3lRAltCydaksfc29WU0fH7mJrnweaDYLqBrCw33Vxb6QfzKD87ANo&s=10" alt="GoFood Logo" style="width:24px; height:24px;"></a>` : ''}
-                    ${p.grabfood_link ? `<a href="${p.grabfood_link}" target="_blank" rel="noopener noreferrer" class="ls-order-link" aria-label="Order on GrabFood"><img src="https://iconlogovector.com/uploads/images/2023/11/lg-655d63568932b-grab-food.png" alt="GrabFood Logo" style="width:24px; height:24px;"></a>` : ''}
+                    ${(p.gofood_link && p.gofood_link.trim() !== '') ? `<a href="${p.gofood_link}" target="_blank" rel="noopener noreferrer" class="ls-order-link" aria-label="Order on GoFood"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRF4G3lRAltCydaksfc29WU0fH7mJrnweaDYLqBrCw33Vxb6QfzKD87ANo&s=10" alt="GoFood" style="height:24px;"></a>` : ''}
+                    ${(p.grabfood_link && p.grabfood_link.trim() !== '') ? `<a href="${p.grabfood_link}" target="_blank" rel="noopener noreferrer" class="ls-order-link" aria-label="Order on GrabFood"><img src="https://iconlogovector.com/uploads/images/2023/11/lg-655d63568932b-grab-food.png" alt="GrabFood" style="height:24px;"></a>` : ''}
                 </div>
             </div> 
         </div>`;
@@ -106,33 +94,19 @@ const renderMenu = () => {
         domElements.featuredMenuWrapper.innerHTML = siteData.products
             .filter(p => p.is_featured).map(p => `<div class="swiper-slide">${getCardHTML(p)}</div>`).join('');
     }
-        
     domElements.menuGrid.innerHTML = siteData.products.map(p => getCardHTML(p)).join('');
-    
     const allText = currentLanguage === 'id' ? 'Semua' : 'All';
     if(domElements.menuFilters) {
         domElements.menuFilters.innerHTML = `<button class="ls-filter-btn active" data-filter="all">${allText}</button>` +
             siteData.categories.map(c => `<button class="ls-filter-btn" data-filter="${c.name}">${c.name}</button>`).join('');
     }
-    
-    new Swiper('.ls-featured-slider', { 
-        slidesPerView: 1, spaceBetween: 24, grabCursor: true, 
-        pagination: { el: '.swiper-pagination', clickable: true },
-        breakpoints: { 576: { slidesPerView: 2 }, 992: { slidesPerView: 3 } }
-    });
+    new Swiper('.ls-featured-slider', { slidesPerView: 1, spaceBetween: 24, grabCursor: true, pagination: { el: '.swiper-pagination', clickable: true }, breakpoints: { 576: { slidesPerView: 2 }, 992: { slidesPerView: 3 } } });
 };
 
 const renderGallery = () => {
     if (!siteData.gallery_images || !domElements.galleryGrid) return;
-    domElements.galleryGrid.innerHTML = siteData.gallery_images.map(img => `
-        <a href="${img.image_url}" class="glightbox" data-gallery="our-gallery" data-title="${img[`caption_${currentLanguage}`] || img.caption_id}"> 
-            <img src="${img.image_url}" alt="${img.caption_en || 'Gallery Image'}" loading="lazy"> 
-        </a>`).join('');
-    if (lightbox) { 
-        lightbox.reload(); 
-    } else { 
-        lightbox = GLightbox({ selector: '.glightbox', touchNavigation: true }); 
-    }
+    domElements.galleryGrid.innerHTML = siteData.gallery_images.map(img => `<a href="${img.image_url}" class="glightbox" data-gallery="our-gallery" data-title="${img[`caption_${currentLanguage}`] || img.caption_id}"><img src="${img.image_url}" alt="${img.caption_en || 'Gallery Image'}" loading="lazy"></a>`).join('');
+    if (lightbox) { lightbox.reload(); } else { lightbox = GLightbox({ selector: '.glightbox' }); }
 };
 
 const showProductModal = (productId) => {
@@ -154,11 +128,7 @@ const showProductModal = (productId) => {
                 ${hasGrabFood ? `<a href="${product.grabfood_link}" target="_blank" class="ls-btn">GrabFood</a>` : ''}
             </div>`;
     } else {
-        optionsHTML = `
-            <div class="modal-options">
-                <button id="modal-dinein-btn" class="ls-btn">Dine In Only</button>
-            </div>
-            `;
+        optionsHTML = `<div class="modal-options"><button id="modal-dinein-btn" class="ls-btn">Dine In</button></div><p class="dine-in-only-msg">Hanya Tersedia Dine In</p>`;
     }
 
     domElements.modalBody.innerHTML = `
@@ -169,7 +139,6 @@ const showProductModal = (productId) => {
             <p class="modal-description">${product[`description_${currentLanguage}`] || product.description_id}</p>
             ${optionsHTML}
         </div>`;
-
     domElements.body.classList.add('ls-modal-open');
     domElements.modalOverlay.classList.add('visible');
 
@@ -177,19 +146,13 @@ const showProductModal = (productId) => {
         if (hasGoFood && hasGrabFood) {
             document.querySelector('.modal-options').style.display = 'none';
             document.querySelector('.modal-online-choice').style.display = 'flex';
-        } else if (hasGoFood) {
-            window.open(product.gofood_link, '_blank');
-        } else if (hasGrabFood) {
-            window.open(product.grabfood_link, '_blank');
-        }
+        } else if (hasGoFood) { window.open(product.gofood_link, '_blank'); }
+        else if (hasGrabFood) { window.open(product.grabfood_link, '_blank'); }
     });
 
     document.getElementById('modal-dinein-btn')?.addEventListener('click', () => {
         hideProductModal();
-        setTimeout(() => {
-            const fabDineIn = document.getElementById('fab-dine-in');
-            if (fabDineIn) fabDineIn.click();
-        }, 300);
+        setTimeout(() => document.getElementById('fab-dine-in')?.click(), 300);
     });
 };
 
@@ -214,7 +177,6 @@ async function fetchAllData() {
         const collections = ['products', 'categories', 'content', 'banners', 'gallery_images', 'history'];
         const promises = collections.map(col => db.collection(col).get());
         const [ productsSnap, categoriesSnap, contentSnap, bannersSnap, gallerySnap, historySnap ] = await Promise.all(promises);
-        
         siteData.products = productsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         siteData.categories = categoriesSnap.docs.map(doc => doc.data()).sort((a,b) => a.id - b.id);
         siteData.banners = bannersSnap.docs.map(doc => doc.data()).sort((a,b) => a.sort_order - b.sort_order);
@@ -222,15 +184,10 @@ async function fetchAllData() {
         siteData.history = historySnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         siteData.content = {};
         contentSnap.docs.forEach(doc => { siteData.content[doc.id] = doc.data(); });
-        
         renderAll();
-        
-        if (typeof setupFloatingButton === 'function') {
-            setupFloatingButton();
-        }
+        if (typeof setupFloatingButton === 'function') setupFloatingButton();
     } catch (error) {
-        console.error("Error fetching data from Firebase:", error);
-        if (document.body) document.body.innerHTML = "<h1>Error loading site data. Please try again later.</h1>";
+        console.error("Error fetching data:", error);
     }
 }
 
@@ -240,81 +197,72 @@ function setupSeeMoreButton() {
     if (seeMoreBtn) {
         seeMoreBtn.addEventListener('click', () => {
             const expandableText = document.querySelector('.expandable-text');
-            if (expandableText) {
-                expandableText.classList.toggle('expanded');
-                seeMoreBtn.textContent = expandableText.classList.contains('expanded') ? 'See Less' : 'See More';
-            }
+            expandableText.classList.toggle('expanded');
+            seeMoreBtn.textContent = expandableText.classList.contains('expanded') ? 'See Less' : 'See More';
         });
     }
 }
 
 function addAllEventListeners() {
-    if (domElements.langToggleContainer) {
-        domElements.langToggleContainer.addEventListener('click', e => {
-            if (!e.target.matches('.ls-lang-btn') || e.target.classList.contains('active')) return;
-            currentLanguage = e.target.dataset.lang;
-            localStorage.setItem('preferredLanguage', currentLanguage);
-            renderHistory(); 
-            renderMenu(); 
-            renderGallery(); 
-            updateTextContent();
-        });
-    }
-    
-    if (domElements.mobileMenuToggle) {
-        domElements.mobileMenuToggle.addEventListener('click', () => {
-            domElements.mainNav.classList.toggle('active');
-            domElements.body.classList.toggle('ls-nav-open');
-            const icon = domElements.mobileMenuToggle.querySelector('i');
-            icon.classList.toggle('fa-bars'); 
-            icon.classList.toggle('fa-times');
-        });
-    }
-
-    if (domElements.mainNav) {
-        domElements.mainNav.addEventListener('click', (e) => {
-            if (e.target.matches('a') && domElements.mainNav.classList.contains('active')) {
-                domElements.mobileMenuToggle.click();
-            }
-        });
-    }
-    
-    if (domElements.menuFilters) {
-        domElements.menuFilters.addEventListener('click', e => {
-            if (!e.target.matches('.ls-filter-btn') || e.target.classList.contains('active')) return;
-            domElements.menuFilters.querySelector('.active').classList.remove('active');
-            e.target.classList.add('active');
-            const filter = e.target.dataset.filter;
-            domElements.menuGrid.querySelectorAll('.ls-menu-card').forEach(card => {
-                const isVisible = filter === 'all' || card.dataset.category === filter;
-                card.classList.toggle('hidden', !isVisible);
-            });
-        });
-    }
-
-    if (domElements.body) {
-        domElements.body.addEventListener('click', e => {
-            const detailsButton = e.target.closest('.ls-view-details-btn');
-            if (detailsButton) {
-                const card = detailsButton.closest('.ls-menu-card');
-                if (card) showProductModal(card.dataset.productId);
-            }
-        });
-    }
-
-    if(domElements.modalCloseBtn) domElements.modalCloseBtn.addEventListener('click', hideProductModal);
-    if(domElements.modalOverlay) domElements.modalOverlay.addEventListener('click', e => {
-        if (e.target === domElements.modalOverlay) hideProductModal();
+    domElements.langToggleContainer?.addEventListener('click', e => {
+        if (!e.target.matches('.ls-lang-btn') || e.target.classList.contains('active')) return;
+        currentLanguage = e.target.dataset.lang;
+        localStorage.setItem('preferredLanguage', currentLanguage);
+        renderHistory(); renderMenu(); renderGallery(); updateTextContent();
     });
     
+    domElements.mobileMenuToggle?.addEventListener('click', () => {
+        domElements.mainNav.classList.toggle('active');
+        domElements.body.classList.toggle('ls-nav-open');
+        const icon = domElements.mobileMenuToggle.querySelector('i');
+        icon.classList.toggle('fa-bars'); 
+        icon.classList.toggle('fa-times');
+    });
+
+    domElements.mainNav?.addEventListener('click', e => {
+        if (e.target.matches('a') && domElements.mainNav.classList.contains('active')) {
+            domElements.mobileMenuToggle.click();
+        }
+    });
+
+    // --- REVISED FILTERING LOGIC ---
+    domElements.menuFilters?.addEventListener('click', e => {
+        if (!e.target.matches('.ls-filter-btn') || e.target.classList.contains('active')) return;
+        
+        domElements.menuFilters.querySelector('.active')?.classList.remove('active');
+        e.target.classList.add('active');
+        
+        const filter = e.target.dataset.filter;
+        
+        domElements.menuGrid.querySelectorAll('.ls-menu-card').forEach(card => {
+            if (filter === 'all' || card.dataset.category === filter) {
+                card.style.display = 'flex'; // Use 'flex' to match the card's display property
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+
+    domElements.body.addEventListener('click', e => {
+        const detailsButton = e.target.closest('.ls-view-details-btn');
+        if (detailsButton) {
+            const card = detailsButton.closest('.ls-menu-card');
+            if (card) showProductModal(card.dataset.productId);
+        }
+    });
+    
+    domElements.modalCloseBtn?.addEventListener('click', hideProductModal);
+    domElements.modalOverlay?.addEventListener('click', e => {
+        if (e.target === domElements.modalOverlay) hideProductModal();
+    });
+
     const cookieAcceptBtn = document.getElementById('ls-cookie-accept-btn');
     if (cookieAcceptBtn) {
         cookieAcceptBtn.addEventListener('click', () => {
             const cookieConsent = document.getElementById('ls-cookie-consent');
             let d = new Date();
             d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
-            let expires = "expires=" + d.toUTCString();
-            document.cookie = "ls_cookie_consent=accepted;" + expires + ";path=/";
+            document.cookie = `ls_cookie_consent=accepted;expires=${d.toUTCString()};path=/`;
             if (cookieConsent) cookieConsent.classList.remove('active');
         });
     }
@@ -324,16 +272,12 @@ function addAllEventListeners() {
     window.addEventListener('scroll', () => {
         let current = '';
         sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            if (window.pageYOffset >= sectionTop - 150) {
+            if (window.pageYOffset >= section.offsetTop - 150) {
                 current = section.getAttribute('id');
             }
         });
         navLinks.forEach(a => {
-            a.classList.remove('active');
-            if (a.getAttribute('href').includes(current)) {
-                a.classList.add('active');
-            }
+            a.classList.toggle('active', a.getAttribute('href').includes(current));
         });
     }, { passive: true });
 }
@@ -341,6 +285,7 @@ function addAllEventListeners() {
 // --- APP INITIALIZATION ---
 async function initApp() {
     try {
+        // NOTE: Replace with your actual Firebase config
         const firebaseConfig = {
             apiKey: "AIzaSyCIC1WLirQbsY8XDsVhMWHVv8GO2nwcyjk",
             authDomain: "lobster-shack-bali.firebaseapp.com",
@@ -352,15 +297,12 @@ async function initApp() {
 
         firebase.initializeApp(firebaseConfig);
         db = firebase.firestore();
-
         addAllEventListeners();
         await fetchAllData();
         
         const cookieConsent = document.getElementById('ls-cookie-consent');
         if (cookieConsent && !document.cookie.includes('ls_cookie_consent=accepted')) {
-            setTimeout(() => {
-                cookieConsent.classList.add('active');
-            }, 2000);
+            setTimeout(() => cookieConsent.classList.add('active'), 2000);
         }
 
     } catch (error) {
