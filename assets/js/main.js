@@ -128,7 +128,7 @@ const showProductModal = (productId) => {
                 ${hasGrabFood ? `<a href="${product.grabfood_link}" target="_blank" class="ls-btn">GrabFood</a>` : ''}
             </div>`;
     } else {
-        optionsHTML = `<div class="modal-options"><button id="modal-dinein-btn" class="ls-btn">Dine In</button></div><p class="dine-in-only-msg">Hanya Tersedia Dine In</p>`;
+        optionsHTML = `<div class="modal-options"><button id="modal-dinein-btn" class="ls-btn">Dine In Only</button></div>`;
     }
 
     domElements.modalBody.innerHTML = `
