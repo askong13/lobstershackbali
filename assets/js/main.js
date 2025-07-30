@@ -157,7 +157,9 @@ const showProductModal = (productId) => {
         optionsHTML = `
             <div class="modal-options">
                 <button id="modal-dinein-btn" class="ls-btn">Dine In Only</button>
-            </div>    }
+            </div>
+            `;
+    }
 
     domElements.modalBody.innerHTML = `
         <div class="modal-image"><img src="${product.imageUrl}" alt="${product.name_en}"></div>
