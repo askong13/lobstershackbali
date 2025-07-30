@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-lang-key="ls_page_title">Lobster Shack Bali - Fresh Seafood</title>
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
@@ -14,6 +14,67 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
 
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        /* Custom Styles for User Request */
+        .ls-main-header .ls-logo {
+            height: 65px; /* LOGO SIZE INCREASED */
+        }
+
+        /* History Section Restyle */
+        .ls-about-section-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 2rem;
+            background: var(--ls-color-surface);
+            border-radius: var(--ls-border-radius);
+            box-shadow: var(--ls-shadow-sm);
+            border: 1px solid var(--ls-color-border);
+        }
+        .ls-about-section-content .about-logo {
+            max-height: 80px;
+            margin-bottom: 2rem;
+        }
+        .ls-about-section-content h3 {
+            font-family: var(--ls-font-heading);
+            color: var(--ls-color-secondary);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .ls-about-section-content p {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--ls-color-text-light);
+        }
+        .ls-timeline { display: none; } /* Hide old timeline */
+
+        /* Menu Card Sizing */
+        .ls-featured-slider .swiper-slide, .ls-menu-grid .ls-menu-card {
+            height: auto; /* Allow height to be determined by content */
+        }
+        .ls-menu-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Ensure cards take full height of the container */
+        }
+        .ls-menu-card-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .ls-menu-card .ls-description {
+            flex-grow: 1;
+            margin-bottom: 1.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* Limit to 3 lines */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+         .ls-featured-slider .swiper-wrapper {
+            align-items: stretch; /* Make all slides same height */
+        }
+    </style>
 </head>
 <body>
     <header class="ls-main-header">
@@ -57,10 +118,11 @@
         <section id="about" class="ls-section">
             <div class="ls-container">
                 <div class="ls-section-header" data-aos="fade-up">
-                    <span class="ls-subtitle" data-lang-key="history_section_subtitle">Since 2025</span>
+                    <span class="ls-subtitle" data-lang-key="history_section_subtitle">Our Story</span>
                     <h2 class="ls-title" data-lang-key="history_title">Our Journey</h2>
                 </div>
-                <div class="ls-timeline" id="ls-history-timeline" data-aos="fade-up" data-aos-delay="200"></div>
+                <div id="ls-history-article" class="ls-about-section-content" data-aos="fade-up" data-aos-delay="200">
+                    </div>
             </div>
         </section>
 
@@ -210,6 +272,55 @@
 
     <script src="assets/js/main.js"></script>
     <script src="assets/js/floating.js"></script>
+    <script>
+        // Override renderHistory function to match new design
+        const originalRenderHistory = renderHistory;
+        renderHistory = () => {
+            const historyArticleContainer = document.getElementById('ls-history-article');
+            if (!historyArticleContainer) {
+                originalRenderHistory(); // Fallback to old function if element not found
+                return;
+            }
 
+            // Assuming there's one main history/about article.
+            // We find a content piece with a specific key, e.g., 'about_us_article'
+            const historyContent = siteData.content?.about_us_article;
+
+            if (historyContent) {
+                historyArticleContainer.innerHTML = `
+                    <img src="https://lh3.googleusercontent.com/d/1GIdbd0F7kn0O4L8qEr-25GXSEWbLNVj9" alt="Lobster Shack Bali" class="about-logo">
+                    <h3>${historyContent[`title_${currentLanguage}`] || historyContent.title_id}</h3>
+                    <p>${historyContent[`text_${currentLanguage}`] || historyContent.text_id}</p>
+                `;
+            } else if (siteData.history && siteData.history.length > 0) {
+                 // Fallback to use the first history item if the specific key is not found
+                const firstHistoryItem = siteData.history.sort((a, b) => a.sort_order - b.sort_order)[0];
+                historyArticleContainer.innerHTML = `
+                    <img src="https://lh3.googleusercontent.com/d/1GIdbd0F7kn0O4L8qEr-25GXSEWbLNVj9" alt="Lobster Shack Bali" class="about-logo">
+                    <h3>${firstHistoryItem[`title_${currentLanguage}`] || firstHistoryItem.title_id}</h3>
+                    <p>${firstHistoryItem[`text_${currentLanguage}`] || firstHistoryItem.text_id}</p>
+                `;
+            } else {
+                historyArticleContainer.innerHTML = '<p>Our story is coming soon. Stay tuned!</p>';
+            }
+        };
+
+        // Re-run render functions on language change
+         const originalLangHandler = addAllEventListeners; // Assume this function exists in main.js
+         // We need to modify the language toggle event listener slightly
+         document.addEventListener('DOMContentLoaded', () => {
+            const langToggle = document.querySelector('.ls-language-toggle');
+            if(langToggle) {
+                langToggle.addEventListener('click', e => {
+                    if (e.target.matches('.ls-lang-btn') && !e.target.classList.contains('active')) {
+                        // The original logic from main.js will handle language switching
+                        // We just need to ensure our new renderHistory is called
+                        setTimeout(renderHistory, 100); // Give time for language variable to update
+                    }
+                });
+            }
+         });
+
+    </script>
 </body>
 </html>
