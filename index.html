@@ -15,13 +15,14 @@
 
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
-        /* === FINAL STYLING REVISIONS V3 === */
+        /* === FINAL STYLING REVISIONS V4 === */
 
+        /* General Adjustments */
         .ls-main-header .ls-logo { height: 65px; }
         .ls-hero-slider .ls-slide-background { background-position: center top; }
         .ls-menu-card-image img { object-position: top; }
 
-        /* "About Us" Article Styling */
+        /* "About Us" Article Styling - Centered on ALL screen sizes */
         .ls-about-section-content {
             max-width: 800px;
             margin: 0 auto;
@@ -29,6 +30,7 @@
             box-shadow: none;
             border: none;
             padding: 0;
+            text-align: center; /* Center align container */
         }
         .about-logo {
             display: block;
@@ -36,14 +38,13 @@
             margin: 0 auto 2rem auto;
         }
         .about-text-container h3 {
-            text-align: center;
             font-family: var(--ls-font-heading);
             color: var(--ls-color-secondary);
             font-size: clamp(1.8rem, 5vw, 2.2rem);
             margin-bottom: 1.5rem;
         }
         .about-text-container p {
-            text-align: left;
+            text-align: left; /* Keep text itself left-aligned for readability */
             font-size: 1.05rem;
             line-height: 1.9;
             color: var(--ls-color-text-light);
@@ -61,21 +62,21 @@
             padding-top: 5px;
         }
         
-        /* Mobile "See More" Functionality */
+        /* "See More" Functionality on ALL screen sizes */
         .expandable-text {
             position: relative;
             overflow: hidden;
             transition: max-height 0.5s ease-out;
         }
         .expandable-text:not(.expanded) {
-            max-height: 150px; /* Initial collapsed height */
+            max-height: 200px; /* Initial collapsed height for all screens */
         }
         .expandable-text .fade-out {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 60px;
+            height: 80px;
             background: linear-gradient(to top, var(--ls-color-background), transparent);
             pointer-events: none;
             transition: opacity 0.3s;
@@ -84,7 +85,7 @@
             opacity: 0;
         }
         .see-more-btn {
-            display: none; /* Hidden by default */
+            display: block; /* Always visible */
             margin-top: 1rem;
             text-align: center;
         }
@@ -95,38 +96,14 @@
             font-weight: 600;
             cursor: pointer;
             font-size: 0.95rem;
-        }
-
-        /* Desktop Layout */
-        @media (min-width: 992px) {
-            .ls-about-section-content {
-                max-width: 100%;
-                display: flex;
-                align-items: flex-start;
-                gap: 3rem;
-            }
-            .about-logo-container {
-                flex: 0 0 150px;
-            }
-            .about-logo {
-                max-height: 120px;
-                margin: 0;
-            }
-            .about-text-container { flex: 1; }
-            .about-text-container h3 { text-align: left; }
-            .expandable-text:not(.expanded) { max-height: none; } /* No collapse on desktop */
-            .expandable-text .fade-out { display: none; } /* No fade on desktop */
-        }
-        
-        /* Activate "See More" only on mobile */
-        @media (max-width: 991.98px) {
-            .see-more-btn { display: block; }
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         /* Uniform Menu Card Sizing */
         .ls-featured-slider .swiper-wrapper, .ls-menu-grid { align-items: stretch; }
-        .ls-featured-slider .swiper-slide, .ls-menu-grid .ls-menu-card { height: 100%; }
-        .ls-menu-card { display: flex; flex-direction: column; }
+        .ls-featured-slider .swiper-slide, .ls-menu-grid .ls-menu-card { height: auto; }
+        .ls-menu-card { display: flex; flex-direction: column; height: 100%; }
         .ls-menu-card-content { flex-grow: 1; display: flex; flex-direction: column; }
         .ls-menu-card .ls-description { flex-grow: 1; }
         .ls-menu-card .ls-card-actions { margin-top: auto; }
