@@ -15,97 +15,42 @@
 
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
-        /* === FINAL STYLING REVISIONS V4 === */
+        /* === FINAL STYLING REVISIONS V5 === */
 
         /* General Adjustments */
         .ls-main-header .ls-logo { height: 65px; }
         .ls-hero-slider .ls-slide-background { background-position: center top; }
         .ls-menu-card-image img { object-position: top; }
 
-        /* "About Us" Article Styling - Centered on ALL screen sizes */
-        .ls-about-section-content {
-            max-width: 800px;
-            margin: 0 auto;
-            background: none;
-            box-shadow: none;
-            border: none;
-            padding: 0;
-            text-align: center; /* Center align container */
-        }
-        .about-logo {
-            display: block;
-            max-height: 80px;
-            margin: 0 auto 2rem auto;
-        }
-        .about-text-container h3 {
-            font-family: var(--ls-font-heading);
-            color: var(--ls-color-secondary);
-            font-size: clamp(1.8rem, 5vw, 2.2rem);
-            margin-bottom: 1.5rem;
-        }
-        .about-text-container p {
-            text-align: left; /* Keep text itself left-aligned for readability */
-            font-size: 1.05rem;
-            line-height: 1.9;
-            color: var(--ls-color-text-light);
-            white-space: pre-wrap;
-            margin-bottom: 1rem;
-        }
-        .about-text-container p:first-of-type::first-letter {
-            font-family: var(--ls-font-heading);
-            font-size: 4.5rem;
-            font-weight: 700;
-            color: var(--ls-color-primary);
-            float: left;
-            line-height: 0.8;
-            padding-right: 12px;
-            padding-top: 5px;
-        }
+        /* "About Us" Article Styling */
+        .ls-about-section-content { max-width: 800px; margin: 0 auto; background: none; box-shadow: none; border: none; padding: 0; text-align: center; }
+        .about-logo { display: block; max-height: 80px; margin: 0 auto 2rem auto; }
+        .about-text-container h3 { font-family: var(--ls-font-heading); color: var(--ls-color-secondary); font-size: clamp(1.8rem, 5vw, 2.2rem); margin-bottom: 1.5rem; }
+        .about-text-container p { text-align: left; font-size: 1.05rem; line-height: 1.9; color: var(--ls-color-text-light); white-space: pre-wrap; margin-bottom: 1rem; }
+        .about-text-container p:first-of-type::first-letter { font-family: var(--ls-font-heading); font-size: 4.5rem; font-weight: 700; color: var(--ls-color-primary); float: left; line-height: 0.8; padding-right: 12px; padding-top: 5px; }
         
-        /* "See More" Functionality on ALL screen sizes */
-        .expandable-text {
-            position: relative;
-            overflow: hidden;
-            transition: max-height 0.5s ease-out;
-        }
-        .expandable-text:not(.expanded) {
-            max-height: 200px; /* Initial collapsed height for all screens */
-        }
-        .expandable-text .fade-out {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 80px;
-            background: linear-gradient(to top, var(--ls-color-background), transparent);
-            pointer-events: none;
-            transition: opacity 0.3s;
-        }
-        .expandable-text.expanded .fade-out {
-            opacity: 0;
-        }
-        .see-more-btn {
-            display: block; /* Always visible */
-            margin-top: 1rem;
-            text-align: center;
-        }
-        .see-more-btn button {
-            background: none;
-            border: none;
-            color: var(--ls-color-primary);
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        /* "See More" Functionality */
+        .expandable-text { position: relative; overflow: hidden; transition: max-height 0.5s ease-out; }
+        .expandable-text:not(.expanded) { max-height: 200px; }
+        .expandable-text .fade-out { position: absolute; bottom: 0; left: 0; width: 100%; height: 80px; background: linear-gradient(to top, var(--ls-color-background), transparent); pointer-events: none; transition: opacity 0.3s; }
+        .expandable-text.expanded .fade-out { opacity: 0; }
+        .see-more-btn { display: block; margin-top: 1rem; text-align: center; }
+        .see-more-btn button { background: none; border: none; color: var(--ls-color-primary); font-weight: 600; cursor: pointer; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Uniform Menu Card Sizing */
+        /* Uniform Menu Card Sizing & Description Truncation */
         .ls-featured-slider .swiper-wrapper, .ls-menu-grid { align-items: stretch; }
-        .ls-featured-slider .swiper-slide, .ls-menu-grid .ls-menu-card { height: auto; }
-        .ls-menu-card { display: flex; flex-direction: column; height: 100%; }
+        .ls-featured-slider .swiper-slide, .ls-menu-grid .ls-menu-card { height: 100%; } /* Changed from auto to 100% for flex */
+        .ls-menu-card { display: flex; flex-direction: column; }
         .ls-menu-card-content { flex-grow: 1; display: flex; flex-direction: column; }
-        .ls-menu-card .ls-description { flex-grow: 1; }
+        .ls-menu-card .ls-description {
+            flex-grow: 1;
+            /* REVISED: Add two-line truncation */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* Limit to 2 lines */
+            -webkit-box-orient: vertical;
+        }
         .ls-menu-card .ls-card-actions { margin-top: auto; }
     </style>
 </head>
@@ -175,7 +120,78 @@
     </main>
     
     <footer class="ls-main-footer">
-        </footer>
+        <div class="ls-container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <img src="https://lh3.googleusercontent.com/d/1GIdbd0F7kn0O4L8qEr-25GXSEWbLNVj9" alt="Logo Lobster Shack" class="ls-logo">
+                    <p data-lang-key="footer_description">Experience the finest catch of the day, grilled to perfection, in a cozy and inviting atmosphere. We look forward to welcoming you.</p>
+                </div>
+                <div class="footer-contact">
+                    <h3 class="ls-footer-title" data-lang-key="footer_contact_title">Contact Us</h3>
+                    <div class="ls-footer-contact-info">
+                        <ul>
+                            <li><i class="fas fa-map-marker-alt"></i> <span data-lang-key="footer_address_value">Jl. Raya Pantai Kuta No. 123, Kuta, Bali</span></li>
+                            <li><i class="fas fa-phone"></i> <span data-lang-key="footer_phone_value">+62 812-3456-7890</span></li>
+                            <li><i class="fas fa-envelope"></i> <span data-lang-key="footer_email_value">info@lobstershackbali.com</span></li>
+                            <li><i class="fas fa-clock"></i> <span data-lang-key="footer_hours_value">Daily: 11:00 AM - 10:00 PM WITA</span></li>
+                        </ul>
+                    </div>
+                </div>
+                 <div class="footer-social-links">
+                    <h3 class="ls-footer-title" data-lang-key="footer_follow_title">Follow Us</h3>
+                    <p data-lang-key="footer_follow_text">Stay connected for the latest updates and offers.</p>
+                    <ul class="ls-footer-socials">
+                        <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+                        <li><a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a></li>
+                        <li><a href="#" aria-label="TripAdvisor"><i class="fab fa-tripadvisor"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="ls-footer-copyright">
+                <p data-lang-key="footer_copyright">© 2025 Lobster Shack Bali. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="ls-modal-overlay" id="ls-product-modal-overlay">
+        <div class="ls-modal-content">
+            <button class="ls-modal-close" id="ls-modal-close-btn" aria-label="Close modal"><i class="fas fa-times"></i></button>
+            <div class="ls-modal-body" id="ls-modal-body"></div>
+        </div>
+    </div>
+    <div class="ls-cookie-consent" id="ls-cookie-consent">
+        <div class="ls-container">
+            <p data-lang-key="cookie_text">We use cookies to enhance your Browse experience and to analyze our traffic. By clicking "Accept", you consent to our use of cookies.</p>
+            <button class="ls-btn" id="ls-cookie-accept-btn" data-lang-key="cookie_accept_btn">Accept</button>
+        </div>
+    </div>
+    <div id="ls-dine-in-modal" class="ls-fab-popup-overlay">
+        <div class="ls-fab-popup-content">
+            <div class="ls-fab-popup-header"><h2>Dine In Reservation</h2><button id="ls-dine-in-close-btn" class="ls-fab-popup-close">×</button></div>
+            <div class="ls-fab-popup-body">
+                <div id="dine-in-step-1">
+                    <p class="popup-info">Complete the form below to get your reservation code.</p>
+                    <div class="popup-form-group"><label for="customer-name">Your Name</label><input type="text" id="customer-name" placeholder="Enter your full name" required></div>
+                    <div class="popup-grid"><div class="popup-form-group"><label for="reservation-date">Date</label><input type="date" id="reservation-date" required></div><div class="popup-form-group"><label for="reservation-time">Time</label><input type="time" id="reservation-time" required></div></div>
+                    <button id="generate-code-btn" class="ls-btn">Generate Code</button>
+                </div>
+                <div id="dine-in-step-2" style="display: none;">
+                    <p class="popup-info">Your code has been generated successfully!</p>
+                    <div class="reservation-code-display"><strong id="reservation-code"></strong></div>
+                    <p class="popup-instruction">Please show this code to our staff. The code is saved in your browser.</p>
+                    <button id="cancel-code-btn" class="ls-btn btn-outline">Cancel & Make New</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ls-fab-container">
+        <div class="ls-fab-menu">
+            <a href="#" id="fab-whatsapp" class="ls-fab-item" target="_blank" rel="noopener noreferrer"><span>Chat Admin</span><i class="fab fa-whatsapp"></i></a>
+            <a href="#" id="fab-direction" class="ls-fab-item" target="_blank" rel="noopener noreferrer"><span>Get Direction</span><i class="fas fa-directions"></i></a>
+            <a href="#" id="fab-dine-in" class="ls-fab-item"><span>Dine In</span><i class="fas fa-utensils"></i></a>
+        </div>
+        <button class="ls-fab-main" aria-label="Open Menu"><i class="fas fa-concierge-bell"></i></button>
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
